@@ -30,8 +30,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}
 
 @media(max-width:768px){
-  body{overflow-x:hidden!important;overflow-y:auto!important}
-  html,body{max-width:100vw!important;width:100%!important}
+  body{overflow-x:hidden;overflow-y:auto}
+  html,body{max-width:100vw;width:100%}
   *{box-sizing:border-box}
   .shell{flex-direction:column;height:auto;min-height:100vh;width:100%;overflow-x:hidden}
   .sidebar{position:fixed;top:0;left:-260px;width:240px;min-width:unset;height:100vh;z-index:100;transition:left .25s ease;overflow-y:auto}
@@ -89,16 +89,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   #dash-marche .qtr-row strong{white-space:nowrap;font-size:11px}
 
   /* ── Grid 2 colonnes → 1 colonne ── */
-  .grid2{grid-template-columns:1fr!important;width:100%!important}
-  .panel .grid2{grid-template-columns:1fr!important}
-  .panel .grid2 > div{width:100%!important;min-width:0!important}
-  #panel-estimation .grid2{grid-template-columns:1fr!important}
-  #panel-estimation .grid2 > div{width:100%!important}
-  #panel-financement .grid2{grid-template-columns:1fr!important}
-  #panel-analyse .grid2{grid-template-columns:1fr!important}
-  #panel-annonces .grid2{grid-template-columns:1fr!important}
-  #panel-rdv .grid2{grid-template-columns:1fr!important}
-  #panel-decoration .grid2{grid-template-columns:1fr!important}
+  .grid2,.grid3{display:flex!important;flex-direction:column!important;width:100%!important}
+  .grid2 > *,.grid3 > *{width:100%!important;min-width:0!important;max-width:100%!important}
 
   /* ── AI box ── */
   .ai-box{width:100%;padding:12px 10px}
@@ -887,6 +879,7 @@ function closeSidebar(){
 function go(panel){
   S.panel=panel;
   closeSidebar();
+  setTimeout(applyMobileLayout, 50);
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   const el=document.getElementById('panel-'+panel);
   if(el) el.classList.add('active');
@@ -1458,6 +1451,40 @@ buildDPE('C');
 updateDeco();
 go('dashboard');
 calcFin();
+</script>
+
+<script>
+// ── MOBILE LAYOUT FIX ──
+function applyMobileLayout(){
+  const isMobile = window.innerWidth <= 768;
+  document.querySelectorAll('.grid2, .grid3').forEach(el=>{
+    if(isMobile){
+      el.style.display = 'flex';
+      el.style.flexDirection = 'column';
+      el.style.width = '100%';
+      el.style.gap = '10px';
+      el.querySelectorAll(':scope > div, :scope > .card').forEach(child=>{
+        child.style.width = '100%';
+        child.style.maxWidth = '100%';
+        child.style.minWidth = '0';
+      });
+    } else {
+      el.style.display = '';
+      el.style.flexDirection = '';
+      el.style.width = '';
+      el.style.gap = '';
+      el.querySelectorAll(':scope > div, :scope > .card').forEach(child=>{
+        child.style.width = '';
+        child.style.maxWidth = '';
+        child.style.minWidth = '';
+      });
+    }
+  });
+}
+window.addEventListener('load', applyMobileLayout);
+window.addEventListener('resize', applyMobileLayout);
+// Aussi appliquer après chaque navigation
+const _origGo = window.go;
 </script>
 </body>
 </html>
