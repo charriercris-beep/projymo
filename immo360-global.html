@@ -8,6 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 html{overflow-x:hidden;max-width:100vw}
+@media(min-width:769px){
+  body{overflow:hidden}
+  .shell{overflow:hidden}
+}
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --gold:#B8922A;--gold-light:#F0D99A;--gold-dark:#7A5F1A;
@@ -15,7 +19,7 @@ html{overflow-x:hidden;max-width:100vw}
   --dark:#1C1A16;--mid:#6B6456;--soft:#C4BAA8;
   --green:#2A7A4B;--red:#B83A2A;--blue:#2A4A7A;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
 
 /* ── RESPONSIVE MOBILE ── */
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border-radius:6px;background:transparent;border:none;margin-right:4px}
@@ -26,7 +30,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}
 
 @media(max-width:768px){
-  body{overflow-x:hidden;overflow-y:auto}
+  body{overflow-x:hidden!important;overflow-y:auto!important}
+  html,body{max-width:100vw!important;width:100%!important}
   *{box-sizing:border-box}
   .shell{flex-direction:column;height:auto;min-height:100vh;width:100%;overflow-x:hidden}
   .sidebar{position:fixed;top:0;left:-260px;width:240px;min-width:unset;height:100vh;z-index:100;transition:left .25s ease;overflow-y:auto}
@@ -84,7 +89,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);
   #dash-marche .qtr-row strong{white-space:nowrap;font-size:11px}
 
   /* ── Grid 2 colonnes → 1 colonne ── */
-  .grid2{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr!important;width:100%!important}
+  .panel .grid2{grid-template-columns:1fr!important}
+  .panel .grid2 > div{width:100%!important;min-width:0!important}
+  #panel-estimation .grid2{grid-template-columns:1fr!important}
+  #panel-estimation .grid2 > div{width:100%!important}
+  #panel-financement .grid2{grid-template-columns:1fr!important}
+  #panel-analyse .grid2{grid-template-columns:1fr!important}
+  #panel-annonces .grid2{grid-template-columns:1fr!important}
+  #panel-rdv .grid2{grid-template-columns:1fr!important}
+  #panel-decoration .grid2{grid-template-columns:1fr!important}
 
   /* ── AI box ── */
   .ai-box{width:100%;padding:12px 10px}
@@ -117,7 +131,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);
   .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.shell{display:flex;height:100vh}
+.shell{display:flex;height:100vh;overflow:hidden}
 
 /* SIDEBAR */
 .sidebar{width:230px;min-width:230px;background:var(--dark);display:flex;flex-direction:column}
