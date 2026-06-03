@@ -15,6 +15,39 @@
   --green:#2A7A4B;--red:#B83A2A;--blue:#2A4A7A;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);overflow:hidden}
+
+/* ── RESPONSIVE MOBILE ── */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border-radius:6px;background:transparent;border:none;margin-right:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:.25s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}
+
+@media(max-width:768px){
+  body{overflow:auto}
+  .shell{flex-direction:column;height:auto;min-height:100vh}
+  .sidebar{position:fixed;top:0;left:-260px;width:240px;min-width:240px;height:100vh;z-index:100;transition:left .25s ease;overflow-y:auto}
+  .sidebar.open{left:0}
+  .sidebar-overlay.show{display:block}
+  .hamburger{display:flex}
+  .main{flex:1;width:100%;overflow:auto}
+  .topbar{padding:0 12px;height:52px;position:sticky;top:0;z-index:50}
+  .content{padding:14px 12px;overflow:visible}
+  .grid2{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .grid4{grid-template-columns:1fr 1fr}
+  .field-row{grid-template-columns:1fr}
+  .field-row3{grid-template-columns:1fr}
+  .ba-container{height:160px}
+  .annonce-preview{margin-top:0}
+  .ai-box{font-size:12px}
+  .kpi-val{font-size:20px}
+  .tbl{font-size:11px}
+  .tbl th,.tbl td{padding:7px 8px}
+  .qtr-row{font-size:11px}
+  .btn{font-size:12px;padding:8px 14px}
+}
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .shell{display:flex;height:100vh}
 
@@ -223,10 +256,11 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 <div class="shell">
 
 <!-- SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
   <div class="logo-area">
     <div class="logo-title">Immo<span>360</span></div>
     <div class="logo-sub">Expert Immobilier NC</div>
@@ -253,6 +287,9 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <div class="topbar-title" id="topbar-title">Tableau de bord</div>
     <select class="dev-sel" id="devsel" onchange="setCurr()">
       <option value="XPF" data-s="F" selected>XPF — Franc CFP</option>
@@ -742,8 +779,24 @@ function buildSB(){
   });
 }
 
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('sb-overlay');
+  const hb=document.getElementById('hamburger');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+  hb.classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('show');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+// Close sidebar when a nav item is clicked on mobile
 function go(panel){
   S.panel=panel;
+  closeSidebar();
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   const el=document.getElementById('panel-'+panel);
   if(el) el.classList.add('active');
