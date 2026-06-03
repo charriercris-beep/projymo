@@ -64,35 +64,57 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);
   .panel.active{width:100%;overflow-x:hidden}
   canvas{max-width:100%!important;height:auto!important}
   .chat-log{max-height:120px}
-  /* Force tout à rentrer dans l'écran */
-  .ai-box{width:100%;overflow:hidden}
-  .annonce-preview{width:100%}
-  .market-source{width:100%}
-  .improve-card{width:100%}
-  .gauge-wrap{width:100%}
-  .dpe-visual{width:100%}
-  .photo-grid{grid-template-columns:repeat(3,1fr)}
-  .upload-zone{width:100%}
-  .ba-container{width:100%}
-  .notif{width:100%}
-  #improvements-summary{width:100%}
-  #improvements-summary .field-row{grid-template-columns:1fr 1fr}
-  .improve-badges{flex-wrap:wrap}
-  .ai-line span:last-child{text-align:right;max-width:55%}
-  .kpi-val{font-size:16px;word-break:break-word}
-  .grid4{grid-template-columns:1fr 1fr}
-  /* Tables */
-  table{width:100%;table-layout:fixed;word-break:break-word}
-  /* Quartiers */
-  .qtr-row{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+  /* ── KPI cards ── */
+  .grid4{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{padding:10px 6px}
+  .kpi-val{font-size:15px;font-weight:700;word-break:normal;white-space:nowrap}
+  .kpi-lbl{font-size:9px}
+
+  /* ── Tables : plus de colonnes verticales ── */
+  .tbl{display:table;width:100%;table-layout:auto;word-break:normal;white-space:normal}
+  .tbl th{font-size:9px;padding:5px 6px;letter-spacing:0;white-space:nowrap}
+  .tbl td{font-size:11px;padding:6px 6px;white-space:normal;word-break:break-word}
+  /* Cacher colonne Événement sur mobile, trop large */
+  .tbl thead tr th:nth-child(2),
+  .tbl tbody tr td:nth-child(2){max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ── Dashboard marché ── */
+  #dash-marche .qtr-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:11px;gap:4px;flex-wrap:nowrap}
+  #dash-marche .qtr-row span:first-child{flex:1;color:var(--mid);font-size:10px}
+  #dash-marche .qtr-row strong{white-space:nowrap;font-size:11px}
+
+  /* ── Grid 2 colonnes → 1 colonne ── */
+  .grid2{grid-template-columns:1fr}
+
+  /* ── AI box ── */
+  .ai-box{width:100%;padding:12px 10px}
+  .ai-line{font-size:11px;gap:4px}
+  .ai-line span:first-child{flex:1;font-size:10px;color:rgba(255,255,255,0.6)}
+  .ai-line span:last-child{text-align:right;white-space:nowrap;font-size:11px}
+  .gauge-val{font-size:20px}
+
+  /* ── Topbar ── */
+  .topbar{gap:6px;padding:0 10px}
+  .topbar-title{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dev-sel{max-width:90px;font-size:10px;padding:3px 4px}
+  .topbar-badge{font-size:9px;padding:3px 7px;white-space:nowrap}
+
+  /* ── Quartiers table ── */
+  .qtr-row{display:flex;align-items:center;gap:6px;font-size:10px;padding:5px 0}
+  .qtr-row div:first-child{min-width:80px;max-width:80px;font-size:10px}
   .qtr-bar-wrap{display:none}
-  /* Annonce meta badges */
-  .annonce-meta{flex-wrap:wrap}
-  /* Topbar compact */
-  .topbar{gap:6px}
-  /* Btn groups */
-  .btn+.btn{margin-left:0}
-  [style*="display:flex"][style*="gap"]{flex-wrap:wrap}
+  .qtr-row div:nth-child(3){font-size:10px;min-width:60px;text-align:right}
+
+  /* ── Divers ── */
+  .annonce-preview{width:100%}
+  .annonce-price{font-size:18px}
+  .photo-grid{grid-template-columns:repeat(3,1fr)}
+  .improve-badges{flex-wrap:wrap;gap:3px}
+  .improve-meta{flex-wrap:wrap;gap:5px}
+  .btn{font-size:11px;padding:6px 10px}
+  .tag{font-size:9px;padding:2px 6px}
+  canvas{max-width:100%!important;height:160px!important}
+  .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .shell{display:flex;height:100vh}
@@ -355,12 +377,20 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       <div class="grid2">
         <div class="card">
           <div class="card-title">📋 Activités récentes</div>
-          <table class="tbl"><thead><tr><th>Date</th><th>Événement</th><th>Statut</th></tr></thead>
-          <tbody>
-            <tr><td>03/06</td><td>Visite — Appt Baie des Citrons</td><td><span class="tag tag-green">Confirmé</span></td></tr>
-            <tr><td>05/06</td><td>Estimation — Villa Anse Vata</td><td><span class="tag tag-gold">En attente</span></td></tr>
-            <tr><td>07/06</td><td>Signature compromis — Studio</td><td><span class="tag tag-blue">Planifié</span></td></tr>
-          </tbody></table>
+          <div style="font-size:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--warm)">
+              <div><span style="color:var(--mid);font-size:10px">03/06</span><br><span>Visite — Baie des Citrons</span></div>
+              <span class="tag tag-green">Confirmé</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--warm)">
+              <div><span style="color:var(--mid);font-size:10px">05/06</span><br><span>Estimation — Villa Anse Vata</span></div>
+              <span class="tag tag-gold">En attente</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0">
+              <div><span style="color:var(--mid);font-size:10px">07/06</span><br><span>Compromis — Studio</span></div>
+              <span class="tag tag-blue">Planifié</span>
+            </div>
+          </div>
         </div>
         <div class="card">
           <div class="card-title">📊 Marché NC <span class="live-dot" style="margin-left:6px"></span></div>
