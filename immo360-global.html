@@ -755,6 +755,29 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
   <img id="overlay-img" src="" alt="">
 </div>
 
+
+<script>
+function applyMobileLayout(){
+  const isMobile = window.innerWidth <= 768;
+  document.querySelectorAll('.grid2, .grid3').forEach(el=>{
+    if(isMobile){
+      el.style.display='flex';el.style.flexDirection='column';
+      el.style.width='100%';el.style.gap='10px';
+      el.querySelectorAll(':scope > div, :scope > .card').forEach(c=>{
+        c.style.width='100%';c.style.maxWidth='100%';c.style.minWidth='0';
+      });
+    } else {
+      el.style.display='';el.style.flexDirection='';
+      el.style.width='';el.style.gap='';
+      el.querySelectorAll(':scope > div, :scope > .card').forEach(c=>{
+        c.style.width='';c.style.maxWidth='';c.style.minWidth='';
+      });
+    }
+  });
+}
+window.addEventListener('load', applyMobileLayout);
+window.addEventListener('resize', applyMobileLayout);
+</script>
 <script>
 // =============================================
 // REAL NC MARKET DATA (sourced from Properstar,
@@ -1536,38 +1559,5 @@ go('dashboard');
 calcFin();
 </script>
 
-<script>
-// ── MOBILE LAYOUT FIX ──
-function applyMobileLayout(){
-  const isMobile = window.innerWidth <= 768;
-  document.querySelectorAll('.grid2, .grid3').forEach(el=>{
-    if(isMobile){
-      el.style.display = 'flex';
-      el.style.flexDirection = 'column';
-      el.style.width = '100%';
-      el.style.gap = '10px';
-      el.querySelectorAll(':scope > div, :scope > .card').forEach(child=>{
-        child.style.width = '100%';
-        child.style.maxWidth = '100%';
-        child.style.minWidth = '0';
-      });
-    } else {
-      el.style.display = '';
-      el.style.flexDirection = '';
-      el.style.width = '';
-      el.style.gap = '';
-      el.querySelectorAll(':scope > div, :scope > .card').forEach(child=>{
-        child.style.width = '';
-        child.style.maxWidth = '';
-        child.style.minWidth = '';
-      });
-    }
-  });
-}
-window.addEventListener('load', applyMobileLayout);
-window.addEventListener('resize', applyMobileLayout);
-// Aussi appliquer après chaque navigation
-const _origGo = window.go;
-</script>
 </body>
 </html>
