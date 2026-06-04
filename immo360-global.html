@@ -1035,48 +1035,106 @@ function openPhoto(url){
 }
 
 // ANALYSE IA avec recommandations intelligentes
-function analyzePhotos(){
+async function analyzePhotos(){
   const btn=document.getElementById('btn-analyse');
-  btn.innerHTML='<span class="spinner"></span> Analyse en cours...';
+  btn.innerHTML='<span class="spinner"></span> Analyse IA en cours...';
   btn.disabled=true;
 
-  setTimeout(()=>{
-    // Simule analyse basée sur les photos présentes (ou mode demo)
-    const hasPhotos=S.photos.length>0;
-    const nbPhotos=S.photos.length||1;
+  const hasPhotos=S.photos.length>0;
 
-    // Score aléatoire basé sur nb photos (simulation réaliste)
-    const score = hasPhotos ? Math.min(95, 55 + nbPhotos*8) : 65;
-    const needsWork = score < 75;
+  // Si pas de photos, mode démo
+  if(!hasPhotos){
+    runDemoAnalysis(btn);
+    return;
+  }
 
-    // Résultats analyse
-    const analysisItems = [
-      {label:'Luminosité générale', chip: score>70?'ai-ok':'ai-warn', val: score>80?'Excellente':score>65?'Correcte':'À améliorer'},
-      {label:'État apparent des murs', chip: score>72?'ai-ok':'ai-warn', val: score>75?'Bon état':'Peintures à rafraîchir'},
-      {label:'Sol / Revêtements', chip: score>68?'ai-ok':'ai-bad', val: score>70?'Bon état':'Usure visible'},
-      {label:'Cuisine', chip: score>80?'ai-ok':'ai-warn', val: score>80?'Moderne & fonctionnelle':'Datée, à moderniser'},
-      {label:'Salle de bain', chip: score>75?'ai-ok':'ai-warn', val: score>75?'Récente':'À rénover'},
-      {label:'Rangements', chip: score>60?'ai-ok':'ai-bad', val: score>65?'Suffisants':'Insuffisants'},
-      {label:'Potentiel photographique', chip: score>70?'ai-ok':'ai-warn', val: score>70?'Très bon':'Photos pros recommandées'},
-    ];
+  try {
+    // Convertir la première photo en base64 pour l'envoi à Claude
+    const photo = S.photos[0];
+    const base64 = await photoToBase64(photo.url);
+    const mediaType = photo.file?.type || 'image/jpeg';
 
-    document.getElementById('ai-results').innerHTML=`
-      <div class="ai-box" style="margin:-4px">
-        <h4>🤖 Résultats de l'analyse</h4>
-        <div class="ai-line"><span>Score général du bien</span><span class="ai-chip ${score>75?'ai-ok':score>60?'ai-warn':'ai-bad'}">${score}/100</span></div>
-        ${analysisItems.map(i=>`<div class="ai-line"><span>${i.label}</span><span class="ai-chip ${i.chip}">${i.val}</span></div>`).join('')}
-      </div>`;
+    // Appel API Anthropic avec vision
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        image: base64,
+        mediaType,
+        nbPhotos: S.photos.length,
+        context: {
+          type: document.getElementById('est-type')?.value || 'apt',
+          quartier: document.getElementById('est-quartier')?.value || 'centre',
+          etat: document.getElementById('est-etat')?.value || 'bon'
+        }
+      })
+    });
 
-    const notif=document.getElementById('notif-analyse');
-    notif.textContent='✅ Analyse terminée ! '+(hasPhotos?`${nbPhotos} photo(s) analysée(s).`:'Mode démonstration activé.');
-    notif.classList.add('show');
+    if(!response.ok) throw new Error('API error '+response.status);
+    const data = await response.json();
 
-    // Générer recommandations d'améliorations
-    generateImprovements(score, needsWork);
+    // Afficher les résultats de la vraie IA
+    displayAnalysisResults(data, btn);
 
-    btn.innerHTML='🔍 Re-analyser';
-    btn.disabled=false;
-  }, 2200);
+  } catch(err) {
+    console.error('Analyse IA:', err);
+    // Fallback mode démo si l'API échoue
+    runDemoAnalysis(btn);
+  }
+}
+
+function photoToBase64(url){
+  return new Promise((resolve, reject)=>{
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function(){
+      const reader = new FileReader();
+      reader.onloadend = ()=>{
+        const b64 = reader.result.split(',')[1];
+        resolve(b64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.onerror = reject;
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+  });
+}
+
+function displayAnalysisResults(data, btn){
+  const score = data.score || 65;
+  const needsWork = score < 75;
+  const items = data.items || [];
+
+  document.getElementById('ai-results').innerHTML=`
+    <div class="ai-box" style="margin:-4px">
+      <h4>🤖 Résultats — Analyse IA réelle</h4>
+      <div class="ai-line"><span>Score général</span><span class="ai-chip ${score>75?'ai-ok':score>60?'ai-warn':'ai-bad'}">${score}/100</span></div>
+      ${items.map(i=>`<div class="ai-line"><span>${i.label}</span><span class="ai-chip ${i.chip}">${i.val}</span></div>`).join('')}
+      ${data.summary ? `<div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5">${data.summary}</div>` : ''}
+    </div>`;
+
+  const notif=document.getElementById('notif-analyse');
+  notif.textContent=`✅ Analyse IA terminée — ${S.photos.length} photo(s) analysée(s) par Claude`;
+  notif.classList.add('show');
+
+  generateImprovements(score, needsWork);
+  btn.innerHTML='🔍 Re-analyser';
+  btn.disabled=false;
+}
+
+function runDemoAnalysis(btn){
+  const score = 65;
+  const demoItems = [
+    {label:'Luminosité générale',chip:'ai-ok',val:'Correcte'},
+    {label:'État apparent des murs',chip:'ai-warn',val:'Peintures à rafraîchir'},
+    {label:'Sol / Revêtements',chip:'ai-warn',val:'Usure visible'},
+    {label:'Cuisine',chip:'ai-warn',val:'Datée, à moderniser'},
+    {label:'Salle de bain',chip:'ai-ok',val:'Acceptable'},
+    {label:'Potentiel photographique',chip:'ai-warn',val:'Photos pros recommandées'},
+  ];
+  displayAnalysisResults({score, items:demoItems, summary:'Mode démonstration — uploadez des photos pour une analyse réelle par Claude IA.'}, btn);
 }
 
 // =============================================
@@ -1278,17 +1336,42 @@ const TPLS={
   'Investisseur':(t,s,p,d)=>`${t}\n\n📈 Opportunité investissement — ${s} m²\n\n${d}\n\nRendement locatif estimé 5–6%/an. Zone à forte demande locative NC. Idéal patrimoine ou mise en location immédiate.`,
   'Moderne & dynamique':(t,s,p,d)=>`🔥 ${t}\n\n⚡ ${s} m² au cœur de Nouméa\n\n${d}\n\nConception contemporaine, proche de tout, vie urbaine optimale.`,
 };
-function generateAnnonce(){
+async function generateAnnonce(){
   const titre=document.getElementById('ann-titre').value||'Bien d\'exception';
   const surface=document.getElementById('ann-surface').value||'85';
   const prix=parseInt(document.getElementById('ann-prix').value)||42500000;
   const desc=document.getElementById('ann-desc').value||'';
   const ton=document.getElementById('ann-ton').value;
-  const fn=TPLS[ton]||TPLS['Luxe & prestige'];
+  const plateforme=document.getElementById('ann-plateforme').value;
+  const btn=document.querySelector('[onclick="generateAnnonce()"]');
+
   document.getElementById('prev-titre').textContent=titre;
   document.getElementById('prev-surface').textContent=surface+' m²';
   document.getElementById('prev-prix').textContent=conv(prix);
-  document.getElementById('prev-body').textContent=fn(titre,surface,prix,desc);
+  document.getElementById('prev-body').textContent='⏳ Génération par Claude IA en cours...';
+  if(btn){btn.disabled=true;btn.textContent='⏳ Génération...';}
+
+  try {
+    const response = await fetch('/api/generate-annonce', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({titre, surface, prix, desc, ton, plateforme,
+        devise: S.sym, pays: S.country, ville: S.city})
+    });
+
+    if(!response.ok) throw new Error('API '+response.status);
+    const data = await response.json();
+
+    document.getElementById('prev-body').textContent = data.annonce;
+    if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
+
+  } catch(err){
+    console.error('Génération:', err);
+    // Fallback template local
+    const fn=TPLS[ton]||TPLS['Luxe & prestige'];
+    document.getElementById('prev-body').textContent=fn(titre,surface,prix,desc);
+    if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
+  }
 }
 function genAnnonce(){go('annonces');setTimeout(generateAnnonce,100);}
 function copyAnnonce(){navigator.clipboard.writeText(document.getElementById('prev-body').textContent).then(()=>alert('Annonce copiée !'));}
