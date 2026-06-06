@@ -797,18 +797,24 @@ const NC_MARKET = {
   },
   // Marché global NC
   global: {
-    mediane_apt: 340054,   // XPF/m² - Properstar avr.2026
+    mediane_apt: 340054,    // XPF/m² - Properstar avr.2026
     mediane_maison: 285693, // XPF/m² - Properstar avr.2026
-    loyer_moy: 1200,       // XPF/m²/mois - AG Gestion fév.2025
-    delai_vente: 52,       // jours
+    moy_apt_kp: 368000,     // XPF/m² - K&P Finance mai 2025
+    moy_maison_kp: 417600,  // XPF/m² - K&P Finance mai 2025
+    loyer_moy: 1200,        // XPF/m²/mois - AG Gestion fév.2025
+    delai_vente: 52,        // jours
     taux_credit: 3.5,
-    evolution_12m: -4.4,   // appartements
-    transactions_chute: -67, // suite émeutes 2024
+    evolution_12m: -4.4,    // appartements - K&P Finance
+    nb_annonces_immonc: 311, // annonces Nouméa - ImmoNC juin 2026
+    nb_annonces_immo_nc: 78, // annonces - Immobilier.nc
   },
   sources: [
     { name:'Properstar NC', url:'properstar.fr', date:'Avr. 2026', apt:340054, maison:285693 },
+    { name:'Immobilier.nc', url:'immobilier.nc', date:'Juin 2026', apt:345000, maison:290000, note:'Annonces particuliers & agences' },
+    { name:'ImmoNC', url:'immonc.com', date:'Juin 2026', apt:380000, maison:420000, note:'311 annonces Nouméa' },
+    { name:'K&P Finance', url:'kp-finance.com', date:'Mai 2025', apt:368000, maison:417600 },
     { name:'Nestenn Nouméa', url:'nestenn.com', date:'2025', apt:404280, maison:null },
-    { name:'K&P Finance / Superimmo', url:'kp-finance.com', date:'Mai 2025', apt:368000, maison:417600 },
+    { name:'Nouméa Immobilier', url:'noumea-immobilier.nc', date:'Juin 2026', apt:330000, maison:380000, note:'78 annonces actives' },
     { name:'AG Gestion NC', url:'agencegenerale.nc', date:'Fév. 2025', loyer:1200, note:'Loyer moy. XPF/m²' },
   ]
 };
@@ -936,7 +942,9 @@ function buildDashboard(){
     <div class="qtr-row"><span>Délai moyen vente</span><strong>${m.delai_vente} jours</strong></div>
     <div class="qtr-row"><span>Taux crédit moyen</span><strong>${m.taux_credit}%</strong></div>
     <div class="qtr-row"><span>Loyer moyen</span><strong>${m.loyer_moy} XPF/m²/mois</strong></div>
-    <div style="margin-top:10px;font-size:10.5px;color:var(--mid)">Sources : Properstar avr.2026 · Nestenn 2025 · K&P Finance mai 2025 · AG Gestion fév.2025</div>`;
+    <div class="qtr-row"><span>Moy. appt K&P Finance</span><strong style="color:var(--gold)">${conv(m.moy_apt_kp)}/m²</strong></div>
+    <div class="qtr-row"><span>Annonces ImmoNC Nouméa</span><strong>${m.nb_annonces_immonc} actives</strong></div>
+    <div style="margin-top:10px;font-size:10px;color:var(--mid)">Sources : Properstar avr.2026 · Immobilier.nc · ImmoNC juin 2026 · K&P Finance mai 2025 · Nestenn · AG Gestion</div>`;
 }
 
 // =============================================
