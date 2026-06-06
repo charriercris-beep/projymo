@@ -4855,34 +4855,47 @@ function renderArtisansGrid(){
 
   grid.innerHTML = artisansFiltres.map(a=>`
     <div class="artisan-card" onclick="openArtisanDetail(${a.id})">
-      <div class="artisan-header">
-        <div style="display:flex;align-items:start;gap:12px">
-          <div class="artisan-avatar">${a.emoji}</div>
-          <div style="flex:1">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;font-weight:700;margin-bottom:2px">${a.nom}</div>
-            <div class="artisan-stars">${'★'.repeat(Math.round(a.note))}${'☆'.repeat(5-Math.round(a.note))}</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.5)">${a.note}/5 · ${a.avis} avis · ${a.realisations} réalisations</div>
+      <!-- TOP : EMOJI + NOM + NOTE -->
+      <div style="padding:16px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--warm)">
+        <div style="width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--warm),var(--cream));display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;border:1px solid var(--warm)">${a.emoji}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.nom}</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span style="color:#F59E0B;font-size:12px">${'★'.repeat(Math.round(a.note))}</span>
+            <span style="font-size:12px;font-weight:600;color:var(--dark)">${a.note}</span>
+            <span style="font-size:11px;color:var(--mid)">(${a.avis} avis)</span>
           </div>
-          <div style="text-align:right">
-            ${a.certifie?'<div class="artisan-badge-certif">✓ Certifié</div>':''}
-            <div style="margin-top:4px;font-size:10px;color:${a.disponible?'#6fd98a':'rgba(255,255,255,0.3)'}">${a.disponible?'● Disponible':'○ Indisponible'}</div>
+          <div style="font-size:10px;color:var(--mid)">${a.realisations} réalisations</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          ${a.certifie?'<span style="background:#DCFCE7;color:#166534;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700">✓ Certifié</span>':''}
+          <span style="font-size:10px;font-weight:600;color:${a.disponible?'#16a34a':'#9ca3af'}">${a.disponible?'● Disponible':'○ Indispo'}</span>
+        </div>
+      </div>
+
+      <!-- MILIEU : SPÉCIALITÉS + INFOS -->
+      <div style="padding:12px 16px;border-bottom:1px solid var(--warm)">
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">
+          ${a.specialites.slice(0,3).map(s=>`<span style="background:rgba(59,130,246,0.08);color:#1d4ed8;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:500">${s}</span>`).join('')}
+          ${a.specialites.length>3?`<span style="background:var(--warm);color:var(--mid);padding:3px 8px;border-radius:6px;font-size:10px">+${a.specialites.length-3}</span>`:''}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div style="background:var(--warm);border-radius:8px;padding:7px 10px">
+            <div style="font-size:9px;color:var(--mid);margin-bottom:1px">Tarif</div>
+            <div style="font-size:12px;font-weight:600;color:var(--dark)">${typeof a.prix_min==='number'&&a.prix_min<1000?a.prix_min+'–'+a.prix_max+' '+a.unite:conv(a.prix_min)+' min'}</div>
+          </div>
+          <div style="background:var(--warm);border-radius:8px;padding:7px 10px">
+            <div style="font-size:9px;color:var(--mid);margin-bottom:1px">Délai</div>
+            <div style="font-size:12px;font-weight:600;color:var(--dark)">${a.delai_moyen}</div>
           </div>
         </div>
       </div>
-      <div style="padding:14px">
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">
-          ${a.specialites.slice(0,3).map(s=>`<span class="tag tag-blue" style="font-size:10px">${s}</span>`).join('')}
-          ${a.specialites.length>3?`<span class="tag" style="font-size:10px">+${a.specialites.length-3}</span>`:''}
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mid);margin-bottom:12px">
-          <span>💰 ${typeof a.prix_min==='number'&&a.prix_min<1000?a.prix_min+'–'+a.prix_max+' '+a.unite:conv(a.prix_min)+' min'}</span>
-          <span>⏱️ ${a.delai_moyen}</span>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" class="btn btn-gold btn-sm" style="flex:1">📋 Demander un devis</button>
-          <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" class="btn btn-outline btn-sm">Voir →</button>
-        </div>
-        ${APP_STATE.user?.profil==='agt'?`<div style="margin-top:6px;font-size:10px;color:var(--gold);text-align:center">Commission agent : ${a.commission_agent}%</div>`:''}
+
+      <!-- BAS : BOUTONS -->
+      <div style="padding:12px 16px;display:flex;gap:6px;align-items:center">
+        <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" class="btn btn-gold btn-sm" style="flex:1;font-size:12px">📋 Devis gratuit</button>
+        <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" class="btn btn-outline btn-sm" style="font-size:12px">Voir →</button>
+        ${APP_STATE.user?.profil==='agt'?`<span style="font-size:10px;color:var(--gold);font-weight:600;white-space:nowrap">${a.commission_agent}% comm.</span>`:''}
       </div>
     </div>`).join('');
 }
