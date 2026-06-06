@@ -1375,24 +1375,31 @@ async function generateAnnonce(){
   if(btn){btn.disabled=true;btn.textContent='⏳ Génération...';}
 
   try {
+    const payload = {titre, surface, prix, desc, ton, plateforme,
+      devise: S.sym, pays: S.country, ville: S.city};
+    console.log('Envoi API:', payload);
+
     const response = await fetch('/api/generate-annonce', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({titre, surface, prix, desc, ton, plateforme,
-        devise: S.sym, pays: S.country, ville: S.city})
+      body: JSON.stringify(payload)
     });
 
-    if(!response.ok) throw new Error('API '+response.status);
-    const data = await response.json();
+    console.log('Statut réponse:', response.status);
+    const raw = await response.text();
+    console.log('Réponse brute:', raw);
+
+    if(!response.ok) throw new Error('API '+response.status+' : '+raw);
+
+    const data = JSON.parse(raw);
+    if(!data.annonce) throw new Error('Pas de contenu dans la réponse');
 
     document.getElementById('prev-body').textContent = data.annonce;
     if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
 
   } catch(err){
-    console.error('Génération:', err);
-    // Fallback template local
-    const fn=TPLS[ton]||TPLS['Luxe & prestige'];
-    document.getElementById('prev-body').textContent=fn(titre,surface,prix,desc);
+    console.error('Erreur génération complète:', err.message);
+    document.getElementById('prev-body').textContent='⚠️ Erreur: '+err.message;
     if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
   }
 }
