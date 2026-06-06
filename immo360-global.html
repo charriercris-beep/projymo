@@ -329,7 +329,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 .qtr-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-dark))}
 
 /* ── PAGE ACCUEIL ── */
-.landing{position:fixed;inset:0;background:var(--cream);z-index:1000;display:flex;flex-direction:column;overflow-y:auto}
+.landing{position:fixed;inset:0;background:var(--cream);z-index:1000;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
 /* Carte annonce grille */
 .ld-card{background:#fff;border:1px solid var(--warm);border-radius:10px;cursor:pointer;overflow:hidden;transition:.15s}
 .ld-card:hover{border-color:var(--gold);box-shadow:0 2px 12px rgba(184,146,42,0.12);transform:translateY(-1px)}
@@ -470,7 +470,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
       <div style="background:#fff;border:1px solid var(--warm);border-radius:10px;padding:12px 18px;display:flex;align-items:center;gap:10px">
         <span style="font-size:24px">🏠</span>
-        <div><div style="font-size:18px;font-weight:700;color:var(--dark)" id="ld-nb-annonces">8</div><div style="font-size:10px;color:var(--mid)">Annonces disponibles</div></div>
+        <div><div style="font-size:18px;font-weight:700;color:var(--dark)" id="ld-nb-annonces">18</div><div style="font-size:10px;color:var(--mid)">Annonces disponibles</div></div>
       </div>
       <div style="background:#fff;border:1px solid var(--warm);border-radius:10px;padding:12px 18px;display:flex;align-items:center;gap:10px">
         <span style="font-size:24px">⏱️</span>
@@ -1820,17 +1820,21 @@ let mktView='grid';
 let mktFiltered=[];
 
 const BIENS_DATA=[
-  {id:1,titre:'Appartement Baie des Citrons',type:'Appartement',surface:75,pieces:4,prix:38000000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Baie des Citrons',desc:'Magnifique appartement lumineux avec vue dégagée sur la baie. Cuisine ouverte, terrasse, résidence sécurisée.',photos:['🏠'],date:'2026-06-01',agent:'Agence Soleil'},
-  {id:2,titre:'Villa Anse Vata — Vue lagon',type:'Villa',surface:200,pieces:6,prix:120000000,statut:'En vente',dpe:'B',ville:'Nouméa',quartier:'Anse Vata',desc:"Villa d'exception avec vue panoramique sur le lagon. Piscine, jardin, garage double.",photos:['🏡'],date:'2026-05-28',agent:'NC Immobilier'},
-  {id:3,titre:'Studio Motor Pool',type:'Studio',surface:28,pieces:1,prix:12000000,statut:'En vente',dpe:'D',ville:'Nouméa',quartier:'Motor Pool',desc:'Studio fonctionnel idéal investissement locatif. Proche commodités et transports.',photos:['🏢'],date:'2026-05-20',agent:'Particulier'},
-  {id:4,titre:'Appartement F3 Val Plaisance',type:'Appartement',surface:68,pieces:3,prix:45000000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Val Plaisance',desc:'Bel appartement traversant, lumineux. Terrasse couverte, parking privatif.',photos:['🏠'],date:'2026-06-03',agent:"L'Agence Immo"},
-  {id:5,titre:'Maison F4 Dumbéa sur Mer',type:'Maison',surface:140,pieces:5,prix:55000000,statut:'En vente',dpe:'B',ville:'Dumbéa',quartier:'Dumbéa sur Mer',desc:'Belle maison familiale avec jardin et terrasse. Quartier calme, proche écoles.',photos:['🏘️'],date:'2026-06-05',agent:'Casa Immo'},
-  {id:6,titre:'Appartement F2 Faubourg Blanchot',type:'Appartement',surface:52,pieces:2,prix:28000000,statut:'Compromis',dpe:'C',ville:'Nouméa',quartier:'Faubourg Blanchot',desc:'Charmant appartement colonial rénové. Cachet authentique, parquet, hauts plafonds.',photos:['🏠'],date:'2026-05-15',agent:'Agence Soleil'},
-  {id:7,titre:'Villa F5 Mont-Dore',type:'Villa',surface:180,pieces:6,prix:72000000,statut:'En vente',dpe:'A',ville:'Mont-Dore',quartier:'Mont-Dore',desc:'Villa neuve BBC, grandes baies vitrées, vue sur la mer. Piscine à débordement.',photos:['🏡'],date:'2026-06-04',agent:'NC Immobilier'},
-  {id:8,titre:'Appartement F1 Magenta',type:'Studio',surface:35,pieces:1,prix:9900000,statut:'En vente',dpe:'D',ville:'Nouméa',quartier:'Magenta',desc:'Appartement pratique, idéal premier achat ou investissement. Proche port et centre-ville.',photos:['🏢'],date:'2026-05-10',agent:'Particulier'},
-];
+  {id:1,titre:'Appartement F4 — Vue mer Baie des Citrons',type:'Appartement',surface:92,pieces:4,chambres:3,prix:48500000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Baie des Citrons',desc:"Superbe appartement au 4ème étage avec vue dégagée sur la baie. Séjour lumineux 35m², cuisine américaine équipée, 3 chambres, grande terrasse 18m². Résidence sécurisée avec gardien, ascenseur, parking sous-sol. À deux pas des plages.",features:['Vue mer','Terrasse 18m²','Parking','Gardien','Ascenseur'],photos:['🌊'],date:'2026-06-05',agent:'Agence Soleil NC',tel:'+687 43 97 67',ref:'ASN-2026-001'},
+  {id:2,titre:'Villa contemporaine — Piscine & Vue lagon — Anse Vata',type:'Villa',surface:210,pieces:7,chambres:4,prix:135000000,statut:'En vente',dpe:'B',ville:'Nouméa',quartier:'Anse Vata',desc:"Villa d'architecte sur 800m². 4 chambres en suite, salle à manger cathédrale, cuisine haut de gamme. Piscine à débordement vue directe sur le lagon. Domotique complète, double garage. Quartier le plus prisé de Nouméa.",features:['Piscine','Vue lagon','Garage double','Jardin 800m²','Domotique'],photos:['🏡'],date:'2026-06-03',agent:'NC Immobilier Prestige',tel:'+687 27 73 00',ref:'NCI-2026-047'},
+  {id:3,titre:'Studio meublé — Investissement 8.3% — Secteur port',type:'Studio',surface:32,pieces:1,chambres:0,prix:11500000,statut:'En vente',dpe:'D',ville:'Nouméa',quartier:'Motor Pool',desc:"Studio entièrement meublé, locataire en place. Loyer 80 000 XPF/mois — rendement 8,3%/an. Cuisine équipée, salle d'eau. Syndic sain. À 5 min du port et des commerces.",features:['Meublé','Locataire en place','Rendement 8.3%'],photos:['🏢'],date:'2026-05-28',agent:'Particulier',tel:'+687 99 12 34',ref:'PART-2026-012'},
+  {id:4,titre:'Appartement F3 rénové 2024 — Val Plaisance',type:'Appartement',surface:71,pieces:3,chambres:2,prix:46000000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Val Plaisance',desc:"Entièrement rénové en 2024. Nouveaux parquets, cuisine ouverte moderne, salle de bain refaite. Terrasse couverte 12m² vue collines. Parking privatif. Résidence calme proche Tina.",features:['Rénové 2024','Terrasse 12m²','Parking','Vue dégagée'],photos:['🏠'],date:'2026-06-06',agent:"L'Agence Immo",tel:'+687 24 24 24',ref:'AGI-2026-089'},
+  {id:5,titre:'Maison F5 familiale — Terrain 650m² — Dumbéa sur Mer',type:'Maison',surface:148,pieces:6,chambres:4,prix:58000000,statut:'En vente',dpe:'B',ville:'Dumbéa',quartier:'Dumbéa sur Mer',desc:"Maison familiale de plain-pied sur 650m². 4 chambres, 2 salles de bain, grand séjour 45m². Jardin arboré, abri voiture double. École primaire à 300m, commerces à 5 min. Construction 2018.",features:['Jardin 650m²','Garage double','École proche','Construction 2018'],photos:['🏘️'],date:'2026-06-04',agent:'Casa Immo Dumbéa',tel:'+687 35 88 00',ref:'CID-2026-023'},
+  {id:6,titre:'Appartement F2 colonial rénové — Faubourg Blanchot',type:'Appartement',surface:55,pieces:2,chambres:1,prix:29500000,statut:'Compromis',dpe:'C',ville:'Nouméa',quartier:'Faubourg Blanchot',desc:"Charmant appartement colonial rénové. Hauts plafonds, parquet massif, moulures d'époque. Cuisine moderne, salle de bain en marbre. Balcon sur rue arborée. Immeuble de caractère.",features:['Cachet colonial','Parquet massif','Balcon','Rénové'],photos:['🏛️'],date:'2026-05-20',agent:'Agence Soleil NC',tel:'+687 43 97 67',ref:'ASN-2026-034'},
+  {id:7,titre:'Villa BBC neuve — Vue mer & îlots — Mont-Dore',type:'Villa',surface:185,pieces:7,chambres:5,prix:78000000,statut:'En vente',dpe:'A',ville:'Mont-Dore',quartier:'Normandie',desc:"Villa neuve livrée 2026. Architecture contemporaine, grandes ouvertures sur mer et îlots. 5 chambres en suite, cuisine pro. Piscine 10x4m, pool-house, jardin paysagé. Panneaux solaires.",features:['Neuve 2026','Piscine 10x4m','Vue îlots','Solaire','DPE A'],photos:['🌅'],date:'2026-06-01',agent:'NC Immobilier Prestige',tel:'+687 27 73 00',ref:'NCI-2026-052'},
+  {id:8,titre:'F1 bis — Bon plan investisseur — Magenta',type:'Appartement',surface:38,pieces:2,chambres:1,prix:10200000,statut:'En vente',dpe:'D',ville:'Nouméa',quartier:'Magenta',desc:"F1 bis avec coin chambre séparé. Idéal étudiant ou investisseur. Cuisine équipée, salle d'eau refaite. Charges 18 000 XPF/mois. Proche port de plaisance et marché Magenta.",features:['Proche port','Transports','Charges faibles'],photos:['🏙️'],date:'2026-05-15',agent:'Particulier',tel:'+687 77 44 22',ref:'PART-2026-031'},
+  {id:9,titre:'Terrain 600m² constructible — Vue mer — Boulari',type:'Terrain',surface:600,pieces:0,chambres:0,prix:22000000,statut:'En vente',dpe:'—',ville:'Mont-Dore',quartier:'Boulari',desc:"Terrain plat constructible avec vue directe sur mer et îlots. Viabilités en limite de propriété. PLU favorable. Accès goudronné. Quartier résidentiel, 20 min de Nouméa.",features:['Vue mer','Viabilisé','PLU favorable','600m²'],photos:['🌿'],date:'2026-05-30',agent:'Foncier NC',tel:'+687 28 55 55',ref:'FNC-2026-007'},
+  {id:10,titre:'Duplex attique F5 — Terrasse 40m² — Tina',type:'Appartement',surface:105,pieces:5,chambres:3,prix:62000000,statut:'En vente',dpe:'B',ville:'Nouméa',quartier:'Tina',desc:"Exceptionnel duplex en attique. Séjour double hauteur 50m², cuisine haut de gamme. Suite parentale avec dressing. Terrasse 40m² vue 360° baie et collines. 2 parkings.",features:['Duplex','Terrasse 40m²','Vue 360°','2 parkings','Attique'],photos:['🌆'],date:'2026-06-06',agent:'NC Immobilier Prestige',tel:'+687 27 73 00',ref:'NCI-2026-058'},
+  {id:11,titre:'Maison F4 jardin tropical — Koutio Dumbéa',type:'Maison',surface:95,pieces:4,chambres:3,prix:38000000,statut:'En vente',dpe:'C',ville:'Dumbéa',quartier:'Koutio',desc:"Maison de plain-pied dans quartier pavillonnaire. 3 chambres, séjour 30m². Jardin tropical 350m² clos avec terrasse et barbecue. Carport double. École et commerces à pied.",features:['Jardin 350m²','Carport double','Quartier calme','École à pied'],photos:['🌺'],date:'2026-05-25',agent:'Casa Immo Dumbéa',tel:'+687 35 88 00',ref:'CID-2026-041'},
+  {id:12,titre:'Studio vue mer — Piscine résidence — Anse Vata',type:'Studio',surface:29,pieces:1,chambres:0,prix:14500000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Anse Vata',desc:"Studio vue mer directe dans résidence sécurisée. Balcon vue lagon. Piscine de la résidence. Idéal résidence secondaire ou locatif saisonnier. Loyer estimé 100 000 XPF/mois.",features:['Vue mer','Balcon','Piscine résidence','Saisonnier'],photos:['🌊'],date:'2026-06-02',agent:'Agence Soleil NC',tel:'+687 43 97 67',ref:'ASN-2026-067'},
+]
 
-const MAP_POSITIONS={'Anse Vata':{x:72,y:78},'Baie des Citrons':{x:68,y:72},'Val Plaisance':{x:65,y:65},'Faubourg Blanchot':{x:55,y:55},'Motor Pool':{x:50,y:50},'Magenta':{x:48,y:42},'Dumbéa sur Mer':{x:35,y:35},'Mont-Dore':{x:80,y:85},'Ouémo':{x:52,y:48}};
+const MAP_POSITIONS={'Anse Vata':{x:72,y:78},'Baie des Citrons':{x:68,y:72},'Val Plaisance':{x:65,y:65},'Faubourg Blanchot':{x:55,y:55},'Motor Pool':{x:50,y:50},'Magenta':{x:48,y:42},'Dumbéa sur Mer':{x:35,y:35},'Boulari':{x:32,y:38},'Mont-Dore':{x:80,y:85},'La Coulée':{x:78,y:80},'Ouémo':{x:52,y:48},'Tina':{x:62,y:60},'Centre-ville':{x:50,y:52},'Artillerie':{x:52,y:54},'Nouville':{x:45,y:55},'Numbo':{x:28,y:40},'Numbo':{x:28,y:40}};
 const PIN_COLOR={'En vente':'#B83A2A','Compromis':'#B8922A','Loué':'#2A7A4B','Vendu':'#2A4A7A'};
 const DPE_COLOR2={A:'#2d7f2d',B:'#5aaf2d',C:'#9ecf2d',D:'#f0c020',E:'#f08020',F:'#e04020'};
 const STATUT_BADGE2={'En vente':'tag-gold','Compromis':'tag-blue','Vendu':'tag-green','Loué':'tag-green'};
@@ -1916,12 +1920,13 @@ function openBien(id){
   const b=BIENS_DATA.find(x=>x.id===id);if(!b)return;
   const fin=document.getElementById('fin-prix');if(fin){fin.value=b.prix;calcFin();}
   const ov=document.createElement('div');
+  ov.id='bien-popup';
   ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px';
-  ov.onclick=e=>{if(e.target===ov)document.body.removeChild(ov);};
+  ov.onclick=e=>{if(e.target===ov)ov.remove();};
   ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
       <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);flex:1">${b.titre}</h3>
-      <button onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);margin-left:8px">✕</button>
+      <button onclick="closeLandingPopup()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);margin-left:8px">✕</button>
     </div>
     <div style="background:var(--warm);border-radius:10px;height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:12px">${b.photos[0]}</div>
     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
@@ -1936,8 +1941,8 @@ function openBien(id){
     <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
     <div style="font-size:11px;color:var(--mid);margin-bottom:14px">${conv(Math.round(b.prix/b.surface))}/m² · Via ${b.agent}</div>
     <div style="display:flex;gap:7px;flex-wrap:wrap">
-      <button class="btn btn-gold" onclick="go('rdv');document.body.removeChild(this.closest('[style*=fixed]'))">📅 RDV visite</button>
-      <button class="btn btn-outline" onclick="go('financement');document.body.removeChild(this.closest('[style*=fixed]'))">💰 Financement</button>
+      <button class="btn btn-gold" onclick="go('rdv');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">📅 RDV visite</button>
+      <button class="btn btn-outline" onclick="go('financement');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">💰 Financement</button>
     </div>
   </div>`;
   document.body.appendChild(ov);
@@ -2064,12 +2069,14 @@ const APP_STATE = {
 };
 
 let ldView='grid';
-let ldFiltered=[...BIENS_DATA];
+let ldFiltered=[];
 
 function showLanding(){
   document.getElementById('landing-page').style.display='flex';
+  ldFiltered=[...BIENS_DATA];
   renderLandingBiens();
-  document.getElementById('ld-nb-annonces').textContent=BIENS_DATA.length;
+  const nbEl=document.getElementById('ld-nb-annonces');
+  if(nbEl) nbEl.textContent=BIENS_DATA.length;
 }
 
 function landingSearch(){
@@ -2122,10 +2129,10 @@ function renderLandingBiens(){
     container.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px';
     container.innerHTML=biens.map(b=>`
       <div class="ld-card" onclick="openLandingBien(${b.id})">
-        <div class="ld-card-img">
-          ${b.photos[0]}
+        <div class="ld-card-img" style="background:${b.type==='Villa'?'linear-gradient(135deg,#e8f0d8,#d0e8a0)':b.type==='Maison'?'linear-gradient(135deg,#e8e0d0,#d8c8a8)':b.type==='Terrain'?'linear-gradient(135deg,#d8e8d0,#b8d8a0)':b.type==='Studio'?'linear-gradient(135deg,#e0e0f0,#c8c8e8)':'linear-gradient(135deg,#f5f0e8,#e8dcc8)'}">
+          <span style="font-size:52px">${b.photos[0]}</span>
           <div class="ld-badge ld-badge-${b.statut==='En vente'?'vente':'compromis'}">${b.statut}</div>
-          <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.5);color:#fff;padding:2px 7px;border-radius:4px;font-size:10px">DPE ${b.dpe}</div>
+          ${b.dpe!=='—'?`<div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.5);color:#fff;padding:2px 7px;border-radius:4px;font-size:10px">DPE ${b.dpe}</div>`:''}
         </div>
         <div class="ld-card-body">
           <div class="ld-card-price">${conv(b.prix)}</div>
@@ -2146,7 +2153,9 @@ function renderLandingBiens(){
     container.style.cssText='display:flex;flex-direction:column;gap:10px';
     container.innerHTML=biens.map(b=>`
       <div class="ld-list-item" onclick="openLandingBien(${b.id})">
-        <div class="ld-list-img">${b.photos[0]}</div>
+        <div class="ld-list-img" style="background:${b.type==='Villa'?'linear-gradient(135deg,#e8f0d8,#d0e8a0)':b.type==='Maison'?'linear-gradient(135deg,#e8e0d0,#d8c8a8)':b.type==='Terrain'?'linear-gradient(135deg,#d8e8d0,#b8d8a0)':b.type==='Studio'?'linear-gradient(135deg,#e0e0f0,#c8c8e8)':'linear-gradient(135deg,#f5f0e8,#e8dcc8)'}">
+          <span style="font-size:40px">${b.photos[0]}</span>
+        </div>
         <div class="ld-list-body">
           <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:8px">
             <div>
@@ -2176,38 +2185,117 @@ function renderLandingBiens(){
   }
 }
 
+function closeLandingPopup(){
+  const ov=document.getElementById('landing-popup');
+  if(ov) ov.remove();
+}
+
 function openLandingBien(id){
   const b=BIENS_DATA.find(x=>x.id===id);
   if(!b) return;
-  // Afficher popup détail
+  const pm2=conv(Math.round(b.prix/(b.surface||1)));
+  const featHTML=(b.features||[]).map(f=>`<span style="background:var(--warm);padding:3px 10px;border-radius:20px;font-size:11px;color:var(--dark)">${f}</span>`).join('');
   const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;display:flex;align-items:center;justify-content:center;padding:12px;overflow-y:auto';
   ov.onclick=e=>{if(e.target===ov)document.body.removeChild(ov);};
-  ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:88vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);flex:1;padding-right:12px">${b.titre}</div>
-      <button onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
+  const ctaBtns = APP_STATE.loggedIn ? `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button class="btn btn-gold btn-full" onclick="contactVendeur(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Envoyer un message</button>
+      <button class="btn btn-outline btn-full" onclick="planifierVisite(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">📅 Demander une visite</button>
     </div>
-    <div style="background:var(--warm);height:160px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:56px;margin-bottom:14px">${b.photos[0]}</div>
-    <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--dark);margin-bottom:4px">${conv(b.prix)}</div>
-    <div style="font-size:12px;color:var(--mid);margin-bottom:12px">${conv(Math.round(b.prix/b.surface))}/m² · ${b.agent}</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
-      <span class="tag tag-gold">${b.surface} m²</span>
-      <span class="tag tag-blue">${b.pieces} pièces</span>
-      <span class="tag tag-blue">${b.type}</span>
-      <span class="tag ${b.statut==='En vente'?'tag-gold':'tag-blue'}">${b.statut}</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <button class="btn btn-dark btn-full btn-sm" onclick="simulerFinancement(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">💰 Simuler financement</button>
+      <button class="btn btn-outline btn-full btn-sm" onclick="ajouterFavori(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">❤️ Favoris</button>
+    </div>` : `
+    <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:12px;padding:16px;text-align:center;margin-bottom:10px">
+      <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:10px">🔒 Créez un compte gratuit pour contacter ce vendeur</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="contactFromLanding(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Contacter le vendeur</button>
+        <button style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer" onclick="document.body.removeChild(this.closest('[style*=fixed]'))">Plus tard</button>
+      </div>
     </div>
-    <div style="font-size:12px;color:var(--mid);margin-bottom:8px">📍 ${b.quartier} · ${b.ville}</div>
-    <div style="font-size:13px;line-height:1.6;color:var(--dark);margin-bottom:16px">${b.desc}</div>
-    <div style="background:var(--warm);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--mid);margin-bottom:16px">
-      🔒 Pour contacter le vendeur et prendre rendez-vous, créez un compte gratuit.
+    <button class="btn btn-outline btn-full btn-sm" onclick="simulerFinancementPublic(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">💰 Simuler le financement</button>`;
+  ov.innerHTML=`<div style="background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">
+    <div style="background:linear-gradient(135deg,#1C1A16,#2a2520);height:180px;display:flex;align-items:center;justify-content:center;font-size:68px;border-radius:20px 20px 0 0;position:relative">
+      ${b.photos[0]}
+      <button onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
+      <div style="position:absolute;bottom:10px;left:12px;display:flex;gap:6px">
+        <span style="background:${b.statut==='En vente'?'var(--gold)':'var(--blue)'};color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${b.statut}</span>
+        ${b.dpe&&b.dpe!=='—'?`<span style="background:#2d7f2d;color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">DPE ${b.dpe}</span>`:''}
+      </div>
+      <div style="position:absolute;bottom:10px;right:12px;font-size:10px;color:rgba(255,255,255,0.4)">Réf. ${b.ref||'—'}</div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-gold" onclick="contactFromLanding(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Contacter le vendeur</button>
+    <div style="padding:20px">
+      <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--dark)">${conv(b.prix)}</div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:8px">${pm2}/m² · ${b.type} · ${b.surface} m²</div>
+      <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--dark);margin-bottom:4px">${b.titre}</div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:14px">📍 ${b.quartier}, ${b.ville}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--dark)">${b.surface}</div><div style="font-size:10px;color:var(--mid)">m²</div></div>
+        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--dark)">${b.pieces||'—'}</div><div style="font-size:10px;color:var(--mid)">pièces</div></div>
+        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--dark)">${b.chambres!==undefined?b.chambres:'—'}</div><div style="font-size:10px;color:var(--mid)">chambres</div></div>
+      </div>
+      ${featHTML?`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">${featHTML}</div>`:''}
+      <div style="font-size:13px;line-height:1.7;color:var(--dark);margin-bottom:14px;padding:12px;background:var(--warm);border-radius:10px">${b.desc}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--warm);border-radius:10px;margin-bottom:14px">
+        <div><div style="font-size:13px;font-weight:600;color:var(--dark)">🏢 ${b.agent}</div><div style="font-size:11px;color:var(--mid)">${b.tel||'Via messagerie'}</div></div>
+        <div style="font-size:10px;color:var(--soft)">Publié le ${b.date}</div>
+      </div>
+      ${ctaBtns}
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+function planifierVisite(bienId){
+  contactVendeur(bienId);
+  setTimeout(()=>{
+    const conv=CONVERSATIONS.find(x=>x.bien===bienId);
+    if(conv){
+      const now=new Date();
+      const t=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+      conv.messages.push({from:'me',text:'Bonjour, je suis intéressé par votre bien et souhaiterais organiser une visite. Quelles sont vos disponibilités ?',time:t});
+      renderMessages(conv);
+    }
+  },400);
+}
+
+function simulerFinancement(prix){
+  hideLanding();
+  const el=document.getElementById('fin-prix');
+  if(el){el.value=prix;calcFin();}
+  go('financement');
+}
+
+function simulerFinancementPublic(prix){
+  const capital=Math.round(prix*0.8);
+  const r=3.5/100/12, n=240;
+  const mensuel=Math.round(capital*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1));
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px';
+  ov.onclick=e=>{if(e.target===ov)document.body.removeChild(ov);};
+  ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:24px;max-width:360px;width:100%">
+    <h3 style="font-family:'Playfair Display',serif;margin-bottom:16px;font-size:18px">💰 Simulation rapide</h3>
+    <div style="background:var(--warm);border-radius:10px;padding:12px;margin-bottom:12px;text-align:center">
+      <div style="font-size:11px;color:var(--mid)">Prix du bien</div>
+      <div style="font-size:22px;font-weight:700;color:var(--dark)">${conv(prix)}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:11px;color:var(--mid)">Apport 20%</div><div style="font-size:16px;font-weight:700;color:var(--dark)">${conv(Math.round(prix*0.2))}</div></div>
+      <div style="background:var(--gold);border-radius:8px;padding:10px;text-align:center"><div style="font-size:11px;color:rgba(255,255,255,0.7)">Mensualité</div><div style="font-size:16px;font-weight:700;color:#fff">${conv(mensuel)}</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--mid);margin-bottom:14px;text-align:center">Sur 20 ans à 3.5% · Pour une simulation complète, créez un compte gratuit.</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-gold btn-full" onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))">Créer un compte</button>
       <button class="btn btn-outline" onclick="document.body.removeChild(this.closest('[style*=fixed]'))">Fermer</button>
     </div>
   </div>`;
   document.body.appendChild(ov);
+}
+
+function ajouterFavori(id){
+  const b=BIENS_DATA.find(x=>x.id===id);
+  if(b) alert('❤️ "'+b.titre+'" ajouté à vos favoris !');
 }
 
 function contactFromLanding(bienId){
