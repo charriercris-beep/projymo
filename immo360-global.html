@@ -701,6 +701,85 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
+    <!-- ==================== MARKETPLACE ==================== -->
+    <div class="panel" id="panel-marketplace">
+      <!-- FILTRES -->
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:140px">
+            <select id="mkt-type" onchange="filterMarketplace()" style="width:100%">
+              <option value="">Tous les types</option>
+              <option value="Appartement">Appartement</option>
+              <option value="Maison">Maison</option>
+              <option value="Villa">Villa</option>
+              <option value="Studio">Studio</option>
+              <option value="Terrain">Terrain</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:140px">
+            <select id="mkt-statut" onchange="filterMarketplace()" style="width:100%">
+              <option value="">Tous statuts</option>
+              <option value="En vente">En vente</option>
+              <option value="Loué">En location</option>
+              <option value="Compromis">Compromis</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:140px">
+            <select id="mkt-tri" onchange="filterMarketplace()" style="width:100%">
+              <option value="date">Plus récents</option>
+              <option value="prix_asc">Prix croissant</option>
+              <option value="prix_desc">Prix décroissant</option>
+              <option value="surface">Surface</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:140px">
+            <input type="text" id="mkt-search" placeholder="🔍 Rechercher..." oninput="filterMarketplace()" style="width:100%">
+          </div>
+          <div id="mkt-count" style="font-size:12px;color:var(--mid);white-space:nowrap"></div>
+        </div>
+      </div>
+
+      <!-- VUE TOGGLE -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <h2 style="font-size:18px;font-family:'Playfair Display',serif" id="lbl-marketplace">Annonces en ligne</h2>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm" id="btn-view-grid" onclick="setMktView('grid')" style="background:var(--gold);color:#fff">⊞ Grille</button>
+          <button class="btn btn-outline btn-sm" id="btn-view-map" onclick="setMktView('map')">🗺️ Carte</button>
+        </div>
+      </div>
+
+      <!-- VUE GRILLE -->
+      <div id="mkt-grid-view">
+        <div id="mkt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
+      </div>
+
+      <!-- VUE CARTE -->
+      <div id="mkt-map-view" style="display:none">
+        <div class="card">
+          <div id="mkt-map" style="width:100%;height:400px;background:linear-gradient(135deg,#e8f4f8,#d4e8f0);border-radius:10px;position:relative;overflow:hidden">
+            <!-- Fond carte stylisé -->
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+              <div style="text-align:center">
+                <div style="font-size:48px;margin-bottom:8px">🗺️</div>
+                <div style="font-size:14px;color:var(--mid);font-weight:500">Carte de Nouméa</div>
+                <div style="font-size:12px;color:var(--soft)">Nouvelle-Calédonie</div>
+              </div>
+            </div>
+            <!-- Pins des biens -->
+            <div id="map-pins"></div>
+          </div>
+          <!-- Légende -->
+          <div style="display:flex;gap:14px;margin-top:10px;font-size:11px;flex-wrap:wrap">
+            <span>🔴 En vente</span>
+            <span>🟡 Compromis</span>
+            <span>🟢 Location</span>
+          </div>
+        </div>
+        <!-- Liste compacte sous la carte -->
+        <div id="mkt-map-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:14px"></div>
+      </div>
+    </div>
+
     <!-- ==================== BIENS ==================== -->
     <div class="panel" id="panel-biens">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -860,17 +939,17 @@ const MENUS = {
     {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
   ],
   buy:[
-    {s:'Recherche',items:[{ico:'🏠',k:'dashboard'},{ico:'🔍',k:'biens'},{ico:'💰',k:'financement'},{ico:'📅',k:'rdv'}]},
+    {s:'Recherche',items:[{ico:'🏠',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💰',k:'financement'},{ico:'📅',k:'rdv'}]},
     {s:'Outils',items:[{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
   ],
   agt:[
-    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'🏠',k:'biens'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'}]},
+    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'}]},
     {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'📅',k:'rdv'},{ico:'🔄',k:'suivi'},{ico:'📈',k:'stats'}]},
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques'},
-  en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics'},
+  fr:{dashboard:'Tableau de bord',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne'},
+  en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
 
@@ -917,6 +996,7 @@ function go(panel){
   if(panel==='dashboard') buildDashboard();
   if(panel==='estimation'){calcEstim();buildDPE();buildMarketSources();buildQuartiersTable();}
   if(panel==='financement') calcFin();
+  if(panel==='marketplace') buildMarketplace();
   if(panel==='rdv') buildCal();
   if(panel==='biens') buildBiens();
   if(panel==='suivi') buildSuivi();
@@ -1465,6 +1545,136 @@ function confirmRdv(){
   const n=document.getElementById('notif-rdv');
   n.textContent='✅ Rendez-vous confirmé ! Un email de confirmation a été envoyé.';
   n.classList.add('show');
+}
+
+// =============================================
+// MARKETPLACE
+// =============================================
+let mktView='grid';
+let mktFiltered=[];
+
+const BIENS_DATA=[
+  {id:1,titre:'Appartement Baie des Citrons',type:'Appartement',surface:75,pieces:4,prix:38000000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Baie des Citrons',desc:'Magnifique appartement lumineux avec vue dégagée sur la baie. Cuisine ouverte, terrasse, résidence sécurisée.',photos:['🏠'],date:'2026-06-01',agent:'Agence Soleil'},
+  {id:2,titre:'Villa Anse Vata — Vue lagon',type:'Villa',surface:200,pieces:6,prix:120000000,statut:'En vente',dpe:'B',ville:'Nouméa',quartier:'Anse Vata',desc:"Villa d'exception avec vue panoramique sur le lagon. Piscine, jardin, garage double.",photos:['🏡'],date:'2026-05-28',agent:'NC Immobilier'},
+  {id:3,titre:'Studio Motor Pool',type:'Studio',surface:28,pieces:1,prix:12000000,statut:'En vente',dpe:'D',ville:'Nouméa',quartier:'Motor Pool',desc:'Studio fonctionnel idéal investissement locatif. Proche commodités et transports.',photos:['🏢'],date:'2026-05-20',agent:'Particulier'},
+  {id:4,titre:'Appartement F3 Val Plaisance',type:'Appartement',surface:68,pieces:3,prix:45000000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Val Plaisance',desc:'Bel appartement traversant, lumineux. Terrasse couverte, parking privatif.',photos:['🏠'],date:'2026-06-03',agent:"L'Agence Immo"},
+  {id:5,titre:'Maison F4 Dumbéa sur Mer',type:'Maison',surface:140,pieces:5,prix:55000000,statut:'En vente',dpe:'B',ville:'Dumbéa',quartier:'Dumbéa sur Mer',desc:'Belle maison familiale avec jardin et terrasse. Quartier calme, proche écoles.',photos:['🏘️'],date:'2026-06-05',agent:'Casa Immo'},
+  {id:6,titre:'Appartement F2 Faubourg Blanchot',type:'Appartement',surface:52,pieces:2,prix:28000000,statut:'Compromis',dpe:'C',ville:'Nouméa',quartier:'Faubourg Blanchot',desc:'Charmant appartement colonial rénové. Cachet authentique, parquet, hauts plafonds.',photos:['🏠'],date:'2026-05-15',agent:'Agence Soleil'},
+  {id:7,titre:'Villa F5 Mont-Dore',type:'Villa',surface:180,pieces:6,prix:72000000,statut:'En vente',dpe:'A',ville:'Mont-Dore',quartier:'Mont-Dore',desc:'Villa neuve BBC, grandes baies vitrées, vue sur la mer. Piscine à débordement.',photos:['🏡'],date:'2026-06-04',agent:'NC Immobilier'},
+  {id:8,titre:'Appartement F1 Magenta',type:'Studio',surface:35,pieces:1,prix:9900000,statut:'En vente',dpe:'D',ville:'Nouméa',quartier:'Magenta',desc:'Appartement pratique, idéal premier achat ou investissement. Proche port et centre-ville.',photos:['🏢'],date:'2026-05-10',agent:'Particulier'},
+];
+
+const MAP_POSITIONS={'Anse Vata':{x:72,y:78},'Baie des Citrons':{x:68,y:72},'Val Plaisance':{x:65,y:65},'Faubourg Blanchot':{x:55,y:55},'Motor Pool':{x:50,y:50},'Magenta':{x:48,y:42},'Dumbéa sur Mer':{x:35,y:35},'Mont-Dore':{x:80,y:85},'Ouémo':{x:52,y:48}};
+const PIN_COLOR={'En vente':'#B83A2A','Compromis':'#B8922A','Loué':'#2A7A4B','Vendu':'#2A4A7A'};
+const DPE_COLOR2={A:'#2d7f2d',B:'#5aaf2d',C:'#9ecf2d',D:'#f0c020',E:'#f08020',F:'#e04020'};
+const STATUT_BADGE2={'En vente':'tag-gold','Compromis':'tag-blue','Vendu':'tag-green','Loué':'tag-green'};
+
+function buildMarketplace(){mktFiltered=[...BIENS_DATA];filterMarketplace();}
+
+function filterMarketplace(){
+  const type=document.getElementById('mkt-type')?.value||'';
+  const statut=document.getElementById('mkt-statut')?.value||'';
+  const tri=document.getElementById('mkt-tri')?.value||'date';
+  const search=(document.getElementById('mkt-search')?.value||'').toLowerCase();
+  mktFiltered=BIENS_DATA.filter(b=>{
+    if(type&&b.type!==type)return false;
+    if(statut&&b.statut!==statut)return false;
+    if(search&&!b.titre.toLowerCase().includes(search)&&!b.quartier.toLowerCase().includes(search))return false;
+    return true;
+  });
+  if(tri==='prix_asc')mktFiltered.sort((a,b)=>a.prix-b.prix);
+  else if(tri==='prix_desc')mktFiltered.sort((a,b)=>b.prix-a.prix);
+  else if(tri==='surface')mktFiltered.sort((a,b)=>b.surface-a.surface);
+  else mktFiltered.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const c=document.getElementById('mkt-count');
+  if(c)c.textContent=mktFiltered.length+' bien(s)';
+  if(mktView==='grid')renderMktGrid();else renderMktMap();
+  setTimeout(applyMobileLayout,50);
+}
+
+function setMktView(v){
+  mktView=v;
+  document.getElementById('mkt-grid-view').style.display=v==='grid'?'block':'none';
+  document.getElementById('mkt-map-view').style.display=v==='map'?'block':'none';
+  const bg=document.getElementById('btn-view-grid');
+  const bm=document.getElementById('btn-view-map');
+  bg.style.background=v==='grid'?'var(--gold)':'transparent';bg.style.color=v==='grid'?'#fff':'var(--gold)';
+  bm.style.background=v==='map'?'var(--gold)':'transparent';bm.style.color=v==='map'?'#fff':'var(--gold)';
+  if(v==='grid')renderMktGrid();else renderMktMap();
+}
+
+function renderMktGrid(){
+  const g=document.getElementById('mkt-grid');if(!g)return;
+  if(!mktFiltered.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)">Aucun bien trouvé.</div>';return;}
+  g.innerHTML=mktFiltered.map(b=>`
+    <div class="card" style="margin-bottom:0;cursor:pointer" onclick="openBien(${b.id})">
+      <div style="background:linear-gradient(135deg,var(--warm),var(--cream));border-radius:10px;height:110px;display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:10px;position:relative">
+        ${b.photos[0]}
+        <div style="position:absolute;top:6px;right:6px"><span class="tag ${STATUT_BADGE2[b.statut]||'tag-gold'}">${b.statut}</span></div>
+        <div style="position:absolute;top:6px;left:6px;background:${DPE_COLOR2[b.dpe]||'#9ecf2d'};color:#fff;padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700">DPE ${b.dpe}</div>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:500;margin-bottom:3px">${b.titre}</div>
+      <div style="font-size:10px;color:var(--mid);margin-bottom:6px">📍 ${b.quartier} · ${b.ville}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="tag tag-gold">${b.surface} m²</span>
+        <span class="tag tag-blue">${b.pieces} pcs</span>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
+      <div style="font-size:10px;color:var(--mid);margin-top:1px">${conv(Math.round(b.prix/b.surface))}/m²</div>
+      <div style="display:flex;gap:5px;margin-top:10px">
+        <button class="btn btn-gold btn-sm" onclick="event.stopPropagation();go('rdv')">📅 Visiter</button>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openBien(${b.id})">Détail</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderMktMap(){
+  const p=document.getElementById('map-pins');const l=document.getElementById('mkt-map-list');if(!p)return;
+  p.innerHTML=mktFiltered.map(b=>{
+    const pos=MAP_POSITIONS[b.quartier]||{x:50+Math.random()*15,y:50+Math.random()*15};
+    const c=PIN_COLOR[b.statut]||'#B83A2A';
+    return `<div onclick="openBien(${b.id})" title="${b.titre}" style="position:absolute;left:${pos.x}%;top:${pos.y}%;transform:translate(-50%,-100%);cursor:pointer;text-align:center;z-index:10">
+      <div style="background:${c};color:#fff;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3)">${conv(b.prix)}</div>
+      <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid ${c};margin:0 auto"></div>
+    </div>`;
+  }).join('');
+  if(l)l.innerHTML=mktFiltered.map(b=>`
+    <div class="card" style="margin-bottom:0;padding:10px;cursor:pointer" onclick="openBien(${b.id})">
+      <div style="font-size:12px;font-weight:500;margin-bottom:1px">${b.titre}</div>
+      <div style="font-size:10px;color:var(--mid)">📍 ${b.quartier}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--gold);margin-top:3px">${conv(b.prix)}</div>
+    </div>`).join('');
+}
+
+function openBien(id){
+  const b=BIENS_DATA.find(x=>x.id===id);if(!b)return;
+  const fin=document.getElementById('fin-prix');if(fin){fin.value=b.prix;calcFin();}
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px';
+  ov.onclick=e=>{if(e.target===ov)document.body.removeChild(ov);};
+  ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+      <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);flex:1">${b.titre}</h3>
+      <button onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);margin-left:8px">✕</button>
+    </div>
+    <div style="background:var(--warm);border-radius:10px;height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:12px">${b.photos[0]}</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
+      <span class="tag tag-gold">${b.surface} m²</span>
+      <span class="tag tag-blue">${b.pieces} pièces</span>
+      <span class="tag tag-blue">${b.type}</span>
+      <span class="tag ${STATUT_BADGE2[b.statut]||'tag-gold'}">${b.statut}</span>
+      <span style="background:${DPE_COLOR2[b.dpe]};color:#fff;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700">DPE ${b.dpe}</span>
+    </div>
+    <div style="font-size:11px;color:var(--mid);margin-bottom:8px">📍 ${b.quartier} · ${b.ville}</div>
+    <div style="font-size:13px;line-height:1.6;margin-bottom:12px">${b.desc}</div>
+    <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
+    <div style="font-size:11px;color:var(--mid);margin-bottom:14px">${conv(Math.round(b.prix/b.surface))}/m² · Via ${b.agent}</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn btn-gold" onclick="go('rdv');document.body.removeChild(this.closest('[style*=fixed]'))">📅 RDV visite</button>
+      <button class="btn btn-outline" onclick="go('financement');document.body.removeChild(this.closest('[style*=fixed]'))">💰 Financement</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
 }
 
 // =============================================
