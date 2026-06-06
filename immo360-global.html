@@ -4853,51 +4853,83 @@ function renderArtisansGrid(){
     return;
   }
 
-  grid.innerHTML = artisansFiltres.map(a=>`
-    <div class="artisan-card" onclick="openArtisanDetail(${a.id})">
-      <!-- TOP : EMOJI + NOM + NOTE -->
-      <div style="padding:16px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--warm)">
-        <div style="width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--warm),var(--cream));display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;border:1px solid var(--warm)">${a.emoji}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.nom}</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-            <span style="color:#F59E0B;font-size:12px">${'★'.repeat(Math.round(a.note))}</span>
-            <span style="font-size:12px;font-weight:600;color:var(--dark)">${a.note}</span>
-            <span style="font-size:11px;color:var(--mid)">(${a.avis} avis)</span>
+  // Palette de couleurs par catégorie
+  const CAT_COLORS = {
+    peinture:   {bg:'#FFF7ED',accent:'#EA580C',light:'#FED7AA'},
+    plomberie:  {bg:'#EFF6FF',accent:'#2563EB',light:'#BFDBFE'},
+    electricite:{bg:'#FEFCE8',accent:'#CA8A04',light:'#FEF08A'},
+    cuisine:    {bg:'#FFF1F2',accent:'#E11D48',light:'#FECDD3'},
+    'salle-de-bain':{bg:'#F0FDFA',accent:'#0D9488',light:'#99F6E4'},
+    carrelage:  {bg:'#F5F3FF',accent:'#7C3AED',light:'#DDD6FE'},
+    menuiserie: {bg:'#ECFDF5',accent:'#059669',light:'#A7F3D0'},
+    maconnerie: {bg:'#FDF4FF',accent:'#9333EA',light:'#E9D5FF'},
+    piscine:    {bg:'#EFF6FF',accent:'#0284C7',light:'#BAE6FD'},
+    jardin:     {bg:'#F0FDF4',accent:'#16A34A',light:'#BBF7D0'},
+    climatisation:{bg:'#F0F9FF',accent:'#0369A1',light:'#BAE6FD'},
+    domotique:  {bg:'#F8FAFC',accent:'#475569',light:'#CBD5E1'},
+    photo:      {bg:'#1C1A16',accent:'#B8922A',light:'#F0D99A'},
+    homestaging:{bg:'#FFF7ED',accent:'#C2410C',light:'#FED7AA'},
+  };
+  const defaultColor = {bg:'#F8FAFC',accent:'#475569',light:'#CBD5E1'};
+
+  grid.innerHTML = artisansFiltres.map(a=>{
+    const col = CAT_COLORS[a.categorie] || defaultColor;
+    const isPhoto = a.categorie === 'photo';
+    const prix = typeof a.prix_min==='number'&&a.prix_min<1000 ? a.prix_min+'–'+a.prix_max+' '+a.unite : conv(a.prix_min)+' min';
+    return `
+    <div class="artisan-card" onclick="openArtisanDetail(${a.id})" style="border:none;box-shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04)">
+
+      <!-- HEADER COLORÉ -->
+      <div style="background:${col.bg};padding:16px;border-bottom:3px solid ${col.accent}20;position:relative">
+        <div style="display:flex;align-items:center;gap:12px">
+          <!-- ICÔNE -->
+          <div style="width:56px;height:56px;border-radius:14px;background:${col.accent};display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 10px ${col.accent}40">${a.emoji}</div>
+          <!-- INFOS -->
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:800;color:${isPhoto?'#fff':'#111827'};margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.nom}</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+              <span style="color:#F59E0B;font-size:13px;letter-spacing:-1px">${'★'.repeat(Math.round(a.note))}</span>
+              <span style="font-size:13px;font-weight:700;color:${isPhoto?'#fff':'#111827'}">${a.note}</span>
+              <span style="font-size:11px;color:${isPhoto?'rgba(255,255,255,0.6)':'#6B7280'}">${a.avis} avis</span>
+            </div>
+            <div style="font-size:11px;color:${isPhoto?'rgba(255,255,255,0.5)':'#9CA3AF'}">${a.realisations} réalisations</div>
           </div>
-          <div style="font-size:10px;color:var(--mid)">${a.realisations} réalisations</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-          ${a.certifie?'<span style="background:#DCFCE7;color:#166534;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700">✓ Certifié</span>':''}
-          <span style="font-size:10px;font-weight:600;color:${a.disponible?'#16a34a':'#9ca3af'}">${a.disponible?'● Disponible':'○ Indispo'}</span>
+          <!-- BADGES -->
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+            ${a.certifie?`<span style="background:${col.accent};color:#fff;padding:2px 8px;border-radius:12px;font-size:9px;font-weight:800">✓ Certifié</span>`:''}
+            <span style="font-size:10px;font-weight:700;color:${a.disponible?'#16A34A':'#9CA3AF'}">${a.disponible?'● Disponible':'○ Indispo'}</span>
+          </div>
         </div>
       </div>
 
-      <!-- MILIEU : SPÉCIALITÉS + INFOS -->
-      <div style="padding:12px 16px;border-bottom:1px solid var(--warm)">
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">
-          ${a.specialites.slice(0,3).map(s=>`<span style="background:rgba(59,130,246,0.08);color:#1d4ed8;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:500">${s}</span>`).join('')}
-          ${a.specialites.length>3?`<span style="background:var(--warm);color:var(--mid);padding:3px 8px;border-radius:6px;font-size:10px">+${a.specialites.length-3}</span>`:''}
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <div style="background:var(--warm);border-radius:8px;padding:7px 10px">
-            <div style="font-size:9px;color:var(--mid);margin-bottom:1px">Tarif</div>
-            <div style="font-size:12px;font-weight:600;color:var(--dark)">${typeof a.prix_min==='number'&&a.prix_min<1000?a.prix_min+'–'+a.prix_max+' '+a.unite:conv(a.prix_min)+' min'}</div>
-          </div>
-          <div style="background:var(--warm);border-radius:8px;padding:7px 10px">
-            <div style="font-size:9px;color:var(--mid);margin-bottom:1px">Délai</div>
-            <div style="font-size:12px;font-weight:600;color:var(--dark)">${a.delai_moyen}</div>
-          </div>
+      <!-- SPÉCIALITÉS -->
+      <div style="padding:10px 14px;background:#fff;border-bottom:1px solid #F3F4F6">
+        <div style="display:flex;flex-wrap:wrap;gap:4px">
+          ${a.specialites.slice(0,3).map(s=>`<span style="background:${col.accent}15;color:${col.accent};padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;border:1px solid ${col.accent}30">${s}</span>`).join('')}
+          ${a.specialites.length>3?`<span style="background:#F3F4F6;color:#6B7280;padding:3px 9px;border-radius:20px;font-size:10px">+${a.specialites.length-3}</span>`:''}
         </div>
       </div>
 
-      <!-- BAS : BOUTONS -->
-      <div style="padding:12px 16px;display:flex;gap:6px;align-items:center">
-        <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" class="btn btn-gold btn-sm" style="flex:1;font-size:12px">📋 Devis gratuit</button>
-        <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" class="btn btn-outline btn-sm" style="font-size:12px">Voir →</button>
-        ${APP_STATE.user?.profil==='agt'?`<span style="font-size:10px;color:var(--gold);font-weight:600;white-space:nowrap">${a.commission_agent}% comm.</span>`:''}
+      <!-- TARIF + DÉLAI -->
+      <div style="padding:10px 14px;background:#fff;border-bottom:1px solid #F3F4F6;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:${col.accent}08;border:1px solid ${col.accent}20;border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;font-weight:700;color:${col.accent};text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Tarif</div>
+          <div style="font-size:12px;font-weight:700;color:#111827">${prix}</div>
+        </div>
+        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;font-weight:700;color:#16A34A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Délai</div>
+          <div style="font-size:12px;font-weight:700;color:#111827">${a.delai_moyen}</div>
+        </div>
       </div>
-    </div>`).join('');
+
+      <!-- BOUTONS -->
+      <div style="padding:12px 14px;background:#fff;display:flex;gap:6px;align-items:center">
+        <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" style="flex:1;background:${col.accent};color:#fff;border:none;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">📋 Devis gratuit</button>
+        <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" style="padding:9px 12px;border:1.5px solid ${col.accent}40;background:#fff;color:${col.accent};border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Voir →</button>
+        ${APP_STATE.user?.profil==='agt'?`<span style="font-size:10px;color:${col.accent};font-weight:700;white-space:nowrap;padding:4px 8px;background:${col.accent}10;border-radius:6px">${a.commission_agent}%</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function openArtisanDetail(id){
