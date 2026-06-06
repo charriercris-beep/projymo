@@ -331,6 +331,10 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 /* ── ÉQUIPEMENTS DROPDOWN ── */
 .eq-btn{background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s;display:inline-block;margin:1px}
 .eq-btn.active,.eq-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold-dark)}
+.eq-check{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--dark);cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid transparent;transition:.15s;white-space:nowrap}
+.eq-check:hover{background:var(--warm)}
+.eq-check input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.eq-check:has(input:checked){background:rgba(184,146,42,0.08);border-color:rgba(184,146,42,0.3);color:var(--gold-dark);font-weight:500}
 
 /* ── PAGE ACCUEIL ── */
 .landing{position:fixed;inset:0;background:var(--cream);z-index:1000;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
@@ -537,35 +541,34 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
           <option value="">⚡ DPE</option>
           <option value="A">🟢 A</option><option value="B">🟡 B+</option><option value="C">🟠 C+</option>
         </select>
-        <!-- MENU DÉROULANT ÉQUIPEMENTS -->
-        <div style="flex:1;min-width:140px;position:relative" id="equip-menu-wrap">
-          <button onclick="toggleEquipMenu()" id="equip-menu-btn" style="width:100%;border:1px solid var(--warm);padding:7px 10px;font-size:12px;border-radius:6px;color:var(--dark);background:#fff;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center">
-            <span id="equip-menu-label">✨ Équipements</span>
-            <span style="font-size:9px;color:var(--mid)">▾</span>
-          </button>
-          <div id="equip-dropdown" style="display:none;position:absolute;top:36px;left:0;right:0;background:#fff;border:1px solid var(--warm);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;padding:10px;min-width:260px">
-            <div style="display:flex;flex-wrap:wrap;gap:4px" id="equip-filters">
-              <span class="eq-btn" data-eq="Vue mer" onclick="toggleEquip(this)">🌊 Vue mer</span>
-              <span class="eq-btn" data-eq="Vue lagon" onclick="toggleEquip(this)">🐠 Vue lagon</span>
-              <span class="eq-btn" data-eq="Vue dégagée" onclick="toggleEquip(this)">🏔️ Vue dégagée</span>
-              <span class="eq-btn" data-eq="Piscine" onclick="toggleEquip(this)">🏊 Piscine</span>
-              <span class="eq-btn" data-eq="Jacuzzi" onclick="toggleEquip(this)">🛁 Jacuzzi</span>
-              <span class="eq-btn" data-eq="Garage" onclick="toggleEquip(this)">🚗 Garage</span>
-              <span class="eq-btn" data-eq="Parking" onclick="toggleEquip(this)">🅿️ Parking</span>
-              <span class="eq-btn" data-eq="Terrasse" onclick="toggleEquip(this)">🌿 Terrasse</span>
-              <span class="eq-btn" data-eq="Jardin" onclick="toggleEquip(this)">🌳 Jardin</span>
-              <span class="eq-btn" data-eq="Ascenseur" onclick="toggleEquip(this)">🛗 Ascenseur</span>
-              <span class="eq-btn" data-eq="Gardien" onclick="toggleEquip(this)">👮 Gardien</span>
-              <span class="eq-btn" data-eq="Domotique" onclick="toggleEquip(this)">🤖 Domotique</span>
-              <span class="eq-btn" data-eq="Solaire" onclick="toggleEquip(this)">☀️ Solaire</span>
-              <span class="eq-btn" data-eq="Meublé" onclick="toggleEquip(this)">🛋️ Meublé</span>
-              <span class="eq-btn" data-eq="Locataire en place" onclick="toggleEquip(this)">📈 Rendement</span>
-              <span class="eq-btn" data-eq="Saisonnier" onclick="toggleEquip(this)">📅 Saisonnier</span>
-            </div>
-            <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--warm);text-align:center">
-              <button onclick="resetAllFilters();toggleEquipMenu()" style="background:none;border:none;color:var(--gold);font-size:12px;cursor:pointer;font-weight:600">✕ Tout réinitialiser</button>
-            </div>
-          </div>
+        <!-- ÉQUIPEMENTS EN LIGNE -->
+        <div style="flex:1;min-width:200px" id="equip-menu-wrap"></div>
+      </div>
+
+      <!-- ÉQUIPEMENTS CHECKBOXES -->
+      <div style="background:#fff;padding:8px 12px 10px;border-top:1px solid var(--warm);border-radius:0">
+        <div style="font-size:10px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">✨ Équipements</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:4px" id="equip-filters">
+          <label class="eq-check"><input type="checkbox" data-eq="Vue mer" onchange="toggleEquipCheck(this)"> 🌊 Vue mer</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Vue lagon" onchange="toggleEquipCheck(this)"> 🐠 Vue lagon</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Vue dégagée" onchange="toggleEquipCheck(this)"> 🏔️ Vue dégagée</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Piscine" onchange="toggleEquipCheck(this)"> 🏊 Piscine</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Jacuzzi" onchange="toggleEquipCheck(this)"> 🛁 Jacuzzi</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Garage" onchange="toggleEquipCheck(this)"> 🚗 Garage</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Parking" onchange="toggleEquipCheck(this)"> 🅿️ Parking</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Terrasse" onchange="toggleEquipCheck(this)"> 🌿 Terrasse</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Jardin" onchange="toggleEquipCheck(this)"> 🌳 Jardin</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Ascenseur" onchange="toggleEquipCheck(this)"> 🛗 Ascenseur</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Gardien" onchange="toggleEquipCheck(this)"> 👮 Gardien</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Domotique" onchange="toggleEquipCheck(this)"> 🤖 Domotique</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Solaire" onchange="toggleEquipCheck(this)"> ☀️ Solaire</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Meublé" onchange="toggleEquipCheck(this)"> 🛋️ Meublé</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Locataire en place" onchange="toggleEquipCheck(this)"> 📈 Rendement</label>
+          <label class="eq-check"><input type="checkbox" data-eq="Saisonnier" onchange="toggleEquipCheck(this)"> 📅 Saisonnier</label>
+          <label class="eq-check"><input type="checkbox" data-eq="neuf" onchange="toggleEquipCheck(this)"> 🆕 Neuf</label>
+        </div>
+        <div style="margin-top:8px;text-align:right">
+          <button onclick="resetAllFilters()" style="background:none;border:none;color:var(--mid);font-size:11px;cursor:pointer;text-decoration:underline">Tout réinitialiser</button>
         </div>
       </div>
 
@@ -2993,19 +2996,15 @@ function updateBudgetDisplay(val){
 let activeEquips=new Set();
 function toggleEquip(el){
   const eq=el.dataset.eq;
-  if(activeEquips.has(eq)){
-    activeEquips.delete(eq);
-    el.classList.remove('active');
-  } else {
-    activeEquips.add(eq);
-    el.classList.add('active');
-  }
-  // Mettre à jour le label du bouton
-  const lbl=document.getElementById('equip-menu-label');
-  if(lbl){
-    if(activeEquips.size===0) lbl.textContent='✨ Équipements';
-    else lbl.textContent='✨ Équipements ('+activeEquips.size+')';
-  }
+  if(activeEquips.has(eq)){activeEquips.delete(eq);el.classList.remove('active');}
+  else{activeEquips.add(eq);el.classList.add('active');}
+  landingSearch();
+}
+
+function toggleEquipCheck(input){
+  const eq=input.dataset.eq;
+  if(input.checked) activeEquips.add(eq);
+  else activeEquips.delete(eq);
   landingSearch();
 }
 
@@ -3013,8 +3012,7 @@ function resetAllFilters(){
   activeEquips.clear();
   activeQuickFilter='';
   document.querySelectorAll('.eq-btn').forEach(b=>b.classList.remove('active'));
-  const lbl=document.getElementById('equip-menu-label');
-  if(lbl) lbl.textContent='✨ Équipements';
+  document.querySelectorAll('.eq-check input[type=checkbox]').forEach(cb=>cb.checked=false);
   document.querySelectorAll('.qf-btn').forEach(b=>{
     const isAll=b.dataset.type==='';
     b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
