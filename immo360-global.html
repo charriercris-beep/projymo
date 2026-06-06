@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Immo360 — Votre Expert Immobilier NC</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -327,6 +328,16 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 .qtr-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--warm);font-size:13px}
 .qtr-bar-wrap{flex:1;margin:0 12px;height:6px;background:var(--warm);border-radius:3px;overflow:hidden}
 .qtr-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-dark))}
+
+/* ── ÉTAPES FORMULAIRE DÉPÔT ── */
+.depot-step{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1}
+.depot-step-num{width:32px;height:32px;border-radius:50%;border:2px solid var(--soft);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--soft);transition:.2s}
+.depot-step-lbl{font-size:10px;color:var(--soft);transition:.2s;text-align:center}
+.depot-step.active .depot-step-num{border-color:var(--gold);background:var(--gold);color:#fff}
+.depot-step.active .depot-step-lbl{color:var(--gold);font-weight:600}
+.depot-step.done .depot-step-num{border-color:var(--green);background:var(--green);color:#fff}
+.depot-step.done .depot-step-lbl{color:var(--green)}
+.depot-step-line{flex:1;height:2px;background:var(--warm);margin-top:-20px}
 
 /* ── ÉQUIPEMENTS DROPDOWN ── */
 .eq-btn{background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s;display:inline-block;margin:1px}
@@ -1473,6 +1484,290 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
+    <!-- ==================== DÉPOSER UNE ANNONCE ==================== -->
+    <div class="panel" id="panel-depot">
+      <div style="max-width:700px;margin:0 auto">
+
+        <!-- ÉTAPES -->
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:24px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+          <div class="depot-step active" id="dstep-1" onclick="goDepotStep(1)">
+            <div class="depot-step-num">1</div>
+            <div class="depot-step-lbl">Le bien</div>
+          </div>
+          <div class="depot-step-line"></div>
+          <div class="depot-step" id="dstep-2" onclick="goDepotStep(2)">
+            <div class="depot-step-num">2</div>
+            <div class="depot-step-lbl">Photos</div>
+          </div>
+          <div class="depot-step-line"></div>
+          <div class="depot-step" id="dstep-3" onclick="goDepotStep(3)">
+            <div class="depot-step-num">3</div>
+            <div class="depot-step-lbl">Prix & détails</div>
+          </div>
+          <div class="depot-step-line"></div>
+          <div class="depot-step" id="dstep-4" onclick="goDepotStep(4)">
+            <div class="depot-step-num">4</div>
+            <div class="depot-step-lbl">Publication</div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 1 : LE BIEN -->
+        <div id="depot-step-1">
+          <div class="card">
+            <div class="card-title">🏠 Caractéristiques du bien</div>
+            <div class="field"><label>Titre de l'annonce *</label>
+              <input type="text" id="d-titre" placeholder="Ex: Appartement F4 lumineux — Vue mer Baie des Citrons">
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Type de bien *</label>
+                <select id="d-type">
+                  <option value="">Choisir...</option>
+                  <option>Appartement</option><option>Maison</option><option>Villa</option>
+                  <option>Studio</option><option>Terrain</option><option>Local commercial</option>
+                </select>
+              </div>
+              <div class="field"><label>Transaction *</label>
+                <select id="d-transaction">
+                  <option value="vente">Vente</option>
+                  <option value="location">Location</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Surface (m²) *</label><input type="number" id="d-surface" placeholder="85"></div>
+              <div class="field"><label>Pièces</label><input type="number" id="d-pieces" placeholder="4"></div>
+              <div class="field"><label>Chambres</label><input type="number" id="d-chambres" placeholder="3"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Année construction</label><input type="number" id="d-annee" placeholder="2005"></div>
+              <div class="field"><label>Étage</label><input type="number" id="d-etage" placeholder="2"></div>
+            </div>
+            <div class="field"><label>État général *</label>
+              <select id="d-etat">
+                <option value="">Choisir...</option>
+                <option value="neuf">Neuf / Récent</option>
+                <option value="excellent">Excellent état</option>
+                <option value="bon">Bon état</option>
+                <option value="moyen">État moyen</option>
+                <option value="travaux">À rénover</option>
+              </select>
+            </div>
+            <div class="field"><label>DPE (Diagnostic énergétique)</label>
+              <select id="d-dpe">
+                <option value="">Non renseigné</option>
+                <option value="A">A — Excellent</option><option value="B">B — Très bon</option>
+                <option value="C">C — Bon</option><option value="D">D — Moyen</option>
+                <option value="E">E — Médiocre</option><option value="F">F — Mauvais</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">📍 Localisation</div>
+            <div class="field-row">
+              <div class="field"><label>Ville *</label>
+                <select id="d-ville" onchange="updateQuartiers()">
+                  <option value="Nouméa">Nouméa</option>
+                  <option value="Dumbéa">Dumbéa</option>
+                  <option value="Mont-Dore">Mont-Dore</option>
+                  <option value="Païta">Païta</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+              <div class="field"><label>Quartier</label>
+                <select id="d-quartier">
+                  <option value="Anse Vata">Anse Vata</option>
+                  <option value="Baie des Citrons">Baie des Citrons</option>
+                  <option value="Val Plaisance">Val Plaisance</option>
+                  <option value="Tina">Tina</option>
+                  <option value="Faubourg Blanchot">Faubourg Blanchot</option>
+                  <option value="Motor Pool">Motor Pool</option>
+                  <option value="Magenta">Magenta</option>
+                  <option value="Ouémo">Ouémo</option>
+                  <option value="Centre-ville">Centre-ville</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label>Adresse (optionnel — non affichée publiquement)</label>
+              <input type="text" id="d-adresse" placeholder="Ex: 12 rue des Flamboyants">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">✨ Équipements & options</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px">
+              <label class="eq-check"><input type="checkbox" id="df-vue-mer"> 🌊 Vue mer</label>
+              <label class="eq-check"><input type="checkbox" id="df-vue-lagon"> 🐠 Vue lagon</label>
+              <label class="eq-check"><input type="checkbox" id="df-vue-deg"> 🏔️ Vue dégagée</label>
+              <label class="eq-check"><input type="checkbox" id="df-piscine"> 🏊 Piscine</label>
+              <label class="eq-check"><input type="checkbox" id="df-jacuzzi"> 🛁 Jacuzzi</label>
+              <label class="eq-check"><input type="checkbox" id="df-garage"> 🚗 Garage</label>
+              <label class="eq-check"><input type="checkbox" id="df-parking"> 🅿️ Parking</label>
+              <label class="eq-check"><input type="checkbox" id="df-terrasse"> 🌿 Terrasse</label>
+              <label class="eq-check"><input type="checkbox" id="df-jardin"> 🌳 Jardin</label>
+              <label class="eq-check"><input type="checkbox" id="df-ascenseur"> 🛗 Ascenseur</label>
+              <label class="eq-check"><input type="checkbox" id="df-gardien"> 👮 Gardien</label>
+              <label class="eq-check"><input type="checkbox" id="df-domotique"> 🤖 Domotique</label>
+              <label class="eq-check"><input type="checkbox" id="df-solaire"> ☀️ Solaire</label>
+              <label class="eq-check"><input type="checkbox" id="df-meuble"> 🛋️ Meublé</label>
+              <label class="eq-check"><input type="checkbox" id="df-clim"> ❄️ Climatisation</label>
+              <label class="eq-check"><input type="checkbox" id="df-digicode"> 🔐 Digicode</label>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">📝 Description</div>
+            <div class="field">
+              <label>Description du bien *</label>
+              <textarea id="d-desc" rows="5" placeholder="Décrivez votre bien : ses points forts, son environnement, son état, ses atouts..."></textarea>
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="genDescriptionIA()" style="margin-top:-6px">✨ Générer avec l'IA</button>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end">
+            <button class="btn btn-gold" onclick="validateStep1()">Suivant — Photos →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 2 : PHOTOS -->
+        <div id="depot-step-2" style="display:none">
+          <div class="card">
+            <div class="card-title">📷 Photos du bien</div>
+            <p style="font-size:13px;color:var(--mid);margin-bottom:14px">Ajoutez jusqu'à 15 photos. La première sera la photo principale de l'annonce.</p>
+            <div class="upload-zone" onclick="document.getElementById('d-photos-input').click()" style="margin-bottom:12px">
+              <input type="file" id="d-photos-input" accept="image/*" multiple onchange="handleDepotPhotos(event)">
+              <div style="font-size:36px;margin-bottom:8px">📸</div>
+              <div style="font-size:13px;color:var(--mid)">Cliquez ou glissez vos photos ici<br><small>JPG, PNG, WEBP — 15 photos max</small></div>
+            </div>
+            <div id="d-photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px"></div>
+            <div id="d-photos-count" style="font-size:11px;color:var(--mid);margin-top:8px;text-align:center"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">🤖 Analyse IA des photos</div>
+  if(result) result.innerHTML="<div style='text-align:center;padding:14px;color:var(--mid)'>L'IA analyse vos photos...</div>";
+            <button class="btn btn-dark btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">🔍 Analyser mes photos avec l'IA</button>
+            <div id="depot-ia-result" style="margin-top:12px"></div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;margin-top:8px">
+            <button class="btn btn-outline" onclick="goDepotStep(1)">← Retour</button>
+            <button class="btn btn-gold" onclick="goDepotStep(3)">Suivant — Prix & détails →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 3 : PRIX & DÉTAILS -->
+        <div id="depot-step-3" style="display:none">
+          <div class="card">
+            <div class="card-title">💰 Prix & conditions</div>
+            <div class="field-row">
+              <div class="field"><label>Prix de vente (XPF) *</label>
+                <input type="number" id="d-prix" placeholder="42500000" oninput="updateDepotEstim()">
+              </div>
+              <div class="field"><label>Prix négociable ?</label>
+                <select id="d-negociable">
+                  <option value="non">Non</option>
+                  <option value="oui">Oui</option>
+                  <option value="faire-offre">Faire une offre</option>
+                </select>
+              </div>
+            </div>
+            <!-- ESTIMATION IA vs PRIX DEMANDÉ -->
+            <div id="depot-estim-compare" style="display:none;background:var(--warm);border-radius:8px;padding:12px;margin-top:4px">
+              <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px">💡 Positionnement par rapport au marché NC</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+                <div><div style="font-size:10px;color:var(--mid)">Votre prix</div><div style="font-size:16px;font-weight:700;color:var(--dark)" id="depot-prix-user">—</div></div>
+                <div><div style="font-size:10px;color:var(--mid)">Estimation IA</div><div style="font-size:16px;font-weight:700;color:var(--gold)" id="depot-prix-ia">—</div></div>
+                <div><div style="font-size:10px;color:var(--mid)">Écart</div><div style="font-size:16px;font-weight:700" id="depot-ecart">—</div></div>
+              </div>
+            </div>
+
+            <div class="field" style="margin-top:14px">
+              <label>Charges mensuelles (XPF) — optionnel</label>
+              <input type="number" id="d-charges" placeholder="Ex: 45000">
+            </div>
+            <div class="field">
+              <label>Taxe foncière annuelle (XPF) — optionnel</label>
+              <input type="number" id="d-taxe" placeholder="Ex: 180000">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">📞 Coordonnées de contact</div>
+            <div class="field-row">
+              <div class="field"><label>Nom affiché *</label>
+                <input type="text" id="d-contact-nom" placeholder="Jean Dupont ou Agence Soleil">
+              </div>
+              <div class="field"><label>Téléphone *</label>
+                <input type="tel" id="d-contact-tel" placeholder="+687 00 00 00">
+              </div>
+            </div>
+            <div class="field"><label>Email de contact *</label>
+              <input type="email" id="d-contact-email" placeholder="contact@email.com">
+            </div>
+            <div class="field"><label>Disponibilités pour visites</label>
+              <input type="text" id="d-dispos" placeholder="Ex: Lundi–vendredi 9h–18h, weekend sur RDV">
+            </div>
+            <div class="field"><label>Référence interne (optionnel)</label>
+              <input type="text" id="d-ref" placeholder="Ex: APPT-2026-001">
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;margin-top:8px">
+            <button class="btn btn-outline" onclick="goDepotStep(2)">← Retour</button>
+            <button class="btn btn-gold" onclick="validateStep3()">Suivant — Publication →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 4 : RÉCAP + PUBLICATION -->
+        <div id="depot-step-4" style="display:none">
+          <div class="card">
+            <div class="card-title">👁️ Aperçu de votre annonce</div>
+            <div id="depot-preview" style="background:linear-gradient(135deg,#1C1A16,#2a2520);border-radius:12px;padding:20px;color:#fff">
+              <div style="font-size:28px;text-align:center;margin-bottom:12px" id="dp-emoji">🏠</div>
+              <div style="font-family:'Playfair Display',serif;font-size:18px;color:#F0D99A;margin-bottom:6px" id="dp-titre">—</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="dp-tags"></div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:12px" id="dp-desc">—</div>
+              <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#F0D99A" id="dp-prix">—</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">📢 Options de publication</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px">
+                <input type="checkbox" id="pub-immo360" checked> <div><strong>✅ Immo360</strong> — Publication sur notre plateforme (gratuit)</div>
+              </label>
+              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;opacity:.6">
+                <input type="checkbox" id="pub-immonc" disabled> <div><strong>🔗 ImmoNC.com</strong> — Bientôt disponible <span class="tag tag-blue" style="font-size:9px">Partenariat en cours</span></div>
+              </label>
+              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;opacity:.6">
+                <input type="checkbox" id="pub-properstar" disabled> <div><strong>🔗 Properstar</strong> — Bientôt disponible <span class="tag tag-blue" style="font-size:9px">Partenariat en cours</span></div>
+              </label>
+              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;opacity:.6">
+                <input type="checkbox" id="pub-facebook" disabled> <div><strong>🔗 Facebook Marketplace</strong> — Bientôt disponible</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">✅ Confirmation</div>
+            <div style="font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:14px">
+              En publiant cette annonce, vous certifiez que les informations sont exactes et conformes à la réglementation NC. Vous acceptez les <span style="color:var(--gold);cursor:pointer" onclick="openLegalPage('cgu')">conditions d'utilisation</span> d'Immo360.
+            </div>
+            <div id="depot-notif" style="display:none;padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px"></div>
+            <button class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">
+              🚀 Publier mon annonce
+            </button>
+            <button class="btn btn-outline btn-full" style="margin-top:8px" onclick="goDepotStep(3)">← Modifier</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== BIENS ==================== -->
     <!-- ==================== BIENS ==================== -->
     <div class="panel" id="panel-biens">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -1682,7 +1977,7 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 // =============================================
 const MENUS = {
   sell:[
-    {s:'Vente',items:[{ico:'🏠',k:'dashboard'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'},{ico:'🎨',k:'decoration'},{ico:'📣',k:'annonces'}]},
+    {s:'Vente',items:[{ico:'🏠',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'},{ico:'🎨',k:'decoration'},{ico:'📣',k:'annonces'}]},
     {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
   ],
   buy:[
@@ -1690,12 +1985,12 @@ const MENUS = {
     {s:'Mon espace',items:[{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
   ],
   agt:[
-    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'}]},
+    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'🔭',k:'marketplace'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'}]},
     {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📈',k:'stats'}]},
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
@@ -1745,6 +2040,7 @@ function go(panel){
   if(panel==='financement') calcFin();
   if(panel==='marketplace') buildMarketplace();
   if(panel==='messagerie') buildMessagerie();
+  if(panel==='depot'){depotStep=1;goDepotStep(1);}
   if(panel==='rdv') buildCal();
   if(panel==='biens') buildBiens();
   if(panel==='suivi') buildSuivi();
@@ -2493,11 +2789,11 @@ async function generateAnnonce(){
     if(data.error) throw new Error(data.error);
     if(!data.annonce) throw new Error('Réponse vide');
     document.getElementById('prev-body').textContent = data.annonce;
-    if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
+    if(btn){btn.disabled=false;btn.innerHTML="✨ Générer l'annonce";}
 
   } catch(err){
     document.getElementById('prev-body').textContent='⚠️ '+err.message;
-    if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
+    if(btn){btn.disabled=false;btn.innerHTML="✨ Générer l'annonce";}
   }
 }
 function genAnnonce(){go('annonces');setTimeout(generateAnnonce,100);}
@@ -3481,6 +3777,317 @@ function buildMessagerie(){
 }
 
 // =============================================
+// SUPABASE — CONNEXION BASE DE DONNÉES
+// =============================================
+const SUPABASE_URL = 'https://wulymsslxgnhysopigcw.supabase.co';
+let sb = null;
+
+async function initSupabase(){
+  try {
+    // Charger la clé depuis l'API Vercel
+    const r = await fetch('/api/config');
+    if(r.ok){
+      const cfg = await r.json();
+      if(cfg.supabaseKey && window.supabase){
+        sb = window.supabase.createClient(SUPABASE_URL, cfg.supabaseKey);
+        console.log('Supabase connecté');
+      }
+    }
+  } catch(e){ console.warn('Supabase:', e.message); }
+}
+
+// Sauvegarder un bien dans Supabase
+async function saveBienToSupabase(bien){
+  if(!sb){ console.warn('Supabase non initialisé'); return null; }
+  try {
+    const { data, error } = await sb.from('biens').insert([bien]).select();
+    if(error){ console.error('Erreur Supabase:', error); return null; }
+    return data?.[0] || null;
+  } catch(e){ console.error('Erreur save bien:', e); return null; }
+}
+
+// Charger les biens depuis Supabase
+async function loadBiensFromSupabase(){
+  if(!sb) return [];
+  try {
+    const { data, error } = await sb.from('biens').select('*').order('created_at', {ascending:false});
+    if(error){ console.error('Erreur load biens:', error); return []; }
+    return data || [];
+  } catch(e){ return []; }
+}
+
+// Sauvegarder un utilisateur
+async function saveUserToSupabase(user){
+  if(!sb) return null;
+  try {
+    const { data, error } = await sb.from('users').insert([user]).select();
+    if(error && !error.message.includes('duplicate')){ console.error(error); return null; }
+    return data?.[0] || null;
+  } catch(e){ return null; }
+}
+
+// Sauvegarder un message
+async function saveMessageToSupabase(msg){
+  if(!sb) return null;
+  try {
+    const { data, error } = await sb.from('messages').insert([msg]).select();
+    if(error){ console.error(error); return null; }
+    return data?.[0] || null;
+  } catch(e){ return null; }
+}
+
+// Sauvegarder un RDV
+async function saveRdvToSupabase(rdv){
+  if(!sb) return null;
+  try {
+    const { data, error } = await sb.from('rdv').insert([rdv]).select();
+    if(error){ console.error(error); return null; }
+    return data?.[0] || null;
+  } catch(e){ return null; }
+}
+
+// =============================================
+// FORMULAIRE DÉPÔT D'ANNONCE
+// =============================================
+let depotStep = 1;
+let depotPhotos = [];
+
+function goDepotStep(n){
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('depot-step-'+i);
+    if(el) el.style.display=i===n?'block':'none';
+    const step=document.getElementById('dstep-'+i);
+    if(step){
+      step.classList.remove('active','done');
+      if(i<n) step.classList.add('done');
+      if(i===n) step.classList.add('active');
+    }
+  }
+  depotStep=n;
+  if(n===4) buildDepotPreview();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function validateStep1(){
+  const titre=document.getElementById('d-titre')?.value?.trim();
+  const type=document.getElementById('d-type')?.value;
+  const surface=document.getElementById('d-surface')?.value;
+  const etat=document.getElementById('d-etat')?.value;
+  const desc=document.getElementById('d-desc')?.value?.trim();
+  if(!titre){alert('Veuillez saisir un titre pour votre annonce');return;}
+  if(!type){alert('Veuillez choisir le type de bien');return;}
+  if(!surface){alert('Veuillez indiquer la surface');return;}
+  if(!desc){alert('Veuillez ajouter une description');return;}
+  goDepotStep(2);
+}
+
+function validateStep3(){
+  const prix=document.getElementById('d-prix')?.value;
+  const nom=document.getElementById('d-contact-nom')?.value?.trim();
+  const tel=document.getElementById('d-contact-tel')?.value?.trim();
+  if(!prix){alert('Veuillez indiquer le prix');return;}
+  if(!nom){alert('Veuillez indiquer un nom de contact');return;}
+  if(!tel){alert('Veuillez indiquer un téléphone de contact');return;}
+  goDepotStep(4);
+}
+
+function handleDepotPhotos(event){
+  const files=Array.from(event.target.files).slice(0,15-depotPhotos.length);
+  files.forEach(f=>{
+    depotPhotos.push({url:URL.createObjectURL(f),name:f.name,file:f});
+  });
+  renderDepotPhotos();
+}
+
+function renderDepotPhotos(){
+  const grid=document.getElementById('d-photos-grid');
+  const count=document.getElementById('d-photos-count');
+  if(!grid) return;
+  grid.innerHTML=depotPhotos.map((p,i)=>`
+    <div style="position:relative;aspect-ratio:1">
+      <img src="${p.url}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;${i===0?'border:2px solid var(--gold)':''}">
+      ${i===0?'<div style="position:absolute;bottom:3px;left:3px;background:var(--gold);color:#fff;font-size:9px;padding:1px 5px;border-radius:3px">Principale</div>':''}
+      <div onclick="removeDepotPhoto(${i})" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.6);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px">✕</div>
+    </div>`).join('');
+  if(count) count.textContent=depotPhotos.length>0?depotPhotos.length+' photo(s) ajoutée(s) · Faites glisser pour réorganiser':'';
+}
+
+function removeDepotPhoto(i){
+  depotPhotos.splice(i,1);
+  renderDepotPhotos();
+}
+
+async function analyzeDepotPhotos(){
+  if(depotPhotos.length===0){alert('Ajoutez au moins une photo');return;}
+  const btn=document.getElementById('btn-analyze-depot');
+  btn.innerHTML='⏳ Analyse en cours...';btn.disabled=true;
+  const result=document.getElementById('depot-ia-result');
+  if(result) result.innerHTML="<div style='text-align:center;padding:14px;color:var(--mid)'>L'IA analyse vos photos...</div>";
+  setTimeout(()=>{
+    const score=Math.min(95,60+depotPhotos.length*8);
+    const items=[
+      {l:'Luminosité',v:score>70?'Bonne':'Insuffisante',ok:score>70},
+      {l:'État apparent',v:score>65?'Correct':'À améliorer',ok:score>65},
+      {l:'Mise en scène',v:score>75?'Bonne':'Peut être améliorée',ok:score>75},
+    ];
+    if(result) result.innerHTML=`<div class="ai-box" style="margin-top:0">
+      <h4>🤖 Score IA : ${score}/100</h4>
+      ${items.map(i=>`<div class="ai-line"><span>${i.l}</span><span class="ai-chip ${i.ok?'ai-ok':'ai-warn'}">${i.v}</span></div>`).join('')}
+      <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.5)">${score<70?'Conseil : ajoutez plus de photos et assurez-vous que les pièces sont bien éclairées.':'Vos photos sont de bonne qualité !'}</div>
+    </div>`;
+    btn.innerHTML='🔍 Re-analyser';btn.disabled=false;
+  },2000);
+}
+
+function updateDepotEstim(){
+  const prix=parseInt(document.getElementById('d-prix')?.value||0);
+  const surface=parseInt(document.getElementById('d-surface')?.value||0);
+  const quartier=document.getElementById('d-quartier')?.value||'centre';
+  if(!prix||!surface) return;
+  const el=document.getElementById('depot-estim-compare');
+  if(el) el.style.display='block';
+  // Calcul estimation IA
+  const qKey=Object.keys(NC_MARKET.quartiers).find(k=>NC_MARKET.quartiers[k].nom.includes(quartier))||'centre';
+  const pm2=NC_MARKET.quartiers[qKey]?.apt||340000;
+  const prixIA=Math.round(pm2*surface*0.96);
+  const ecart=Math.round((prix/prixIA-1)*100);
+  const dp=document.getElementById('depot-prix-user');
+  const di=document.getElementById('depot-prix-ia');
+  const de=document.getElementById('depot-ecart');
+  if(dp) dp.textContent=conv(prix);
+  if(di) di.textContent=conv(prixIA);
+  if(de){
+    de.textContent=(ecart>=0?'+':'')+ecart+'%';
+    de.style.color=Math.abs(ecart)>20?'var(--red)':Math.abs(ecart)>10?'var(--gold)':'var(--green)';
+  }
+}
+
+async function genDescriptionIA(){
+  const titre=document.getElementById('d-titre')?.value||'Bien immobilier';
+  const surface=document.getElementById('d-surface')?.value||'85';
+  const type=document.getElementById('d-type')?.value||'Appartement';
+  const ville=document.getElementById('d-ville')?.value||'Nouméa';
+  const quartier=document.getElementById('d-quartier')?.value||'';
+  const etat=document.getElementById('d-etat')?.value||'bon';
+  const btn=document.querySelector('[onclick="genDescriptionIA()"]');
+  if(btn){btn.textContent="⏳ Génération...";btn.disabled=true;}
+  const descEl=document.getElementById('d-desc');
+  if(descEl) descEl.value='Génération en cours par Claude IA...';
+  try {
+    const r=await fetch('/api/generate-annonce',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({titre,surface,prix:0,desc:'',ton:'Familial & chaleureux',
+        plateforme:'Multi-plateformes',devise:'F',pays:'NC',ville:quartier?quartier+', '+ville:ville})
+    });
+    const d=await r.json();
+    if(descEl&&d.annonce) descEl.value=d.annonce;
+    else if(descEl) descEl.value='';
+  } catch(e){
+    if(descEl) descEl.value='';
+  }
+  if(btn){btn.textContent="✨ Générer avec l'IA";btn.disabled=false;}
+}
+
+function buildDepotPreview(){
+  const titre=document.getElementById('d-titre')?.value||'Mon bien';
+  const type=document.getElementById('d-type')?.value||'Bien';
+  const surface=document.getElementById('d-surface')?.value||'—';
+  const prix=parseInt(document.getElementById('d-prix')?.value||0);
+  const ville=document.getElementById('d-ville')?.value||'Nouméa';
+  const quartier=document.getElementById('d-quartier')?.value||'';
+  const desc=document.getElementById('d-desc')?.value||'';
+  const emojis={Appartement:'🏠',Maison:'🏘️',Villa:'🏡',Studio:'🏢',Terrain:'🌿',default:'🏠'};
+  const t=document.getElementById('dp-titre');
+  const tg=document.getElementById('dp-tags');
+  const td=document.getElementById('dp-desc');
+  const tp=document.getElementById('dp-prix');
+  const te=document.getElementById('dp-emoji');
+  if(te) te.textContent=emojis[type]||emojis.default;
+  if(t) t.textContent=titre;
+  if(tg) tg.innerHTML=`<span class="annonce-badge">${surface} m²</span><span class="annonce-badge">${type}</span><span class="annonce-badge">📍 ${quartier||ville}</span>`;
+  if(td) td.textContent=desc.substring(0,200)+(desc.length>200?'...':'');
+  if(tp) tp.textContent=prix>0?conv(prix):'Prix non renseigné';
+}
+
+async function publierAnnonce(){
+  const btn=document.getElementById('btn-publier');
+  const notif=document.getElementById('depot-notif');
+  btn.innerHTML='⏳ Publication en cours...';btn.disabled=true;
+
+  // Construire l'objet bien
+  const features=[];
+  const fMap={
+    'df-vue-mer':'Vue mer','df-vue-lagon':'Vue lagon','df-vue-deg':'Vue dégagée',
+    'df-piscine':'Piscine','df-jacuzzi':'Jacuzzi','df-garage':'Garage',
+    'df-parking':'Parking','df-terrasse':'Terrasse','df-jardin':'Jardin',
+    'df-ascenseur':'Ascenseur','df-gardien':'Gardien','df-domotique':'Domotique',
+    'df-solaire':'Solaire','df-meuble':'Meublé','df-clim':'Climatisation','df-digicode':'Digicode'
+  };
+  Object.entries(fMap).forEach(([id,val])=>{
+    if(document.getElementById(id)?.checked) features.push(val);
+  });
+
+  const bien = {
+    titre: document.getElementById('d-titre')?.value,
+    type: document.getElementById('d-type')?.value,
+    surface: parseInt(document.getElementById('d-surface')?.value)||null,
+    pieces: parseInt(document.getElementById('d-pieces')?.value)||null,
+    chambres: parseInt(document.getElementById('d-chambres')?.value)||null,
+    prix: parseInt(document.getElementById('d-prix')?.value)||null,
+    quartier: document.getElementById('d-quartier')?.value,
+    ville: document.getElementById('d-ville')?.value,
+    etat: document.getElementById('d-etat')?.value,
+    dpe: document.getElementById('d-dpe')?.value||null,
+    description: document.getElementById('d-desc')?.value,
+    features,
+    statut: 'En vente',
+    agent: document.getElementById('d-contact-nom')?.value,
+    tel: document.getElementById('d-contact-tel')?.value,
+    ref: document.getElementById('d-ref')?.value||null,
+  };
+
+  // Tenter sauvegarde Supabase
+  let saved=false;
+  const result=await saveBienToSupabase(bien);
+  if(result){
+    saved=true;
+    // Ajouter aussi dans BIENS_DATA local pour affichage immédiat
+    const newBien={
+      id:Date.now(), titre:bien.titre, type:bien.type, surface:bien.surface,
+      pieces:bien.pieces||0, chambres:bien.chambres||0, prix:bien.prix,
+      statut:'En vente', dpe:bien.dpe||'C', ville:bien.ville, quartier:bien.quartier,
+      description:bien.description, features:bien.features, photos:['🏠'],
+      date:new Date().toISOString().split('T')[0], agent:bien.agent, tel:bien.tel,
+      ref:bien.ref||'IMM-'+Date.now()
+    };
+    BIENS_DATA.unshift(newBien);
+  }
+
+  // Afficher résultat
+  if(notif){
+    notif.style.display='block';
+    if(saved){
+      notif.style.background='rgba(42,122,75,0.1)';notif.style.border='1px solid rgba(42,122,75,0.3)';notif.style.color='var(--green)';
+      notif.innerHTML='🎉 <strong>Annonce publiée avec succès !</strong><br>Elle est maintenant visible sur Immo360 NC. Référence : '+(bien.ref||'IMM-'+Date.now());
+      btn.innerHTML='✅ Annonce publiée !';
+      // Rediriger vers la marketplace après 3 secondes
+      setTimeout(()=>{go('marketplace');},3000);
+    } else {
+      notif.style.background='rgba(184,146,42,0.1)';notif.style.border='1px solid rgba(184,146,42,0.3)';notif.style.color='var(--gold-dark)';
+      notif.innerHTML="⚠️ Annonce enregistrée localement. La connexion à la base de données n'est pas encore configurée.";
+      btn.innerHTML="🚀 Publier mon annonce";btn.disabled=false;
+      BIENS_DATA.unshift({
+        id:Date.now(),titre:bien.titre,type:bien.type,surface:bien.surface,
+        pieces:bien.pieces||0,prix:bien.prix,statut:'En vente',dpe:bien.dpe||'C',
+        ville:bien.ville,quartier:bien.quartier,description:bien.description,
+        features:bien.features,photos:['🏠'],date:new Date().toISOString().split('T')[0],
+        agent:bien.agent,tel:bien.tel,ref:'IMM-'+Date.now()
+      });
+    }
+  }
+}
+
+// =============================================
 // PAGES LÉGALES
 // =============================================
 const LEGAL_PAGES = {
@@ -3627,6 +4234,7 @@ function openLegalPage(page){
 buildDPE('C');
 updateDeco();
 calcFin();
+initSupabase();
 // Afficher la page d'accueil au démarrage
 showLanding();
 // L'app s'initialise mais reste cachée derrière la landing
