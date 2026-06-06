@@ -453,87 +453,123 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
   </div>
 
   <!-- BARRE DE RECHERCHE PRINCIPALE -->
-  <div style="background:var(--gold);padding:32px 24px">
-    <div style="max-width:800px;margin:0 auto;text-align:center">
-      <h1 style="font-family:'Playfair Display',serif;font-size:28px;color:#fff;font-weight:700;margin-bottom:6px">Trouvez votre bien en Nouvelle-Calédonie</h1>
-      <p style="color:rgba(255,255,255,0.8);font-size:14px;margin-bottom:20px">Appartements, maisons, villas, terrains — achat et location</p>
-      <!-- Barre de recherche -->
-      <div style="background:#fff;border-radius:10px;padding:6px;display:flex;gap:6px;flex-wrap:wrap;box-shadow:0 4px 20px rgba(0,0,0,0.15)">
-        <select id="ld-type" style="flex:1;min-width:120px;border:none;padding:10px 12px;font-size:14px;border-radius:6px;background:var(--warm);color:var(--dark)">
-          <option value="">Tous les types</option>
-          <option>Appartement</option>
-          <option>Maison</option>
-          <option>Villa</option>
-          <option>Studio</option>
-          <option>Terrain</option>
+  <div style="background:var(--gold);padding:24px 20px 0">
+    <div style="max-width:920px;margin:0 auto;text-align:center">
+      <h1 style="font-family:'Playfair Display',serif;font-size:24px;color:#fff;font-weight:700;margin-bottom:3px">Trouvez votre bien en Nouvelle-Calédonie</h1>
+      <p style="color:rgba(255,255,255,0.75);font-size:12px;margin-bottom:14px">Appartements · Maisons · Villas · Terrains — Achat et Location</p>
+
+      <!-- LIGNE 1 : TYPE + ZONE + BOUTON -->
+      <div style="background:#fff;border-radius:10px 10px 0 0;padding:8px 8px 0;display:flex;gap:5px;flex-wrap:wrap">
+        <select id="ld-type" onchange="landingSearch()" style="flex:1;min-width:130px;border:1px solid var(--warm);padding:8px 10px;font-size:13px;border-radius:6px;background:var(--warm);color:var(--dark)">
+          <option value="">🏷️ Tous types</option>
+          <option>Appartement</option><option>Maison</option><option>Villa</option>
+          <option>Studio</option><option>Terrain</option><option>Local commercial</option><option>Dock</option>
         </select>
-        <select id="ld-zone" style="flex:1;min-width:140px;border:none;padding:10px 12px;font-size:14px;border-radius:6px;background:var(--warm);color:var(--dark)">
-          <option value="">Toute la NC</option>
+        <select id="ld-zone" onchange="landingSearch()" style="flex:2;min-width:160px;border:1px solid var(--warm);padding:8px 10px;font-size:13px;border-radius:6px;background:var(--warm);color:var(--dark)">
+          <option value="">📍 Toute la NC</option>
           <optgroup label="── Nouméa ──">
-            <option>Anse Vata</option>
-            <option>Baie des Citrons</option>
-            <option>Val Plaisance</option>
-            <option>Tina</option>
-            <option>Faubourg Blanchot</option>
-            <option>Motor Pool</option>
-            <option>Magenta</option>
-            <option>Ouémo</option>
-            <option>Vallée des Colons</option>
-            <option>Trianon</option>
-            <option>Robinson</option>
-            <option>Receiving</option>
-            <option>Orphelinat</option>
-            <option>6ème Km</option>
-            <option>7ème Km</option>
-            <option>Kaméré</option>
-            <option>Centre-ville Nouméa</option>
+            <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option>
+            <option>Tina</option><option>Faubourg Blanchot</option><option>Motor Pool</option>
+            <option>Magenta</option><option>Ouémo</option><option>Vallée des Colons</option>
+            <option>Trianon</option><option>Robinson</option><option>Receiving</option>
+            <option>Orphelinat</option><option>6ème Km</option><option>7ème Km</option>
+            <option>Kaméré</option><option>Centre-ville Nouméa</option>
           </optgroup>
           <optgroup label="── Grand Nouméa ──">
-            <option>Dumbéa sur Mer</option>
-            <option>Koutio</option>
-            <option>Dumbéa Centre</option>
-            <option>Boulari</option>
-            <option>Normandie</option>
-            <option>Mont-Dore</option>
-            <option>Plum</option>
-            <option>Yaté</option>
-            <option>Païta</option>
-            <option>La Coulée</option>
-            <option>Port Laguerre</option>
+            <option>Dumbéa sur Mer</option><option>Koutio</option><option>Dumbéa Centre</option>
+            <option>Boulari</option><option>Normandie</option><option>Mont-Dore</option>
+            <option>Plum</option><option>Yaté</option><option>Païta</option>
+            <option>La Coulée</option><option>Port Laguerre</option>
           </optgroup>
           <optgroup label="── Province Nord ──">
-            <option>Koné</option>
-            <option>Poindimié</option>
-            <option>Bourail</option>
-            <option>La Foa</option>
-            <option>Poya</option>
-            <option>Koumac</option>
+            <option>Koné</option><option>Poindimié</option><option>Bourail</option>
+            <option>La Foa</option><option>Poya</option><option>Koumac</option>
           </optgroup>
           <optgroup label="── Îles ──">
-            <option>Île des Pins</option>
-            <option>Lifou</option>
-            <option>Maré</option>
-            <option>Ouvéa</option>
+            <option>Île des Pins</option><option>Lifou</option><option>Maré</option><option>Ouvéa</option>
           </optgroup>
         </select>
-        <select id="ld-budget" style="flex:1;min-width:140px;border:none;padding:10px 12px;font-size:14px;border-radius:6px;background:var(--warm);color:var(--dark)">
-          <option value="">Budget max</option>
-          <option value="15000000">15 M F</option>
-          <option value="30000000">30 M F</option>
-          <option value="50000000">50 M F</option>
-          <option value="80000000">80 M F</option>
-          <option value="120000000">120 M F</option>
-        </select>
-        <button onclick="landingSearch()" style="background:var(--gold);color:#fff;border:none;padding:10px 24px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 Rechercher</button>
+        <button onclick="landingSearch()" style="background:var(--dark);color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 Rechercher</button>
       </div>
-      <!-- FILTRES RAPIDES TOGGLE -->
-      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap" id="quick-filters">
-        <span class="qf-btn" data-type="Appartement" onclick="toggleQuickFilter(this,'Appartement')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏠 Appartements</span>
-        <span class="qf-btn" data-type="Maison" onclick="toggleQuickFilter(this,'Maison')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏘️ Maisons</span>
-        <span class="qf-btn" data-type="Villa" onclick="toggleQuickFilter(this,'Villa')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏡 Villas</span>
-        <span class="qf-btn" data-type="Studio" onclick="toggleQuickFilter(this,'Studio')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏢 Studios</span>
-        <span class="qf-btn" data-type="Terrain" onclick="toggleQuickFilter(this,'Terrain')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🌿 Terrains</span>
-        <span class="qf-btn" data-type="" onclick="toggleQuickFilter(this,'')" style="background:rgba(255,255,255,0.35);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.6);transition:.2s;font-weight:600">✦ Tout afficher</span>
+
+      <!-- LIGNE 2 : BUDGET SLIDER -->
+      <div style="background:#fff;padding:10px 12px 8px;border-top:1px solid var(--warm)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:12px;font-weight:600;color:var(--mid);white-space:nowrap;min-width:80px">💰 Budget max</span>
+          <div style="flex:1">
+            <input type="range" id="ld-budget-range" min="5000000" max="200000000" step="1000000" value="200000000"
+              oninput="updateBudgetDisplay(this.value);landingSearch()"
+              style="width:100%;height:6px;accent-color:var(--gold)">
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--soft);margin-top:1px">
+              <span>5M F</span><span>50M F</span><span>100M F</span><span>150M F</span><span>200M F</span>
+            </div>
+          </div>
+          <div id="ld-budget-display" style="min-width:90px;text-align:right;font-size:13px;font-weight:700;color:var(--gold)">Sans limite</div>
+        </div>
+      </div>
+
+      <!-- LIGNE 3 : SURFACE + PIÈCES + ÉTAT + DPE -->
+      <div style="background:#fff;padding:8px 12px;border-top:1px solid var(--warm);display:flex;gap:6px;flex-wrap:wrap">
+        <select id="ld-surface" onchange="landingSearch()" style="flex:1;min-width:110px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
+          <option value="">📐 Surface min</option>
+          <option value="25">25 m² min</option><option value="40">40 m² min</option>
+          <option value="60">60 m² min</option><option value="80">80 m² min</option>
+          <option value="100">100 m² min</option><option value="150">150 m² min</option>
+          <option value="200">200 m² min</option>
+        </select>
+        <select id="ld-pieces" onchange="landingSearch()" style="flex:1;min-width:110px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
+          <option value="">🚪 Pièces min</option>
+          <option value="1">1+ pièce</option><option value="2">2+ pièces</option>
+          <option value="3">3+ pièces</option><option value="4">4+ pièces</option><option value="5">5+ pièces</option>
+        </select>
+        <select id="ld-etat" onchange="landingSearch()" style="flex:1;min-width:120px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
+          <option value="">🔨 État du bien</option>
+          <option value="sans">✅ Sans travaux</option>
+          <option value="avec">🔧 Avec travaux</option>
+          <option value="neuf">🆕 Neuf / Récent</option>
+          <option value="renove">✨ Rénové</option>
+        </select>
+        <select id="ld-dpe" onchange="landingSearch()" style="flex:1;min-width:100px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
+          <option value="">⚡ DPE</option>
+          <option value="A">🟢 A (Excellent)</option>
+          <option value="B">🟡 B ou mieux</option>
+          <option value="C">🟠 C ou mieux</option>
+        </select>
+      </div>
+
+      <!-- LIGNE 4 : ÉQUIPEMENTS -->
+      <div style="background:#fff;padding:8px 12px 10px;border-top:1px solid var(--warm);border-radius:0">
+        <div style="font-size:10px;font-weight:600;color:var(--mid);margin-bottom:6px;text-align:left">✨ Équipements &amp; options</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px" id="equip-filters">
+          <span class="eq-btn" data-eq="Vue mer" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🌊 Vue mer</span>
+          <span class="eq-btn" data-eq="Vue lagon" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🐠 Vue lagon</span>
+          <span class="eq-btn" data-eq="Vue dégagée" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🏔️ Vue dégagée</span>
+          <span class="eq-btn" data-eq="Piscine" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🏊 Piscine</span>
+          <span class="eq-btn" data-eq="Jacuzzi" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🛁 Jacuzzi</span>
+          <span class="eq-btn" data-eq="Garage" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🚗 Garage</span>
+          <span class="eq-btn" data-eq="Parking" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🅿️ Parking</span>
+          <span class="eq-btn" data-eq="Terrasse" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🌿 Terrasse</span>
+          <span class="eq-btn" data-eq="Jardin" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🌳 Jardin</span>
+          <span class="eq-btn" data-eq="Ascenseur" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🛗 Ascenseur</span>
+          <span class="eq-btn" data-eq="Gardien" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">👮 Gardien</span>
+          <span class="eq-btn" data-eq="Domotique" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🤖 Domotique</span>
+          <span class="eq-btn" data-eq="Solaire" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">☀️ Solaire</span>
+          <span class="eq-btn" data-eq="Meublé" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🛋️ Meublé</span>
+          <span class="eq-btn" data-eq="Locataire en place" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">📈 Rendement</span>
+          <span class="eq-btn" data-eq="Saisonnier" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">📅 Saisonnier</span>
+          <span class="eq-btn" data-eq="neuf" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🆕 Neuf</span>
+          <button onclick="resetAllFilters()" style="background:none;border:1px solid var(--soft);color:var(--mid);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;transition:.15s">✕ Tout réinitialiser</button>
+        </div>
+      </div>
+
+      <!-- FILTRES RAPIDES TYPE -->
+      <div style="background:rgba(0,0,0,0.15);padding:7px 10px;border-radius:0 0 10px 10px;display:flex;gap:5px;flex-wrap:wrap;justify-content:center" id="quick-filters">
+        <span class="qf-btn" data-type="Appartement" onclick="toggleQuickFilter(this,'Appartement')" style="background:rgba(255,255,255,0.15);color:#fff;padding:3px 11px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏠 Apparts</span>
+        <span class="qf-btn" data-type="Maison" onclick="toggleQuickFilter(this,'Maison')" style="background:rgba(255,255,255,0.15);color:#fff;padding:3px 11px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏘️ Maisons</span>
+        <span class="qf-btn" data-type="Villa" onclick="toggleQuickFilter(this,'Villa')" style="background:rgba(255,255,255,0.15);color:#fff;padding:3px 11px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏡 Villas</span>
+        <span class="qf-btn" data-type="Studio" onclick="toggleQuickFilter(this,'Studio')" style="background:rgba(255,255,255,0.15);color:#fff;padding:3px 11px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏢 Studios</span>
+        <span class="qf-btn" data-type="Terrain" onclick="toggleQuickFilter(this,'Terrain')" style="background:rgba(255,255,255,0.15);color:#fff;padding:3px 11px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🌿 Terrains</span>
+        <span class="qf-btn" data-type="" onclick="toggleQuickFilter(this,'')" style="background:rgba(255,255,255,0.35);color:#fff;padding:3px 11px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,0.6);font-weight:600;transition:.2s">✦ Tout</span>
       </div>
     </div>
   </div>
@@ -2412,14 +2448,101 @@ function showLanding(){
   if(nbEl) nbEl.textContent=BIENS_DATA.length;
 }
 
+// ── BUDGET DISPLAY ──
+function updateBudgetDisplay(val){
+  const v=parseInt(val);
+  const el=document.getElementById('ld-budget-display');
+  if(!el) return;
+  if(v>=200000000){el.textContent='Sans limite';el.style.color='var(--mid)';}
+  else if(v>=1000000){el.textContent=(v/1000000).toFixed(0)+' M F';el.style.color='var(--gold)';}
+  else{el.textContent=(v/1000).toFixed(0)+' k F';el.style.color='var(--gold)';}
+}
+
+// ── ÉQUIPEMENTS TOGGLE ──
+let activeEquips=new Set();
+function toggleEquip(el){
+  const eq=el.dataset.eq;
+  if(activeEquips.has(eq)){
+    activeEquips.delete(eq);
+    el.style.background='var(--warm)';
+    el.style.color='var(--dark)';
+    el.style.borderColor='transparent';
+    el.style.fontWeight='normal';
+  } else {
+    activeEquips.add(eq);
+    el.style.background='var(--gold)';
+    el.style.color='#fff';
+    el.style.borderColor='var(--gold-dark)';
+    el.style.fontWeight='600';
+  }
+  landingSearch();
+}
+
+function resetAllFilters(){
+  activeEquips.clear();
+  activeQuickFilter='';
+  document.querySelectorAll('.eq-btn').forEach(b=>{
+    b.style.background='var(--warm)';b.style.color='var(--dark)';
+    b.style.borderColor='transparent';b.style.fontWeight='normal';
+  });
+  document.querySelectorAll('.qf-btn').forEach(b=>{
+    const isAll=b.dataset.type==='';
+    b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
+    b.style.color='#fff';b.style.fontWeight=isAll?'600':'normal';
+    b.style.borderColor=isAll?'rgba(255,255,255,0.6)':'rgba(255,255,255,0.3)';
+  });
+  ['ld-type','ld-zone','ld-surface','ld-pieces','ld-etat','ld-dpe'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  const br=document.getElementById('ld-budget-range');if(br)br.value=200000000;
+  updateBudgetDisplay(200000000);
+  ldFiltered=[...BIENS_DATA];
+  renderLandingBiens();
+  const nb=document.getElementById('ld-nb-annonces');
+  if(nb) nb.textContent=BIENS_DATA.length;
+}
+
 function landingSearch(){
   const type=document.getElementById('ld-type')?.value||'';
   const zone=document.getElementById('ld-zone')?.value||'';
-  const budget=parseInt(document.getElementById('ld-budget')?.value||0);
+  const budgetVal=parseInt(document.getElementById('ld-budget-range')?.value||200000000);
+  const budget=budgetVal>=200000000?0:budgetVal;
+  const surface=parseInt(document.getElementById('ld-surface')?.value||0);
+  const pieces=parseInt(document.getElementById('ld-pieces')?.value||0);
+  const etat=document.getElementById('ld-etat')?.value||'';
+  const dpe=document.getElementById('ld-dpe')?.value||'';
+
   ldFiltered=BIENS_DATA.filter(b=>{
     if(type&&b.type!==type) return false;
     if(zone&&!b.ville.includes(zone)&&!b.quartier.includes(zone)) return false;
     if(budget&&b.prix>budget) return false;
+    if(surface&&b.surface<surface) return false;
+    if(pieces&&b.pieces<pieces) return false;
+    // Filtre état/travaux
+    if(etat){
+      const desc=(b.desc||'').toLowerCase();
+      const feat=(b.features||[]).join(' ').toLowerCase();
+      if(etat==='sans'&&(desc.includes('travaux')||desc.includes('rénov'))) return false;
+      if(etat==='avec'&&!desc.includes('travaux')&&!feat.includes('travaux')) return false;
+      if(etat==='neuf'&&!desc.includes('neuf')&&!desc.includes('2026')&&!desc.includes('2025')) return false;
+      if(etat==='renove'&&!desc.includes('rénov')&&!feat.includes('rénov')) return false;
+    }
+    // Filtre DPE
+    if(dpe){
+      const dpeOrder=['A','B','C','D','E','F','G'];
+      const bIdx=dpeOrder.indexOf(b.dpe);
+      const maxIdx=dpeOrder.indexOf(dpe);
+      if(bIdx===-1||bIdx>maxIdx) return false;
+    }
+    // Filtre équipements
+    if(activeEquips.size>0){
+      const allFeats=(b.features||[]).join('|').toLowerCase()+'|'+(b.desc||'').toLowerCase();
+      for(const eq of activeEquips){
+        if(!allFeats.includes(eq.toLowerCase())) return false;
+      }
+    }
+    // Filtre type rapide
+    if(activeQuickFilter&&b.type!==activeQuickFilter) return false;
     return true;
   });
   const titre=document.getElementById('ld-titre-section');
