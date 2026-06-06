@@ -626,33 +626,95 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 </div>
 
 <!-- ═══════════════════════════════════
-     MODAL LOGIN
+     MODAL AUTH — S'IDENTIFIER / S'ENREGISTRER
 ═══════════════════════════════════ -->
 <div class="modal-overlay" id="login-modal" style="display:none">
-  <div class="modal-box">
-    <div class="modal-title">Bienvenue sur Immo360</div>
-    <div class="modal-sub">Choisissez votre profil pour continuer</div>
-    <div class="profile-choice">
-      <div class="profile-opt" onclick="selectProfile('sell')" id="opt-sell">
-        <div class="profile-opt-icon">🏠</div>
-        <div class="profile-opt-name">Vendeur</div>
+  <div class="modal-box" style="max-width:480px;padding:0;overflow:hidden">
+
+    <!-- ÉTAPE 1 : CHOIX CONNEXION / INSCRIPTION -->
+    <div id="auth-step-1">
+      <!-- EN-TÊTE -->
+      <div style="background:var(--dark);padding:24px 28px 20px">
+        <div style="display:flex;justify-content:space-between;align-items:start">
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff" id="auth-modal-title">Bienvenue sur Immo360</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:3px" id="auth-modal-sub">Rejoignez la plateforme immobilière NC</div>
+          </div>
+          <button onclick="closeLoginModal()" style="background:rgba(255,255,255,0.1);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer">✕</button>
+        </div>
+        <!-- PROFIL SÉLECTIONNÉ -->
+        <div id="auth-profil-badge" style="margin-top:14px;background:rgba(184,146,42,0.2);border:1px solid rgba(184,146,42,0.4);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px">
+          <span id="auth-profil-icon" style="font-size:18px">🏠</span>
+          <div>
+            <div id="auth-profil-name" style="font-size:13px;font-weight:600;color:#F0D99A">Espace Vendeur</div>
+            <div id="auth-profil-desc" style="font-size:11px;color:rgba(255,255,255,0.5)">Estimation IA · Annonces · Suivi de vente</div>
+          </div>
+        </div>
       </div>
-      <div class="profile-opt" onclick="selectProfile('agt')" id="opt-agt">
-        <div class="profile-opt-icon">🤝</div>
-        <div class="profile-opt-name">Agent</div>
+
+      <!-- ONGLETS CONNEXION / INSCRIPTION -->
+      <div style="display:flex;border-bottom:2px solid var(--warm)">
+        <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:14px;border:none;background:#fff;font-size:14px;font-weight:600;color:var(--gold);border-bottom:2px solid var(--gold);margin-bottom:-2px;cursor:pointer">
+          Se connecter
+        </button>
+        <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:14px;border:none;background:#fff;font-size:14px;font-weight:500;color:var(--mid);cursor:pointer">
+          Créer un compte
+        </button>
       </div>
-      <div class="profile-opt sel" onclick="selectProfile('buy')" id="opt-buy">
-        <div class="profile-opt-icon">🔍</div>
-        <div class="profile-opt-name">Acheteur</div>
+
+      <!-- FORMULAIRE CONNEXION -->
+      <div id="form-login" style="padding:24px 28px">
+        <div class="field"><label>Email</label><input type="email" id="login-email-existing" placeholder="votre@email.com"></div>
+        <div class="field">
+          <label>Mot de passe</label>
+          <input type="password" id="login-password" placeholder="••••••••">
+          <div style="text-align:right;margin-top:4px"><span style="font-size:11px;color:var(--gold);cursor:pointer">Mot de passe oublié ?</span></div>
+        </div>
+        <button class="btn btn-gold btn-full" style="margin-top:4px" onclick="doLoginExisting()">
+          → Se connecter
+        </button>
+        <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--mid)">
+          Pas encore de compte ? <span style="color:var(--gold);cursor:pointer;font-weight:600" onclick="switchAuthTab('register')">Créer un compte gratuit</span>
+        </div>
+        <!-- DÉMO RAPIDE -->
+        <div style="margin-top:16px;padding:12px;background:var(--warm);border-radius:8px;text-align:center">
+          <div style="font-size:11px;color:var(--mid);margin-bottom:6px">Mode démonstration (sans inscription)</div>
+          <button class="btn btn-outline btn-sm" onclick="doLoginDemo()" style="font-size:11px">Accéder en démo →</button>
+        </div>
+      </div>
+
+      <!-- FORMULAIRE INSCRIPTION -->
+      <div id="form-register" style="padding:24px 28px;display:none">
+        <div class="field-row">
+          <div class="field"><label>Prénom</label><input type="text" id="reg-prenom" placeholder="Jean"></div>
+          <div class="field"><label>Nom</label><input type="text" id="reg-nom" placeholder="Dupont"></div>
+        </div>
+        <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="votre@email.com"></div>
+        <div class="field"><label>Téléphone</label><input type="tel" id="reg-tel" placeholder="+687 00 00 00"></div>
+        <div class="field"><label>Mot de passe</label><input type="password" id="reg-password" placeholder="Min. 8 caractères"></div>
+        <div id="reg-extra-agt" style="display:none">
+          <div class="field"><label>Nom de l'agence</label><input type="text" id="reg-agence" placeholder="Agence Soleil NC"></div>
+          <div class="field"><label>Numéro de carte pro (optionnel)</label><input type="text" id="reg-cartepro" placeholder="FNAIM / CCI NC"></div>
+        </div>
+        <button class="btn btn-gold btn-full" style="margin-top:4px" onclick="doRegister()">
+          ✅ Créer mon compte gratuit
+        </button>
+        <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--mid)">
+          En vous inscrivant, vous acceptez nos <span style="color:var(--gold);cursor:pointer">conditions d'utilisation</span>
+        </div>
       </div>
     </div>
-    <div class="field"><label>Prénom & Nom</label><input type="text" id="login-nom" placeholder="Jean Dupont"></div>
-    <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="jean@email.com"></div>
-    <div class="field"><label>Téléphone</label><input type="tel" id="login-tel" placeholder="+687 00 00 00"></div>
-    <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="doLogin()">✅ Accéder à l'application</button>
-    <div style="text-align:center;margin-top:12px">
-      <span style="font-size:12px;color:var(--mid);cursor:pointer" onclick="closeLoginModal()">← Retour</span>
+
+    <!-- ÉTAPE 2 : CONFIRMATION -->
+    <div id="auth-step-2" style="display:none;padding:32px 28px;text-align:center">
+      <div style="font-size:56px;margin-bottom:16px">🎉</div>
+      <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--dark);margin-bottom:8px" id="auth-confirm-title">Bienvenue !</div>
+      <div style="font-size:13px;color:var(--mid);margin-bottom:24px" id="auth-confirm-sub">Votre compte a été créé avec succès.</div>
+      <button class="btn btn-gold btn-full" onclick="doLoginConfirm()">
+        Accéder à mon espace →
+      </button>
     </div>
+
   </div>
 </div>
 
@@ -2165,50 +2227,126 @@ function setProfile(p,btn){
 // LANDING PAGE & LOGIN
 // =============================================
 const APP_STATE = {
-  user: null, // {nom, email, tel, profil}
+  user: null,
   loggedIn: false,
 };
 
-let ldView='grid';
-let ldFiltered=[];
-let activeQuickFilter='';
+const PROFIL_CONFIG = {
+  sell:{icon:'🏠',name:'Espace Vendeur',desc:'Estimation IA · Annonces · Suivi de vente'},
+  agt:{icon:'🤝',name:'Espace Agent Immobilier',desc:'CRM · Multi-biens · Annonces · Stats'},
+  buy:{icon:'🔍',name:'Espace Acheteur',desc:'Recherche · Messagerie · Financement'},
+};
 
-function toggleMenu(name){
-  ['vendre','acheter','pro'].forEach(m=>{
-    if(m!==name){const d=document.getElementById('dropdown-'+m);if(d)d.style.display='none';}
-  });
-  const drop=document.getElementById('dropdown-'+name);
-  if(drop) drop.style.display=drop.style.display==='none'?'block':'none';
+function showLoginModal(profil){
+  document.getElementById('login-modal').style.display='flex';
+  document.getElementById('login-modal').dataset.profil=profil||'buy';
+  updateAuthModalProfil(profil||'buy');
+  switchAuthTab('login');
+  const extra=document.getElementById('reg-extra-agt');
+  if(extra) extra.style.display=(profil==='agt')?'block':'none';
+  document.getElementById('auth-step-1').style.display='block';
+  document.getElementById('auth-step-2').style.display='none';
 }
-document.addEventListener('click',e=>{
-  if(!e.target.closest('[id^="menu-"]')){
-    ['vendre','acheter','pro'].forEach(m=>{const d=document.getElementById('dropdown-'+m);if(d)d.style.display='none';});
-  }
-});
 
-function toggleQuickFilter(el,type){
-  if(activeQuickFilter===type){
-    activeQuickFilter='';
-    document.querySelectorAll('.qf-btn').forEach(b=>{
-      const isAll=b.dataset.type==='';
-      b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
-      b.style.color='#fff';b.style.fontWeight=isAll?'600':'normal';
-      b.style.borderColor=isAll?'rgba(255,255,255,0.6)':'rgba(255,255,255,0.3)';
-    });
+function updateAuthModalProfil(profil){
+  const cfg=PROFIL_CONFIG[profil]||PROFIL_CONFIG.buy;
+  const titles={sell:'Déposer une annonce',agt:'Espace Agent',buy:'Se connecter'};
+  const subs={sell:"Vendez votre bien avec l'IA en quelques minutes",agt:'Accédez à votre tableau de bord professionnel',buy:'Trouvez votre bien idéal en NC'};
+  const els={title:'auth-modal-title',sub:'auth-modal-sub',icon:'auth-profil-icon',name:'auth-profil-name',desc:'auth-profil-desc'};
+  const vals={title:titles[profil]||titles.buy,sub:subs[profil]||subs.buy,icon:cfg.icon,name:cfg.name,desc:cfg.desc};
+  Object.keys(els).forEach(k=>{const e=document.getElementById(els[k]);if(e)e.textContent=vals[k];});
+}
+
+function closeLoginModal(){
+  document.getElementById('login-modal').style.display='none';
+}
+
+function selectProfile(p){
+  document.getElementById('login-modal').dataset.profil=p;
+  updateAuthModalProfil(p);
+  ['sell','agt','buy'].forEach(x=>{document.getElementById('opt-'+x)?.classList.remove('sel');});
+  document.getElementById('opt-'+p)?.classList.add('sel');
+  const extra=document.getElementById('reg-extra-agt');
+  if(extra) extra.style.display=(p==='agt')?'block':'none';
+}
+
+function switchAuthTab(tab){
+  const fl=document.getElementById('form-login');
+  const fr=document.getElementById('form-register');
+  const tl=document.getElementById('tab-login');
+  const tr=document.getElementById('tab-register');
+  if(!fl||!fr) return;
+  if(tab==='login'){
+    fl.style.display='block';fr.style.display='none';
+    if(tl){tl.style.color='var(--gold)';tl.style.borderBottom='2px solid var(--gold)';tl.style.fontWeight='600';}
+    if(tr){tr.style.color='var(--mid)';tr.style.borderBottom='none';tr.style.fontWeight='500';}
   } else {
-    activeQuickFilter=type;
-    document.querySelectorAll('.qf-btn').forEach(b=>{
-      const isActive=b.dataset.type===type;
-      b.style.background=isActive?'#fff':'rgba(255,255,255,0.1)';
-      b.style.color=isActive?'var(--gold)':'rgba(255,255,255,0.7)';
-      b.style.fontWeight=isActive?'600':'normal';
-      b.style.borderColor=isActive?'#fff':'rgba(255,255,255,0.2)';
-    });
+    fl.style.display='none';fr.style.display='block';
+    if(tr){tr.style.color='var(--gold)';tr.style.borderBottom='2px solid var(--gold)';tr.style.fontWeight='600';}
+    if(tl){tl.style.color='var(--mid)';tl.style.borderBottom='none';tl.style.fontWeight='500';}
   }
-  const sel=document.getElementById('ld-type');
-  if(sel) sel.value=activeQuickFilter;
-  landingSearch();
 }
+
+function doLoginExisting(){
+  const email=document.getElementById('login-email-existing')?.value?.trim();
+  const pwd=document.getElementById('login-password')?.value;
+  if(!email){alert('Veuillez entrer votre email');return;}
+  if(!pwd){alert('Veuillez entrer votre mot de passe');return;}
+  const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
+  APP_STATE.user={nom:email.split('@')[0],email,profil};
+  APP_STATE.loggedIn=true;
+  showAuthStep2('Connexion réussie !');
+}
+
+function doRegister(){
+  const prenom=document.getElementById('reg-prenom')?.value?.trim();
+  const nom=document.getElementById('reg-nom')?.value?.trim();
+  const email=document.getElementById('reg-email')?.value?.trim();
+  if(!prenom||!nom){alert('Veuillez entrer votre prénom et nom');return;}
+  if(!email){alert('Veuillez entrer votre email');return;}
+  const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
+  APP_STATE.user={nom:prenom+' '+nom,email,tel:document.getElementById('reg-tel')?.value,profil};
+  APP_STATE.loggedIn=true;
+  showAuthStep2('Compte créé avec succès !');
+}
+
+function showAuthStep2(msg){
+  const profil=APP_STATE.user?.profil||'buy';
+  const cfg=PROFIL_CONFIG[profil]||PROFIL_CONFIG.buy;
+  document.getElementById('auth-step-1').style.display='none';
+  document.getElementById('auth-step-2').style.display='block';
+  const t=document.getElementById('auth-confirm-title');
+  const s=document.getElementById('auth-confirm-sub');
+  if(t) t.textContent='Bienvenue '+APP_STATE.user.nom+' !';
+  if(s) s.textContent=msg+' Accédez maintenant à votre '+cfg.name+'.';
+}
+
+function doLoginDemo(){
+  const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
+  APP_STATE.user={nom:'Démo',email:'demo@immo360.nc',profil};
+  APP_STATE.loggedIn=true;
+  closeLoginModal();
+  hideLanding();
+  const btn=document.getElementById('t-'+profil);
+  if(btn) setProfile(profil,btn); else go('dashboard');
+  initConversations();
+  updateUserDisplay();
+}
+
+function doLoginConfirm(){
+  const profil=APP_STATE.user?.profil||'buy';
+  closeLoginModal();
+  hideLanding();
+  const btn=document.getElementById('t-'+profil);
+  if(btn) setProfile(profil,btn); else go('dashboard');
+  initConversations();
+  updateUserDisplay();
+  if(window._pendingBien){setTimeout(()=>{contactVendeur(window._pendingBien);window._pendingBien=null;},300);}
+}
+
+function doLogin(){doLoginConfirm();}
+function loginAs(profil){showLoginModal(profil);}
+
 
 function showLanding(){
   document.getElementById('landing-page').style.display='flex';
