@@ -1842,6 +1842,141 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
+    <!-- ==================== MATCHING IA ==================== -->
+    <div class="panel" id="panel-matching">
+
+      <!-- EN-TÊTE -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🤖 Matching IA</h2>
+          <p style="font-size:13px;color:var(--mid)">L'IA analyse automatiquement la compatibilité entre vos biens et vos acheteurs</p>
+        </div>
+        <button class="btn btn-gold" onclick="runGlobalMatching()">⚡ Lancer le matching global</button>
+      </div>
+
+      <!-- STATS GLOBALES -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px" id="matching-stats">
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:28px;font-weight:700;color:var(--gold)" id="ms-biens">0</div>
+          <div style="font-size:11px;color:var(--mid)">Biens actifs</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:28px;font-weight:700;color:var(--blue)" id="ms-acheteurs">0</div>
+          <div style="font-size:11px;color:var(--mid)">Acheteurs enregistrés</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:28px;font-weight:700;color:var(--green)" id="ms-matches">0</div>
+          <div style="font-size:11px;color:var(--mid)">Matches >80%</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:28px;font-weight:700;color:var(--dark)" id="ms-contacts">0</div>
+          <div style="font-size:11px;color:var(--mid)">Contacts générés</div>
+        </div>
+      </div>
+
+      <div class="grid2">
+
+        <!-- COLONNE GAUCHE : BIENS + LEURS ACHETEURS COMPATIBLES -->
+        <div>
+          <div class="card">
+            <div class="card-title">🏠 Biens — Acheteurs compatibles
+              <select id="matching-filter-bien" onchange="filterMatchingBiens()" style="margin-left:auto;font-size:11px;border:1px solid var(--warm);padding:4px 8px;border-radius:6px">
+                <option value="">Tous les biens</option>
+                <option value="90">Score >90%</option>
+                <option value="80">Score >80%</option>
+                <option value="70">Score >70%</option>
+              </select>
+            </div>
+            <div id="matching-biens-list"></div>
+          </div>
+        </div>
+
+        <!-- COLONNE DROITE : ACHETEURS + BIENS COMPATIBLES -->
+        <div>
+          <div class="card">
+            <div class="card-title">🔍 Acheteurs — Biens compatibles
+              <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showAddAcheteurModal()">+ Ajouter</button>
+            </div>
+            <div id="matching-acheteurs-list"></div>
+          </div>
+
+          <!-- DÉTAIL MATCH SÉLECTIONNÉ -->
+          <div class="card" id="match-detail-card" style="display:none">
+            <div class="card-title">⚡ Analyse du match
+              <button onclick="document.getElementById('match-detail-card').style.display='none'" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--mid)">✕</button>
+            </div>
+            <div id="match-detail-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL AJOUTER ACHETEUR -->
+      <div id="acheteur-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">Ajouter un acheteur</h3>
+            <button onclick="document.getElementById('acheteur-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Prénom & Nom *</label><input type="text" id="ach-nom" placeholder="Jean Martin"></div>
+            <div class="field"><label>Téléphone *</label><input type="tel" id="ach-tel" placeholder="+687 00 00 00"></div>
+          </div>
+          <div class="field"><label>Email</label><input type="email" id="ach-email" placeholder="jean@email.com"></div>
+          <div class="field"><label>Type de recherche</label>
+            <select id="ach-type">
+              <option value="">Tous types</option>
+              <option>Appartement</option><option>Maison</option><option>Villa</option>
+              <option>Studio</option><option>Terrain</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Budget min (F)</label><input type="number" id="ach-budget-min" placeholder="20000000"></div>
+            <div class="field"><label>Budget max (F)</label><input type="number" id="ach-budget-max" placeholder="60000000"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Surface min (m²)</label><input type="number" id="ach-surface-min" placeholder="60"></div>
+            <div class="field"><label>Pièces min</label><input type="number" id="ach-pieces-min" placeholder="3"></div>
+          </div>
+          <div class="field"><label>Zones préférées</label>
+            <select id="ach-zone" multiple style="height:80px">
+              <option value="Anse Vata">Anse Vata</option>
+              <option value="Baie des Citrons">Baie des Citrons</option>
+              <option value="Val Plaisance">Val Plaisance</option>
+              <option value="Tina">Tina</option>
+              <option value="Faubourg Blanchot">Faubourg Blanchot</option>
+              <option value="Dumbéa">Dumbéa</option>
+              <option value="Mont-Dore">Mont-Dore</option>
+              <option value="Magenta">Magenta</option>
+            </select>
+            <div style="font-size:10px;color:var(--mid);margin-top:3px">Ctrl+clic pour sélectionner plusieurs zones</div>
+          </div>
+          <div class="field"><label>Équipements souhaités</label>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">
+              <label class="eq-check"><input type="checkbox" id="ach-vue-mer"> 🌊 Vue mer</label>
+              <label class="eq-check"><input type="checkbox" id="ach-piscine"> 🏊 Piscine</label>
+              <label class="eq-check"><input type="checkbox" id="ach-garage"> 🚗 Garage</label>
+              <label class="eq-check"><input type="checkbox" id="ach-terrasse"> 🌿 Terrasse</label>
+              <label class="eq-check"><input type="checkbox" id="ach-jardin"> 🌳 Jardin</label>
+              <label class="eq-check"><input type="checkbox" id="ach-ascenseur"> 🛗 Ascenseur</label>
+            </div>
+          </div>
+          <div class="field"><label>Urgence d'achat</label>
+            <select id="ach-urgence">
+              <option value="3">Dans les 3 mois</option>
+              <option value="6">Dans les 6 mois</option>
+              <option value="12">Dans l'année</option>
+              <option value="0">Pas de délai</option>
+            </select>
+          </div>
+          <div class="field"><label>Notes</label>
+            <textarea id="ach-notes" rows="2" placeholder="Contraintes particulières, préférences..."></textarea>
+          </div>
+          <button class="btn btn-gold btn-full" onclick="saveAcheteur()">✅ Enregistrer l'acheteur</button>
+        </div>
+      </div>
+
+    </div>
+
     <!-- ==================== STATS ==================== -->
     <div class="panel" id="panel-stats">
       <div class="grid4" style="margin-bottom:18px" id="stats-kpis"></div>
@@ -2028,12 +2163,12 @@ const MENUS = {
     {s:'Mon espace',items:[{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
   ],
   agt:[
-    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'🔭',k:'marketplace'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'}]},
+    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'},{ico:'💎',k:'estimation'}]},
     {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📈',k:'stats'}]},
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
@@ -2082,6 +2217,7 @@ function go(panel){
   if(panel==='estimation'){calcEstim();buildDPE();buildMarketSources();buildQuartiersTable();if(prixBase>0)buildTravauxList(document.getElementById('est-etat')?.value||'bon',document.getElementById('est-type')?.value||'apt',parseInt(document.getElementById('est-surface')?.value)||85);}
   if(panel==='financement') calcFin();
   if(panel==='marketplace') buildMarketplace();
+  if(panel==='matching') buildMatching();
   if(panel==='messagerie') buildMessagerie();
   if(panel==='depot'){depotStep=1;goDepotStep(1);}
   if(panel==='rdv') buildCal();
@@ -4381,6 +4517,383 @@ function openLegalPage(page){
   document.getElementById('legal-title').textContent=data.title;
   document.getElementById('legal-content').innerHTML=data.content;
   document.getElementById('legal-modal').style.display='flex';
+}
+
+// =============================================
+// MATCHING IA — MOTEUR COMPLET
+// =============================================
+
+// Base d'acheteurs (démo + réels ajoutés)
+let ACHETEURS = [
+  {id:1,nom:'Marie Lecomte',tel:'+687 43 21 00',email:'marie.l@email.nc',type:'Appartement',budgetMin:30000000,budgetMax:55000000,surfaceMin:65,piecesMin:3,zones:['Anse Vata','Baie des Citrons','Val Plaisance'],features:['Vue mer','Terrasse'],urgence:3,notes:'Cadre expatriée, cherche vue mer, étage élevé',avatar:'M'},
+  {id:2,nom:'Paul & Sophie Roux',tel:'+687 77 88 99',email:'famille.roux@email.nc',type:'Maison',budgetMin:45000000,budgetMax:70000000,surfaceMin:120,piecesMin:4,zones:['Dumbéa','Mont-Dore','Normandie'],features:['Jardin','Garage'],urgence:6,notes:'Famille 3 enfants, école primaire importante, quartier calme',avatar:'P'},
+  {id:3,nom:'Antoine Moreau',tel:'+687 55 66 77',email:'a.moreau@invest.nc',type:'Appartement',budgetMin:10000000,budgetMax:20000000,surfaceMin:25,piecesMin:1,zones:['Magenta','Motor Pool','Centre-ville'],features:['Locataire en place'],urgence:3,notes:'Investisseur, cherche rendement >7%, locataire en place idéal',avatar:'A'},
+  {id:4,nom:'Isabelle Fontaine',tel:'+687 22 33 44',email:'i.fontaine@email.nc',type:'Villa',budgetMin:80000000,budgetMax:150000000,surfaceMin:180,piecesMin:5,zones:['Anse Vata','Baie des Citrons'],features:['Piscine','Vue lagon','Garage'],urgence:12,notes:'CEO entreprise locale, cherche villa prestige avec piscine',avatar:'I'},
+  {id:5,nom:'Thomas Gérard',tel:'+687 11 22 33',email:'t.gerard@email.nc',type:'Studio',budgetMin:8000000,budgetMax:15000000,surfaceMin:20,piecesMin:1,zones:['Magenta','Centre-ville','Faubourg Blanchot'],features:[],urgence:3,notes:'Jeune actif, premier achat ou colocation',avatar:'T'},
+  {id:6,nom:'Hélène & Marc Dupuis',tel:'+687 99 00 11',email:'dupuis@email.nc',type:'Appartement',budgetMin:38000000,budgetMax:60000000,surfaceMin:75,piecesMin:3,zones:['Val Plaisance','Tina','Baie des Citrons'],features:['Terrasse','Parking','Ascenseur'],urgence:6,notes:'Couple sans enfants, veulent vue mer ou vue dégagée',avatar:'H'},
+];
+
+let selectedBienForMatch = null;
+let selectedAcheteurForMatch = null;
+
+// ALGORITHME DE MATCHING IA
+function calculateMatchScore(bien, acheteur){
+  let score = 0;
+  let details = [];
+  let weights = {budget:30, type:20, surface:15, zone:15, features:10, urgence:5, pieces:5};
+
+  // 1. BUDGET (30 pts)
+  const prix = bien.prix || 0;
+  if(prix >= acheteur.budgetMin && prix <= acheteur.budgetMax){
+    score += weights.budget;
+    details.push({label:'Budget', status:'ok', text:`${conv(prix)} dans la fourchette`});
+  } else if(prix < acheteur.budgetMin * 0.95){
+    score += weights.budget * 0.7;
+    details.push({label:'Budget', status:'warn', text:`Légèrement sous budget (${conv(prix)} vs min ${conv(acheteur.budgetMin)})`});
+  } else if(prix <= acheteur.budgetMax * 1.05){
+    score += weights.budget * 0.5;
+    details.push({label:'Budget', status:'warn', text:`Légèrement au-dessus (${conv(prix)} vs max ${conv(acheteur.budgetMax)})`});
+  } else {
+    details.push({label:'Budget', status:'bad', text:`Hors budget (${conv(prix)})`});
+  }
+
+  // 2. TYPE (20 pts)
+  if(!acheteur.type || acheteur.type === bien.type){
+    score += weights.type;
+    details.push({label:'Type', status:'ok', text:bien.type+' recherché'});
+  } else if(
+    (acheteur.type==='Appartement' && bien.type==='Studio') ||
+    (acheteur.type==='Studio' && bien.type==='Appartement') ||
+    (acheteur.type==='Maison' && bien.type==='Villa') ||
+    (acheteur.type==='Villa' && bien.type==='Maison')
+  ){
+    score += weights.type * 0.6;
+    details.push({label:'Type', status:'warn', text:`${bien.type} (recherche ${acheteur.type})`});
+  } else {
+    details.push({label:'Type', status:'bad', text:`${bien.type} vs ${acheteur.type} recherché`});
+  }
+
+  // 3. SURFACE (15 pts)
+  const surf = bien.surface || 0;
+  if(surf >= acheteur.surfaceMin){
+    score += weights.surface;
+    details.push({label:'Surface', status:'ok', text:`${surf}m² ≥ ${acheteur.surfaceMin}m² min`});
+  } else if(surf >= acheteur.surfaceMin * 0.9){
+    score += weights.surface * 0.6;
+    details.push({label:'Surface', status:'warn', text:`${surf}m² (min souhaité ${acheteur.surfaceMin}m²)`});
+  } else {
+    details.push({label:'Surface', status:'bad', text:`${surf}m² trop petit (min ${acheteur.surfaceMin}m²)`});
+  }
+
+  // 4. ZONE (15 pts)
+  const bienZone = bien.quartier || bien.ville || '';
+  const zoneMatch = acheteur.zones.some(z =>
+    bienZone.toLowerCase().includes(z.toLowerCase()) ||
+    z.toLowerCase().includes(bienZone.toLowerCase())
+  );
+  if(zoneMatch){
+    score += weights.zone;
+    details.push({label:'Localisation', status:'ok', text:`${bienZone} dans les zones préférées`});
+  } else if(acheteur.zones.length === 0){
+    score += weights.zone * 0.7;
+    details.push({label:'Localisation', status:'warn', text:`${bienZone} (pas de préférence zone)`});
+  } else {
+    details.push({label:'Localisation', status:'bad', text:`${bienZone} hors zones souhaitées`});
+  }
+
+  // 5. FEATURES (10 pts)
+  const bienFeatures = bien.features || [];
+  if(acheteur.features.length === 0){
+    score += weights.features;
+    details.push({label:'Équipements', status:'ok', text:'Pas de critère spécifique'});
+  } else {
+    const matchCount = acheteur.features.filter(f =>
+      bienFeatures.some(bf => bf.toLowerCase().includes(f.toLowerCase()) || f.toLowerCase().includes(bf.toLowerCase()))
+    ).length;
+    const ratio = matchCount / acheteur.features.length;
+    score += weights.features * ratio;
+    if(ratio === 1) details.push({label:'Équipements', status:'ok', text:'Tous les équipements présents'});
+    else if(ratio >= 0.5) details.push({label:'Équipements', status:'warn', text:`${matchCount}/${acheteur.features.length} équipements présents`});
+    else details.push({label:'Équipements', status:'bad', text:`Seulement ${matchCount}/${acheteur.features.length} équipements`});
+  }
+
+  // 6. PIÈCES (5 pts)
+  const pieces = bien.pieces || 0;
+  if(pieces >= acheteur.piecesMin){
+    score += weights.pieces;
+    details.push({label:'Pièces', status:'ok', text:`${pieces} pièces ≥ ${acheteur.piecesMin} min`});
+  } else {
+    details.push({label:'Pièces', status:'bad', text:`${pieces} pièces (min ${acheteur.piecesMin})`});
+  }
+
+  // 7. URGENCE (5 pts) — toujours un petit bonus
+  score += weights.urgence * (acheteur.urgence <= 3 ? 1 : acheteur.urgence <= 6 ? 0.7 : 0.4);
+  details.push({label:'Urgence', status:'ok', text:acheteur.urgence<=3?"Achat urgent (<3 mois)":acheteur.urgence<=6?"Dans les 6 mois":"Dans l'année"});
+
+  return {score: Math.round(Math.min(100, score)), details};
+}
+
+// Calculer tous les matches pour un bien
+function getMatchesForBien(bien){
+  return ACHETEURS.map(ach => {
+    const {score, details} = calculateMatchScore(bien, ach);
+    return {acheteur:ach, score, details};
+  }).sort((a,b) => b.score - a.score);
+}
+
+// Calculer tous les matches pour un acheteur
+function getMatchesForAcheteur(acheteur){
+  return BIENS_DATA.filter(b => b.statut === 'En vente').map(bien => {
+    const {score, details} = calculateMatchScore(bien, acheteur);
+    return {bien, score, details};
+  }).sort((a,b) => b.score - a.score);
+}
+
+function getScoreClass(score){
+  if(score >= 90) return 'match-score-95';
+  if(score >= 80) return 'match-score-85';
+  if(score >= 70) return 'match-score-75';
+  return 'match-score-low';
+}
+
+function getScoreColor(score){
+  if(score >= 90) return '#2A7A4B';
+  if(score >= 80) return '#5aaf2d';
+  if(score >= 70) return '#B8922A';
+  return '#888';
+}
+
+function buildMatching(){
+  // Stats
+  const biensActifs = BIENS_DATA.filter(b => b.statut === 'En vente');
+  const allMatches = biensActifs.flatMap(b => getMatchesForBien(b).filter(m => m.score >= 80));
+  document.getElementById('ms-biens').textContent = biensActifs.length;
+  document.getElementById('ms-acheteurs').textContent = ACHETEURS.length;
+  document.getElementById('ms-matches').textContent = allMatches.length;
+  document.getElementById('ms-contacts').textContent = allMatches.filter(m => m.score >= 85).length;
+
+  renderMatchingBiens();
+  renderMatchingAcheteurs();
+  setTimeout(applyMobileLayout, 50);
+}
+
+function renderMatchingBiens(){
+  const el = document.getElementById('matching-biens-list');
+  if(!el) return;
+  const minScore = parseInt(document.getElementById('matching-filter-bien')?.value || 0);
+  const biensActifs = BIENS_DATA.filter(b => b.statut === 'En vente').slice(0, 10);
+
+  if(!biensActifs.length){
+    el.innerHTML = "<div style='text-align:center;padding:30px;color:var(--mid)'>Aucun bien actif.<br>Déposez une annonce d'abord.</div>";
+    return;
+  }
+
+  el.innerHTML = biensActifs.map(bien => {
+    const matches = getMatchesForBien(bien).filter(m => m.score >= (minScore || 0));
+    const top3 = matches.slice(0, 3);
+    const bestScore = matches[0]?.score || 0;
+    return `
+    <div class="match-card ${selectedBienForMatch===bien.id?'selected':''}" onclick="selectBienForMatch(${bien.id})">
+      <div style="display:flex;align-items:start;gap:10px;margin-bottom:8px">
+        <div class="match-score-circle ${getScoreClass(bestScore)}" style="font-size:12px">${bestScore}%</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${bien.titre||bien.type+' '+bien.quartier}</div>
+          <div style="font-size:11px;color:var(--mid)">${bien.surface||'—'}m² · ${bien.pieces||'—'} pièces · ${conv(bien.prix)}</div>
+          <div style="font-size:11px;color:var(--mid)">📍 ${bien.quartier||bien.ville||'NC'}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:18px;font-weight:700;color:${getScoreColor(matches.length)}">${matches.length}</div>
+          <div style="font-size:9px;color:var(--mid)">acheteur${matches.length>1?'s':''}<br>compatibles</div>
+        </div>
+      </div>
+      <!-- Mini scores -->
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        ${top3.map(m => `
+          <div style="display:flex;align-items:center;gap:4px;background:var(--warm);border-radius:20px;padding:3px 8px 3px 4px">
+            <div style="width:20px;height:20px;border-radius:50%;background:${getScoreColor(m.score)};color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">${m.acheteur.avatar}</div>
+            <span style="font-size:11px;font-weight:500">${m.acheteur.nom.split(' ')[0]}</span>
+            <span style="font-size:10px;color:${getScoreColor(m.score)};font-weight:700">${m.score}%</span>
+          </div>`).join('')}
+        ${matches.length > 3 ? `<span style="font-size:11px;color:var(--mid);padding:3px 6px">+${matches.length-3} autres</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMatchingAcheteurs(){
+  const el = document.getElementById('matching-acheteurs-list');
+  if(!el) return;
+
+  if(!ACHETEURS.length){
+    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mid)">Aucun acheteur enregistré.<br><button class="btn btn-gold btn-sm" onclick="showAddAcheteurModal()">+ Ajouter un acheteur</button></div>';
+    return;
+  }
+
+  el.innerHTML = ACHETEURS.map(ach => {
+    const matches = getMatchesForAcheteur(ach).filter(m => m.score >= 70);
+    const bestMatch = matches[0];
+    const urgenceLabel = ach.urgence<=3?'🔴 Urgent':ach.urgence<=6?'🟡 6 mois':'🟢 1 an';
+    return `
+    <div class="acheteur-card ${selectedAcheteurForMatch===ach.id?'selected':''}" onclick="selectAcheteurForMatch(${ach.id})">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div class="acheteur-avatar">${ach.avatar}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--dark)">${ach.nom}</div>
+          <div style="font-size:11px;color:var(--mid)">${ach.type||'Tous types'} · ${conv(ach.budgetMin)}–${conv(ach.budgetMax)}</div>
+          <div style="font-size:11px;color:var(--mid)">${ach.surfaceMin}m² min · ${ach.piecesMin}+ pièces · ${urgenceLabel}</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          ${bestMatch ? `<div style="font-size:20px;font-weight:700;color:${getScoreColor(bestMatch.score)}">${bestMatch.score}%</div><div style="font-size:9px;color:var(--mid)">meilleur match</div>` : '<div style="font-size:11px;color:var(--soft)">Aucun match</div>'}
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:11px;color:var(--mid)">${matches.length} bien${matches.length>1?'s':''} compatible${matches.length>1?'s':''}</div>
+        <div style="display:flex;gap:5px">
+          <button onclick="event.stopPropagation();contactAcheteur(${ach.id})" class="btn btn-outline btn-sm" style="font-size:10px">💬 Contacter</button>
+          <button onclick="event.stopPropagation();selectAcheteurForMatch(${ach.id})" class="btn btn-gold btn-sm" style="font-size:10px">Voir matches →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectBienForMatch(bienId){
+  selectedBienForMatch = bienId;
+  const bien = BIENS_DATA.find(b => b.id === bienId);
+  if(!bien) return;
+  const matches = getMatchesForBien(bien);
+  showMatchDetail('bien', bien, matches);
+  renderMatchingBiens();
+}
+
+function selectAcheteurForMatch(achId){
+  selectedAcheteurForMatch = achId;
+  const ach = ACHETEURS.find(a => a.id === achId);
+  if(!ach) return;
+  const matches = getMatchesForAcheteur(ach);
+  showMatchDetail('acheteur', ach, matches);
+  renderMatchingAcheteurs();
+}
+
+function showMatchDetail(mode, entity, matches){
+  const card = document.getElementById('match-detail-card');
+  const content = document.getElementById('match-detail-content');
+  if(!card || !content) return;
+  card.style.display = 'block';
+
+  if(mode === 'bien'){
+    content.innerHTML = `
+      <div style="padding:10px 0;border-bottom:1px solid var(--warm);margin-bottom:12px">
+        <div style="font-size:14px;font-weight:600;color:var(--dark)">${entity.titre||entity.type+' '+entity.quartier}</div>
+        <div style="font-size:11px;color:var(--mid)">${conv(entity.prix)} · ${entity.surface}m² · ${entity.quartier}</div>
+      </div>
+      <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${matches.length} acheteur${matches.length>1?'s':''} analysé${matches.length>1?'s':''}</div>
+      ${matches.slice(0,6).map(m => renderMatchRow(m.acheteur, m.score, m.details, 'acheteur')).join('')}`;
+  } else {
+    content.innerHTML = `
+      <div style="padding:10px 0;border-bottom:1px solid var(--warm);margin-bottom:12px">
+        <div style="font-size:14px;font-weight:600;color:var(--dark)">${entity.nom}</div>
+        <div style="font-size:11px;color:var(--mid)">${entity.type||'Tous types'} · ${conv(entity.budgetMin)}–${conv(entity.budgetMax)}</div>
+      </div>
+      <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${matches.length} bien${matches.length>1?'s':''} analysé${matches.length>1?'s':''}</div>
+      ${matches.slice(0,6).map(m => renderMatchRow(m.bien, m.score, m.details, 'bien')).join('')}`;
+  }
+  card.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderMatchRow(entity, score, details, type){
+  const name = type==='acheteur' ? entity.nom : (entity.titre||entity.type+' '+entity.quartier);
+  const sub = type==='acheteur' ? entity.tel : conv(entity.prix);
+  return `
+  <div style="border:1px solid var(--warm);border-radius:8px;padding:10px;margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="width:40px;height:40px;border-radius:50%;background:${getScoreColor(score)};color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${score}%</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--dark)">${name}</div>
+        <div style="font-size:11px;color:var(--mid)">${sub}</div>
+      </div>
+      <div style="display:flex;gap:4px">
+        ${score>=80?`<button onclick="contactMatch('${name}','${score}')" class="btn btn-gold btn-sm" style="font-size:10px">📨 Contacter</button>`:''}
+      </div>
+    </div>
+    <div class="match-bar"><div class="match-bar-fill" style="width:${score}%;background:${getScoreColor(score)}"></div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:8px">
+      ${details.map(d => `<span class="match-tag match-${d.status}">${d.label}: ${d.text}</span>`).join('')}
+    </div>
+  </div>`;
+}
+
+function filterMatchingBiens(){renderMatchingBiens();}
+
+function runGlobalMatching(){
+  const btn=document.querySelector('[onclick="runGlobalMatching()"]');
+  btn.innerHTML='⏳ Analyse en cours...';btn.disabled=true;
+  setTimeout(()=>{
+    buildMatching();
+    btn.innerHTML='⚡ Lancer le matching global';btn.disabled=false;
+    // Notification
+    const notif=document.createElement('div');
+    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(184,146,42,0.3)';
+    notif.textContent='🤖 Matching terminé — '+ACHETEURS.length+' acheteurs × '+BIENS_DATA.filter(b=>b.statut==='En vente').length+' biens analysés';
+    document.body.appendChild(notif);
+    setTimeout(()=>document.body.removeChild(notif),3500);
+  },1800);
+}
+
+function contactMatch(name, score){
+
+
+
+}
+
+function contactAcheteur(achId){
+  const ach=ACHETEURS.find(a=>a.id===achId);
+  if(!ach) return;
+  go('messagerie');
+}
+
+function showAddAcheteurModal(){
+  const m=document.getElementById('acheteur-modal');
+  if(m){m.style.display='flex';}
+}
+
+function saveAcheteur(){
+  const nom=document.getElementById('ach-nom')?.value?.trim();
+  const tel=document.getElementById('ach-tel')?.value?.trim();
+  if(!nom||!tel){alert('Nom et téléphone requis');return;}
+
+  const zones=Array.from(document.getElementById('ach-zone')?.selectedOptions||[]).map(o=>o.value);
+  const features=[];
+  if(document.getElementById('ach-vue-mer')?.checked) features.push('Vue mer');
+  if(document.getElementById('ach-piscine')?.checked) features.push('Piscine');
+  if(document.getElementById('ach-garage')?.checked) features.push('Garage');
+  if(document.getElementById('ach-terrasse')?.checked) features.push('Terrasse');
+  if(document.getElementById('ach-jardin')?.checked) features.push('Jardin');
+  if(document.getElementById('ach-ascenseur')?.checked) features.push('Ascenseur');
+
+  const newAch = {
+    id:Date.now(),
+    nom, tel,
+    email:document.getElementById('ach-email')?.value||'',
+    type:document.getElementById('ach-type')?.value||'',
+    budgetMin:parseInt(document.getElementById('ach-budget-min')?.value)||0,
+    budgetMax:parseInt(document.getElementById('ach-budget-max')?.value)||999999999,
+    surfaceMin:parseInt(document.getElementById('ach-surface-min')?.value)||0,
+    piecesMin:parseInt(document.getElementById('ach-pieces-min')?.value)||0,
+    zones, features,
+    urgence:parseInt(document.getElementById('ach-urgence')?.value)||12,
+    notes:document.getElementById('ach-notes')?.value||'',
+    avatar:nom.charAt(0).toUpperCase()
+  };
+
+  ACHETEURS.push(newAch);
+  document.getElementById('acheteur-modal').style.display='none';
+  buildMatching();
+
+  // Sauvegarder dans Supabase si dispo
+  if(sb){
+    saveUserToSupabase({nom,email:newAch.email,tel,profil:'buy'}).catch(console.error);
+  }
 }
 
 // =============================================
