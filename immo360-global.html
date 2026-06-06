@@ -1329,6 +1329,49 @@ const NC_MARKET = {
 // =============================================
 // STATE
 // =============================================
+// ── VARIABLES LANDING ──
+let ldView = 'grid';
+let ldFiltered = [];
+let activeQuickFilter = '';
+
+// ── MENUS DÉROULANTS HEADER ──
+function toggleMenu(name){
+  ['vendre','acheter','pro'].forEach(m=>{
+    if(m!==name){const d=document.getElementById('dropdown-'+m);if(d)d.style.display='none';}
+  });
+  const drop=document.getElementById('dropdown-'+name);
+  if(drop) drop.style.display=(drop.style.display==='block')?'none':'block';
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('[id^="menu-"]')){
+    ['vendre','acheter','pro'].forEach(m=>{const d=document.getElementById('dropdown-'+m);if(d)d.style.display='none';});
+  }
+});
+
+// ── FILTRES RAPIDES TOGGLE ──
+function toggleQuickFilter(el, type){
+  if(activeQuickFilter===type && type!==''){
+    activeQuickFilter='';
+    document.querySelectorAll('.qf-btn').forEach(b=>{
+      const isAll=b.dataset.type==='';
+      b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
+      b.style.color='#fff';b.style.fontWeight=isAll?'600':'normal';
+      b.style.borderColor=isAll?'rgba(255,255,255,0.6)':'rgba(255,255,255,0.3)';
+    });
+  } else {
+    activeQuickFilter=type;
+    document.querySelectorAll('.qf-btn').forEach(b=>{
+      const isActive=b.dataset.type===type;
+      b.style.background=isActive?'#fff':'rgba(255,255,255,0.1)';
+      b.style.color=isActive?'var(--gold)':'rgba(255,255,255,0.7)';
+      b.style.fontWeight=isActive?'600':'normal';
+      b.style.borderColor=isActive?'#fff':'rgba(255,255,255,0.2)';
+    });
+  }
+  const sel=document.getElementById('ld-type');if(sel)sel.value=activeQuickFilter;
+  landingSearch();
+}
+
 const S = {
   lang:'fr', profile:'sell', panel:'dashboard',
   country:'NC', city:'Nouméa', curr:'XPF', sym:'F',
@@ -2349,8 +2392,21 @@ function loginAs(profil){showLoginModal(profil);}
 
 
 function showLanding(){
-  document.getElementById('landing-page').style.display='flex';
+  const lp=document.getElementById('landing-page');
+  if(lp){lp.style.display='flex';lp.style.flexDirection='column';}
+  activeQuickFilter='';
   ldFiltered=[...BIENS_DATA];
+  ['ld-type','ld-zone','ld-budget'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  // Reset apparence filtres rapides
+  document.querySelectorAll('.qf-btn').forEach(b=>{
+    const isAll=b.dataset.type==='';
+    b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
+    b.style.color='#fff';
+    b.style.fontWeight=isAll?'600':'normal';
+    b.style.borderColor=isAll?'rgba(255,255,255,0.6)':'rgba(255,255,255,0.3)';
+  });
   renderLandingBiens();
   const nbEl=document.getElementById('ld-nb-annonces');
   if(nbEl) nbEl.textContent=BIENS_DATA.length;
