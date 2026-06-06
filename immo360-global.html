@@ -2385,11 +2385,16 @@ function showLoginModal(profil){
   document.body.style.overflow='hidden';
   document.getElementById('login-modal').dataset.profil=profil||'buy';
   updateAuthModalProfil(profil||'buy');
-  switchAuthTab('login');
-  const extra=document.getElementById('reg-extra-agt');
-  if(extra) extra.style.display=(profil==='agt')?'block':'none';
+  // Toujours reset sur "Se connecter"
   document.getElementById('auth-step-1').style.display='block';
   document.getElementById('auth-step-2').style.display='none';
+  switchAuthTab('login');
+  // Reset formulaires
+  ['login-email-existing','login-password','reg-prenom','reg-nom','reg-email','reg-tel','reg-password'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  const extra=document.getElementById('reg-extra-agt');
+  if(extra) extra.style.display=(profil==='agt')?'block':'none';
 }
 
 function updateAuthModalProfil(profil){
