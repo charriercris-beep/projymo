@@ -406,10 +406,47 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 <div class="landing" id="landing-page" style="background:var(--cream);color:var(--dark)">
 
   <!-- HEADER -->
-  <div style="background:#fff;border-bottom:1px solid var(--warm);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;flex-shrink:0">
-    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark)">Immo<span style="color:var(--gold)">360</span></div>
+  <div style="background:#fff;border-bottom:1px solid var(--warm);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0">
+    <!-- LOGO CLIQUABLE -->
+    <div onclick="showLanding()" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);cursor:pointer;user-select:none">Immo<span style="color:var(--gold)">360</span></div>
+
+    <!-- MENU CENTRE -->
+    <div style="display:flex;gap:4px;align-items:center">
+      <!-- MENU VENDRE -->
+      <div style="position:relative" id="menu-vendre">
+        <button onclick="toggleMenu('vendre')" style="background:none;border:none;padding:8px 12px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:4px">
+          Vendre <span style="font-size:10px">▾</span>
+        </button>
+        <div id="dropdown-vendre" style="display:none;position:absolute;top:44px;left:0;background:#fff;border:1px solid var(--warm);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);min-width:200px;z-index:200;overflow:hidden">
+          <div onclick="loginAs('sell')" style="padding:12px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--warm)" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='#fff'">🏠 <div><div style="font-weight:500">Vendre mon bien</div><div style="font-size:11px;color:var(--mid)">Estimation IA + annonce</div></div></div>
+          <div onclick="loginAs('sell')" style="padding:12px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='#fff'">💎 <div><div style="font-weight:500">Estimer mon bien</div><div style="font-size:11px;color:var(--mid)">Prix IA basé sur le marché NC</div></div></div>
+        </div>
+      </div>
+      <!-- MENU ACHETER -->
+      <div style="position:relative" id="menu-acheter">
+        <button onclick="toggleMenu('acheter')" style="background:none;border:none;padding:8px 12px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:4px">
+          Acheter <span style="font-size:10px">▾</span>
+        </button>
+        <div id="dropdown-acheter" style="display:none;position:absolute;top:44px;left:0;background:#fff;border:1px solid var(--warm);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);min-width:220px;z-index:200;overflow:hidden">
+          <div onclick="showLoginModal('buy')" style="padding:12px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--warm)" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='#fff'">🔍 <div><div style="font-weight:500">Rechercher un bien</div><div style="font-size:11px;color:var(--mid)">Parcourir les annonces</div></div></div>
+          <div onclick="showLoginModal('buy')" style="padding:12px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--warm)" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='#fff'">💰 <div><div style="font-weight:500">Simuler un financement</div><div style="font-size:11px;color:var(--mid)">Calculez vos mensualités</div></div></div>
+          <div onclick="showLoginModal('buy')" style="padding:12px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='#fff'">💬 <div><div style="font-weight:500">Contacter un agent</div><div style="font-size:11px;color:var(--mid)">Messagerie directe</div></div></div>
+        </div>
+      </div>
+      <!-- MENU ESPACE PRO -->
+      <div style="position:relative" id="menu-pro">
+        <button onclick="toggleMenu('pro')" style="background:none;border:none;padding:8px 12px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:4px">
+          Espace pro <span style="font-size:10px">▾</span>
+        </button>
+        <div id="dropdown-pro" style="display:none;position:absolute;top:44px;left:0;background:#fff;border:1px solid var(--warm);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);min-width:220px;z-index:200;overflow:hidden">
+          <div onclick="loginAs('agt')" style="padding:12px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--warm)" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='#fff'">🤝 <div><div style="font-weight:500">Espace agent immobilier</div><div style="font-size:11px;color:var(--mid)">CRM, annonces, stats</div></div></div>
+          <div onclick="loginAs('agt')" style="padding:12px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='#fff'">📊 <div><div style="font-weight:500">Tableau de bord agent</div><div style="font-size:11px;color:var(--mid)">Gérer mes mandats</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOUTONS DROITE -->
     <div style="display:flex;gap:8px;align-items:center">
-      <span style="font-size:12px;color:var(--mid)">Nouvelle-Calédonie</span>
       <button class="btn btn-outline btn-sm" onclick="loginAs('sell')">📝 Déposer une annonce</button>
       <button class="btn btn-gold btn-sm" onclick="showLoginModal('buy')">Se connecter</button>
     </div>
@@ -432,11 +469,52 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
         </select>
         <select id="ld-zone" style="flex:1;min-width:140px;border:none;padding:10px 12px;font-size:14px;border-radius:6px;background:var(--warm);color:var(--dark)">
           <option value="">Toute la NC</option>
-          <option>Nouméa</option>
-          <option>Dumbéa</option>
-          <option>Mont-Dore</option>
-          <option>Païta</option>
-          <option>Grand Nouméa</option>
+          <optgroup label="── Nouméa ──">
+            <option>Anse Vata</option>
+            <option>Baie des Citrons</option>
+            <option>Val Plaisance</option>
+            <option>Tina</option>
+            <option>Faubourg Blanchot</option>
+            <option>Motor Pool</option>
+            <option>Magenta</option>
+            <option>Ouémo</option>
+            <option>Vallée des Colons</option>
+            <option>Trianon</option>
+            <option>Robinson</option>
+            <option>Receiving</option>
+            <option>Orphelinat</option>
+            <option>6ème Km</option>
+            <option>7ème Km</option>
+            <option>Kaméré</option>
+            <option>Centre-ville Nouméa</option>
+          </optgroup>
+          <optgroup label="── Grand Nouméa ──">
+            <option>Dumbéa sur Mer</option>
+            <option>Koutio</option>
+            <option>Dumbéa Centre</option>
+            <option>Boulari</option>
+            <option>Normandie</option>
+            <option>Mont-Dore</option>
+            <option>Plum</option>
+            <option>Yaté</option>
+            <option>Païta</option>
+            <option>La Coulée</option>
+            <option>Port Laguerre</option>
+          </optgroup>
+          <optgroup label="── Province Nord ──">
+            <option>Koné</option>
+            <option>Poindimié</option>
+            <option>Bourail</option>
+            <option>La Foa</option>
+            <option>Poya</option>
+            <option>Koumac</option>
+          </optgroup>
+          <optgroup label="── Îles ──">
+            <option>Île des Pins</option>
+            <option>Lifou</option>
+            <option>Maré</option>
+            <option>Ouvéa</option>
+          </optgroup>
         </select>
         <select id="ld-budget" style="flex:1;min-width:140px;border:none;padding:10px 12px;font-size:14px;border-radius:6px;background:var(--warm);color:var(--dark)">
           <option value="">Budget max</option>
@@ -448,13 +526,14 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
         </select>
         <button onclick="landingSearch()" style="background:var(--gold);color:#fff;border:none;padding:10px 24px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 Rechercher</button>
       </div>
-      <!-- FILTRES RAPIDES -->
-      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
-        <span onclick="quickFilter('Appartement')" style="background:rgba(255,255,255,0.2);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3)">🏠 Appartements</span>
-        <span onclick="quickFilter('Maison')" style="background:rgba(255,255,255,0.2);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3)">🏘️ Maisons</span>
-        <span onclick="quickFilter('Villa')" style="background:rgba(255,255,255,0.2);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3)">🏡 Villas</span>
-        <span onclick="quickFilter('Studio')" style="background:rgba(255,255,255,0.2);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3)">🏢 Studios</span>
-        <span onclick="quickFilter('Terrain')" style="background:rgba(255,255,255,0.2);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3)">🌿 Terrains</span>
+      <!-- FILTRES RAPIDES TOGGLE -->
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap" id="quick-filters">
+        <span class="qf-btn" data-type="Appartement" onclick="toggleQuickFilter(this,'Appartement')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏠 Appartements</span>
+        <span class="qf-btn" data-type="Maison" onclick="toggleQuickFilter(this,'Maison')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏘️ Maisons</span>
+        <span class="qf-btn" data-type="Villa" onclick="toggleQuickFilter(this,'Villa')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏡 Villas</span>
+        <span class="qf-btn" data-type="Studio" onclick="toggleQuickFilter(this,'Studio')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🏢 Studios</span>
+        <span class="qf-btn" data-type="Terrain" onclick="toggleQuickFilter(this,'Terrain')" style="background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);transition:.2s">🌿 Terrains</span>
+        <span class="qf-btn" data-type="" onclick="toggleQuickFilter(this,'')" style="background:rgba(255,255,255,0.35);color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.6);transition:.2s;font-weight:600">✦ Tout afficher</span>
       </div>
     </div>
   </div>
@@ -512,14 +591,36 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
   </div>
 
   <!-- FOOTER -->
-  <div style="background:var(--dark);padding:24px;text-align:center;flex-shrink:0">
-    <div style="font-family:'Playfair Display',serif;font-size:18px;color:#fff;margin-bottom:6px">Immo<span style="color:var(--gold)">360</span></div>
-    <div style="font-size:11px;color:rgba(255,255,255,0.4)">L'immobilier intelligent en Nouvelle-Calédonie · 100% gratuit pour les vendeurs</div>
-    <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap">
-      <span onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer">Vendre</span>
-      <span onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer">Acheter</span>
-      <span onclick="loginAs('agt')" style="font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer">Espace agent</span>
-      <span style="font-size:12px;color:rgba(255,255,255,0.5)">Contact</span>
+  <div style="background:var(--dark);padding:28px 24px;flex-shrink:0">
+    <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:start">
+      <div>
+        <div onclick="showLanding()" style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:6px;cursor:pointer">Immo<span style="color:var(--gold)">360</span></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);max-width:220px;line-height:1.6">L'immobilier intelligent en Nouvelle-Calédonie. 100% gratuit pour les vendeurs particuliers.</div>
+      </div>
+      <div style="display:flex;gap:40px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Vendre</div>
+          <div onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Estimer mon bien</div>
+          <div onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Déposer une annonce</div>
+          <div onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Analyse photos IA</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Acheter</div>
+          <div onclick="showLoginModal('buy')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Rechercher un bien</div>
+          <div onclick="showLoginModal('buy')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Simuler un financement</div>
+          <div onclick="showLoginModal('buy')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Contacter un agent</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Pro</div>
+          <div onclick="loginAs('agt')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Espace agent</div>
+          <div onclick="loginAs('agt')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">CRM & annonces</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:6px">Contact</div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1100px;margin:20px auto 0;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="font-size:11px;color:rgba(255,255,255,0.25)">© 2026 Immo360 · Nouvelle-Calédonie · Tous droits réservés</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.25)">Sources marché : Properstar · Immobilier.nc · ImmoNC · K&P Finance</div>
     </div>
   </div>
 </div>
@@ -2070,6 +2171,44 @@ const APP_STATE = {
 
 let ldView='grid';
 let ldFiltered=[];
+let activeQuickFilter='';
+
+function toggleMenu(name){
+  ['vendre','acheter','pro'].forEach(m=>{
+    if(m!==name){const d=document.getElementById('dropdown-'+m);if(d)d.style.display='none';}
+  });
+  const drop=document.getElementById('dropdown-'+name);
+  if(drop) drop.style.display=drop.style.display==='none'?'block':'none';
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('[id^="menu-"]')){
+    ['vendre','acheter','pro'].forEach(m=>{const d=document.getElementById('dropdown-'+m);if(d)d.style.display='none';});
+  }
+});
+
+function toggleQuickFilter(el,type){
+  if(activeQuickFilter===type){
+    activeQuickFilter='';
+    document.querySelectorAll('.qf-btn').forEach(b=>{
+      const isAll=b.dataset.type==='';
+      b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
+      b.style.color='#fff';b.style.fontWeight=isAll?'600':'normal';
+      b.style.borderColor=isAll?'rgba(255,255,255,0.6)':'rgba(255,255,255,0.3)';
+    });
+  } else {
+    activeQuickFilter=type;
+    document.querySelectorAll('.qf-btn').forEach(b=>{
+      const isActive=b.dataset.type===type;
+      b.style.background=isActive?'#fff':'rgba(255,255,255,0.1)';
+      b.style.color=isActive?'var(--gold)':'rgba(255,255,255,0.7)';
+      b.style.fontWeight=isActive?'600':'normal';
+      b.style.borderColor=isActive?'#fff':'rgba(255,255,255,0.2)';
+    });
+  }
+  const sel=document.getElementById('ld-type');
+  if(sel) sel.value=activeQuickFilter;
+  landingSearch();
+}
 
 function showLanding(){
   document.getElementById('landing-page').style.display='flex';
