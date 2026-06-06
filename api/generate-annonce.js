@@ -1,24 +1,33 @@
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if(req.method === 'OPTIONS') return res.status(200).end();
   if(req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
 
-  const { titre, surface, prix, desc, ton, plateforme, devise, pays, ville } = req.body;
+  const { titre, surface, prix, desc, ton, plateforme, devise, pays, ville } = req.body || {};
 
   const tonDescriptions = {
-    'Luxe & prestige': 'luxueux, raffiné, vocabulaire haut de gamme, met en valeur les prestations exceptionnelles',
-    'Familial & chaleureux': 'chaleureux, proche, met en avant la vie de famille, le confort et le quartier',
-    'Investisseur': 'factuel, chiffré, met en avant le rendement, la rentabilité et le potentiel locatif',
-    'Moderne & dynamique': 'dynamique, court, moderne, cible les actifs et jeunes professionnels'
+    'Luxe & prestige': 'luxueux, raffiné, vocabulaire haut de gamme',
+    'Familial & chaleureux': 'chaleureux, proche, met en avant la vie de famille',
+    'Investisseur': 'factuel, chiffré, met en avant le rendement locatif',
+    'Moderne & dynamique': 'dynamique, court, moderne, cible les actifs'
   };
 
   const tonDesc = tonDescriptions[ton] || tonDescriptions['Luxe & prestige'];
-  const prixFormate = new Intl.NumberFormat('fr-FR').format(prix) + ' ' + (devise || 'F');
+  const prixNum = parseInt(prix) || 42500000;
+  const prixFormate = new Intl.NumberFormat('fr-FR').format(prixNum) + ' ' + (devise || 'F');
 
   try {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if(!apiKey) return res.status(500).json({error: 'Clé API manquante'});
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
@@ -26,36 +35,35 @@ export default async function handler(req, res) {
         max_tokens: 800,
         messages: [{
           role: 'user',
-          content: `Tu es un expert en rédaction d'annonces immobilières pour la Nouvelle-Calédonie.
+          content: `Tu es expert en annonces immobilières pour la Nouvelle-Calédonie.
 
-Rédige une annonce immobilière professionnelle avec ces informations :
-- Titre souhaité : ${titre}
-- Surface : ${surface} m²
+Rédige une annonce professionnelle :
+- Titre : ${titre || 'Bien immobilier'}
+- Surface : ${surface || 85} m²
 - Prix : ${prixFormate}
 - Ville : ${ville || 'Nouméa'}, ${pays || 'Nouvelle-Calédonie'}
-- Description du vendeur : ${desc || 'Bien en bon état'}
-- Ton souhaité : ${tonDesc}
-- Plateforme cible : ${plateforme || 'Multi-plateformes'}
+- Description : ${desc || 'Beau bien en bon état'}
+- Ton : ${tonDesc}
+- Plateforme : ${plateforme || 'Multi-plateformes'}
 
-Règles :
-- Commence directement par le texte de l'annonce, sans titre ni préambule
-- Entre 120 et 200 mots
-- Inclus les points forts du bien
-- Termine par un appel à l'action adapté au marché NC
-- N'invente pas de caractéristiques qui ne sont pas mentionnées
-- Utilise le franc CFP (F) pour les prix si en NC`
+Règles : 120-200 mots, commence directement par le texte, pas de titre, appel à l'action final.`
         }]
       })
-
     });
 
-    const data = await response.json();
-    const annonce = data.content?.[0]?.text || 'Erreur de génération.';
+    if(!response.ok) {
+      const errText = await response.text();
+      return res.status(500).json({error: 'Anthropic error: ' + errText});
+    }
 
-    res.status(200).json({ annonce });
+    const data = await response.json();
+    const annonce = data.content?.[0]?.text;
+
+    if(!annonce) return res.status(500).json({error: 'Réponse vide de Claude'});
+
+    return res.status(200).json({ annonce });
 
   } catch(err) {
-    console.error('Generate error:', err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 }
