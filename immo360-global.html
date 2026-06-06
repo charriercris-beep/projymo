@@ -1706,8 +1706,38 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
             <div class="field"><label>Email de contact *</label>
               <input type="email" id="d-contact-email" placeholder="contact@email.com">
             </div>
-            <div class="field"><label>Disponibilités pour visites</label>
-              <input type="text" id="d-dispos" placeholder="Ex: Lundi–vendredi 9h–18h, weekend sur RDV">
+            <div class="field">
+              <label>Disponibilités pour visites</label>
+              <div style="border:1px solid var(--warm);border-radius:8px;overflow:hidden">
+                <!-- Jours -->
+                <div style="padding:10px 12px;background:var(--warm)">
+                  <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px">Jours disponibles</div>
+                  <div style="display:flex;gap:5px;flex-wrap:wrap">
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-lun" value="Lundi"> Lun</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-mar" value="Mardi"> Mar</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-mer" value="Mercredi"> Mer</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-jeu" value="Jeudi"> Jeu</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-ven" value="Vendredi"> Ven</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-sam" value="Samedi"> Sam</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-dim" value="Dimanche"> Dim</label>
+                  </div>
+                </div>
+                <!-- Créneaux horaires -->
+                <div style="padding:10px 12px">
+                  <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px">Créneaux horaires</div>
+                  <div style="display:flex;gap:5px;flex-wrap:wrap">
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-matin" value="8h–12h"> 🌅 Matin 8h–12h</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-midi" value="12h–14h"> ☀️ Midi 12h–14h</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-aprem" value="14h–18h"> 🌤️ Après-midi 14h–18h</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-soir" value="18h–20h"> 🌆 Soir 18h–20h</label>
+                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-rdv" value="Sur RDV uniquement"> 📅 Sur RDV uniquement</label>
+                  </div>
+                </div>
+                <!-- Note libre -->
+                <div style="padding:6px 12px 10px;border-top:1px solid var(--warm)">
+                  <input type="text" id="d-dispos" placeholder="Précision optionnelle : Ex: éviter le mercredi matin" style="font-size:12px">
+                </div>
+              </div>
             </div>
             <div class="field"><label>Référence interne (optionnel)</label>
               <input type="text" id="d-ref" placeholder="Ex: APPT-2026-001">
@@ -1724,12 +1754,21 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
         <div id="depot-step-4" style="display:none">
           <div class="card">
             <div class="card-title">👁️ Aperçu de votre annonce</div>
-            <div id="depot-preview" style="background:linear-gradient(135deg,#1C1A16,#2a2520);border-radius:12px;padding:20px;color:#fff">
-              <div style="font-size:28px;text-align:center;margin-bottom:12px" id="dp-emoji">🏠</div>
-              <div style="font-family:'Playfair Display',serif;font-size:18px;color:#F0D99A;margin-bottom:6px" id="dp-titre">—</div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="dp-tags"></div>
-              <div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:12px" id="dp-desc">—</div>
-              <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#F0D99A" id="dp-prix">—</div>
+            <div id="depot-preview" style="border:1px solid var(--warm);border-radius:12px;overflow:hidden">
+              <!-- Photo principale -->
+              <div style="height:180px;background:linear-gradient(135deg,var(--warm),var(--cream));position:relative;display:flex;align-items:center;justify-content:center" id="dp-photo-zone">
+                <div style="font-size:56px" id="dp-emoji">🏠</div>
+                <div style="position:absolute;top:10px;left:10px"><span class="tag tag-gold">En vente</span></div>
+                <div style="position:absolute;top:10px;right:10px;background:#2d7f2d;color:#fff;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700" id="dp-dpe-badge">DPE C</div>
+              </div>
+              <!-- Infos -->
+              <div style="padding:16px">
+                <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:6px" id="dp-titre">—</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px" id="dp-tags"></div>
+                <div style="font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:12px" id="dp-desc">—</div>
+                <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--gold)" id="dp-prix">—</div>
+                <div style="font-size:11px;color:var(--mid);margin-top:3px" id="dp-contact-info">—</div>
+              </div>
             </div>
           </div>
 
@@ -1759,6 +1798,9 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
             <div id="depot-notif" style="display:none;padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px"></div>
             <button class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">
               🚀 Publier mon annonce
+            </button>
+            <button class="btn btn-gold btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px;background:var(--green)" onclick="go('marketplace')">
+              👁️ Voir mon annonce en ligne →
             </button>
             <button class="btn btn-outline btn-full" style="margin-top:8px" onclick="goDepotStep(3)">← Modifier</button>
           </div>
@@ -2925,8 +2967,8 @@ function renderMktGrid(){
   if(!mktFiltered.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)">Aucun bien trouvé.</div>';return;}
   g.innerHTML=mktFiltered.map(b=>`
     <div class="card" style="margin-bottom:0;cursor:pointer" onclick="openBien(${b.id})">
-      <div style="background:linear-gradient(135deg,var(--warm),var(--cream));border-radius:10px;height:110px;display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:10px;position:relative">
-        ${b.photos[0]}
+      <div style="background:linear-gradient(135deg,var(--warm),var(--cream));border-radius:10px;height:110px;display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:10px;position:relative;overflow:hidden">
+        ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">`:b.photos[0]}
         <div style="position:absolute;top:6px;right:6px"><span class="tag ${STATUT_BADGE2[b.statut]||'tag-gold'}">${b.statut}</span></div>
         <div style="position:absolute;top:6px;left:6px;background:${DPE_COLOR2[b.dpe]||'#9ecf2d'};color:#fff;padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700">DPE ${b.dpe}</div>
       </div>
@@ -3491,14 +3533,14 @@ function openLandingBien(id){
       <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:10px">🔒 Créez un compte gratuit pour contacter ce vendeur</div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
         <button class="btn btn-gold" onclick="contactFromLanding(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Contacter le vendeur</button>
-        <button style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer" onclick="document.body.removeChild(this.closest('[style*=fixed]'))">Plus tard</button>
+        <button style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer" onclick="closeAnnonce(this)">Plus tard</button>
       </div>
     </div>
     <button class="btn btn-outline btn-full btn-sm" onclick="simulerFinancementPublic(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">💰 Simuler le financement</button>`;
   ov.innerHTML=`<div style="background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">
-    <div style="background:linear-gradient(135deg,#1C1A16,#2a2520);height:180px;display:flex;align-items:center;justify-content:center;font-size:68px;border-radius:20px 20px 0 0;position:relative">
-      ${b.photos[0]}
-      <button onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
+    <div style="background:linear-gradient(135deg,#1C1A16,#2a2520);height:180px;display:flex;align-items:center;justify-content:center;font-size:68px;border-radius:20px 20px 0 0;position:relative;overflow:hidden">
+      ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">`:b.photos[0]}
+      <button onclick="closeAnnonce(this)" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10">✕</button>
       <div style="position:absolute;bottom:10px;left:12px;display:flex;gap:6px">
         <span style="background:${b.statut==='En vente'?'var(--gold)':'var(--blue)'};color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${b.statut}</span>
         ${b.dpe&&b.dpe!=='—'?`<span style="background:#2d7f2d;color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">DPE ${b.dpe}</span>`:''}
@@ -3525,6 +3567,20 @@ function openLandingBien(id){
     </div>
   </div>`;
   document.body.appendChild(ov);
+}
+
+function closeAnnonce(el){
+  // Cherche le parent overlay et le supprime
+  let node=el;
+  while(node && node!==document.body){
+    if(node.style&&(node.style.position==='fixed'||node.style.zIndex>500)){
+      document.body.removeChild(node);return;
+    }
+    node=node.parentNode;
+  }
+  // Fallback : supprimer le dernier overlay
+  const overlays=document.querySelectorAll('body>[style*="position:fixed"]');
+  if(overlays.length) document.body.removeChild(overlays[overlays.length-1]);
 }
 
 function planifierVisite(bienId){
@@ -3567,7 +3623,7 @@ function simulerFinancementPublic(prix){
     <div style="font-size:11px;color:var(--mid);margin-bottom:14px;text-align:center">Sur 20 ans à 3.5% · Pour une simulation complète, créez un compte gratuit.</div>
     <div style="display:flex;gap:8px">
       <button class="btn btn-gold btn-full" onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))">Créer un compte</button>
-      <button class="btn btn-outline" onclick="document.body.removeChild(this.closest('[style*=fixed]'))">Fermer</button>
+      <button class="btn btn-outline" onclick="closeAnnonce(this)">Fermer</button>
     </div>
   </div>`;
   document.body.appendChild(ov);
@@ -3904,12 +3960,19 @@ function renderDepotPhotos(){
   const count=document.getElementById('d-photos-count');
   if(!grid) return;
   grid.innerHTML=depotPhotos.map((p,i)=>`
-    <div style="position:relative;aspect-ratio:1">
-      <img src="${p.url}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;${i===0?'border:2px solid var(--gold)':''}">
-      ${i===0?'<div style="position:absolute;bottom:3px;left:3px;background:var(--gold);color:#fff;font-size:9px;padding:1px 5px;border-radius:3px">Principale</div>':''}
-      <div onclick="removeDepotPhoto(${i})" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.6);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px">✕</div>
+    <div style="position:relative;width:100%;padding-top:75%;border-radius:8px;overflow:hidden;${i===0?'border:2px solid var(--gold)':'border:1px solid var(--warm)'}">
+      <img src="${p.url}" 
+        style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;"
+        onerror="this.style.display='none';this.parentNode.querySelector('.photo-placeholder').style.display='flex'"
+      >
+      <div class="photo-placeholder" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:var(--warm);align-items:center;justify-content:center;flex-direction:column;gap:4px">
+        <div style="font-size:24px">🖼️</div>
+        <div style="font-size:9px;color:var(--mid);text-align:center;padding:0 4px">${p.name.substring(0,15)}</div>
+      </div>
+      ${i===0?'<div style="position:absolute;bottom:4px;left:4px;background:var(--gold);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px">⭐ Principale</div>':''}
+      <div onclick="removeDepotPhoto(${i})" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.7);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700">✕</div>
     </div>`).join('');
-  if(count) count.textContent=depotPhotos.length>0?depotPhotos.length+' photo(s) ajoutée(s) · Faites glisser pour réorganiser':'';
+  if(count) count.textContent=depotPhotos.length>0?depotPhotos.length+'/15 photo(s) · La première = photo principale':'';
 }
 
 function removeDepotPhoto(i){
@@ -3920,23 +3983,62 @@ function removeDepotPhoto(i){
 async function analyzeDepotPhotos(){
   if(depotPhotos.length===0){alert('Ajoutez au moins une photo');return;}
   const btn=document.getElementById('btn-analyze-depot');
-  btn.innerHTML='⏳ Analyse en cours...';btn.disabled=true;
+  btn.innerHTML='⏳ Analyse IA en cours...';btn.disabled=true;
   const result=document.getElementById('depot-ia-result');
-  if(result) result.innerHTML="<div style='text-align:center;padding:14px;color:var(--mid)'>L'IA analyse vos photos...</div>";
+  if(result) result.innerHTML='<div style="text-align:center;padding:20px;color:var(--mid)"><div style="font-size:32px;margin-bottom:8px">🤖</div>Analyse de vos photos en cours...</div>';
+
   setTimeout(()=>{
-    const score=Math.min(95,60+depotPhotos.length*8);
+    const nbPhotos=depotPhotos.length;
+    const score=Math.min(95,55+nbPhotos*7+(nbPhotos>=5?10:0));
+    const needsWork=score<72;
+
     const items=[
-      {l:'Luminosité',v:score>70?'Bonne':'Insuffisante',ok:score>70},
-      {l:'État apparent',v:score>65?'Correct':'À améliorer',ok:score>65},
-      {l:'Mise en scène',v:score>75?'Bonne':'Peut être améliorée',ok:score>75},
+      {l:'Luminosité générale',v:score>70?'Bonne':'Insuffisante — ouvrez les volets',ok:score>70},
+      {l:'État apparent des murs',v:score>68?'Correct':'Peintures à rafraîchir',ok:score>68},
+      {l:'Mise en scène',v:score>74?'Soignée':'Désencombrer recommandé',ok:score>74},
+      {l:'Qualité des photos',v:nbPhotos>=5?'Bonne couverture':'Ajoutez plus de photos',ok:nbPhotos>=5},
+      {l:'Angle de prise de vue',v:score>72?'Satisfaisant':'Photos grand angle recommandées',ok:score>72},
     ];
-    if(result) result.innerHTML=`<div class="ai-box" style="margin-top:0">
-      <h4>🤖 Score IA : ${score}/100</h4>
-      ${items.map(i=>`<div class="ai-line"><span>${i.l}</span><span class="ai-chip ${i.ok?'ai-ok':'ai-warn'}">${i.v}</span></div>`).join('')}
-      <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.5)">${score<70?'Conseil : ajoutez plus de photos et assurez-vous que les pièces sont bien éclairées.':'Vos photos sont de bonne qualité !'}</div>
-    </div>`;
+
+    // Travaux recommandés si score bas
+    const travauxReco=needsWork?[
+      {emoji:'📸',titre:'Shooting photo professionnel',gain:'+8% sur le prix',cout:'35 000 F',roi:'89x',urgent:true},
+      {emoji:'🛋️',titre:'Home staging',gain:'+5% sur le prix',cout:'120 000 F',roi:'16x',urgent:true},
+      {emoji:'🎨',titre:'Rafraîchissement peintures',gain:'+6% sur le prix',cout:'280 000 F',roi:'8.5x',urgent:false},
+    ]:[];
+
+    if(result) result.innerHTML=`
+      <div class="ai-box" style="margin-top:0">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="text-align:center">
+            <div style="font-size:28px;font-weight:700;color:${score>=75?'#6fd98a':score>=55?'#F0D99A':'#e07070'}">${score}<span style="font-size:14px">/100</span></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4)">Score IA</div>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">${score>=75?'✅ Bien présenté — prêt à publier':score>=55?'⚠️ Quelques améliorations possibles':'🔴 Des travaux peuvent fortement valoriser ce bien'}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.5)">${nbPhotos} photo(s) analysée(s)</div>
+          </div>
+        </div>
+        ${items.map(i=>`<div class="ai-line"><span style="font-size:12px">${i.l}</span><span class="ai-chip ${i.ok?'ai-ok':'ai-warn'}" style="font-size:10px">${i.v}</span></div>`).join('')}
+        ${travauxReco.length>0?`
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1)">
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">💡 Travaux recommandés pour valoriser ce bien</div>
+          ${travauxReco.map(t=>`
+          <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px">${t.emoji}</span>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:600;color:#fff">${t.titre} ${t.urgent?'<span style="background:rgba(184,58,42,0.3);color:#e07070;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700">PRIORITÉ</span>':''}</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px">${t.cout} · ${t.gain} · ROI ${t.roi}</div>
+            </div>
+            <button onclick="go('estimation')" style="background:var(--gold);border:none;color:#fff;padding:4px 10px;border-radius:6px;font-size:10px;cursor:pointer;white-space:nowrap">Voir détail →</button>
+          </div>`).join('')}
+        </div>`:``}
+        <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.4)">
+          ${score>=75?"Vous pouvez publier en confiance.":score>=55?"Conseil : ajoutez des photos mieux éclairées.":"Voir l'Estimation IA pour un plan de travaux."}
+        </div>
+      </div>`;
     btn.innerHTML='🔍 Re-analyser';btn.disabled=false;
-  },2000);
+  },2500);
 }
 
 function updateDepotEstim(){
@@ -3992,21 +4094,50 @@ function buildDepotPreview(){
   const titre=document.getElementById('d-titre')?.value||'Mon bien';
   const type=document.getElementById('d-type')?.value||'Bien';
   const surface=document.getElementById('d-surface')?.value||'—';
+  const pieces=document.getElementById('d-pieces')?.value||'';
   const prix=parseInt(document.getElementById('d-prix')?.value||0);
   const ville=document.getElementById('d-ville')?.value||'Nouméa';
   const quartier=document.getElementById('d-quartier')?.value||'';
   const desc=document.getElementById('d-desc')?.value||'';
+  const dpe=document.getElementById('d-dpe')?.value||'C';
+  const contactNom=document.getElementById('d-contact-nom')?.value||'';
+  const contactTel=document.getElementById('d-contact-tel')?.value||'';
   const emojis={Appartement:'🏠',Maison:'🏘️',Villa:'🏡',Studio:'🏢',Terrain:'🌿',default:'🏠'};
+
+  // Photo principale si disponible
+  const photoZone=document.getElementById('dp-photo-zone');
+  const emojiEl=document.getElementById('dp-emoji');
+  if(photoZone && depotPhotos.length>0){
+    const img=photoZone.querySelector('img')||document.createElement('img');
+    img.src=depotPhotos[0].url;
+    img.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover';
+    if(!photoZone.querySelector('img')) photoZone.appendChild(img);
+    if(emojiEl) emojiEl.style.display='none';
+  } else {
+    const img=photoZone?.querySelector('img');
+    if(img) img.remove();
+    if(emojiEl){emojiEl.style.display='block';emojiEl.textContent=emojis[type]||emojis.default;}
+  }
+
+  // DPE badge
+  const dpeColors={A:'#2d7f2d',B:'#5aaf2d',C:'#9ecf2d',D:'#f0c020',E:'#f08020',F:'#e04020'};
+  const dpeBadge=document.getElementById('dp-dpe-badge');
+  if(dpeBadge&&dpe){dpeBadge.textContent='DPE '+dpe;dpeBadge.style.background=dpeColors[dpe]||'#9ecf2d';}
+
   const t=document.getElementById('dp-titre');
   const tg=document.getElementById('dp-tags');
   const td=document.getElementById('dp-desc');
   const tp=document.getElementById('dp-prix');
-  const te=document.getElementById('dp-emoji');
-  if(te) te.textContent=emojis[type]||emojis.default;
+  const tc=document.getElementById('dp-contact-info');
   if(t) t.textContent=titre;
-  if(tg) tg.innerHTML=`<span class="annonce-badge">${surface} m²</span><span class="annonce-badge">${type}</span><span class="annonce-badge">📍 ${quartier||ville}</span>`;
-  if(td) td.textContent=desc.substring(0,200)+(desc.length>200?'...':'');
+  if(tg) tg.innerHTML=`
+    <span class="tag tag-gold">${surface} m²</span>
+    ${pieces?`<span class="tag tag-blue">${pieces} pièces</span>`:''}
+    <span class="tag tag-blue">${type}</span>
+    <span class="tag tag-blue">📍 ${quartier||ville}</span>`;
+  if(td) td.textContent=desc?desc.substring(0,220)+(desc.length>220?'...':''):'Aucune description renseignée';
   if(tp) tp.textContent=prix>0?conv(prix):'Prix non renseigné';
+  if(tc) tc.textContent=contactNom?(contactNom+(contactTel?' · '+contactTel:'')):'';
 }
 
 async function publierAnnonce(){
@@ -4056,7 +4187,9 @@ async function publierAnnonce(){
       id:Date.now(), titre:bien.titre, type:bien.type, surface:bien.surface,
       pieces:bien.pieces||0, chambres:bien.chambres||0, prix:bien.prix,
       statut:'En vente', dpe:bien.dpe||'C', ville:bien.ville, quartier:bien.quartier,
-      description:bien.description, features:bien.features, photos:['🏠'],
+      description:bien.description, features:bien.features,
+      photos:[depotPhotos.length>0?'📸':'🏠'],
+      photoUrl:depotPhotos.length>0?depotPhotos[0].url:null,
       date:new Date().toISOString().split('T')[0], agent:bien.agent, tel:bien.tel,
       ref:bien.ref||'IMM-'+Date.now()
     };
@@ -4068,10 +4201,12 @@ async function publierAnnonce(){
     notif.style.display='block';
     if(saved){
       notif.style.background='rgba(42,122,75,0.1)';notif.style.border='1px solid rgba(42,122,75,0.3)';notif.style.color='var(--green)';
-      notif.innerHTML='🎉 <strong>Annonce publiée avec succès !</strong><br>Elle est maintenant visible sur Immo360 NC. Référence : '+(bien.ref||'IMM-'+Date.now());
-      btn.innerHTML='✅ Annonce publiée !';
-      // Rediriger vers la marketplace après 3 secondes
-      setTimeout(()=>{go('marketplace');},3000);
+      const ref=bien.ref||'IMM-'+Date.now();
+      notif.innerHTML='🎉 <strong>Annonce publiée avec succès !</strong><br>Elle est maintenant visible sur Immo360 NC.<br><small style="opacity:.7">Référence : '+ref+'</small>';
+      btn.innerHTML='✅ Publiée !';
+      // Afficher bouton "Voir mon annonce"
+      const voirBtn=document.getElementById('btn-voir-annonce');
+      if(voirBtn) voirBtn.style.display='block';
     } else {
       notif.style.background='rgba(184,146,42,0.1)';notif.style.border='1px solid rgba(184,146,42,0.3)';notif.style.color='var(--gold-dark)';
       notif.innerHTML="⚠️ Annonce enregistrée localement. La connexion à la base de données n'est pas encore configurée.";
@@ -4080,7 +4215,10 @@ async function publierAnnonce(){
         id:Date.now(),titre:bien.titre,type:bien.type,surface:bien.surface,
         pieces:bien.pieces||0,prix:bien.prix,statut:'En vente',dpe:bien.dpe||'C',
         ville:bien.ville,quartier:bien.quartier,description:bien.description,
-        features:bien.features,photos:['🏠'],date:new Date().toISOString().split('T')[0],
+        features:bien.features,
+        photos:[depotPhotos.length>0?'📸':'🏠'],
+        photoUrl:depotPhotos.length>0?depotPhotos[0].url:null,
+        date:new Date().toISOString().split('T')[0],
         agent:bien.agent,tel:bien.tel,ref:'IMM-'+Date.now()
       });
     }
