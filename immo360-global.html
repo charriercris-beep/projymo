@@ -1977,6 +1977,182 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 
     </div>
 
+    <!-- ==================== ARTISANS ==================== -->
+    <div class="panel" id="panel-artisans">
+
+      <!-- HEADER -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🏗️ Module Artisans</h2>
+          <p style="font-size:13px;color:var(--mid)">Demandez des devis, comparez les artisans, suivez vos travaux</p>
+        </div>
+        <button class="btn btn-gold" onclick="showDevisModal()">+ Demander un devis</button>
+      </div>
+
+      <!-- ONGLETS -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--warm);margin-bottom:20px">
+        <button class="artisan-tab active" id="tab-artisans-trouver" onclick="switchArtisanTab('trouver')">🔍 Trouver un artisan</button>
+        <button class="artisan-tab" id="tab-artisans-devis" onclick="switchArtisanTab('devis')">📋 Mes demandes de devis</button>
+        <button class="artisan-tab" id="tab-artisans-suivi" onclick="switchArtisanTab('suivi')">🔨 Suivi travaux</button>
+      </div>
+
+      <!-- ONGLET 1 : TROUVER UN ARTISAN -->
+      <div id="artisans-trouver">
+        <!-- FILTRES -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+          <select id="art-categorie" onchange="filterArtisans()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:8px 10px;border-radius:8px;font-size:13px">
+            <option value="">Toutes catégories</option>
+            <option value="peinture">🎨 Peinture</option>
+            <option value="plomberie">🔧 Plomberie</option>
+            <option value="electricite">⚡ Électricité</option>
+            <option value="cuisine">🍳 Cuisine</option>
+            <option value="salle-de-bain">🚿 Salle de bain</option>
+            <option value="carrelage">🪵 Carrelage / Sol</option>
+            <option value="menuiserie">🪟 Menuiserie</option>
+            <option value="maconnerie">🧱 Maçonnerie</option>
+            <option value="piscine">🏊 Piscine</option>
+            <option value="jardin">🌿 Paysagisme</option>
+            <option value="climatisation">❄️ Climatisation</option>
+            <option value="domotique">🤖 Domotique</option>
+            <option value="photo">📸 Photo professionnelle</option>
+            <option value="homestaging">🛋️ Home staging</option>
+          </select>
+          <select id="art-zone" onchange="filterArtisans()" style="flex:1;min-width:140px;border:1px solid var(--warm);padding:8px 10px;border-radius:8px;font-size:13px">
+            <option value="">Toute la NC</option>
+            <option value="noumea">Nouméa</option>
+            <option value="dumbea">Dumbéa</option>
+            <option value="mont-dore">Mont-Dore</option>
+            <option value="paita">Païta</option>
+          </select>
+          <select id="art-tri" onchange="filterArtisans()" style="flex:1;min-width:130px;border:1px solid var(--warm);padding:8px 10px;border-radius:8px;font-size:13px">
+            <option value="note">Mieux notés</option>
+            <option value="prix">Moins chers</option>
+            <option value="delai">Plus rapides</option>
+            <option value="avis">Plus d'avis</option>
+          </select>
+          <div id="art-count" style="font-size:12px;color:var(--mid);white-space:nowrap"></div>
+        </div>
+
+        <!-- GRILLE ARTISANS -->
+        <div id="artisans-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
+      </div>
+
+      <!-- ONGLET 2 : MES DEMANDES DE DEVIS -->
+      <div id="artisans-devis" style="display:none">
+        <div id="devis-list">
+          <div style="text-align:center;padding:40px;color:var(--mid)">
+            <div style="font-size:40px;margin-bottom:10px">📋</div>
+            <div style="font-size:14px;margin-bottom:12px">Aucune demande de devis en cours</div>
+            <button class="btn btn-gold" onclick="showDevisModal()">+ Faire une demande</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ONGLET 3 : SUIVI TRAVAUX -->
+      <div id="artisans-suivi" style="display:none">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px" id="travaux-suivi-grid">
+          <!-- Exemple de chantier en cours -->
+          <div class="card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+              <div style="font-size:28px">🎨</div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--dark)">Peintures intérieures</div>
+                <div style="font-size:11px;color:var(--mid)">Appartement Baie des Citrons</div>
+              </div>
+              <span class="tag tag-gold" style="margin-left:auto">En cours</span>
+            </div>
+            <div style="margin-bottom:10px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mid);margin-bottom:4px">
+                <span>Avancement</span><span>65%</span>
+              </div>
+              <div style="height:6px;background:var(--warm);border-radius:3px;overflow:hidden">
+                <div style="width:65%;height:100%;background:var(--gold);border-radius:3px"></div>
+              </div>
+            </div>
+            <div class="ai-line"><span>Artisan</span><span>Eric Peintures NC</span></div>
+            <div class="ai-line"><span>Début</span><span>02/06/2026</span></div>
+            <div class="ai-line"><span>Fin prévue</span><span>12/06/2026</span></div>
+            <div class="ai-line"><span>Montant</span><span style="color:var(--gold);font-weight:600">280 000 F</span></div>
+            <button class="btn btn-outline btn-full btn-sm" style="margin-top:10px" onclick="alert('Messagerie avec Eric Peintures NC ouverte')">💬 Contacter l'artisan</button>
+          </div>
+          <div class="card" style="border:1.5px dashed var(--soft);background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;cursor:pointer" onclick="showDevisModal()">
+            <div style="font-size:32px;margin-bottom:8px">+</div>
+            <div style="font-size:13px;color:var(--mid)">Ajouter un chantier</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL DEMANDE DE DEVIS -->
+      <div id="devis-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">📋 Demande de devis</h3>
+            <button onclick="document.getElementById('devis-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
+          </div>
+          <div class="field"><label>Type de travaux *</label>
+            <select id="devis-type">
+              <option value="">Choisir...</option>
+              <option>🎨 Peinture intérieure</option>
+              <option>🚿 Rénovation salle de bain</option>
+              <option>🍳 Rénovation cuisine</option>
+              <option>🪵 Pose de carrelage / parquet</option>
+              <option>⚡ Travaux électricité</option>
+              <option>🔧 Plomberie</option>
+              <option>🪟 Menuiserie / Fenêtres</option>
+              <option>🧱 Maçonnerie / Gros oeuvre</option>
+              <option>🏊 Construction piscine</option>
+              <option>🌿 Aménagement jardin</option>
+              <option>❄️ Climatisation</option>
+              <option>📸 Shooting photo professionnel</option>
+              <option>🛋️ Home staging</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="field"><label>Description des travaux *</label>
+            <textarea id="devis-desc" rows="4" placeholder="Décrivez précisément les travaux souhaités, les surfaces concernées, vos contraintes..."></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Budget estimé (F)</label>
+              <input type="number" id="devis-budget" placeholder="Ex: 300000">
+            </div>
+            <div class="field"><label>Délai souhaité</label>
+              <select id="devis-delai">
+                <option value="urgent">Urgent (< 1 semaine)</option>
+                <option value="1mois">Dans le mois</option>
+                <option value="3mois">Dans les 3 mois</option>
+                <option value="flexible">Flexible</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Adresse du bien</label>
+            <input type="text" id="devis-adresse" placeholder="Quartier / Zone — Ex: Baie des Citrons, Nouméa">
+          </div>
+          <div class="field"><label>Photos (optionnel)</label>
+            <div class="upload-zone" style="padding:12px" onclick="document.getElementById('devis-photos').click()">
+              <input type="file" id="devis-photos" accept="image/*" multiple style="display:none">
+              <div style="font-size:11px;color:var(--mid)">📸 Ajoutez des photos pour aider les artisans à chiffrer</div>
+            </div>
+          </div>
+          <div class="field"><label>Vos coordonnées *</label>
+            <div class="field-row">
+              <input type="text" id="devis-nom" placeholder="Votre nom" style="flex:1">
+              <input type="tel" id="devis-tel" placeholder="Téléphone" style="flex:1">
+            </div>
+          </div>
+          <div style="background:var(--warm);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--mid);margin-bottom:14px">
+            💡 Votre demande sera envoyée aux artisans partenaires correspondants. Vous recevrez les devis sous 48h. L'agent immobilier peut percevoir une commission de 3-5% sur les travaux réalisés.
+          </div>
+          <button class="btn btn-gold btn-full" onclick="envoyerDevis()">🚀 Envoyer la demande de devis</button>
+        </div>
+      </div>
+
+      <!-- MODAL DÉTAIL ARTISAN -->
+      <div id="artisan-detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto" id="artisan-detail-content"></div>
+      </div>
+
+    </div>
+
     <!-- ==================== STATS ==================== -->
     <div class="panel" id="panel-stats">
       <div class="grid4" style="margin-bottom:18px" id="stats-kpis"></div>
@@ -2156,19 +2332,20 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 const MENUS = {
   sell:[
     {s:'Vente',items:[{ico:'🏠',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'},{ico:'🎨',k:'decoration'},{ico:'📣',k:'annonces'}]},
+    {s:'Services',items:[{ico:'🏗️',k:'artisans'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'}]},
     {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
   ],
   buy:[
     {s:'Recherche',items:[{ico:'🏠',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💰',k:'financement'},{ico:'📅',k:'rdv'}]},
-    {s:'Mon espace',items:[{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
+    {s:'Mon espace',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
   ],
   agt:[
     {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'},{ico:'💎',k:'estimation'}]},
-    {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📈',k:'stats'}]},
+    {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'🏗️',k:'artisans'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'📈',k:'stats'}]},
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
@@ -2218,6 +2395,7 @@ function go(panel){
   if(panel==='financement') calcFin();
   if(panel==='marketplace') buildMarketplace();
   if(panel==='matching') buildMatching();
+  if(panel==='artisans') buildArtisans();
   if(panel==='messagerie') buildMessagerie();
   if(panel==='depot'){depotStep=1;goDepotStep(1);}
   if(panel==='rdv') buildCal();
@@ -4517,6 +4695,335 @@ function openLegalPage(page){
   document.getElementById('legal-title').textContent=data.title;
   document.getElementById('legal-content').innerHTML=data.content;
   document.getElementById('legal-modal').style.display='flex';
+}
+
+// =============================================
+// MODULE ARTISANS NC
+// =============================================
+
+const ARTISANS_DATA = [
+  {
+    id:1, nom:'Eric Peintures NC', categorie:'peinture', zone:'noumea',
+    emoji:'🎨', specialites:['Peinture intérieure','Peinture extérieure','Ravalement','Papier peint'],
+    note:4.9, avis:47, realisations:124, certifie:true, assure:true,
+    prix_min:180, prix_max:350, unite:'F/m²', delai_moyen:'1 semaine',
+    tel:'+687 43 21 10', email:'eric.peintures@nc.email',
+    bio:'Peintre professionnel depuis 15 ans à Nouméa. Spécialiste de la peinture intérieure haut de gamme et des finitions parfaites.',
+    photos:['🎨','🖌️'], disponible:true, commission_agent:4,
+    avis_details:[
+      {auteur:'M. Dupont',note:5,texte:'Travail impeccable, ponctuel et propre. Recommande vivement !',date:'Mai 2026'},
+      {auteur:'Mme Lecomte',note:5,texte:'Résultat magnifique, respecte les délais et le budget.',date:'Avr. 2026'},
+      {auteur:'M. Roux',note:4,texte:'Très bon travail, quelques retouches nécessaires mais vite corrigées.',date:'Mar. 2026'},
+    ]
+  },
+  {
+    id:2, nom:'Plomberie Martin NC', categorie:'plomberie', zone:'noumea',
+    emoji:'🔧', specialites:['Salle de bain','Cuisine','Urgences fuite','Chauffe-eau','Tuyauterie'],
+    note:4.7, avis:89, realisations:256, certifie:true, assure:true,
+    prix_min:8000, prix_max:15000, unite:'F/heure', delai_moyen:'Sous 48h',
+    tel:'+687 55 77 88', email:'plomberie.martin@nc.email',
+    bio:'Plombier agréé RGE, intervention 7j/7 pour urgences. Spécialiste rénovation salle de bain clé en main.',
+    photos:['🚿','🔧'], disponible:true, commission_agent:3,
+    avis_details:[
+      {auteur:'Mme Fontaine',note:5,texte:'Intervention rapide pour fuite urgente. Très professionnel.',date:'Juin 2026'},
+      {auteur:'M. Gérard',note:5,texte:'Rénovation complète salle de bain, résultat top !',date:'Mai 2026'},
+    ]
+  },
+  {
+    id:3, nom:'Electro Pro NC', categorie:'electricite', zone:'noumea',
+    emoji:'⚡', specialites:['Tableau électrique','Mise aux normes','Domotique','Éclairage','Borne recharge'],
+    note:4.8, avis:62, realisations:189, certifie:true, assure:true,
+    prix_min:7500, prix_max:12000, unite:'F/heure', delai_moyen:'3-5 jours',
+    tel:'+687 22 44 66', email:'electro.pro@nc.email',
+    bio:'Électricien certifié CONSUEL. Mise aux normes, domotique, installation borne recharge véhicule électrique.',
+    photos:['⚡','💡'], disponible:true, commission_agent:3,
+    avis_details:[
+      {auteur:'M. Moreau',note:5,texte:'Mise aux normes électrique parfaite. Travail soigné.',date:'Avr. 2026'},
+    ]
+  },
+  {
+    id:4, nom:'Cuisines & Co NC', categorie:'cuisine', zone:'noumea',
+    emoji:'🍳', specialites:['Cuisines sur mesure','Façades','Plans de travail','Électroménager','Îlot central'],
+    note:4.6, avis:38, realisations:87, certifie:true, assure:true,
+    prix_min:450000, prix_max:1500000, unite:'F/projet', delai_moyen:'2-4 semaines',
+    tel:'+687 88 99 00', email:'cuisines.co@nc.email',
+    bio:'Cuisiniste professionnel, création et rénovation de cuisines haut de gamme. Showroom à Nouméa.',
+    photos:['🍳','🏠'], disponible:true, commission_agent:5,
+    avis_details:[
+      {auteur:'Famille Dupuis',note:5,texte:'Cuisine magnifique, exactement ce que nous voulions !',date:'Mai 2026'},
+      {auteur:'Mme Roux',note:4,texte:'Beau travail mais délai légèrement dépassé.',date:'Avr. 2026'},
+    ]
+  },
+  {
+    id:5, nom:'Lagon Piscines', categorie:'piscine', zone:'noumea',
+    emoji:'🏊', specialites:['Construction piscine','Rénovation','Traitement eau','Pool-house','Jacuzzi'],
+    note:4.9, avis:29, realisations:45, certifie:true, assure:true,
+    prix_min:3500000, prix_max:8000000, unite:'F/projet', delai_moyen:'4-8 semaines',
+    tel:'+687 33 55 77', email:'lagon.piscines@nc.email',
+    bio:'Constructeur de piscines depuis 20 ans en NC. Spécialiste débordement et piscines sur terrain en pente.',
+    photos:['🏊','🌊'], disponible:true, commission_agent:5,
+    avis_details:[
+      {auteur:'M. Fontaine',note:5,texte:'Piscine à débordement superbe, vue sur le lagon incluse !',date:'Mar. 2026'},
+    ]
+  },
+  {
+    id:6, nom:'Photo & Home Staging NC', categorie:'photo', zone:'noumea',
+    emoji:'📸', specialites:['Photos HDR','Vidéo drone','Home staging','Visite virtuelle 360°','Retouches'],
+    note:5.0, avis:54, realisations:312, certifie:false, assure:true,
+    prix_min:25000, prix_max:80000, unite:'F/session', delai_moyen:'2-3 jours',
+    tel:'+687 11 33 55', email:'photo.staging@nc.email',
+    bio:'Photographe immobilier professionnel + home stager certifiée. ROI moyen de 8% sur le prix de vente.',
+    photos:['📸','🏠'], disponible:true, commission_agent:3,
+    avis_details:[
+      {auteur:'Agent Soleil NC',note:5,texte:'Photos exceptionnelles, biens vendus 2x plus vite !',date:'Juin 2026'},
+      {auteur:'M. Charrier',note:5,texte:'Home staging parfait, appartement vendu en 3 jours.',date:'Mai 2026'},
+    ]
+  },
+  {
+    id:7, nom:'Jardin Tropical NC', categorie:'jardin', zone:'noumea',
+    emoji:'🌿', specialites:['Aménagement jardins','Terrasses','Haies','Arrosage auto','Pelouse'],
+    note:4.7, avis:41, realisations:98, certifie:false, assure:true,
+    prix_min:50000, prix_max:400000, unite:'F/projet', delai_moyen:'1-2 semaines',
+    tel:'+687 66 88 00', email:'jardin.tropical@nc.email',
+    bio:'Paysagiste spécialisé jardins tropicaux. Plantes locales, arrosage automatique, entretien sur abonnement.',
+    photos:['🌿','🌺'], disponible:true, commission_agent:4,
+    avis_details:[
+      {auteur:'Mme Lecomte',note:5,texte:'Jardin magnifique, a valorisé notre bien de 3% !',date:'Avr. 2026'},
+    ]
+  },
+  {
+    id:8, nom:'ClimaTech NC', categorie:'climatisation', zone:'noumea',
+    emoji:'❄️', specialites:['Climatisation réversible','Multi-split','Gainable','Entretien','VMC'],
+    note:4.8, avis:73, realisations:215, certifie:true, assure:true,
+    prix_min:180000, prix_max:450000, unite:'F/unité', delai_moyen:'2-4 jours',
+    tel:'+687 44 55 66', email:'climatech@nc.email',
+    bio:'Installateur certifié toutes marques. Spécialiste multi-split pour appartements et villas.',
+    photos:['❄️','🏠'], disponible:false, commission_agent:3,
+    avis_details:[
+      {auteur:'M. Gérard',note:5,texte:'Installation propre et rapide, prix compétitif.',date:'Mar. 2026'},
+    ]
+  },
+];
+
+let devisEnCours = [];
+let artisansFiltres = [...ARTISANS_DATA];
+
+function buildArtisans(){
+  filterArtisans();
+}
+
+function switchArtisanTab(tab){
+  ['trouver','devis','suivi'].forEach(t=>{
+    document.getElementById('artisans-'+t).style.display = t===tab?'block':'none';
+    const btn = document.getElementById('tab-artisans-'+t);
+    if(btn){
+      btn.classList.toggle('active', t===tab);
+    }
+  });
+  if(tab==='devis') renderDevisList();
+}
+
+function filterArtisans(){
+  const cat = document.getElementById('art-categorie')?.value||'';
+  const zone = document.getElementById('art-zone')?.value||'';
+  const tri = document.getElementById('art-tri')?.value||'note';
+
+  artisansFiltres = ARTISANS_DATA.filter(a=>{
+    if(cat && a.categorie!==cat) return false;
+    if(zone && a.zone!==zone) return false;
+    return true;
+  });
+
+  if(tri==='note') artisansFiltres.sort((a,b)=>b.note-a.note);
+  else if(tri==='avis') artisansFiltres.sort((a,b)=>b.avis-a.avis);
+  else if(tri==='delai') artisansFiltres.sort((a,b)=>a.delai_moyen.localeCompare(b.delai_moyen));
+
+  const cnt = document.getElementById('art-count');
+  if(cnt) cnt.textContent = artisansFiltres.length+' artisan'+(artisansFiltres.length>1?'s':'');
+
+  renderArtisansGrid();
+}
+
+function renderArtisansGrid(){
+  const grid = document.getElementById('artisans-grid');
+  if(!grid) return;
+
+  if(!artisansFiltres.length){
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)">Aucun artisan trouvé pour ces critères.</div>';
+    return;
+  }
+
+  grid.innerHTML = artisansFiltres.map(a=>`
+    <div class="artisan-card" onclick="openArtisanDetail(${a.id})">
+      <div class="artisan-header">
+        <div style="display:flex;align-items:start;gap:12px">
+          <div class="artisan-avatar">${a.emoji}</div>
+          <div style="flex:1">
+            <div style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;font-weight:700;margin-bottom:2px">${a.nom}</div>
+            <div class="artisan-stars">${'★'.repeat(Math.round(a.note))}${'☆'.repeat(5-Math.round(a.note))}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.5)">${a.note}/5 · ${a.avis} avis · ${a.realisations} réalisations</div>
+          </div>
+          <div style="text-align:right">
+            ${a.certifie?'<div class="artisan-badge-certif">✓ Certifié</div>':''}
+            <div style="margin-top:4px;font-size:10px;color:${a.disponible?'#6fd98a':'rgba(255,255,255,0.3)'}">${a.disponible?'● Disponible':'○ Indisponible'}</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:14px">
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">
+          ${a.specialites.slice(0,3).map(s=>`<span class="tag tag-blue" style="font-size:10px">${s}</span>`).join('')}
+          ${a.specialites.length>3?`<span class="tag" style="font-size:10px">+${a.specialites.length-3}</span>`:''}
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mid);margin-bottom:12px">
+          <span>💰 ${typeof a.prix_min==='number'&&a.prix_min<1000?a.prix_min+'–'+a.prix_max+' '+a.unite:conv(a.prix_min)+' min'}</span>
+          <span>⏱️ ${a.delai_moyen}</span>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" class="btn btn-gold btn-sm" style="flex:1">📋 Demander un devis</button>
+          <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" class="btn btn-outline btn-sm">Voir →</button>
+        </div>
+        ${APP_STATE.user?.profil==='agt'?`<div style="margin-top:6px;font-size:10px;color:var(--gold);text-align:center">Commission agent : ${a.commission_agent}%</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function openArtisanDetail(id){
+  const a = ARTISANS_DATA.find(x=>x.id===id);
+  if(!a) return;
+  const modal = document.getElementById('artisan-detail-modal');
+  const content = document.getElementById('artisan-detail-content');
+  if(!modal||!content) return;
+
+  content.innerHTML = `
+    <div style="background:linear-gradient(135deg,var(--dark),#2a2520);padding:24px;border-radius:16px 16px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+        <div style="display:flex;gap:14px;align-items:center">
+          <div style="width:60px;height:60px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji}</div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:700">${a.nom}</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:12px">${a.realisations} réalisations · ${a.avis} avis</div>
+            ${a.certifie?'<span style="background:rgba(42,122,75,0.3);color:#6fd98a;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">✓ Certifié</span>':''}
+            ${a.assure?'<span style="background:rgba(42,74,122,0.3);color:#7ab3e0;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:4px">🛡️ Assuré</span>':''}
+          </div>
+        </div>
+        <button onclick="document.getElementById('artisan-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+      </div>
+      <div class="artisan-stars" style="font-size:18px;margin-bottom:4px">${'★'.repeat(Math.round(a.note))}${'☆'.repeat(5-Math.round(a.note))}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.6)">${a.note}/5 sur ${a.avis} avis</div>
+    </div>
+    <div style="padding:20px">
+      <p style="font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:16px">${a.bio}</p>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Spécialités</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">${a.specialites.map(s=>`<span class="tag tag-blue">${s}</span>`).join('')}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:16px;font-weight:700;color:var(--dark)">${a.note}</div>
+          <div style="font-size:10px;color:var(--mid)">Note /5</div>
+        </div>
+        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:16px;font-weight:700;color:var(--dark)">${a.delai_moyen}</div>
+          <div style="font-size:10px;color:var(--mid)">Délai moyen</div>
+        </div>
+        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:16px;font-weight:700;color:var(--gold)">${a.commission_agent}%</div>
+          <div style="font-size:10px;color:var(--mid)">Commission agent</div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Avis clients</div>
+        ${a.avis_details.map(av=>`
+        <div style="border:1px solid var(--warm);border-radius:8px;padding:10px;margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:12px;font-weight:600;color:var(--dark)">${av.auteur}</span>
+            <span style="font-size:10px;color:var(--mid)">${av.date}</span>
+          </div>
+          <div style="color:#FFD700;font-size:11px;margin-bottom:3px">${'★'.repeat(av.note)}</div>
+          <div style="font-size:12px;color:var(--mid);font-style:italic">"${av.texte}"</div>
+        </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-gold btn-full" onclick="demanderDevisArtisan(${a.id});document.getElementById('artisan-detail-modal').style.display='none'">📋 Demander un devis</button>
+        <a href="tel:${a.tel}" class="btn btn-outline" style="white-space:nowrap">📞 Appeler</a>
+      </div>
+      ${APP_STATE.user?.profil==='agt'?`<div style="margin-top:10px;padding:8px 12px;background:rgba(184,146,42,0.08);border-radius:8px;font-size:12px;color:var(--gold-dark);text-align:center">💼 Commission agent : ${a.commission_agent}% sur les travaux réalisés</div>`:''}
+    </div>`;
+
+  modal.style.display = 'flex';
+}
+
+function demanderDevisArtisan(id){
+  const a = ARTISANS_DATA.find(x=>x.id===id);
+  if(a){
+    const typeEl = document.getElementById('devis-type');
+    if(typeEl) typeEl.value = a.specialites[0]||'';
+  }
+  showDevisModal();
+}
+
+function showDevisModal(){
+  const modal = document.getElementById('devis-modal');
+  if(modal) modal.style.display='flex';
+  // Préremplir le nom si connecté
+  const nom = document.getElementById('devis-nom');
+  if(nom && APP_STATE.user?.nom) nom.value = APP_STATE.user.nom;
+}
+
+function envoyerDevis(){
+  const type = document.getElementById('devis-type')?.value;
+  const desc = document.getElementById('devis-desc')?.value?.trim();
+  const nom = document.getElementById('devis-nom')?.value?.trim();
+  const tel = document.getElementById('devis-tel')?.value?.trim();
+  if(!type){alert('Veuillez choisir le type de travaux');return;}
+  if(!desc){alert('Veuillez décrire les travaux');return;}
+  if(!nom||!tel){alert('Veuillez entrer vos coordonnées');return;}
+
+  const devis = {
+    id:Date.now(), type, desc, nom, tel,
+    budget:parseInt(document.getElementById('devis-budget')?.value||0),
+    delai:document.getElementById('devis-delai')?.value,
+    adresse:document.getElementById('devis-adresse')?.value||'',
+    statut:'En attente', date:new Date().toLocaleDateString('fr-FR'),
+    artisansContactes:3
+  };
+  devisEnCours.push(devis);
+
+  document.getElementById('devis-modal').style.display='none';
+  switchArtisanTab('devis');
+
+  // Notification
+  const notif=document.createElement('div');
+  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(184,146,42,0.3);max-width:300px';
+  notif.innerHTML='📋 Demande envoyée à 3 artisans partenaires !<br><small style="font-weight:400">Vous recevrez les devis sous 48h</small>';
+  document.body.appendChild(notif);
+  setTimeout(()=>document.body.removeChild(notif),4000);
+}
+
+function renderDevisList(){
+  const el = document.getElementById('devis-list');
+  if(!el) return;
+  if(!devisEnCours.length){
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--mid)"><div style="font-size:40px;margin-bottom:10px">📋</div><div style="font-size:14px;margin-bottom:12px">Aucune demande de devis en cours</div><button class="btn btn-gold" onclick="showDevisModal()">+ Faire une demande</button></div>';
+    return;
+  }
+  el.innerHTML = devisEnCours.map(d=>`
+    <div class="devis-card">
+      <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:8px">
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--dark)">${d.type}</div>
+          <div style="font-size:11px;color:var(--mid)">${d.adresse||'Adresse non renseignée'} · ${d.date}</div>
+        </div>
+        <span class="devis-status devis-pending">En attente</span>
+      </div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.5">${d.desc.substring(0,120)}${d.desc.length>120?'...':''}</div>
+      <div class="ai-line"><span>Demandé par</span><span>${d.nom} · ${d.tel}</span></div>
+      ${d.budget?`<div class="ai-line"><span>Budget estimé</span><span style="color:var(--gold);font-weight:600">${conv(d.budget)}</span></div>`:''}
+      <div class="ai-line"><span>Artisans contactés</span><span>${d.artisansContactes} artisans partenaires</span></div>
+      <div style="margin-top:10px;padding:8px 12px;background:var(--warm);border-radius:6px;font-size:11px;color:var(--mid)">
+        ⏳ Les devis arrivent sous 48h. Vous serez notifié par email et sur la plateforme.
+      </div>
+    </div>`).join('');
 }
 
 // =============================================
