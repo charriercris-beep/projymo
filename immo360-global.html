@@ -327,9 +327,160 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 .qtr-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--warm);font-size:13px}
 .qtr-bar-wrap{flex:1;margin:0 12px;height:6px;background:var(--warm);border-radius:3px;overflow:hidden}
 .qtr-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-dark))}
+
+/* ── PAGE ACCUEIL ── */
+.landing{position:fixed;inset:0;background:var(--dark);z-index:1000;display:flex;flex-direction:column;overflow-y:auto}
+.landing-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;min-height:100vh}
+.landing-logo{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;color:#fff;margin-bottom:8px}
+.landing-logo span{color:var(--gold)}
+.landing-tagline{font-size:18px;color:rgba(255,255,255,0.6);margin-bottom:48px;font-style:italic}
+.landing-cards{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;width:100%;max-width:900px}
+.landing-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px 28px;cursor:pointer;transition:.25s;flex:1;min-width:240px;max-width:280px;text-align:center}
+.landing-card:hover{background:rgba(184,146,42,0.15);border-color:var(--gold);transform:translateY(-3px)}
+.landing-card-icon{font-size:44px;margin-bottom:16px}
+.landing-card-title{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:8px}
+.landing-card-desc{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6}
+.landing-card-btn{margin-top:20px;display:inline-block;padding:10px 24px;background:var(--gold);color:#fff;border-radius:8px;font-size:13px;font-weight:600}
+.landing-stats{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;padding:24px 0;border-top:1px solid rgba(255,255,255,0.08)}
+.landing-stat-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold)}
+.landing-stat-lbl{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px}
+.landing-annonces{width:100%;max-width:1000px;padding:0 20px 60px}
+.landing-annonces h2{font-family:'Playfair Display',serif;font-size:24px;color:#fff;margin-bottom:20px;text-align:center}
+
+/* ── LOGIN MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:#fff;border-radius:16px;padding:32px;width:100%;max-width:440px}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--mid);margin-bottom:24px}
+.profile-choice{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.profile-opt{border:1.5px solid var(--warm);border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;transition:.2s}
+.profile-opt:hover,.profile-opt.sel{border-color:var(--gold);background:rgba(184,146,42,0.05)}
+.profile-opt-icon{font-size:24px;margin-bottom:6px}
+.profile-opt-name{font-size:12px;font-weight:600;color:var(--dark)}
+
+/* ── MESSAGERIE ── */
+.msg-layout{display:grid;grid-template-columns:280px 1fr;gap:0;height:calc(100vh - 56px);overflow:hidden}
+.msg-sidebar{border-right:1px solid var(--warm);overflow-y:auto;background:#fff}
+.msg-sidebar-header{padding:14px 16px;border-bottom:1px solid var(--warm);font-weight:600;font-size:14px}
+.conv-item{padding:12px 16px;border-bottom:1px solid var(--warm);cursor:pointer;transition:.15s}
+.conv-item:hover,.conv-item.active{background:rgba(184,146,42,0.06)}
+.conv-item-name{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px}
+.conv-item-preview{font-size:11px;color:var(--mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-item-meta{font-size:10px;color:var(--soft);float:right;margin-top:2px}
+.conv-unread{background:var(--gold);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;float:right}
+.msg-main{display:flex;flex-direction:column;background:var(--cream)}
+.msg-header{padding:14px 20px;border-bottom:1px solid var(--warm);background:#fff;display:flex;align-items:center;gap:12px}
+.msg-header-avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.msg-header-info{flex:1}
+.msg-header-name{font-size:14px;font-weight:600;color:var(--dark)}
+.msg-header-sub{font-size:11px;color:var(--mid)}
+.msg-body{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+.msg-bubble{max-width:75%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5}
+.msg-bubble.mine{background:var(--gold);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg-bubble.other{background:#fff;color:var(--dark);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.msg-bubble-time{font-size:10px;opacity:0.6;margin-top:3px}
+.msg-input-bar{padding:12px 16px;background:#fff;border-top:1px solid var(--warm);display:flex;gap:8px}
+.msg-input{flex:1;padding:9px 14px;border:1px solid var(--warm);border-radius:24px;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;background:#fff}
+.msg-input:focus{outline:none;border-color:var(--gold)}
+.msg-send{padding:9px 18px;background:var(--gold);color:#fff;border:none;border-radius:24px;font-size:13px;font-weight:600;cursor:pointer}
+.msg-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--mid);font-size:14px}
+
+@media(max-width:768px){
+  .landing-cards{flex-direction:column;align-items:center}
+  .landing-card{max-width:100%}
+  .landing-logo{font-size:36px}
+  .msg-layout{grid-template-columns:1fr}
+  .msg-sidebar{display:none}
+  .msg-sidebar.show{display:block;position:fixed;inset:0;z-index:100;overflow-y:auto}
+  .profile-choice{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
+<!-- ═══════════════════════════════════
+     PAGE D'ACCUEIL PUBLIQUE
+═══════════════════════════════════ -->
+<div class="landing" id="landing-page">
+  <div class="landing-hero">
+    <div class="landing-logo">Immo<span>360</span></div>
+    <div class="landing-tagline">"Le ChatGPT de l'immobilier en Nouvelle-Calédonie"</div>
+
+    <div class="landing-cards">
+      <!-- VENDEUR -->
+      <div class="landing-card" onclick="loginAs('sell')">
+        <div class="landing-card-icon">🏠</div>
+        <div class="landing-card-title">Je vends mon bien</div>
+        <div class="landing-card-desc">Estimation IA, analyse photos, génération d'annonce, suivi de vente. Tout en un.</div>
+        <div class="landing-card-btn">Commencer gratuitement →</div>
+      </div>
+      <!-- AGENT -->
+      <div class="landing-card" onclick="loginAs('agt')">
+        <div class="landing-card-icon">🤝</div>
+        <div class="landing-card-title">Je suis agent immobilier</div>
+        <div class="landing-card-desc">CRM, multi-biens, annonces multi-plateformes, stats et performances.</div>
+        <div class="landing-card-btn">Espace pro →</div>
+      </div>
+      <!-- ACHETEUR -->
+      <div class="landing-card" onclick="showLoginModal('buy')">
+        <div class="landing-card-icon">🔍</div>
+        <div class="landing-card-title">Je cherche un bien</div>
+        <div class="landing-card-desc">Parcourez les annonces, contactez directement les vendeurs et agents.</div>
+        <div class="landing-card-btn">Créer un compte →</div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="landing-stats">
+      <div style="text-align:center"><div class="landing-stat-val">8</div><div class="landing-stat-lbl">Biens disponibles</div></div>
+      <div style="text-align:center"><div class="landing-stat-val">340k F</div><div class="landing-stat-lbl">Prix médian/m² NC</div></div>
+      <div style="text-align:center"><div class="landing-stat-val">100%</div><div class="landing-stat-lbl">Gratuit pour les vendeurs</div></div>
+      <div style="text-align:center"><div class="landing-stat-val">IA</div><div class="landing-stat-lbl">Analyse photos réelle</div></div>
+    </div>
+  </div>
+
+  <!-- ANNONCES SUR LA PAGE D'ACCUEIL -->
+  <div class="landing-annonces">
+    <h2>Annonces récentes en Nouvelle-Calédonie</h2>
+    <div id="landing-biens" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
+    <div style="text-align:center;margin-top:24px">
+      <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3)" onclick="showLoginModal('buy')">
+        Voir toutes les annonces →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MODAL LOGIN
+═══════════════════════════════════ -->
+<div class="modal-overlay" id="login-modal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">Bienvenue sur Immo360</div>
+    <div class="modal-sub">Choisissez votre profil pour continuer</div>
+    <div class="profile-choice">
+      <div class="profile-opt" onclick="selectProfile('sell')" id="opt-sell">
+        <div class="profile-opt-icon">🏠</div>
+        <div class="profile-opt-name">Vendeur</div>
+      </div>
+      <div class="profile-opt" onclick="selectProfile('agt')" id="opt-agt">
+        <div class="profile-opt-icon">🤝</div>
+        <div class="profile-opt-name">Agent</div>
+      </div>
+      <div class="profile-opt sel" onclick="selectProfile('buy')" id="opt-buy">
+        <div class="profile-opt-icon">🔍</div>
+        <div class="profile-opt-name">Acheteur</div>
+      </div>
+    </div>
+    <div class="field"><label>Prénom & Nom</label><input type="text" id="login-nom" placeholder="Jean Dupont"></div>
+    <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="jean@email.com"></div>
+    <div class="field"><label>Téléphone</label><input type="tel" id="login-tel" placeholder="+687 00 00 00"></div>
+    <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="doLogin()">✅ Accéder à l'application</button>
+    <div style="text-align:center;margin-top:12px">
+      <span style="font-size:12px;color:var(--mid);cursor:pointer" onclick="closeLoginModal()">← Retour</span>
+    </div>
+  </div>
+</div>
+
 <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 <div class="shell">
 
@@ -372,7 +523,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       <option value="CAD" data-s="$">CAD</option>
       <option value="USD" data-s="$">USD</option>
     </select>
-    <div class="topbar-badge badge-sell" id="profile-badge">Vendeur</div>
+    <div class="topbar-badge badge-sell" id="profile-badge" onclick="logout()" title="Déconnexion" style="cursor:pointer">Vendeur</div>
   </div>
 
   <div class="content">
@@ -670,6 +821,46 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
+    <!-- ==================== MESSAGERIE ==================== -->
+    <div class="panel" id="panel-messagerie">
+      <div class="msg-layout">
+        <!-- LISTE CONVERSATIONS -->
+        <div class="msg-sidebar" id="msg-sidebar">
+          <div class="msg-sidebar-header">
+            💬 Messages
+            <span id="msg-unread-total" style="float:right;background:var(--gold);color:#fff;border-radius:12px;padding:1px 8px;font-size:11px"></span>
+          </div>
+          <div id="conv-list"></div>
+          <div style="padding:12px 16px">
+            <button class="btn btn-gold btn-full btn-sm" onclick="newConversation()">+ Nouvelle conversation</button>
+          </div>
+        </div>
+        <!-- CONVERSATION ACTIVE -->
+        <div class="msg-main" id="msg-main">
+          <div class="msg-empty" id="msg-empty">
+            <div style="font-size:40px">💬</div>
+            <div>Sélectionnez une conversation</div>
+            <div style="font-size:12px;color:var(--soft)">ou démarrez-en une nouvelle</div>
+          </div>
+          <div id="msg-conversation" style="display:none;flex:1;display:none;flex-direction:column">
+            <div class="msg-header">
+              <div class="msg-header-avatar" id="msg-avatar">?</div>
+              <div class="msg-header-info">
+                <div class="msg-header-name" id="msg-contact-name">—</div>
+                <div class="msg-header-sub" id="msg-contact-sub">—</div>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="go('rdv')">📅 RDV</button>
+            </div>
+            <div class="msg-body" id="msg-body"></div>
+            <div class="msg-input-bar">
+              <textarea class="msg-input" id="msg-input" placeholder="Votre message..." rows="1" onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+              <button class="msg-send" onclick="sendMessage()">Envoyer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== RDV ==================== -->
     <div class="panel" id="panel-rdv">
       <div class="grid2">
@@ -936,20 +1127,20 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 const MENUS = {
   sell:[
     {s:'Vente',items:[{ico:'🏠',k:'dashboard'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'},{ico:'🎨',k:'decoration'},{ico:'📣',k:'annonces'}]},
-    {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
+    {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
   ],
   buy:[
     {s:'Recherche',items:[{ico:'🏠',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💰',k:'financement'},{ico:'📅',k:'rdv'}]},
-    {s:'Outils',items:[{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
+    {s:'Mon espace',items:[{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
   ],
   agt:[
     {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'}]},
-    {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'📅',k:'rdv'},{ico:'🔄',k:'suivi'},{ico:'📈',k:'stats'}]},
+    {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📈',k:'stats'}]},
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne'},
-  en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings'},
+  fr:{dashboard:'Tableau de bord',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
 
@@ -997,6 +1188,7 @@ function go(panel){
   if(panel==='estimation'){calcEstim();buildDPE();buildMarketSources();buildQuartiersTable();}
   if(panel==='financement') calcFin();
   if(panel==='marketplace') buildMarketplace();
+  if(panel==='messagerie') buildMessagerie();
   if(panel==='rdv') buildCal();
   if(panel==='biens') buildBiens();
   if(panel==='suivi') buildSuivi();
@@ -1677,6 +1869,28 @@ function openBien(id){
   document.body.appendChild(ov);
 }
 
+function contactVendeur(bienId){
+  // Si pas connecté, demander de créer un compte
+  if(!APP_STATE.loggedIn){
+    showLoginModal('buy');
+    return;
+  }
+  const b=BIENS_DATA.find(x=>x.id===bienId);
+  if(!b) return;
+  // Chercher ou créer une conversation pour ce bien
+  let conv=CONVERSATIONS.find(x=>x.bien===bienId);
+  if(!conv){
+    conv={
+      id:Date.now(),bien:bienId,bienTitre:b.titre,
+      contact:{nom:b.agent,role:'Vendeur/Agent',avatar:'🏢'},
+      messages:[],unread:0
+    };
+    CONVERSATIONS.unshift(conv);
+  }
+  go('messagerie');
+  setTimeout(()=>openConversation(conv.id),100);
+}
+
 // =============================================
 // BIENS
 // =============================================
@@ -1768,12 +1982,234 @@ function setProfile(p,btn){
 }
 
 // =============================================
+// LANDING PAGE & LOGIN
+// =============================================
+const APP_STATE = {
+  user: null, // {nom, email, tel, profil}
+  loggedIn: false,
+};
+
+function showLanding(){
+  document.getElementById('landing-page').style.display='flex';
+  document.getElementById('landing-page').style.flexDirection='column';
+  // Afficher 4 biens sur la landing
+  const container=document.getElementById('landing-biens');
+  if(container){
+    container.innerHTML=BIENS_DATA.slice(0,4).map(b=>`
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="showLoginModal('buy')">
+        <div style="font-size:32px;text-align:center;margin-bottom:10px">${b.photos[0]}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:14px;color:#fff;margin-bottom:4px">${b.titre}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px">📍 ${b.quartier}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">${b.surface} m² · ${b.type}</div>
+        <div style="margin-top:10px;background:rgba(184,146,42,0.2);color:var(--gold-light);border:1px solid rgba(184,146,42,0.3);padding:6px 12px;border-radius:6px;font-size:11px;text-align:center">Créer un compte pour contacter →</div>
+      </div>`).join('');
+  }
+}
+
+function hideLanding(){
+  document.getElementById('landing-page').style.display='none';
+}
+
+function loginAs(profil){
+  // Vendeur et Agent : accès direct sans formulaire
+  APP_STATE.user = {nom:'Utilisateur', email:'', tel:'', profil};
+  APP_STATE.loggedIn = true;
+  hideLanding();
+  setProfile(profil, document.getElementById('t-'+profil));
+  initConversations();
+}
+
+function showLoginModal(profil){
+  document.getElementById('login-modal').style.display='flex';
+  selectProfile(profil||'buy');
+}
+
+function closeLoginModal(){
+  document.getElementById('login-modal').style.display='none';
+}
+
+function selectProfile(p){
+  ['sell','agt','buy'].forEach(x=>{
+    document.getElementById('opt-'+x)?.classList.remove('sel');
+  });
+  document.getElementById('opt-'+p)?.classList.add('sel');
+  document.getElementById('login-modal').dataset.profil=p;
+}
+
+function doLogin(){
+  const nom=document.getElementById('login-nom').value.trim();
+  const email=document.getElementById('login-email').value.trim();
+  const profil=document.getElementById('login-modal').dataset.profil||'buy';
+  if(!nom){alert('Veuillez entrer votre nom');return;}
+  APP_STATE.user={nom,email,tel:document.getElementById('login-tel').value,profil};
+  APP_STATE.loggedIn=true;
+  closeLoginModal();
+  hideLanding();
+  // Mettre à jour l'affichage du profil
+  const btn=document.getElementById('t-'+profil);
+  if(btn) setProfile(profil,btn);
+  else go('dashboard');
+  initConversations();
+  // Mettre à jour le nom dans la topbar
+  updateUserDisplay();
+}
+
+function updateUserDisplay(){
+  if(!APP_STATE.user) return;
+  const badge=document.getElementById('profile-badge');
+  if(badge) badge.textContent=APP_STATE.user.nom.split(' ')[0];
+}
+
+// Bouton déconnexion dans la topbar
+function logout(){
+  APP_STATE.user=null;
+  APP_STATE.loggedIn=false;
+  showLanding();
+}
+
+// =============================================
+// MESSAGERIE INTERNE
+// =============================================
+const CONVERSATIONS = [
+  {
+    id:1, bien:1, bienTitre:'Appartement Baie des Citrons',
+    contact:{nom:'Marie L.',role:'Acheteur',avatar:'👩'},
+    messages:[
+      {from:'other',text:'Bonjour, est-ce que le bien est toujours disponible ?',time:'10:30'},
+      {from:'me',text:'Oui bonjour ! Le bien est toujours disponible. Souhaitez-vous organiser une visite ?',time:'10:45'},
+      {from:'other',text:'Oui avec plaisir ! Je suis disponible ce samedi matin.',time:'11:00'},
+    ],
+    unread:1
+  },
+  {
+    id:2, bien:2, bienTitre:'Villa Anse Vata',
+    contact:{nom:'Paul M.',role:'Acheteur',avatar:'👨'},
+    messages:[
+      {from:'other',text:'Bonjour, quel est le montant des charges de copropriété ?',time:'Hier'},
+      {from:'me',text:'Les charges sont de 45 000 XPF par trimestre.',time:'Hier'},
+    ],
+    unread:0
+  },
+  {
+    id:3, bien:5, bienTitre:'Maison F4 Dumbéa',
+    contact:{nom:'Agent NC Immobilier',role:'Agent',avatar:'🏢'},
+    messages:[
+      {from:'other',text:'Bonjour, nous avons un client très intéressé par votre maison. Pouvons-nous organiser une visite cette semaine ?',time:'Lun'},
+    ],
+    unread:1
+  },
+];
+
+let activeConvId = null;
+
+function initConversations(){
+  renderConvList();
+  updateUnreadTotal();
+}
+
+function renderConvList(){
+  const list=document.getElementById('conv-list');
+  if(!list) return;
+  list.innerHTML=CONVERSATIONS.map(c=>`
+    <div class="conv-item${c.id===activeConvId?' active':''}" onclick="openConversation(${c.id})">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div class="conv-item-name">${c.contact.avatar} ${c.contact.nom}</div>
+        ${c.unread>0?`<span class="conv-unread">${c.unread}</span>`:'<span class="conv-item-meta">'+c.messages[c.messages.length-1]?.time+'</span>'}
+      </div>
+      <div class="conv-item-preview">🏠 ${c.bienTitre}</div>
+      <div class="conv-item-preview">${c.messages[c.messages.length-1]?.text||''}</div>
+    </div>`).join('');
+}
+
+function updateUnreadTotal(){
+  const total=CONVERSATIONS.reduce((a,c)=>a+c.unread,0);
+  const el=document.getElementById('msg-unread-total');
+  if(el) el.textContent=total>0?total:'';
+  // Badge dans le menu
+  document.querySelectorAll('.nav-item').forEach(item=>{
+    if(item.textContent.includes('Messagerie')&&total>0){
+      item.innerHTML=item.innerHTML.replace('Messagerie','Messagerie <span style="background:var(--gold);color:#fff;border-radius:10px;padding:1px 6px;font-size:9px;vertical-align:middle">'+total+'</span>');
+    }
+  });
+}
+
+function openConversation(id){
+  activeConvId=id;
+  const c=CONVERSATIONS.find(x=>x.id===id);
+  if(!c) return;
+  c.unread=0;
+  renderConvList();
+  updateUnreadTotal();
+  // Afficher conversation
+  document.getElementById('msg-empty').style.display='none';
+  const convEl=document.getElementById('msg-conversation');
+  convEl.style.display='flex';
+  document.getElementById('msg-avatar').textContent=c.contact.avatar;
+  document.getElementById('msg-contact-name').textContent=c.contact.nom;
+  document.getElementById('msg-contact-sub').textContent=c.contact.role+' · 🏠 '+c.bienTitre;
+  renderMessages(c);
+}
+
+function renderMessages(conv){
+  const body=document.getElementById('msg-body');
+  if(!body) return;
+  body.innerHTML=conv.messages.map(m=>`
+    <div style="display:flex;flex-direction:column;align-items:${m.from==='me'?'flex-end':'flex-start'}">
+      <div class="msg-bubble ${m.from==='me'?'mine':'other'}">${m.text}
+        <div class="msg-bubble-time">${m.time}</div>
+      </div>
+    </div>`).join('');
+  body.scrollTop=body.scrollHeight;
+}
+
+function sendMessage(){
+  const input=document.getElementById('msg-input');
+  const text=input?.value?.trim();
+  if(!text||!activeConvId) return;
+  const conv=CONVERSATIONS.find(x=>x.id===activeConvId);
+  if(!conv) return;
+  const now=new Date();
+  const time=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+  conv.messages.push({from:'me',text,time});
+  input.value='';
+  renderMessages(conv);
+  renderConvList();
+  // Simuler réponse automatique après 2 secondes
+  setTimeout(()=>{
+    const replies=[
+      'Merci pour votre message, je reviens vers vous rapidement.',
+      'Parfait ! Je note votre disponibilité.',
+      'D'accord, je vous confirme par email.',
+      'Entendu, à très bientôt !',
+    ];
+    conv.messages.push({from:'other',text:replies[Math.floor(Math.random()*replies.length)],time:(now.getHours()+':'+((now.getMinutes()+2)<10?'0':'')+(now.getMinutes()+2))});
+    conv.unread=0;
+    renderMessages(conv);
+    renderConvList();
+  },2000);
+}
+
+function newConversation(){
+  // Ouvrir depuis un bien
+  go('marketplace');
+}
+
+function buildMessagerie(){
+  renderConvList();
+  updateUnreadTotal();
+}
+
+// =============================================
 // INIT
 // =============================================
 buildDPE('C');
 updateDeco();
-go('dashboard');
 calcFin();
+// Afficher la page d'accueil au démarrage
+showLanding();
+// L'app s'initialise mais reste cachée derrière la landing
+go('dashboard');
 </script>
 
 </body>
