@@ -698,8 +698,8 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 <!-- ═══════════════════════════════════
      MODAL AUTH — S'IDENTIFIER / S'ENREGISTRER
 ═══════════════════════════════════ -->
-<div class="modal-overlay" id="login-modal" style="display:none">
-  <div class="modal-box" style="max-width:480px;padding:0;overflow:hidden">
+<div class="modal-overlay" id="login-modal" style="display:none" onclick="if(event.target===this)closeLoginModal()">
+  <div class="modal-box" style="max-width:480px;padding:0;overflow-y:auto;max-height:92vh;border-radius:16px">
 
     <!-- ÉTAPE 1 : CHOIX CONNEXION / INSCRIPTION -->
     <div id="auth-step-1">
@@ -710,7 +710,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
             <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff" id="auth-modal-title">Bienvenue sur Immo360</div>
             <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:3px" id="auth-modal-sub">Rejoignez la plateforme immobilière NC</div>
           </div>
-          <button onclick="closeLoginModal()" style="background:rgba(255,255,255,0.1);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer">✕</button>
+          <button onclick="closeLoginModal()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
         </div>
         <!-- PROFIL SÉLECTIONNÉ -->
         <div id="auth-profil-badge" style="margin-top:14px;background:rgba(184,146,42,0.2);border:1px solid rgba(184,146,42,0.4);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px">
@@ -2382,6 +2382,7 @@ const PROFIL_CONFIG = {
 
 function showLoginModal(profil){
   document.getElementById('login-modal').style.display='flex';
+  document.body.style.overflow='hidden';
   document.getElementById('login-modal').dataset.profil=profil||'buy';
   updateAuthModalProfil(profil||'buy');
   switchAuthTab('login');
@@ -2402,6 +2403,7 @@ function updateAuthModalProfil(profil){
 
 function closeLoginModal(){
   document.getElementById('login-modal').style.display='none';
+  document.body.style.overflow='';
 }
 
 function selectProfile(p){
@@ -2849,11 +2851,13 @@ function hideLanding(){
 
 function showLoginModal(profil){
   document.getElementById('login-modal').style.display='flex';
+  document.body.style.overflow='hidden';
   selectProfile(profil||'buy');
 }
 
 function closeLoginModal(){
   document.getElementById('login-modal').style.display='none';
+  document.body.style.overflow='';
 }
 
 function selectProfile(p){
