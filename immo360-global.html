@@ -4873,64 +4873,74 @@ function renderArtisansGrid(){
   const defaultColor = {bg:'#F8FAFC',accent:'#475569',light:'#CBD5E1'};
 
   grid.innerHTML = artisansFiltres.map(a=>{
-    const col = CAT_COLORS[a.categorie] || defaultColor;
-    const isPhoto = a.categorie === 'photo';
+    // Couleurs vives par catégorie
+    const CATS = {
+      peinture:    {h:'#FF6B35',t:'#fff',bg:'#FF6B35'},
+      plomberie:   {h:'#2563EB',t:'#fff',bg:'#2563EB'},
+      electricite: {h:'#D97706',t:'#fff',bg:'#D97706'},
+      cuisine:     {h:'#DC2626',t:'#fff',bg:'#DC2626'},
+      'salle-de-bain':{h:'#0D9488',t:'#fff',bg:'#0D9488'},
+      carrelage:   {h:'#7C3AED',t:'#fff',bg:'#7C3AED'},
+      menuiserie:  {h:'#059669',t:'#fff',bg:'#059669'},
+      maconnerie:  {h:'#6D28D9',t:'#fff',bg:'#6D28D9'},
+      piscine:     {h:'#0284C7',t:'#fff',bg:'#0284C7'},
+      jardin:      {h:'#16A34A',t:'#fff',bg:'#16A34A'},
+      climatisation:{h:'#0369A1',t:'#fff',bg:'#0369A1'},
+      domotique:   {h:'#374151',t:'#fff',bg:'#374151'},
+      photo:       {h:'#1C1A16',t:'#F0D99A',bg:'#1C1A16'},
+      homestaging: {h:'#9A3412',t:'#fff',bg:'#9A3412'},
+    };
+    const c = CATS[a.categorie] || {h:'#374151',t:'#fff',bg:'#374151'};
     const prix = typeof a.prix_min==='number'&&a.prix_min<1000 ? a.prix_min+'–'+a.prix_max+' '+a.unite : conv(a.prix_min)+' min';
-    return `
-    <div class="artisan-card" onclick="openArtisanDetail(${a.id})" style="border:none;box-shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04)">
+    return `<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);cursor:pointer;transition:transform .2s,box-shadow .2s" onclick="openArtisanDetail(${a.id})" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
 
-      <!-- HEADER COLORÉ -->
-      <div style="background:${col.bg};padding:16px;border-bottom:3px solid ${col.accent}20;position:relative">
-        <div style="display:flex;align-items:center;gap:12px">
-          <!-- ICÔNE -->
-          <div style="width:56px;height:56px;border-radius:14px;background:${col.accent};display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 10px ${col.accent}40">${a.emoji}</div>
-          <!-- INFOS -->
+      <!-- HEADER COLORÉ FRANC -->
+      <div style="background:${c.h};padding:16px 16px 14px;position:relative">
+        <div style="position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent)"></div>
+        <div style="display:flex;align-items:center;gap:11px;position:relative">
+          <div style="width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;backdrop-filter:blur(4px)">${a.emoji}</div>
           <div style="flex:1;min-width:0">
-            <div style="font-size:15px;font-weight:800;color:${isPhoto?'#fff':'#111827'};margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.nom}</div>
-            <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
-              <span style="color:#F59E0B;font-size:13px;letter-spacing:-1px">${'★'.repeat(Math.round(a.note))}</span>
-              <span style="font-size:13px;font-weight:700;color:${isPhoto?'#fff':'#111827'}">${a.note}</span>
-              <span style="font-size:11px;color:${isPhoto?'rgba(255,255,255,0.6)':'#6B7280'}">${a.avis} avis</span>
+            <div style="font-size:15px;font-weight:800;color:${c.t};margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.nom}</div>
+            <div style="display:flex;align-items:center;gap:5px">
+              <span style="color:#FCD34D;font-size:12px">${'★'.repeat(Math.round(a.note))}</span>
+              <span style="font-size:12px;font-weight:700;color:${c.t}">${a.note}</span>
+              <span style="font-size:11px;color:rgba(255,255,255,0.65)">${a.avis} avis · ${a.realisations} réal.</span>
             </div>
-            <div style="font-size:11px;color:${isPhoto?'rgba(255,255,255,0.5)':'#9CA3AF'}">${a.realisations} réalisations</div>
           </div>
-          <!-- BADGES -->
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-            ${a.certifie?`<span style="background:${col.accent};color:#fff;padding:2px 8px;border-radius:12px;font-size:9px;font-weight:800">✓ Certifié</span>`:''}
-            <span style="font-size:10px;font-weight:700;color:${a.disponible?'#16A34A':'#9CA3AF'}">${a.disponible?'● Disponible':'○ Indispo'}</span>
+            ${a.certifie?'<span style="background:rgba(255,255,255,0.25);color:#fff;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:.3px">✓ CERTIFIÉ</span>':''}
+            <span style="font-size:10px;font-weight:700;color:${a.disponible?'#86EFAC':'rgba(255,255,255,0.4)'}">${a.disponible?'● Disponible':'○ Indispo'}</span>
           </div>
         </div>
       </div>
 
-      <!-- SPÉCIALITÉS -->
-      <div style="padding:10px 14px;background:#fff;border-bottom:1px solid #F3F4F6">
-        <div style="display:flex;flex-wrap:wrap;gap:4px">
-          ${a.specialites.slice(0,3).map(s=>`<span style="background:${col.accent}15;color:${col.accent};padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;border:1px solid ${col.accent}30">${s}</span>`).join('')}
-          ${a.specialites.length>3?`<span style="background:#F3F4F6;color:#6B7280;padding:3px 9px;border-radius:20px;font-size:10px">+${a.specialites.length-3}</span>`:''}
+      <!-- CORPS BLANC -->
+      <div style="padding:12px 14px;background:#fff">
+        <!-- Spécialités -->
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px">
+          ${a.specialites.slice(0,3).map(s=>`<span style="background:${c.h}15;color:${c.h};border:1px solid ${c.h}30;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600">${s}</span>`).join('')}
+          ${a.specialites.length>3?`<span style="background:#F3F4F6;color:#6B7280;padding:3px 9px;border-radius:20px;font-size:10px;border:1px solid #E5E7EB">+${a.specialites.length-3}</span>`:''}
         </div>
-      </div>
-
-      <!-- TARIF + DÉLAI -->
-      <div style="padding:10px 14px;background:#fff;border-bottom:1px solid #F3F4F6;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div style="background:${col.accent}08;border:1px solid ${col.accent}20;border-radius:8px;padding:8px 10px">
-          <div style="font-size:9px;font-weight:700;color:${col.accent};text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Tarif</div>
-          <div style="font-size:12px;font-weight:700;color:#111827">${prix}</div>
+        <!-- Tarif + Délai -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px">
+          <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:8px 10px">
+            <div style="font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">💰 Tarif</div>
+            <div style="font-size:12px;font-weight:800;color:#111827">${prix}</div>
+          </div>
+          <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:8px 10px">
+            <div style="font-size:9px;font-weight:700;color:#15803D;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">⏱️ Délai</div>
+            <div style="font-size:12px;font-weight:800;color:#111827">${a.delai_moyen}</div>
+          </div>
         </div>
-        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:8px 10px">
-          <div style="font-size:9px;font-weight:700;color:#16A34A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Délai</div>
-          <div style="font-size:12px;font-weight:700;color:#111827">${a.delai_moyen}</div>
+        <!-- Boutons -->
+        <div style="display:flex;gap:6px;align-items:center">
+          <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" style="flex:1;background:${c.h};color:#fff;border:none;padding:9px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">📋 Devis gratuit</button>
+          <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" style="padding:9px 12px;border:2px solid ${c.h};background:#fff;color:${c.h};border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Voir →</button>
+          ${APP_STATE.user?.profil==='agt'?`<div style="text-align:center;background:${c.h}12;border:1px solid ${c.h}30;border-radius:6px;padding:4px 6px"><div style="font-size:9px;color:#6B7280">Comm.</div><div style="font-size:11px;font-weight:800;color:${c.h}">${a.commission_agent}%</div></div>`:''}
         </div>
-      </div>
-
-      <!-- BOUTONS -->
-      <div style="padding:12px 14px;background:#fff;display:flex;gap:6px;align-items:center">
-        <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" style="flex:1;background:${col.accent};color:#fff;border:none;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">📋 Devis gratuit</button>
-        <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" style="padding:9px 12px;border:1.5px solid ${col.accent}40;background:#fff;color:${col.accent};border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Voir →</button>
-        ${APP_STATE.user?.profil==='agt'?`<span style="font-size:10px;color:${col.accent};font-weight:700;white-space:nowrap;padding:4px 8px;background:${col.accent}10;border-radius:6px">${a.commission_agent}%</span>`:''}
       </div>
     </div>`;
-  }).join('');
-}
+  }).join('');}
 
 function openArtisanDetail(id){
   const a = ARTISANS_DATA.find(x=>x.id===id);
