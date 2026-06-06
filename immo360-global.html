@@ -328,6 +328,10 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 .qtr-bar-wrap{flex:1;margin:0 12px;height:6px;background:var(--warm);border-radius:3px;overflow:hidden}
 .qtr-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-dark))}
 
+/* ── ÉQUIPEMENTS DROPDOWN ── */
+.eq-btn{background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s;display:inline-block;margin:1px}
+.eq-btn.active,.eq-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold-dark)}
+
 /* ── PAGE ACCUEIL ── */
 .landing{position:fixed;inset:0;background:var(--cream);z-index:1000;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
 /* Carte annonce grille */
@@ -508,57 +512,60 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
         </div>
       </div>
 
-      <!-- LIGNE 3 : SURFACE + PIÈCES + ÉTAT + DPE -->
-      <div style="background:#fff;padding:8px 12px;border-top:1px solid var(--warm);display:flex;gap:6px;flex-wrap:wrap">
-        <select id="ld-surface" onchange="landingSearch()" style="flex:1;min-width:110px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
-          <option value="">📐 Surface min</option>
+      <!-- LIGNE 3 : CRITÈRES COMPACTS EN DÉROULANTS -->
+      <div style="background:#fff;padding:8px 12px 10px;border-top:1px solid var(--warm);display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+        <select id="ld-surface" onchange="landingSearch()" style="flex:1;min-width:110px;border:1px solid var(--warm);padding:7px 8px;font-size:12px;border-radius:6px;color:var(--dark);background:#fff">
+          <option value="">📐 Surface</option>
           <option value="25">25 m² min</option><option value="40">40 m² min</option>
           <option value="60">60 m² min</option><option value="80">80 m² min</option>
           <option value="100">100 m² min</option><option value="150">150 m² min</option>
           <option value="200">200 m² min</option>
         </select>
-        <select id="ld-pieces" onchange="landingSearch()" style="flex:1;min-width:110px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
-          <option value="">🚪 Pièces min</option>
+        <select id="ld-pieces" onchange="landingSearch()" style="flex:1;min-width:100px;border:1px solid var(--warm);padding:7px 8px;font-size:12px;border-radius:6px;color:var(--dark);background:#fff">
+          <option value="">🚪 Pièces</option>
           <option value="1">1+ pièce</option><option value="2">2+ pièces</option>
           <option value="3">3+ pièces</option><option value="4">4+ pièces</option><option value="5">5+ pièces</option>
         </select>
-        <select id="ld-etat" onchange="landingSearch()" style="flex:1;min-width:120px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
-          <option value="">🔨 État du bien</option>
+        <select id="ld-etat" onchange="landingSearch()" style="flex:1;min-width:120px;border:1px solid var(--warm);padding:7px 8px;font-size:12px;border-radius:6px;color:var(--dark);background:#fff">
+          <option value="">🔨 État</option>
           <option value="sans">✅ Sans travaux</option>
           <option value="avec">🔧 Avec travaux</option>
           <option value="neuf">🆕 Neuf / Récent</option>
           <option value="renove">✨ Rénové</option>
         </select>
-        <select id="ld-dpe" onchange="landingSearch()" style="flex:1;min-width:100px;border:1px solid var(--warm);padding:6px 8px;font-size:12px;border-radius:6px;color:var(--dark)">
+        <select id="ld-dpe" onchange="landingSearch()" style="flex:1;min-width:90px;border:1px solid var(--warm);padding:7px 8px;font-size:12px;border-radius:6px;color:var(--dark);background:#fff">
           <option value="">⚡ DPE</option>
-          <option value="A">🟢 A (Excellent)</option>
-          <option value="B">🟡 B ou mieux</option>
-          <option value="C">🟠 C ou mieux</option>
+          <option value="A">🟢 A</option><option value="B">🟡 B+</option><option value="C">🟠 C+</option>
         </select>
-      </div>
-
-      <!-- LIGNE 4 : ÉQUIPEMENTS -->
-      <div style="background:#fff;padding:8px 12px 10px;border-top:1px solid var(--warm);border-radius:0">
-        <div style="font-size:10px;font-weight:600;color:var(--mid);margin-bottom:6px;text-align:left">✨ Équipements &amp; options</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px" id="equip-filters">
-          <span class="eq-btn" data-eq="Vue mer" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🌊 Vue mer</span>
-          <span class="eq-btn" data-eq="Vue lagon" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🐠 Vue lagon</span>
-          <span class="eq-btn" data-eq="Vue dégagée" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🏔️ Vue dégagée</span>
-          <span class="eq-btn" data-eq="Piscine" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🏊 Piscine</span>
-          <span class="eq-btn" data-eq="Jacuzzi" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🛁 Jacuzzi</span>
-          <span class="eq-btn" data-eq="Garage" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🚗 Garage</span>
-          <span class="eq-btn" data-eq="Parking" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🅿️ Parking</span>
-          <span class="eq-btn" data-eq="Terrasse" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🌿 Terrasse</span>
-          <span class="eq-btn" data-eq="Jardin" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🌳 Jardin</span>
-          <span class="eq-btn" data-eq="Ascenseur" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🛗 Ascenseur</span>
-          <span class="eq-btn" data-eq="Gardien" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">👮 Gardien</span>
-          <span class="eq-btn" data-eq="Domotique" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🤖 Domotique</span>
-          <span class="eq-btn" data-eq="Solaire" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">☀️ Solaire</span>
-          <span class="eq-btn" data-eq="Meublé" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🛋️ Meublé</span>
-          <span class="eq-btn" data-eq="Locataire en place" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">📈 Rendement</span>
-          <span class="eq-btn" data-eq="Saisonnier" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">📅 Saisonnier</span>
-          <span class="eq-btn" data-eq="neuf" onclick="toggleEquip(this)" style="background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s">🆕 Neuf</span>
-          <button onclick="resetAllFilters()" style="background:none;border:1px solid var(--soft);color:var(--mid);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;transition:.15s">✕ Tout réinitialiser</button>
+        <!-- MENU DÉROULANT ÉQUIPEMENTS -->
+        <div style="flex:1;min-width:140px;position:relative" id="equip-menu-wrap">
+          <button onclick="toggleEquipMenu()" id="equip-menu-btn" style="width:100%;border:1px solid var(--warm);padding:7px 10px;font-size:12px;border-radius:6px;color:var(--dark);background:#fff;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center">
+            <span id="equip-menu-label">✨ Équipements</span>
+            <span style="font-size:9px;color:var(--mid)">▾</span>
+          </button>
+          <div id="equip-dropdown" style="display:none;position:absolute;top:36px;left:0;right:0;background:#fff;border:1px solid var(--warm);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;padding:10px;min-width:260px">
+            <div style="display:flex;flex-wrap:wrap;gap:4px" id="equip-filters">
+              <span class="eq-btn" data-eq="Vue mer" onclick="toggleEquip(this)">🌊 Vue mer</span>
+              <span class="eq-btn" data-eq="Vue lagon" onclick="toggleEquip(this)">🐠 Vue lagon</span>
+              <span class="eq-btn" data-eq="Vue dégagée" onclick="toggleEquip(this)">🏔️ Vue dégagée</span>
+              <span class="eq-btn" data-eq="Piscine" onclick="toggleEquip(this)">🏊 Piscine</span>
+              <span class="eq-btn" data-eq="Jacuzzi" onclick="toggleEquip(this)">🛁 Jacuzzi</span>
+              <span class="eq-btn" data-eq="Garage" onclick="toggleEquip(this)">🚗 Garage</span>
+              <span class="eq-btn" data-eq="Parking" onclick="toggleEquip(this)">🅿️ Parking</span>
+              <span class="eq-btn" data-eq="Terrasse" onclick="toggleEquip(this)">🌿 Terrasse</span>
+              <span class="eq-btn" data-eq="Jardin" onclick="toggleEquip(this)">🌳 Jardin</span>
+              <span class="eq-btn" data-eq="Ascenseur" onclick="toggleEquip(this)">🛗 Ascenseur</span>
+              <span class="eq-btn" data-eq="Gardien" onclick="toggleEquip(this)">👮 Gardien</span>
+              <span class="eq-btn" data-eq="Domotique" onclick="toggleEquip(this)">🤖 Domotique</span>
+              <span class="eq-btn" data-eq="Solaire" onclick="toggleEquip(this)">☀️ Solaire</span>
+              <span class="eq-btn" data-eq="Meublé" onclick="toggleEquip(this)">🛋️ Meublé</span>
+              <span class="eq-btn" data-eq="Locataire en place" onclick="toggleEquip(this)">📈 Rendement</span>
+              <span class="eq-btn" data-eq="Saisonnier" onclick="toggleEquip(this)">📅 Saisonnier</span>
+            </div>
+            <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--warm);text-align:center">
+              <button onclick="resetAllFilters();toggleEquipMenu()" style="background:none;border:none;color:var(--gold);font-size:12px;cursor:pointer;font-weight:600">✕ Tout réinitialiser</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -626,37 +633,64 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <div style="background:var(--dark);padding:28px 24px;flex-shrink:0">
-    <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:start">
+  <!-- FOOTER COMPLET -->
+  <div style="background:var(--dark);padding:32px 24px 0;flex-shrink:0">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:32px;flex-wrap:wrap">
+      <!-- LOGO + DESCRIPTION -->
       <div>
-        <div onclick="showLanding()" style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:6px;cursor:pointer">Immo<span style="color:var(--gold)">360</span></div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.35);max-width:220px;line-height:1.6">L'immobilier intelligent en Nouvelle-Calédonie. 100% gratuit pour les vendeurs particuliers.</div>
+        <div onclick="showLanding()" style="font-family:'Playfair Display',serif;font-size:22px;color:#fff;margin-bottom:8px;cursor:pointer">Immo<span style="color:var(--gold)">360</span></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:12px">La plateforme immobilière intelligente de Nouvelle-Calédonie. Gratuit pour les vendeurs particuliers.</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.2)">📍 Nouméa, Nouvelle-Calédonie</div>
       </div>
-      <div style="display:flex;gap:40px;flex-wrap:wrap">
-        <div>
-          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Vendre</div>
-          <div onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Estimer mon bien</div>
-          <div onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Déposer une annonce</div>
-          <div onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Analyse photos IA</div>
-        </div>
-        <div>
-          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Acheter</div>
-          <div onclick="showLoginModal('buy')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Rechercher un bien</div>
-          <div onclick="showLoginModal('buy')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Simuler un financement</div>
-          <div onclick="showLoginModal('buy')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Contacter un agent</div>
-        </div>
-        <div>
-          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Pro</div>
-          <div onclick="loginAs('agt')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">Espace agent</div>
-          <div onclick="loginAs('agt')" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:6px">CRM & annonces</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:6px">Contact</div>
-        </div>
+      <!-- VENDRE -->
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Vendre</div>
+        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Estimer mon bien</div>
+        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Déposer une annonce</div>
+        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Analyse photos IA</div>
+        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Génération d'annonce</div>
+      </div>
+      <!-- ACHETER -->
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Acheter</div>
+        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Rechercher un bien</div>
+        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Simuler un financement</div>
+        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Contacter un agent</div>
+        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Alertes nouvelles annonces</div>
+      </div>
+      <!-- PRO -->
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Espace Pro</div>
+        <div onclick="loginAs('agt')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Espace agent</div>
+        <div onclick="loginAs('agt')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">CRM & mandats</div>
+        <div onclick="loginAs('agt')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Multi-diffusion annonces</div>
+        <div onclick="openLegalPage('about')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Qui sommes-nous ?</div>
+      </div>
+      <!-- INFOS LÉGALES -->
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Informations légales</div>
+        <div onclick="openLegalPage('cgu')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Conditions d'utilisation</div>
+        <div onclick="openLegalPage('cgv')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Conditions de vente</div>
+        <div onclick="openLegalPage('privacy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Politique de confidentialité</div>
+        <div onclick="openLegalPage('droits')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Vos droits &amp; obligations</div>
+        <div onclick="openLegalPage('plan')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Plan du site</div>
       </div>
     </div>
-    <div style="max-width:1100px;margin:20px auto 0;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div style="font-size:11px;color:rgba(255,255,255,0.25)">© 2026 Immo360 · Nouvelle-Calédonie · Tous droits réservés</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.25)">Sources marché : Properstar · Immobilier.nc · ImmoNC · K&P Finance</div>
+    <!-- BAS DE FOOTER -->
+    <div style="max-width:1100px;margin:24px auto 0;padding:16px 0;border-top:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.2)">© 2026 Immo360 NC · Tous droits réservés · <span onclick="openLegalPage('plan')" style="cursor:pointer;text-decoration:underline">Plan du site</span></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.2)">Sources : Properstar · Immobilier.nc · ImmoNC · K&P Finance · Nestenn</div>
+    </div>
+  </div>
+
+  <!-- PAGES LÉGALES (modal) -->
+  <div class="modal-overlay" id="legal-modal" style="display:none">
+    <div style="background:#fff;border-radius:16px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--warm);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1">
+        <h2 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--dark)" id="legal-title">—</h2>
+        <button onclick="document.getElementById('legal-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
+      </div>
+      <div style="padding:24px" id="legal-content"></div>
     </div>
   </div>
 </div>
@@ -720,7 +754,28 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
 
       <!-- FORMULAIRE INSCRIPTION -->
-      <div id="form-register" style="padding:24px 28px;display:none">
+      <div id="form-register" style="padding:20px 28px;display:none">
+        <!-- CHOIX PROFIL -->
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Je suis</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div class="reg-profil-opt active" id="rp-buy" onclick="selectRegProfil('buy')" style="border:1.5px solid var(--gold);background:rgba(184,146,42,0.06);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s">
+              <div style="font-size:20px;margin-bottom:3px">🔍</div>
+              <div style="font-size:11px;font-weight:600;color:var(--dark)">Acheteur</div>
+              <div style="font-size:9px;color:var(--mid)">Je cherche</div>
+            </div>
+            <div class="reg-profil-opt" id="rp-sell" onclick="selectRegProfil('sell')" style="border:1.5px solid var(--warm);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s">
+              <div style="font-size:20px;margin-bottom:3px">🏠</div>
+              <div style="font-size:11px;font-weight:600;color:var(--dark)">Vendeur</div>
+              <div style="font-size:9px;color:var(--mid)">Je vends</div>
+            </div>
+            <div class="reg-profil-opt" id="rp-agt" onclick="selectRegProfil('agt')" style="border:1.5px solid var(--warm);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s">
+              <div style="font-size:20px;margin-bottom:3px">🤝</div>
+              <div style="font-size:11px;font-weight:600;color:var(--dark)">Agent</div>
+              <div style="font-size:9px;color:var(--mid)">Pro immo</div>
+            </div>
+          </div>
+        </div>
         <div class="field-row">
           <div class="field"><label>Prénom</label><input type="text" id="reg-prenom" placeholder="Jean"></div>
           <div class="field"><label>Nom</label><input type="text" id="reg-nom" placeholder="Dupont"></div>
@@ -730,13 +785,11 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
         <div class="field"><label>Mot de passe</label><input type="password" id="reg-password" placeholder="Min. 8 caractères"></div>
         <div id="reg-extra-agt" style="display:none">
           <div class="field"><label>Nom de l'agence</label><input type="text" id="reg-agence" placeholder="Agence Soleil NC"></div>
-          <div class="field"><label>Numéro de carte pro (optionnel)</label><input type="text" id="reg-cartepro" placeholder="FNAIM / CCI NC"></div>
+          <div class="field"><label>N° carte professionnelle (optionnel)</label><input type="text" id="reg-cartepro" placeholder="FNAIM / CCI NC"></div>
         </div>
-        <button class="btn btn-gold btn-full" style="margin-top:4px" onclick="doRegister()">
-          ✅ Créer mon compte gratuit
-        </button>
+        <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="doRegister()">✅ Créer mon compte gratuit</button>
         <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--mid)">
-          En vous inscrivant, vous acceptez nos <span style="color:var(--gold);cursor:pointer">conditions d'utilisation</span>
+          En vous inscrivant, vous acceptez nos <span style="color:var(--gold);cursor:pointer;font-weight:600" onclick="openLegalPage('cgu')">conditions d'utilisation</span>
         </div>
       </div>
     </div>
@@ -1371,6 +1424,17 @@ let ldFiltered = [];
 let activeQuickFilter = '';
 
 // ── MENUS DÉROULANTS HEADER ──
+function toggleEquipMenu(){
+  const d=document.getElementById('equip-dropdown');
+  if(d) d.style.display=d.style.display==='block'?'none':'block';
+}
+document.addEventListener('click',function(e2){
+  if(!e2.target.closest('#equip-menu-wrap')){
+    const d=document.getElementById('equip-dropdown');
+    if(d) d.style.display='none';
+  }
+},{capture:true});
+
 function toggleMenu(name){
   ['vendre','acheter','pro'].forEach(m=>{
     if(m!==name){const d=document.getElementById('dropdown-'+m);if(d)d.style.display='none';}
@@ -2349,6 +2413,24 @@ function selectProfile(p){
   if(extra) extra.style.display=(p==='agt')?'block':'none';
 }
 
+function selectRegProfil(p){
+  ['buy','sell','agt'].forEach(x=>{
+    const el=document.getElementById('rp-'+x);
+    if(!el) return;
+    if(x===p){
+      el.style.border='1.5px solid var(--gold)';
+      el.style.background='rgba(184,146,42,0.06)';
+    } else {
+      el.style.border='1.5px solid var(--warm)';
+      el.style.background='';
+    }
+  });
+  document.getElementById('login-modal').dataset.profil=p;
+  const extra=document.getElementById('reg-extra-agt');
+  if(extra) extra.style.display=(p==='agt')?'block':'none';
+  updateAuthModalProfil(p);
+}
+
 function switchAuthTab(tab){
   const fl=document.getElementById('form-login');
   const fr=document.getElementById('form-register');
@@ -2464,16 +2546,16 @@ function toggleEquip(el){
   const eq=el.dataset.eq;
   if(activeEquips.has(eq)){
     activeEquips.delete(eq);
-    el.style.background='var(--warm)';
-    el.style.color='var(--dark)';
-    el.style.borderColor='transparent';
-    el.style.fontWeight='normal';
+    el.classList.remove('active');
   } else {
     activeEquips.add(eq);
-    el.style.background='var(--gold)';
-    el.style.color='#fff';
-    el.style.borderColor='var(--gold-dark)';
-    el.style.fontWeight='600';
+    el.classList.add('active');
+  }
+  // Mettre à jour le label du bouton
+  const lbl=document.getElementById('equip-menu-label');
+  if(lbl){
+    if(activeEquips.size===0) lbl.textContent='✨ Équipements';
+    else lbl.textContent='✨ Équipements ('+activeEquips.size+')';
   }
   landingSearch();
 }
@@ -2481,10 +2563,9 @@ function toggleEquip(el){
 function resetAllFilters(){
   activeEquips.clear();
   activeQuickFilter='';
-  document.querySelectorAll('.eq-btn').forEach(b=>{
-    b.style.background='var(--warm)';b.style.color='var(--dark)';
-    b.style.borderColor='transparent';b.style.fontWeight='normal';
-  });
+  document.querySelectorAll('.eq-btn').forEach(b=>b.classList.remove('active'));
+  const lbl=document.getElementById('equip-menu-label');
+  if(lbl) lbl.textContent='✨ Équipements';
   document.querySelectorAll('.qf-btn').forEach(b=>{
     const isAll=b.dataset.type==='';
     b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
@@ -2948,6 +3029,147 @@ function newConversation(){
 function buildMessagerie(){
   renderConvList();
   updateUnreadTotal();
+}
+
+// =============================================
+// PAGES LÉGALES
+// =============================================
+const LEGAL_PAGES = {
+  cgu: {
+    title: "Conditions Générales d'Utilisation",
+    content: `
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">1. Objet</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation de la plateforme Immo360 NC (ci-après "la Plateforme"), accessible à l'adresse 360immo.nc, éditée et exploitée en Nouvelle-Calédonie. En accédant à la Plateforme, vous acceptez sans réserve les présentes CGU.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">2. Description du service</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Immo360 NC est une plateforme immobilière numérique proposant des services d'estimation assistée par intelligence artificielle, de publication d'annonces immobilières, d'analyse de photos, de génération de contenu, de mise en relation entre acheteurs, vendeurs et agents immobiliers, et de simulation de financement pour le marché de la Nouvelle-Calédonie.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">3. Accès et inscription</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">La consultation des annonces est libre et gratuite. La publication d'annonces et l'accès à certains services nécessitent la création d'un compte. L'utilisateur s'engage à fournir des informations exactes et à maintenir la confidentialité de ses identifiants de connexion. Immo360 NC se réserve le droit de suspendre tout compte en cas de violation des présentes CGU.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">4. Contenu des annonces</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">L'utilisateur est seul responsable du contenu qu'il publie. Les annonces doivent être sincères, exactes et conformes à la réglementation en vigueur en Nouvelle-Calédonie. Sont interdits : les contenus mensongers, les prix volontairement erronés, les photos ne correspondant pas au bien, les annonces portant sur des biens non disponibles.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">5. Propriété intellectuelle</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">La Plateforme, son interface, ses outils IA, son code source et ses contenus sont protégés par le droit de la propriété intellectuelle. Toute reproduction, modification ou exploitation non autorisée est interdite.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">6. Responsabilité</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Immo360 NC ne garantit pas l'exactitude des estimations générées par IA. Celles-ci sont fournies à titre indicatif et ne constituent pas une expertise immobilière officielle. La Plateforme ne saurait être tenue responsable des transactions réalisées entre utilisateurs.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">7. Modification des CGU</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444">Immo360 NC se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés par email ou notification lors de leur prochaine connexion.</p>
+    `
+  },
+  cgv: {
+    title: "Conditions Générales de Vente",
+    content: `
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">1. Services payants</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">La consultation des annonces et la publication par les vendeurs particuliers sont gratuites. Les services professionnels (abonnement agent, mise en avant d'annonces, accès aux outils IA avancés) sont soumis à tarification. Les prix sont affichés en Francs CFP (XPF) et sont susceptibles d'évoluer.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">2. Abonnement agent</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">L'abonnement agent est facturé mensuellement. Il peut être résilié à tout moment avec un préavis de 30 jours. Aucun remboursement ne sera effectué pour la période en cours lors de la résiliation.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">3. Paiement</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Les paiements sont sécurisés. Immo360 NC ne stocke aucune donnée bancaire. En cas de défaut de paiement, l'accès aux services payants sera suspendu.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">4. Commission mise en relation artisans</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444">Une commission de 5% s'applique sur les devis artisans acceptés via la plateforme. Cette commission est prélevée à la validation du devis par le client.</p>
+    `
+  },
+  privacy: {
+    title: "Politique de Confidentialité",
+    content: `
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">1. Données collectées</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Immo360 NC collecte les données suivantes : informations de compte (nom, email, téléphone), données de navigation, contenu des annonces, photos uploadées, et données d'utilisation. Les photos sont analysées par IA pour fournir le service d'analyse de biens.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">2. Utilisation des données</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Vos données sont utilisées pour : fournir et améliorer nos services, personnaliser votre expérience, entraîner nos modèles IA immobiliers NC, vous contacter pour les transactions, respecter nos obligations légales.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">3. Partage des données</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Vos données ne sont jamais vendues à des tiers. Elles peuvent être partagées avec nos prestataires techniques (hébergement, IA) dans le cadre strict de la fourniture du service.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">4. Vos droits</h3>
+      <p style="font-size:13px;line-height:1.7;color:#444">Conformément à la réglementation applicable, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Pour exercer ces droits : contact@360immo.nc</p>
+    `
+  },
+  droits: {
+    title: "Vos Droits & Obligations",
+    content: `
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">Vos droits en tant qu'utilisateur</h3>
+      <ul style="font-size:13px;line-height:1.9;color:#444;margin-bottom:14px;padding-left:20px">
+        <li>Accéder gratuitement aux annonces publiées sur la plateforme</li>
+        <li>Publier des annonces immobilières légales et sincères</li>
+        <li>Contacter directement les vendeurs et agents</li>
+        <li>Demander la suppression de votre compte et de vos données</li>
+        <li>Contester une estimation IA et demander une révision</li>
+        <li>Signaler une annonce suspecte ou frauduleuse</li>
+      </ul>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">Vos obligations</h3>
+      <ul style="font-size:13px;line-height:1.9;color:#444;margin-bottom:14px;padding-left:20px">
+        <li>Fournir des informations exactes sur les biens publiés</li>
+        <li>Ne pas publier de biens fictifs ou indisponibles</li>
+        <li>Respecter la vie privée des autres utilisateurs</li>
+        <li>Ne pas utiliser la plateforme à des fins frauduleuses</li>
+        <li>Signaler tout dysfonctionnement ou abus constaté</li>
+      </ul>
+      <p style="font-size:12px;color:var(--mid)">Pour toute question : contact@360immo.nc</p>
+    `
+  },
+  about: {
+    title: "Qui sommes-nous ?",
+    content: `
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#1C1A16">Immo<span style="color:#B8922A">360</span></div>
+        <div style="font-size:13px;color:#888;margin-top:4px">La plateforme immobilière intelligente de Nouvelle-Calédonie</div>
+      </div>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Immo360 NC est né d'un constat simple : le marché immobilier de Nouvelle-Calédonie manquait d'un outil numérique moderne, intelligent et accessible à tous les acteurs — vendeurs particuliers, acheteurs, et professionnels de l'immobilier.</p>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Notre mission est de démocratiser l'accès à l'intelligence artificielle pour l'immobilier calédonien : estimation précise basée sur les données réelles du marché NC, analyse photo IA, génération d'annonces professionnelles, et mise en relation directe entre les parties.</p>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:8px">Nos valeurs</h3>
+      <ul style="font-size:13px;line-height:1.9;color:#444;margin-bottom:14px;padding-left:20px">
+        <li><strong>Transparence</strong> — données de marché sourcées et publiques</li>
+        <li><strong>Accessibilité</strong> — gratuit pour les vendeurs particuliers</li>
+        <li><strong>Innovation</strong> — IA appliquée au marché local NC</li>
+        <li><strong>Confiance</strong> — mise en relation directe et sécurisée</li>
+      </ul>
+      <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">La plateforme est développée et hébergée en Nouvelle-Calédonie, avec une ambition d'expansion vers le Pacifique Sud et les marchés francophones.</p>
+      <p style="font-size:12px;color:#aaa">Contact : contact@360immo.nc · Nouméa, Nouvelle-Calédonie</p>
+    `
+  },
+  plan: {
+    title: "Plan du site",
+    content: `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#B8922A">Vendeurs</h3>
+          <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
+            <li>Estimation IA</li><li>Analyse photos</li>
+            <li>Générateur d'annonces</li><li>Décoration IA</li>
+            <li>Calendrier RDV</li><li>Suivi de vente</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#B8922A">Acheteurs</h3>
+          <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
+            <li>Annonces en ligne</li><li>Recherche avancée</li>
+            <li>Simulation financement</li><li>Messagerie</li>
+            <li>Prise de RDV</li><li>Favoris</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#B8922A">Agents pro</h3>
+          <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
+            <li>Tableau de bord</li><li>CRM & leads</li>
+            <li>Multi-biens</li><li>Statistiques</li>
+            <li>Multi-diffusion</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#B8922A">Informations</h3>
+          <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
+            <li>Qui sommes-nous</li><li>CGU</li>
+            <li>Confidentialité</li><li>CGV</li>
+            <li>Contact</li>
+          </ul>
+        </div>
+      </div>
+    `
+  }
+};
+
+function openLegalPage(page){
+  const data=LEGAL_PAGES[page];
+  if(!data) return;
+  document.getElementById('legal-title').textContent=data.title;
+  document.getElementById('legal-content').innerHTML=data.content;
+  document.getElementById('legal-modal').style.display='flex';
 }
 
 // =============================================
