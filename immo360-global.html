@@ -1360,46 +1360,40 @@ const TPLS={
   'Moderne & dynamique':(t,s,p,d)=>`🔥 ${t}\n\n⚡ ${s} m² au cœur de Nouméa\n\n${d}\n\nConception contemporaine, proche de tout, vie urbaine optimale.`,
 };
 async function generateAnnonce(){
-  const titre=document.getElementById('ann-titre').value||'Bien d\'exception';
+  const titre=document.getElementById('ann-titre').value||'Villa d\'exception';
   const surface=document.getElementById('ann-surface').value||'85';
   const prix=parseInt(document.getElementById('ann-prix').value)||42500000;
-  const desc=document.getElementById('ann-desc').value||'';
-  const ton=document.getElementById('ann-ton').value;
-  const plateforme=document.getElementById('ann-plateforme').value;
+  const desc=document.getElementById('ann-desc').value||'Beau bien';
+  const ton=document.getElementById('ann-ton').value||'Luxe & prestige';
+  const plateforme=document.getElementById('ann-plateforme').value||'Multi-plateformes';
   const btn=document.querySelector('[onclick="generateAnnonce()"]');
 
   document.getElementById('prev-titre').textContent=titre;
   document.getElementById('prev-surface').textContent=surface+' m²';
   document.getElementById('prev-prix').textContent=conv(prix);
-  document.getElementById('prev-body').textContent='⏳ Génération par Claude IA en cours...';
-  if(btn){btn.disabled=true;btn.textContent='⏳ Génération...';}
+  document.getElementById('prev-body').textContent='⏳ Claude IA rédige votre annonce...';
+  if(btn){btn.disabled=true;btn.textContent='⏳ En cours...';}
 
   try {
-    const payload = {titre, surface, prix, desc, ton, plateforme,
-      devise: S.sym, pays: S.country, ville: S.city};
-    console.log('Envoi API:', payload);
-
-    const response = await fetch('/api/generate-annonce', {
+    const response = await fetch('https://projymo.vercel.app/api/generate-annonce', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
+      body: JSON.stringify({
+        titre, surface, prix, desc, ton, plateforme,
+        devise: S.sym||'F', pays: S.country||'NC', ville: S.city||'Nouméa'
+      })
     });
 
-    console.log('Statut réponse:', response.status);
     const raw = await response.text();
-    console.log('Réponse brute:', raw);
+    document.getElementById('prev-body').textContent = '🔍 Réponse reçue (statut '+response.status+'): '+raw.substring(0,200);
 
-    if(!response.ok) throw new Error('API '+response.status+' : '+raw);
-
+    if(!response.ok) throw new Error('Statut '+response.status);
     const data = JSON.parse(raw);
-    if(!data.annonce) throw new Error('Pas de contenu dans la réponse');
-
-    document.getElementById('prev-body').textContent = data.annonce;
+    document.getElementById('prev-body').textContent = data.annonce || 'Pas de contenu';
     if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
 
   } catch(err){
-    console.error('Erreur génération complète:', err.message);
-    document.getElementById('prev-body').textContent='⚠️ Erreur: '+err.message;
+    document.getElementById('prev-body').textContent='⚠️ '+err.message;
     if(btn){btn.disabled=false;btn.innerHTML='✨ Générer l\'annonce';}
   }
 }
