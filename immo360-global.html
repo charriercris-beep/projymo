@@ -1560,19 +1560,19 @@ function generateImprovements(score, needsWork){
     {
       id:'cuisine', priority: score<65?'urgent':'recommandé',
       icon:'🍳', title:'Modernisation cuisine',
-      desc:'Remplacement des facades d\'armoires, plan de travail et robinetterie. Cuisine ouverte si possible.',
+      desc:"Remplacement des facades d'armoires, plan de travail et robinetterie. Cuisine ouverte si possible.",
       cout:750000, gainPct:11, duree:'2–3 semaines', roi:5.8, tag:'Fort impact'
     },
     {
       id:'sdb', priority:'recommandé',
       icon:'🚿', title:'Rénovation salle de bain',
-      desc:'Carrelage, sanitaires, douche à l\'italienne. La salle de bain est un critère décisif pour les acheteurs.',
+      desc:"Carrelage, sanitaires, douche à l'italienne. La salle de bain est un critère décisif pour les acheteurs.",
       cout:580000, gainPct:9, duree:'2 semaines', roi:6.0, tag:'Fort impact'
     },
     {
       id:'sol', priority: score<68?'urgent':'optionnel',
       icon:'🪵', title:'Ponçage ou remplacement des sols',
-      desc:'Ponçage et vitrification du parquet existant, ou pose d\'un revêtement stratifié.',
+      desc:"Ponçage et vitrification du parquet existant, ou pose d'un revêtement stratifié.",
       cout:190000, gainPct:4, duree:'3–4 jours', roi:8.2, tag:'Quick win'
     },
     {
@@ -1584,13 +1584,13 @@ function generateImprovements(score, needsWork){
     {
       id:'photos', priority:'urgent',
       icon:'📸', title:'Shooting photo professionnel',
-      desc:'Photos HDR, plans larges, retouches professionnelles. Augmente le nombre de visites de 40–60%.',
+      desc:"Photos HDR, plans larges, retouches professionnelles. Augmente le nombre de visites de 40–60%.",
       cout:35000, gainPct:8, duree:'1 jour', roi:89.0, tag:'ROI maximal'
     },
     {
       id:'homestaging', priority:'recommandé',
       icon:'🛋️', title:'Home staging professionnel',
-      desc:'Désencombrement, mobilier de présentation, accessoires déco. Accélère la vente de 30%.',
+      desc:"Désencombrement, mobilier de présentation, accessoires déco. Accélère la vente de 30%.",
       cout:120000, gainPct:5, duree:'2–3 jours', roi:16.3, tag:'Recommandé NC'
     },
     {
@@ -2481,7 +2481,7 @@ function sendMessage(){
     const replies=[
       'Merci pour votre message, je reviens vers vous rapidement.',
       'Parfait ! Je note votre disponibilité.',
-      'D'accord, je vous confirme par email.',
+      'D\'accord, je vous confirme par email.',
       'Entendu, à très bientôt !',
     ];
     conv.messages.push({from:'other',text:replies[Math.floor(Math.random()*replies.length)],time:(now.getHours()+':'+((now.getMinutes()+2)<10?'0':'')+(now.getMinutes()+2))});
