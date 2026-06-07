@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.shell{display:flex;height:100vh;overflow:hidden}
+.shell{display:none;height:100vh;overflow:hidden}
 
 /* SIDEBAR */
 .sidebar{width:230px;min-width:230px;background:var(--dark);display:flex;flex-direction:column}
@@ -4472,6 +4472,8 @@ function loginAs(profil){
 
 function showLanding(){
   const lp=document.getElementById('landing-page');
+  const shell=document.querySelector('.shell');
+  if(shell) shell.style.display='none';
   if(lp){lp.style.display='flex';lp.style.flexDirection='column';}
   activeQuickFilter='';
   ldFiltered=[...BIENS_DATA];
@@ -4828,7 +4830,10 @@ function contactFromLanding(bienId){
 }
 
 function hideLanding(){
-  document.getElementById('landing-page').style.display='none';
+  const lp=document.getElementById('landing-page');
+  const shell=document.querySelector('.shell');
+  if(lp) lp.style.display='none';
+  if(shell) shell.style.display='flex';
 }
 
 // loginAs défini plus haut
