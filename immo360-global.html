@@ -422,7 +422,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 <!-- ═══════════════════════════════════
      PAGE D'ACCUEIL — STYLE LEBONCOIN
 ═══════════════════════════════════ 
-  <div ng" id="landing-page" style="background:#F8F6F1;color:var(--dark);overflow-y:auto;flex:1;display:flex;flex-direction:column">
+  <div id="landing-page" style="background:#F8F6F1;color:var(--dark);overflow-y:auto;flex:1;display:flex;flex-direction:column">
 
   <!-- ═══ HEADER STICKY ═══ -->
   <div style="background:rgba(248,246,241,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--warm);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0">
@@ -8291,34 +8291,4 @@ go('dashboard');
 </script>
 
 </body>
-</html><!-- HERO -->
-      <div style="text-align:center;padding:48px 24px 32px;max-width:700px;margin:0 auto">
-        <div style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Nouvelle-Calédonie · Plateforme IA immobilière</div>
-        <h1 style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:var(--dark);line-height:1.15;margin-bottom:16px">Votre projet immobilier,<br>guidé par l'intelligence artificielle</h1>
-        <p style="font-size:16px;color:var(--mid);max-width:480px;margin:0 auto 36px;line-height:1.7">Une seule intention. L'IA analyse, recommande et accompagne chaque étape jusqu'à la transaction.</p>
-
-        <!-- 2 BOUTONS PRINCIPAUX -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:520px;margin:0 auto 20px">
-          <div onclick="loginAs('buy')" style="background:var(--dark);border-radius:14px;padding:24px 20px;cursor:pointer;text-align:left;transition:.2s;border:2px solid transparent" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='transparent'">
-            <div style="font-size:28px;margin-bottom:10px">🔍</div>
-            <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:6px">Je cherche un bien</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5">Créez votre projet de vie — l'IA trouve les biens compatibles et guide votre achat</div>
-            <div style="margin-top:14px;display:inline-block;background:var(--gold);color:#fff;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Commencer →</div>
-          </div>
-          <div onclick="loginAs('sell')" style="background:#fff;border:1.5px solid var(--warm);border-radius:14px;padding:24px 20px;cursor:pointer;text-align:left;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 4px 20px rgba(184,146,42,0.12)'" onmouseout="this.style.borderColor='var(--warm)';this.style.boxShadow=''">
-            <div style="font-size:28px;margin-bottom:10px">🏠</div>
-            <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px">Je vends un bien</div>
-            <div style="font-size:12px;color:var(--mid);line-height:1.5">Estimation IA instantanée, publication en 5 min et suivi complet de votre vente</div>
-            <div style="margin-top:14px;display:inline-block;background:var(--warm);color:var(--dark);padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Estimer mon bien →</div>
-          </div>
-        </div>
-
-        <!-- Accès pro discret -->
-        <div style="font-size:12px;color:var(--soft)">
-          Professionnel ?
-          <span onclick="loginAs('agt')" style="color:var(--gold);cursor:pointer;font-weight:600">Espace agent immobilier</span>
-          · <span onclick="go('notaire')" style="color:var(--mid);cursor:pointer">Notaires</span>
-          · <span onclick="go('artisans')" style="color:var(--mid);cursor:pointer">Artisans</span>
-        </div>
-      </di
-  <d
+</html>
