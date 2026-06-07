@@ -4424,14 +4424,20 @@ function showAuthStep2(msg){
 
 function doLoginDemo(){
   const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
+  // Mettre à jour les deux états
   APP_STATE.user={nom:'Démo',email:'demo@immo360.nc',profil};
   APP_STATE.loggedIn=true;
+  S.profile=profil;
   closeLoginModal();
   hideLanding();
-  const btn=document.getElementById('t-'+profil);
-  if(btn) setProfile(profil,btn); else go('dashboard');
-  initConversations();
-  updateUserDisplay();
+  // Construire le menu et naviguer
+  if(typeof buildSB==='function') buildSB();
+  go('dashboard');
+  setTimeout(()=>{
+    if(typeof buildSmartDashboard==='function') buildSmartDashboard();
+    if(typeof updateUserDisplay==='function') updateUserDisplay();
+    if(typeof initConversations==='function') initConversations();
+  },100);
 }
 
 function doLoginConfirm(){
@@ -4446,7 +4452,22 @@ function doLoginConfirm(){
 }
 
 function doLogin(){doLoginConfirm();}
-function loginAs(profil){showLoginModal(profil);}
+function loginAs(profil){
+  // Accès rapide démo sans modal si profil déjà connu
+  if(profil==='sell'||profil==='buy'||profil==='agt'){
+    APP_STATE.user={nom:'Démo',email:'demo@immo360.nc',profil};
+    APP_STATE.loggedIn=true;
+    S.profile=profil;
+    hideLanding();
+    if(typeof buildSB==='function') buildSB();
+    go('dashboard');
+    setTimeout(()=>{
+      if(typeof buildSmartDashboard==='function') buildSmartDashboard();
+    },100);
+  } else {
+    showLoginModal(profil);
+  }
+}
 
 
 function showLanding(){
