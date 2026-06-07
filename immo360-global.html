@@ -341,6 +341,24 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .depot-step.done .depot-step-lbl{color:var(--green)}
 .depot-step-line{flex:1;height:2px;background:var(--warm);margin-top:-20px}
 
+/* ── FILTRES DROPDOWN MULTI-CHECK ── */
+.ld-filter-group{position:relative}
+.ld-filter-select{border:1px solid var(--warm);padding:7px 12px;font-size:12px;border-radius:8px;background:#fff;color:var(--dark);cursor:pointer;min-width:120px;font-family:'DM Sans',sans-serif}
+.ld-filter-select:focus{outline:none;border-color:var(--gold)}
+.ld-dropdown-btn{background:#fff;border:1px solid var(--warm);color:var(--dark);padding:7px 12px;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:.15s;display:flex;align-items:center;gap:5px}
+.ld-dropdown-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ld-dropdown-btn.has-selection{border-color:var(--gold);background:rgba(184,146,42,0.06);color:var(--gold);font-weight:600}
+.ld-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--warm);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);z-index:200;min-width:180px;padding:10px 0;max-height:320px;overflow-y:auto}
+.ld-dropdown.open{display:block}
+.ld-dd-title{font-size:10px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.8px;padding:2px 14px 8px;border-bottom:1px solid var(--warm);margin-bottom:4px}
+.ld-check-item{display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:12px;color:var(--dark);cursor:pointer;transition:.1s}
+.ld-check-item:hover{background:var(--warm)}
+.ld-check-item input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.ld-dd-clear{background:none;border:none;color:var(--mid);font-size:11px;cursor:pointer;padding:8px 14px;width:100%;text-align:left;border-top:1px solid var(--warm);margin-top:4px;transition:.15s}
+.ld-dd-clear:hover{color:var(--gold)}
+.ld-reset-btn{background:none;border:1px solid var(--warm);color:var(--mid);font-size:11px;cursor:pointer;padding:7px 12px;border-radius:8px;align-self:flex-end;transition:.15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.ld-reset-btn:hover{border-color:var(--gold);color:var(--gold)}
+
 /* ── JAUGE BUDGET ── */
 .budget-preset-btn{background:#fff;border:1px solid var(--warm);color:var(--mid);padding:4px 10px;border-radius:16px;font-size:11px;cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif}
 .budget-preset-btn:hover,.budget-preset-btn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
@@ -689,39 +707,118 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--warm)">
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
 
-            <!-- Pièces -->
-            <div style="display:flex;flex-direction:column;gap:3px;min-width:110px">
-              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Pièces</span>
-              <select id="ld-pieces" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
-                <option value="">Toutes</option>
-                <option value="1">Studio / T1</option>
-                <option value="2">2 pièces</option>
-                <option value="3">3 pièces</option>
-                <option value="4">4 pièces</option>
-                <option value="5">5 pièces +</option>
+            <!-- TYPE -->
+            <div class="ld-filter-group">
+              <select id="ld-type" onchange="landingSearchPublic()" class="ld-filter-select">
+                <option value="">🏠 Tous types</option>
+                <option>Appartement</option><option>Maison</option><option>Villa</option>
+                <option>Studio</option><option>Terrain</option><option>Local commercial</option>
               </select>
             </div>
 
-            <!-- Surface -->
-            <div style="display:flex;flex-direction:column;gap:3px;min-width:120px">
-              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Surface min</span>
-              <select id="ld-surface" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
-                <option value="0">Toutes tailles</option>
-                <option value="20">20m² min</option>
-                <option value="40">40m² min</option>
-                <option value="60">60m² min</option>
-                <option value="80">80m² min</option>
-                <option value="100">100m² min</option>
-                <option value="150">150m² min</option>
-                <option value="200">200m² min</option>
+            <!-- ZONE -->
+            <div class="ld-filter-group" style="min-width:160px">
+              <select id="ld-zone" onchange="landingSearchPublic()" class="ld-filter-select">
+                <option value="">📍 Toute la NC</option>
+                <optgroup label="Nouméa — Quartiers">
+                  <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option><option>Tina</option>
+                  <option>Motor Pool</option><option>Magenta</option><option>Faubourg Blanchot</option><option>Centre Ville</option>
+                  <option>Trianon</option><option>Robinson</option><option>Rivière Salée</option><option>Vallée du Tir</option>
+                  <option>Ducos</option><option>Portes de Fer</option><option>Normandie</option><option>7ème km</option>
+                  <option>Receiving</option><option>Montravel</option><option>Tuband</option><option>Kaméré</option>
+                </optgroup>
+                <optgroup label="Grand Nouméa">
+                  <option>Dumbéa sur Mer</option><option>Dumbéa Centre</option><option>Dumbéa Nord</option><option>Koutio</option>
+                  <option>Katiramona</option><option>Savannah</option><option>Tonghoué</option><option>Pahéa</option>
+                  <option>Mont-Dore Centre</option><option>Boulari</option><option>Plum</option><option>Païta Centre</option>
+                </optgroup>
+                <optgroup label="Autres communes NC">
+                  <option>Boulouparis</option><option>La Foa</option><option>Bourail</option><option>Koné</option>
+                  <option>Voh</option><option>Koumac</option><option>Poindimié</option><option>Poum</option>
+                  <option>Maré</option><option>Lifou</option><option>Ouvéa</option>
+                </optgroup>
               </select>
+            </div>
+
+            <!-- PIÈCES — MULTI-CHECK -->
+            <div class="ld-filter-group">
+              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-pieces')">
+                🛏️ Pièces <span id="lbl-pieces">Toutes</span> ▾
+              </button>
+              <div class="ld-dropdown" id="dd-pieces">
+                <div class="ld-dd-title">Nombre de pièces</div>
+                <label class="ld-check-item"><input type="checkbox" value="1" onchange="updateMultiFilter('pieces');landingSearchPublic()"> Studio / T1</label>
+                <label class="ld-check-item"><input type="checkbox" value="2" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 2 pièces</label>
+                <label class="ld-check-item"><input type="checkbox" value="3" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 3 pièces</label>
+                <label class="ld-check-item"><input type="checkbox" value="4" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 4 pièces</label>
+                <label class="ld-check-item"><input type="checkbox" value="5" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 5 pièces +</label>
+                <button class="ld-dd-clear" onclick="clearMultiFilter('pieces');landingSearchPublic()">✕ Effacer</button>
+              </div>
+            </div>
+
+            <!-- SURFACE — MULTI-CHECK -->
+            <div class="ld-filter-group">
+              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-surface')">
+                📐 Surface <span id="lbl-surface">Toutes</span> ▾
+              </button>
+              <div class="ld-dropdown" id="dd-surface">
+                <div class="ld-dd-title">Surface minimum</div>
+                <label class="ld-check-item"><input type="checkbox" value="20" onchange="updateMultiFilter('surface');landingSearchPublic()"> 20m² et +</label>
+                <label class="ld-check-item"><input type="checkbox" value="40" onchange="updateMultiFilter('surface');landingSearchPublic()"> 40m² et +</label>
+                <label class="ld-check-item"><input type="checkbox" value="60" onchange="updateMultiFilter('surface');landingSearchPublic()"> 60m² et +</label>
+                <label class="ld-check-item"><input type="checkbox" value="80" onchange="updateMultiFilter('surface');landingSearchPublic()"> 80m² et +</label>
+                <label class="ld-check-item"><input type="checkbox" value="100" onchange="updateMultiFilter('surface');landingSearchPublic()"> 100m² et +</label>
+                <label class="ld-check-item"><input type="checkbox" value="150" onchange="updateMultiFilter('surface');landingSearchPublic()"> 150m² et +</label>
+                <label class="ld-check-item"><input type="checkbox" value="200" onchange="updateMultiFilter('surface');landingSearchPublic()"> 200m² et +</label>
+                <button class="ld-dd-clear" onclick="clearMultiFilter('surface');landingSearchPublic()">✕ Effacer</button>
+              </div>
+            </div>
+
+            <!-- ÉTAT — MULTI-CHECK -->
+            <div class="ld-filter-group">
+              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-etat')">
+                🏗️ État <span id="lbl-etat">Tous</span> ▾
+              </button>
+              <div class="ld-dropdown" id="dd-etat">
+                <div class="ld-dd-title">État du bien</div>
+                <label class="ld-check-item"><input type="checkbox" value="neuf" onchange="updateMultiFilter('etat');landingSearchPublic()"> 🆕 Neuf / VEFA</label>
+                <label class="ld-check-item"><input type="checkbox" value="excellent" onchange="updateMultiFilter('etat');landingSearchPublic()"> ⭐ Excellent état</label>
+                <label class="ld-check-item"><input type="checkbox" value="bon" onchange="updateMultiFilter('etat');landingSearchPublic()"> ✅ Bon état</label>
+                <label class="ld-check-item"><input type="checkbox" value="moyen" onchange="updateMultiFilter('etat');landingSearchPublic()"> 🔧 À rafraîchir</label>
+                <label class="ld-check-item"><input type="checkbox" value="travaux" onchange="updateMultiFilter('etat');landingSearchPublic()"> 🔨 Travaux à prévoir</label>
+                <button class="ld-dd-clear" onclick="clearMultiFilter('etat');landingSearchPublic()">✕ Effacer</button>
+              </div>
+            </div>
+
+            <!-- ÉQUIPEMENTS — MULTI-CHECK -->
+            <div class="ld-filter-group">
+              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-equip')">
+                ✨ Équipements <span id="lbl-equip">Tous</span> ▾
+              </button>
+              <div class="ld-dropdown" id="dd-equip" style="min-width:200px">
+                <div class="ld-dd-title">Équipements souhaités</div>
+                <label class="ld-check-item"><input type="checkbox" value="Vue mer" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🌊 Vue mer</label>
+                <label class="ld-check-item"><input type="checkbox" value="Piscine" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🏊 Piscine</label>
+                <label class="ld-check-item"><input type="checkbox" value="Terrasse" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🌿 Terrasse</label>
+                <label class="ld-check-item"><input type="checkbox" value="Balcon" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🏡 Balcon</label>
+                <label class="ld-check-item"><input type="checkbox" value="Jardin" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🌳 Jardin</label>
+                <label class="ld-check-item"><input type="checkbox" value="Garage" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🚗 Garage</label>
+                <label class="ld-check-item"><input type="checkbox" value="Parking" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🅿️ Parking</label>
+                <label class="ld-check-item"><input type="checkbox" value="Climatisation" onchange="updateMultiFilter('equip');landingSearchPublic()"> ❄️ Climatisation</label>
+                <label class="ld-check-item"><input type="checkbox" value="Sécurité" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🔒 Sécurité / Gardien</label>
+                <label class="ld-check-item"><input type="checkbox" value="Ascenseur" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🛗 Ascenseur</label>
+                <label class="ld-check-item"><input type="checkbox" value="Cuisine équipée" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🍳 Cuisine équipée</label>
+                <label class="ld-check-item"><input type="checkbox" value="Dressing" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🚪 Dressing</label>
+                <label class="ld-check-item"><input type="checkbox" value="Cave" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🗄️ Cave / Cellier</label>
+                <label class="ld-check-item"><input type="checkbox" value="Digicode" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🔑 Digicode / Interphone</label>
+                <button class="ld-dd-clear" onclick="clearMultiFilter('equip');landingSearchPublic()">✕ Effacer</button>
+              </div>
             </div>
 
             <!-- DPE -->
-            <div style="display:flex;flex-direction:column;gap:3px;min-width:100px">
-              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">DPE</span>
-              <select id="ld-dpe" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
-                <option value="">Tous</option>
+            <div class="ld-filter-group">
+              <select id="ld-dpe" onchange="landingSearchPublic()" class="ld-filter-select">
+                <option value="">⚡ DPE — Tous</option>
                 <option value="A">A — Excellent</option>
                 <option value="B">B — Très bon</option>
                 <option value="C">C — Bon</option>
@@ -729,52 +826,18 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               </select>
             </div>
 
-            <!-- État -->
-            <div style="display:flex;flex-direction:column;gap:3px;min-width:130px">
-              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">État du bien</span>
-              <select id="ld-etat" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
-                <option value="">Tous états</option>
-                <option value="neuf">Neuf / VEFA</option>
-                <option value="excellent">Excellent état</option>
-                <option value="bon">Bon état</option>
-                <option value="moyen">À rafraîchir</option>
-                <option value="travaux">Travaux à prévoir</option>
+            <!-- TRI -->
+            <div class="ld-filter-group">
+              <select id="ld-tri" onchange="landingSearchPublic()" class="ld-filter-select">
+                <option value="recent">🕐 Plus récent</option>
+                <option value="prix-asc">📈 Prix croissant</option>
+                <option value="prix-desc">📉 Prix décroissant</option>
+                <option value="surface-desc">📐 Surface décroissante</option>
+                <option value="pm2-asc">💰 Prix/m² croissant</option>
               </select>
             </div>
 
-            <!-- Équipements -->
-            <div style="display:flex;flex-direction:column;gap:3px;min-width:140px">
-              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Équipements</span>
-              <select id="ld-equip" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
-                <option value="">Tous</option>
-                <option value="Vue mer">🌊 Vue mer</option>
-                <option value="Piscine">🏊 Piscine</option>
-                <option value="Terrasse">🌿 Terrasse</option>
-                <option value="Garage">🚗 Garage</option>
-                <option value="Jardin">🌳 Jardin</option>
-                <option value="Parking">🅿️ Parking</option>
-                <option value="Climatisation">❄️ Climatisation</option>
-                <option value="Sécurité">🔒 Sécurité / Gardien</option>
-                <option value="Ascenseur">🛗 Ascenseur</option>
-                <option value="Cuisine équipée">🍳 Cuisine équipée</option>
-                <option value="Dressing">🚪 Dressing</option>
-                <option value="Balcon">🏡 Balcon</option>
-              </select>
-            </div>
-
-            <!-- Tri -->
-            <div style="display:flex;flex-direction:column;gap:3px;min-width:140px">
-              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Trier par</span>
-              <select id="ld-tri" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
-                <option value="recent">Plus récent</option>
-                <option value="prix-asc">Prix croissant</option>
-                <option value="prix-desc">Prix décroissant</option>
-                <option value="surface-desc">Surface décroissante</option>
-                <option value="pm2-asc">Prix/m² croissant</option>
-              </select>
-            </div>
-
-            <button onclick="resetFiltresPublic()" style="align-self:flex-end;background:none;border:1px solid var(--warm);color:var(--mid);font-size:11px;cursor:pointer;padding:6px 12px;border-radius:7px;transition:.15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)';this.style.color='var(--mid)'">✕ Effacer</button>
+            <button onclick="resetFiltresPublic()" class="ld-reset-btn">✕ Effacer tout</button>
           </div>
         </div>
       </div>
@@ -8639,9 +8702,10 @@ function filtreRapidePublic(feature){
 function resetFiltresPublic(){
   filtreRapideActif='';
   // Reset tous les filtres
-  ['ld-type','ld-zone','ld-pieces','ld-surface','ld-dpe','ld-etat','ld-equip'].forEach(id=>{
+  ['ld-type','ld-zone','ld-dpe'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
+  ['pieces','surface','etat','equip'].forEach(type=>clearMultiFilter(type));
   // Reset jauge budget
   const budgetSlider=document.getElementById('ld-budget');
   if(budgetSlider){budgetSlider.value=0;updateLdBudgetJauge(0);}
@@ -8683,23 +8747,38 @@ function buildLandingBiensPublic(){
   const type=document.getElementById('ld-type')?.value||'';
   const zone=document.getElementById('ld-zone')?.value||'';
   const budget=parseInt(document.getElementById('ld-budget')?.value||0);
-  const pieces=parseInt(document.getElementById('ld-pieces')?.value||0);
-  const surface=parseInt(document.getElementById('ld-surface')?.value||0);
   const dpe=document.getElementById('ld-dpe')?.value||'';
-  const etat=document.getElementById('ld-etat')?.value||'';
-  const equip=document.getElementById('ld-equip')?.value||'';
   const tri=document.getElementById('ld-tri')?.value||'recent';
+  // Multi-filtres
+  const piecesVals=getMultiFilterValues('pieces').map(Number);
+  const surfaceVals=getMultiFilterValues('surface').map(Number);
+  const etatVals=getMultiFilterValues('etat');
+  const equipVals=getMultiFilterValues('equip');
 
   let biens=BIENS_DATA.filter(b=>{
     if(b.statut!=='En vente') return false;
     if(type&&b.type!==type) return false;
     if(zone&&!(b.quartier||'').includes(zone)&&!(b.ville||'').includes(zone)) return false;
     if(budget>0&&b.prix>budget) return false;
-    if(pieces>0&&(b.pieces||0)<pieces) return false;
-    if(surface>0&&(b.surface||0)<surface) return false;
+    // Pièces : correspond à l'une des valeurs cochées
+    if(piecesVals.length){
+      const p=b.pieces||1;
+      const match=piecesVals.some(v=>v===5?p>=5:p===v);
+      if(!match) return false;
+    }
+    // Surface : toutes les surfaces min cochées → logique OR (au moins l'une)
+    if(surfaceVals.length){
+      const minSurf=Math.min(...surfaceVals);
+      if((b.surface||0)<minSurf) return false;
+    }
     if(dpe&&(b.dpe||'')!==dpe) return false;
-    if(etat&&(b.etat||'')!==etat) return false;
-    if(equip&&!(b.features||[]).some(f=>f.toLowerCase().includes(equip.toLowerCase()))) return false;
+    // État : au moins un correspond
+    if(etatVals.length&&!etatVals.includes(b.etat||'')) return false;
+    // Équipements : TOUS les équipements cochés doivent être présents
+    if(equipVals.length){
+      const feats=(b.features||[]).map(f=>f.toLowerCase());
+      if(!equipVals.every(eq=>feats.some(f=>f.includes(eq.toLowerCase())))) return false;
+    }
     return true;
   });
 
@@ -8994,6 +9073,57 @@ function initBudgetJauge(){
     slider.style.display='block';
     slider.style.width='100%';
   }
+}
+
+// =============================================
+// FILTRES MULTI-SELECT DROPDOWN
+// =============================================
+// Fermer les dropdowns si on clique ailleurs
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.ld-filter-group')){
+    document.querySelectorAll('.ld-dropdown.open').forEach(d=>d.classList.remove('open'));
+  }
+});
+
+function toggleDropdown(id){
+  const dd = document.getElementById(id);
+  if(!dd) return;
+  const wasOpen = dd.classList.contains('open');
+  // Fermer tous les autres
+  document.querySelectorAll('.ld-dropdown.open').forEach(d=>d.classList.remove('open'));
+  if(!wasOpen) dd.classList.add('open');
+}
+
+function updateMultiFilter(type){
+  const dd = document.getElementById('dd-'+type);
+  if(!dd) return;
+  const checked = [...dd.querySelectorAll('input[type=checkbox]:checked')];
+  const btn = dd.previousElementSibling; // le bouton
+  const lbl = document.getElementById('lbl-'+type);
+
+  if(checked.length===0){
+    if(lbl) lbl.textContent = type==='pieces'?'Toutes':type==='surface'?'Toutes':'Tous';
+    if(btn) btn.classList.remove('has-selection');
+  } else if(checked.length===1){
+    if(lbl) lbl.textContent = checked[0].parentElement.textContent.trim().replace(/^[^ ]+ /,'').slice(0,12);
+    if(btn) btn.classList.add('has-selection');
+  } else {
+    if(lbl) lbl.textContent = checked.length+' sélectionnés';
+    if(btn) btn.classList.add('has-selection');
+  }
+}
+
+function clearMultiFilter(type){
+  const dd = document.getElementById('dd-'+type);
+  if(!dd) return;
+  dd.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.checked=false);
+  updateMultiFilter(type);
+}
+
+function getMultiFilterValues(type){
+  const dd = document.getElementById('dd-'+type);
+  if(!dd) return [];
+  return [...dd.querySelectorAll('input[type=checkbox]:checked')].map(cb=>cb.value);
 }
 
 // =============================================
