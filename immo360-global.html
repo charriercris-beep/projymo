@@ -339,6 +339,10 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 .depot-step.done .depot-step-lbl{color:var(--green)}
 .depot-step-line{flex:1;height:2px;background:var(--warm);margin-top:-20px}
 
+/* ── FILTRES RAPIDES LANDING ── */
+.filtre-rapide-btn{background:#fff;border:1px solid var(--warm);color:var(--mid);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif}
+.filtre-rapide-btn:hover,.filtre-rapide-btn.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+
 /* ── ÉQUIPEMENTS DROPDOWN ── */
 .eq-btn{background:var(--warm);color:var(--dark);padding:3px 9px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:.15s;display:inline-block;margin:1px}
 .eq-btn.active,.eq-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold-dark)}
@@ -469,8 +473,8 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 
       <!-- Voir annonces sans connexion -->
       <div style="margin-bottom:14px">
-        <button onclick="voirAnnonesSansConnexion()" style="background:none;border:1.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:9px 24px;border-radius:20px;font-size:13px;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif" onmouseover="this.style.borderColor='rgba(255,255,255,0.5)';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.7)'">
-          👁️ Consulter les annonces sans s'inscrire
+        <button onclick="voirAnnonesSansConnexion()" style="background:none;border:1.5px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.8);padding:10px 28px;border-radius:20px;font-size:14px;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='rgba(255,255,255,0.5)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='rgba(255,255,255,0.8)'">
+          <span style="font-size:16px">🔍</span> Rechercher un bien sans s'inscrire
         </button>
       </div>
       <!-- Accès pro discret -->
@@ -621,48 +625,77 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
     </div>
   </div>
 
-  <!-- ═══ ANNONCES EN LIGNE ═══ -->
-  <div style="background:var(--cream);padding:60px 24px;flex-shrink:0">
+  <!-- ═══ ANNONCES — VISIBLE SANS CONNEXION ═══ -->
+  <div style="background:var(--cream);padding:40px 24px 60px;flex-shrink:0" id="section-annonces">
     <div style="max-width:1100px;margin:0 auto">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px">
-        <div>
-          <h2 style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);font-weight:700;color:var(--dark);margin-bottom:4px">Biens disponibles en NC</h2>
-          <p style="font-size:13px;color:var(--mid)">Données marché en temps réel · Properstar · ImmoNC · Immobilier.nc</p>
-        </div>
-        <button onclick="loginAs('buy')" class="btn btn-gold btn-sm">Voir tous les biens →</button>
+
+      <!-- TITRE + SOUS-TITRE -->
+      <div style="text-align:center;margin-bottom:28px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,34px);font-weight:700;color:var(--dark);margin-bottom:8px">Biens disponibles en Nouvelle-Calédonie</h2>
+        <p style="font-size:14px;color:var(--mid)">Consultez librement · Inscription uniquement pour contacter ou publier</p>
       </div>
 
-      <!-- BARRE RECHERCHE COMPACTE -->
-      <div style="background:#fff;border-radius:14px;padding:16px 20px;border:1px solid var(--warm);margin-bottom:24px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <select id="ld-type" onchange="landingSearch()" style="flex:1;min-width:130px;border:1px solid var(--warm);padding:9px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
-          <option value="">Tous types</option>
-          <option>Appartement</option><option>Maison</option><option>Villa</option>
-          <option>Studio</option><option>Terrain</option>
-        </select>
-        <select id="ld-zone" onchange="landingSearch()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:9px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
-          <option value="">Toute la NC</option>
-          <option>Nouméa</option><option>Dumbéa</option><option>Mont-Dore</option><option>Païta</option>
-          <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option>
-          <option>Magenta</option><option>Faubourg Blanchot</option>
-        </select>
-        <select id="ld-budget" onchange="landingSearch()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:9px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
-          <option value="">Tous budgets</option>
-          <option value="20000000">- de 20M F</option>
-          <option value="40000000">- de 40M F</option>
-          <option value="60000000">- de 60M F</option>
-          <option value="80000000">- de 80M F</option>
-          <option value="100000000">- de 100M F</option>
-          <option value="999999999">+ de 100M F</option>
-        </select>
-        <button onclick="loginAs('buy')" class="btn btn-gold" style="white-space:nowrap;padding:9px 20px">🤖 Matching IA</button>
+      <!-- BARRE RECHERCHE PRINCIPALE -->
+      <div style="background:#fff;border-radius:16px;padding:18px 20px;border:1px solid var(--warm);margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <select id="ld-type" onchange="landingSearchPublic()" style="flex:1;min-width:130px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
+            <option value="">🏠 Tous types</option>
+            <option>Appartement</option><option>Maison</option><option>Villa</option>
+            <option>Studio</option><option>Terrain</option>
+          </select>
+          <select id="ld-zone" onchange="landingSearchPublic()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
+            <option value="">📍 Toute la NC</option>
+            <option>Nouméa</option><option>Dumbéa</option><option>Mont-Dore</option><option>Païta</option>
+            <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option>
+            <option>Magenta</option><option>Faubourg Blanchot</option>
+          </select>
+          <select id="ld-budget" onchange="landingSearchPublic()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
+            <option value="">💰 Tous budgets</option>
+            <option value="20000000">- de 20M F</option>
+            <option value="40000000">- de 40M F</option>
+            <option value="60000000">- de 60M F</option>
+            <option value="80000000">- de 80M F</option>
+            <option value="100000000">- de 100M F</option>
+            <option value="999999999">+ de 100M F</option>
+          </select>
+          <button onclick="landingSearchPublic()" class="btn btn-gold" style="white-space:nowrap;padding:10px 24px;font-size:14px">🔍 Rechercher</button>
+        </div>
+
+        <!-- FILTRES RAPIDES -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--warm)">
+          <span style="font-size:11px;color:var(--mid);display:flex;align-items:center;margin-right:4px">Filtres rapides :</span>
+          <button onclick="filtreRapidePublic('Vue mer')" class="filtre-rapide-btn">🌊 Vue mer</button>
+          <button onclick="filtreRapidePublic('Piscine')" class="filtre-rapide-btn">🏊 Piscine</button>
+          <button onclick="filtreRapidePublic('Terrasse')" class="filtre-rapide-btn">🌿 Terrasse</button>
+          <button onclick="filtreRapidePublic('Garage')" class="filtre-rapide-btn">🚗 Garage</button>
+          <button onclick="filtreRapidePublic('Jardin')" class="filtre-rapide-btn">🌳 Jardin</button>
+          <button onclick="filtreRapidePublic('neuf')" class="filtre-rapide-btn">🆕 Neuf</button>
+          <button onclick="resetFiltresPublic()" style="background:none;border:none;color:var(--mid);font-size:11px;cursor:pointer;padding:3px 6px;text-decoration:underline">Tout effacer</button>
+        </div>
+      </div>
+
+      <!-- RÉSULTATS -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div style="font-size:13px;color:var(--mid)" id="ld-results-count"></div>
+        <div style="display:flex;gap:6px">
+          <button onclick="setViewPublic('grid')" id="view-grid-btn" style="background:var(--dark);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer">⊞ Grille</button>
+          <button onclick="setViewPublic('list')" id="view-list-btn" style="background:#fff;color:var(--mid);border:1px solid var(--warm);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer">☰ Liste</button>
+        </div>
       </div>
 
       <!-- GRILLE ANNONCES -->
-      <div id="landing-biens-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px"></div>
+      <div id="landing-biens-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px"></div>
 
       <!-- VOIR PLUS -->
-      <div style="text-align:center;margin-top:28px">
-        <button onclick="loginAs('buy')" class="btn btn-outline" style="padding:12px 32px;font-size:14px">Voir les <span id="ld-count-more"></span> autres biens →</button>
+      <div id="voir-plus-wrapper" style="text-align:center;margin-top:32px;display:none">
+        <div style="background:#fff;border:1px solid var(--warm);border-radius:14px;padding:24px;max-width:480px;margin:0 auto">
+          <div style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:6px">Et <span id="ld-count-more"></span> autres biens disponibles</div>
+          <div style="font-size:12px;color:var(--mid);margin-bottom:14px">Créez un compte gratuit pour accéder à tous les biens, au matching IA et aux alertes personnalisées</div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button onclick="showLoginModal('buy')" class="btn btn-gold">Voir tous les biens →</button>
+            <button onclick="showLoginModal('buy')" class="btn btn-outline">Se connecter</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -8287,18 +8320,125 @@ const _origLandingSearch = typeof landingSearch === 'function' ? landingSearch :
 // MODE VISITEUR — CONSULTATION SANS CONNEXION
 // =============================================
 
+let filtreRapideActif = '';
+let vuePublique = 'grid';
+
 function voirAnnonesSansConnexion(){
-  // Scroller directement vers la section annonces de la landing
-  const grid = document.getElementById('landing-biens-grid');
+  buildLandingBiensPublic();
+  setTimeout(()=>{
+    document.getElementById('section-annonces')?.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 100);
+}
+
+function landingSearchPublic(){
+  buildLandingBiensPublic();
+}
+
+function filtreRapidePublic(feature){
+  filtreRapideActif = filtreRapideActif===feature ? '' : feature;
+  // Mettre à jour les boutons
+  document.querySelectorAll('.filtre-rapide-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.textContent.includes(feature) && filtreRapideActif===feature);
+  });
+  buildLandingBiensPublic();
+}
+
+function resetFiltresPublic(){
+  filtreRapideActif='';
+  document.querySelectorAll('.filtre-rapide-btn').forEach(b=>b.classList.remove('active'));
+  const selects=['ld-type','ld-zone','ld-budget'];
+  selects.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  buildLandingBiensPublic();
+}
+
+function setViewPublic(vue){
+  vuePublique=vue;
+  const grid=document.getElementById('landing-biens-grid');
   if(grid){
-    grid.scrollIntoView({behavior:'smooth', block:'start'});
-  } else {
-    // Si la grille n'est pas encore construite, la construire et scroller
-    buildLandingBiensPreview();
-    setTimeout(()=>{
-      document.getElementById('landing-biens-grid')?.scrollIntoView({behavior:'smooth'});
-    }, 200);
+    if(vue==='grid') grid.style.gridTemplateColumns='repeat(auto-fill,minmax(270px,1fr))';
+    else grid.style.gridTemplateColumns='1fr';
   }
+  document.getElementById('view-grid-btn').style.background=vue==='grid'?'var(--dark)':'#fff';
+  document.getElementById('view-grid-btn').style.color=vue==='grid'?'#fff':'var(--mid)';
+  document.getElementById('view-list-btn').style.background=vue==='list'?'var(--dark)':'#fff';
+  document.getElementById('view-list-btn').style.color=vue==='list'?'#fff':'var(--mid)';
+}
+
+function buildLandingBiensPublic(){
+  const grid=document.getElementById('landing-biens-grid');
+  const countEl=document.getElementById('ld-results-count');
+  const voirPlus=document.getElementById('voir-plus-wrapper');
+  const countMore=document.getElementById('ld-count-more');
+  if(!grid) return;
+
+  // Filtres
+  const type=document.getElementById('ld-type')?.value||'';
+  const zone=document.getElementById('ld-zone')?.value||'';
+  const budget=parseInt(document.getElementById('ld-budget')?.value||0);
+
+  let biens=BIENS_DATA.filter(b=>{
+    if(b.statut!=='En vente') return false;
+    if(type&&b.type!==type) return false;
+    if(zone&&!(b.quartier||'').includes(zone)&&!(b.ville||'').includes(zone)) return false;
+    if(budget&&b.prix>budget) return false;
+    if(filtreRapideActif&&!(b.features||[]).some(f=>f.toLowerCase().includes(filtreRapideActif.toLowerCase()))) return false;
+    return true;
+  });
+
+  const total=biens.length;
+  const affiches=biens.slice(0,9); // 9 biens max en public
+  const reste=total-9;
+
+  if(countEl) countEl.textContent=total+' bien'+(total>1?'s':'')+(filtreRapideActif?' · '+filtreRapideActif:'')+' trouvé'+(total>1?'s':'');
+
+  if(!affiches.length){
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)">
+      <div style="font-size:36px;margin-bottom:10px">🔍</div>
+      <div style="font-size:14px;margin-bottom:8px">Aucun bien trouvé</div>
+      <button onclick="resetFiltresPublic()" class="btn btn-outline btn-sm">Voir tous les biens</button>
+    </div>`;
+    if(voirPlus) voirPlus.style.display='none';
+    return;
+  }
+
+  grid.innerHTML=affiches.map(b=>{
+    const pm2=conv(Math.round(b.prix/(b.surface||1)));
+    const isListe=vuePublique==='list';
+    return isListe ? `
+      <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;display:flex;gap:14px;align-items:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 2px 8px rgba(184,146,42,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.boxShadow=''">
+        <div style="width:90px;height:70px;border-radius:8px;background:linear-gradient(135deg,var(--warm),var(--cream));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;overflow:hidden;position:relative">
+          ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:b.photos?b.photos[0]:'🏠'}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type+' '+b.quartier}</div>
+          <div style="font-size:11px;color:var(--mid)">📍 ${b.quartier||b.ville} · ${b.surface}m² · ${b.pieces||'—'} pcs</div>
+          <div style="font-size:11px;color:var(--mid)">${pm2}/m²</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
+          <span style="background:var(--green);color:#fff;padding:2px 8px;border-radius:8px;font-size:9px;font-weight:700">${b.statut}</span>
+        </div>
+      </div>` : `
+      <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:14px;overflow:hidden;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(184,146,42,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
+        <div style="height:160px;background:linear-gradient(135deg,var(--warm),var(--cream));position:relative;display:flex;align-items:center;justify-content:center;font-size:44px;overflow:hidden">
+          ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:b.photos?b.photos[0]:'🏠'}
+          <div style="position:absolute;top:8px;left:8px"><span style="background:var(--green);color:#fff;padding:3px 8px;border-radius:8px;font-size:9px;font-weight:700">${b.statut}</span></div>
+          ${b.dpe?`<div style="position:absolute;top:8px;right:8px;background:#2d7f2d;color:#fff;padding:2px 7px;border-radius:6px;font-size:9px;font-weight:700">DPE ${b.dpe}</div>`:''}
+        </div>
+        <div style="padding:14px">
+          <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type+' '+b.quartier}</div>
+          <div style="font-size:11px;color:var(--mid);margin-bottom:8px">📍 ${b.quartier||b.ville} · ${b.surface}m² · ${b.pieces||'—'} pcs</div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between">
+            <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
+            <div style="font-size:10px;color:var(--mid)">${pm2}/m²</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Voir plus
+  if(voirPlus) voirPlus.style.display=reste>0?'block':'none';
+  if(countMore) countMore.textContent=reste;
 }
 
 function simulerFinancementPublic(prix){
