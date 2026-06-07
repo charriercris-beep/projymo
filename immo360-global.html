@@ -467,6 +467,12 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
         </div>
       </div>
 
+      <!-- Voir annonces sans connexion -->
+      <div style="margin-bottom:14px">
+        <button onclick="voirAnnonesSansConnexion()" style="background:none;border:1.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:9px 24px;border-radius:20px;font-size:13px;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif" onmouseover="this.style.borderColor='rgba(255,255,255,0.5)';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.7)'">
+          👁️ Consulter les annonces sans s'inscrire
+        </button>
+      </div>
       <!-- Accès pro discret -->
       <div style="font-size:12px;color:rgba(255,255,255,0.3)">
         Professionnel ?
@@ -8276,6 +8282,76 @@ function launchAIProject(){
 
 // Rendre landingSearch compatible avec la nouvelle recherche budget
 const _origLandingSearch = typeof landingSearch === 'function' ? landingSearch : null;
+
+// =============================================
+// MODE VISITEUR — CONSULTATION SANS CONNEXION
+// =============================================
+
+function voirAnnonesSansConnexion(){
+  // Scroller directement vers la section annonces de la landing
+  const grid = document.getElementById('landing-biens-grid');
+  if(grid){
+    grid.scrollIntoView({behavior:'smooth', block:'start'});
+  } else {
+    // Si la grille n'est pas encore construite, la construire et scroller
+    buildLandingBiensPreview();
+    setTimeout(()=>{
+      document.getElementById('landing-biens-grid')?.scrollIntoView({behavior:'smooth'});
+    }, 200);
+  }
+}
+
+function simulerFinancementPublic(prix){
+  // Ouvrir un simulateur financier léger sans connexion
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px';
+  ov.onclick = e => { if(e.target===ov) document.body.removeChild(ov); };
+
+  const apport = Math.round(prix * 0.2);
+  const capital = prix - apport;
+  const taux = 3.5/100/12;
+  const duree = 240;
+  const mensuel = Math.round(capital * taux * Math.pow(1+taux,duree) / (Math.pow(1+taux,duree)-1));
+  const fraisNotaire = Math.round(prix * 0.075);
+  const coutTotal = prix + fraisNotaire;
+
+  ov.innerHTML = `<div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:420px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark)">💰 Simulation rapide</div>
+      <button onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
+    </div>
+    <div style="background:var(--warm);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--mid);margin-bottom:4px">Prix du bien</div>
+      <div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif;color:var(--gold)">${conv(prix)}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:#F0FDF4;border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:11px;color:var(--mid);margin-bottom:3px">Mensualité estimée</div>
+        <div style="font-size:18px;font-weight:700;color:var(--green)">${conv(mensuel)}/mois</div>
+        <div style="font-size:10px;color:var(--mid)">Sur 20 ans · 3.5%</div>
+      </div>
+      <div style="background:#EFF6FF;border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:11px;color:var(--mid);margin-bottom:3px">Apport conseillé</div>
+        <div style="font-size:18px;font-weight:700;color:#2563EB">${conv(apport)}</div>
+        <div style="font-size:10px;color:var(--mid)">20% du prix</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--mid);margin-bottom:14px;padding:10px;background:var(--cream);border-radius:8px;line-height:1.6">
+      Frais de notaire estimés : <strong>${conv(fraisNotaire)}</strong><br>
+      Coût total du projet : <strong style="color:var(--dark)">${conv(coutTotal)}</strong>
+    </div>
+    <div style="text-align:center;padding:12px;background:var(--warm);border-radius:10px">
+      <div style="font-size:12px;color:var(--mid);margin-bottom:8px">Simulation complète + pré-approbation bancaire</div>
+      <button onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))" class="btn btn-gold btn-full">Créer mon compte gratuit →</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+function contactFromLanding(bienId){
+  // Visiteur veut contacter — ouvrir modal inscription
+  showLoginModal('buy');
+}
 
 // =============================================
 // INIT
