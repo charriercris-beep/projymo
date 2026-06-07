@@ -40,7 +40,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   .sidebar-overlay.show{display:block}
   .hamburger{display:flex}
   .main{flex:1;width:100%;max-width:100vw;overflow-x:hidden}
-  .topbar{padding:0 12px;height:52px;position:sticky;top:0;z-index:50;width:100%}
+  .topbar{display:flex;align-items:center;background:var(--dark);color:#fff;height:56px;flex-shrink:0;position:sticky;top:0;z-index:100}
   .content{padding:12px 10px;width:100%;max-width:100vw;overflow-x:hidden}
   .card{padding:14px 12px;margin-bottom:12px;width:100%}
   .grid2{grid-template-columns:1fr;width:100%}
@@ -1069,8 +1069,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
   <div class="logo-area">
-    <div class="logo-title">Immo<span>360</span></div>
-    <div class="logo-sub">Expert Immobilier NC</div>
+    <div class="logo-title" onclick="showLanding()" style="cursor:pointer">Immo<span>360</span></div>
+    <div class="logo-sub" onclick="showLanding()" style="cursor:pointer;transition:.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color=''">← Retour à l'accueil</div>
   </div>
   <div class="profile-switch">
     <div class="prof-btn on" onclick="setProfile('sell',this)">Vendeur</div>
@@ -1093,19 +1093,39 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 <!-- MAIN -->
 <div class="main">
-  <div class="topbar">
-    <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+  <div class="topbar" style="display:flex;align-items:center;gap:0;padding:0;height:56px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0">
+
+    <!-- HAMBURGER -->
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu" style="flex-shrink:0">
       <span></span><span></span><span></span>
     </button>
-    <div class="topbar-title" id="topbar-title">Tableau de bord</div>
-    <select class="dev-sel" id="devsel" onchange="setCurr()">
-      <option value="XPF" data-s="F" selected>XPF — Franc CFP</option>
-      <option value="EUR" data-s="€">EUR — Euro</option>
-      <option value="CHF" data-s="Fr">CHF</option>
-      <option value="CAD" data-s="$">CAD</option>
+
+    <!-- LOGO + RETOUR ACCUEIL -->
+    <div onclick="showLanding()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:0 12px;border-right:1px solid rgba(255,255,255,0.08);height:100%;flex-shrink:0;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background=''">
+      <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff">Immo<span style="color:var(--gold)">360</span></div>
+      <div style="font-size:9px;color:rgba(255,255,255,0.3);line-height:1.2;max-width:50px">← Accueil</div>
+    </div>
+
+    <!-- FIL D'ARIANE -->
+    <div style="flex:1;display:flex;align-items:center;gap:6px;padding:0 14px;min-width:0;overflow:hidden">
+      <span id="breadcrumb-profil" style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);white-space:nowrap"></span>
+      <span style="color:rgba(255,255,255,0.2);font-size:11px">›</span>
+      <span class="topbar-title" id="topbar-title" style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Tableau de bord</span>
+    </div>
+
+    <!-- DEVISE -->
+    <select class="dev-sel" id="devsel" onchange="setCurr()" style="flex-shrink:0">
+      <option value="XPF" data-s="F" selected>F CFP</option>
+      <option value="EUR" data-s="€">EUR</option>
       <option value="USD" data-s="$">USD</option>
     </select>
-    <div class="topbar-badge badge-sell" id="profile-badge" onclick="logout()" title="Déconnexion" style="cursor:pointer">Vendeur</div>
+
+    <!-- BADGE PROFIL + DÉCONNEXION -->
+    <div style="display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid rgba(255,255,255,0.08);height:100%;flex-shrink:0">
+      <div class="topbar-badge badge-sell" id="profile-badge" style="cursor:default">Vendeur</div>
+      <button onclick="showLanding()" title="Retour à l'accueil" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.6);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">🏠 Accueil</button>
+      <button onclick="logout()" title="Déconnexion" style="background:rgba(220,38,38,0.12);border:none;color:rgba(220,100,100,0.8);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s" onmouseover="this.style.background='rgba(220,38,38,0.25)'" onmouseout="this.style.background='rgba(220,38,38,0.12)'">Déco.</button>
+    </div>
   </div>
 
   <div class="content">
@@ -8532,6 +8552,12 @@ function checkContextualTriggers(panel){
 // DASHBOARD INTELLIGENT — page d'accueil selon profil
 // =============================================
 function buildSmartDashboard(){
+  // Mettre à jour le breadcrumb profil
+  const bcProfil=document.getElementById('breadcrumb-profil');
+  if(bcProfil){
+    const p=APP_STATE.user?.profil||S.profile||'';
+    bcProfil.textContent=p==='sell'?'Vendeur':p==='agt'?'Professionnel':p==='buy'?'Acheteur':'';
+  }
   const profil=S.country==='NC'?APP_STATE.user?.profil||'buy':'buy';
   const dash=document.getElementById('panel-dashboard');
   if(!dash) return;
