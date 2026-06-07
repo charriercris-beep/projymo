@@ -2153,6 +2153,309 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 
     </div>
 
+    <!-- ==================== CRM ==================== -->
+    <div class="panel" id="panel-crm">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">👥 CRM Clients</h2>
+          <p style="font-size:13px;color:var(--mid)">Gérez vos acheteurs, vendeurs et investisseurs en un seul endroit</p>
+        </div>
+        <button class="btn btn-gold" onclick="showAddClientModal()">+ Ajouter un client</button>
+      </div>
+
+      <!-- STATS CRM -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="card" style="text-align:center;padding:14px;background:linear-gradient(135deg,#EFF6FF,#DBEAFE)">
+          <div style="font-size:26px;font-weight:800;color:#2563EB" id="crm-nb-acheteurs">0</div>
+          <div style="font-size:11px;color:#1D4ED8;font-weight:600">Acheteurs</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px;background:linear-gradient(135deg,#FFF7ED,#FED7AA)">
+          <div style="font-size:26px;font-weight:800;color:#EA580C" id="crm-nb-vendeurs">0</div>
+          <div style="font-size:11px;color:#C2410C;font-weight:600">Vendeurs</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px;background:linear-gradient(135deg,#F0FDF4,#BBF7D0)">
+          <div style="font-size:26px;font-weight:800;color:#16A34A" id="crm-nb-investisseurs">0</div>
+          <div style="font-size:11px;color:#15803D;font-weight:600">Investisseurs</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px;background:linear-gradient(135deg,#FDF4FF,#E9D5FF)">
+          <div style="font-size:26px;font-weight:800;color:#9333EA" id="crm-nb-relances">0</div>
+          <div style="font-size:11px;color:#7E22CE;font-weight:600">Relances ce mois</div>
+        </div>
+      </div>
+
+      <!-- FILTRES -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <select id="crm-filter-type" onchange="filterCRM()" style="border:1px solid var(--warm);padding:8px 12px;border-radius:8px;font-size:13px;background:#fff">
+          <option value="">Tous les profils</option>
+          <option value="acheteur">Acheteurs</option>
+          <option value="vendeur">Vendeurs</option>
+          <option value="investisseur">Investisseurs</option>
+        </select>
+        <select id="crm-filter-statut" onchange="filterCRM()" style="border:1px solid var(--warm);padding:8px 12px;border-radius:8px;font-size:13px;background:#fff">
+          <option value="">Tous statuts</option>
+          <option value="actif">Actif</option>
+          <option value="relance">À relancer</option>
+          <option value="chaud">Chaud 🔥</option>
+          <option value="froid">Froid</option>
+        </select>
+        <input type="text" id="crm-search" placeholder="🔍 Rechercher un client..." oninput="filterCRM()" style="flex:1;min-width:200px;border:1px solid var(--warm);padding:8px 12px;border-radius:8px;font-size:13px">
+        <div id="crm-count" style="font-size:12px;color:var(--mid);display:flex;align-items:center"></div>
+      </div>
+
+      <!-- LISTE CLIENTS -->
+      <div id="crm-list"></div>
+
+      <!-- MODAL AJOUT CLIENT -->
+      <div id="client-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">Nouveau client</h3>
+            <button onclick="document.getElementById('client-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+          </div>
+          <div class="field"><label>Profil *</label>
+            <select id="cl-type">
+              <option value="acheteur">🔍 Acheteur</option>
+              <option value="vendeur">🏠 Vendeur</option>
+              <option value="investisseur">📈 Investisseur</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Nom complet *</label><input type="text" id="cl-nom" placeholder="Jean Dupont"></div>
+            <div class="field"><label>Téléphone *</label><input type="tel" id="cl-tel" placeholder="+687 00 00 00"></div>
+          </div>
+          <div class="field"><label>Email</label><input type="email" id="cl-email" placeholder="jean@email.com"></div>
+          <div class="field"><label>Budget (F)</label><input type="number" id="cl-budget" placeholder="45000000"></div>
+          <div class="field"><label>Projet</label><input type="text" id="cl-projet" placeholder="Ex: Cherche F3 Anse Vata, vue mer"></div>
+          <div class="field"><label>Statut</label>
+            <select id="cl-statut">
+              <option value="chaud">🔥 Chaud — achat imminent</option>
+              <option value="actif">✅ Actif — en recherche</option>
+              <option value="relance">🔔 À relancer</option>
+              <option value="froid">❄️ Froid — en attente</option>
+            </select>
+          </div>
+          <div class="field"><label>Prochaine relance</label><input type="date" id="cl-relance"></div>
+          <div class="field"><label>Notes</label><textarea id="cl-notes" rows="3" placeholder="Notes privées..."></textarea></div>
+          <button class="btn btn-gold btn-full" onclick="saveClient()">✅ Enregistrer</button>
+        </div>
+      </div>
+
+      <!-- MODAL DÉTAIL CLIENT -->
+      <div id="client-detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto" id="client-detail-content"></div>
+      </div>
+    </div>
+
+    <!-- ==================== NOTAIRE ==================== -->
+    <div class="panel" id="panel-notaire">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">⚖️ Module Notaire</h2>
+          <p style="font-size:13px;color:var(--mid)">Suivi des compromis, dossiers et signatures — toutes vos transactions en un clic</p>
+        </div>
+        <button class="btn btn-gold" onclick="showAddDossierModal()">+ Nouveau dossier</button>
+      </div>
+
+      <!-- PIPELINE -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+        <div style="background:#FEF9C3;border:2px solid #FDE047;border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:#854D0E" id="not-nb-offre">2</div>
+          <div style="font-size:12px;font-weight:600;color:#92400E">Offre acceptée</div>
+        </div>
+        <div style="background:#DBEAFE;border:2px solid #93C5FD;border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:#1D4ED8" id="not-nb-compromis">3</div>
+          <div style="font-size:12px;font-weight:600;color:#1E40AF">Compromis signé</div>
+        </div>
+        <div style="background:#FCE7F3;border:2px solid #F9A8D4;border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:#9D174D" id="not-nb-instruction">1</div>
+          <div style="font-size:12px;font-weight:600;color:#831843">En instruction</div>
+        </div>
+        <div style="background:#DCFCE7;border:2px solid #86EFAC;border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:#166534" id="not-nb-acte">5</div>
+          <div style="font-size:12px;font-weight:600;color:#15803D">Acte signé ✓</div>
+        </div>
+      </div>
+
+      <!-- DOSSIERS EN COURS -->
+      <div id="notaire-dossiers"></div>
+
+      <!-- MODAL DOSSIER -->
+      <div id="dossier-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">Nouveau dossier notaire</h3>
+            <button onclick="document.getElementById('dossier-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+          </div>
+          <div class="field"><label>Bien concerné</label><input type="text" id="dos-bien" placeholder="Ex: Appartement Anse Vata — F4 92m²"></div>
+          <div class="field-row">
+            <div class="field"><label>Vendeur</label><input type="text" id="dos-vendeur" placeholder="Nom du vendeur"></div>
+            <div class="field"><label>Acheteur</label><input type="text" id="dos-acheteur" placeholder="Nom de l'acheteur"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Prix de vente (F)</label><input type="number" id="dos-prix" placeholder="42500000"></div>
+            <div class="field"><label>Notaire</label><input type="text" id="dos-notaire" placeholder="Me Dupont"></div>
+          </div>
+          <div class="field"><label>Statut</label>
+            <select id="dos-statut">
+              <option value="offre">Offre acceptée</option>
+              <option value="compromis">Compromis signé</option>
+              <option value="instruction">En instruction</option>
+              <option value="acte">Acte signé</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Date compromis</label><input type="date" id="dos-date-compromis"></div>
+            <div class="field"><label>Date acte prévue</label><input type="date" id="dos-date-acte"></div>
+          </div>
+          <div class="field"><label>Documents reçus</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
+              <label class="eq-check"><input type="checkbox" id="doc-offre"> Offre d'achat</label>
+              <label class="eq-check"><input type="checkbox" id="doc-compromis"> Compromis</label>
+              <label class="eq-check"><input type="checkbox" id="doc-financement"> Accord financement</label>
+              <label class="eq-check"><input type="checkbox" id="doc-diagnostics"> Diagnostics</label>
+              <label class="eq-check"><input type="checkbox" id="doc-titre"> Titre de propriété</label>
+            </div>
+          </div>
+          <div class="field"><label>Notes</label><textarea id="dos-notes" rows="2" placeholder="Observations..."></textarea></div>
+          <button class="btn btn-gold btn-full" onclick="saveDossier()">✅ Créer le dossier</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PROJET DE VIE ==================== -->
+    <div class="panel" id="panel-projetdevie">
+      <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:16px;padding:28px;margin-bottom:24px;text-align:center">
+        <div style="font-size:40px;margin-bottom:10px">🌟</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:#fff;margin-bottom:6px">Mon Projet de Vie</h2>
+        <p style="font-size:14px;color:rgba(255,255,255,0.6);max-width:500px;margin:0 auto">Nous ne cherchons pas juste une maison. Nous construisons votre vie idéale en Nouvelle-Calédonie.</p>
+      </div>
+
+      <div class="grid2">
+        <!-- FORMULAIRE PROJET -->
+        <div>
+          <div class="card">
+            <div class="card-title">👨‍👩‍👧 Votre situation</div>
+            <div class="field-row">
+              <div class="field"><label>Situation familiale</label>
+                <select id="pv-famille">
+                  <option>Célibataire</option>
+                  <option>Couple sans enfant</option>
+                  <option>Famille (1-2 enfants)</option>
+                  <option>Famille (3+ enfants)</option>
+                  <option>Retraité(s)</option>
+                </select>
+              </div>
+              <div class="field"><label>Animaux</label>
+                <select id="pv-animaux">
+                  <option value="non">Non</option>
+                  <option value="petit">Petit animal</option>
+                  <option value="chien">Chien</option>
+                  <option value="plusieurs">Plusieurs animaux</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label>Situation professionnelle</label>
+              <select id="pv-travail">
+                <option>Salarié bureau — présentiel</option>
+                <option>Télétravail partiel (2-3j/semaine)</option>
+                <option>100% télétravail</option>
+                <option>Chef d'entreprise / Indépendant</option>
+                <option>Retraité</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Budget total (F)</label><input type="number" id="pv-budget" placeholder="60000000" oninput="updateProjetDeVie()"></div>
+              <div class="field"><label>Apport (F)</label><input type="number" id="pv-apport" placeholder="12000000" oninput="updateProjetDeVie()"></div>
+            </div>
+            <div class="field"><label>Temps de trajet max</label>
+              <select id="pv-trajet" onchange="updateProjetDeVie()">
+                <option value="10">10 min — Centre-ville</option>
+                <option value="20">20 min — Grand Nouméa</option>
+                <option value="30">30 min — Dumbéa / Mont-Dore</option>
+                <option value="45">45 min — Toute la NC</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">🎯 Vos priorités de vie</div>
+            <div style="font-size:12px;color:var(--mid);margin-bottom:12px">Classez ce qui compte le plus pour vous (cochez jusqu'à 5)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-ecole"> 🏫 École / Crèche proche</label>
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-mer"> 🌊 Proche mer / lagon</label>
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-calme"> 🌿 Quartier calme / vert</label>
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-commerce"> 🛒 Commerces à pied</label>
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-sport"> 🏃 Sport / activités outdoor</label>
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-invest"> 📈 Potentiel investissement</label>
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-prestige"> 💎 Prestige / standing</label>
+              <label class="eq-check" style="padding:8px 10px;border-radius:8px;border:1px solid var(--warm)"><input type="checkbox" id="pv-jardin"> 🌳 Grand jardin / extérieur</label>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">🏠 Le bien idéal</div>
+            <div class="field-row">
+              <div class="field"><label>Type de bien</label>
+                <select id="pv-type" onchange="updateProjetDeVie()">
+                  <option>Appartement</option><option>Maison</option>
+                  <option>Villa</option><option>Indifférent</option>
+                </select>
+              </div>
+              <div class="field"><label>Surface minimale</label>
+                <select id="pv-surface" onchange="updateProjetDeVie()">
+                  <option value="40">40 m²</option><option value="60">60 m²</option>
+                  <option value="80">80 m²</option><option value="100">100 m²</option>
+                  <option value="150">150 m²</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label>Loisirs importants</label>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">
+                <label class="eq-check"><input type="checkbox" id="loisir-voile"> ⛵ Voile</label>
+                <label class="eq-check"><input type="checkbox" id="loisir-golf"> ⛳ Golf</label>
+                <label class="eq-check"><input type="checkbox" id="loisir-surf"> 🏄 Surf / kite</label>
+                <label class="eq-check"><input type="checkbox" id="loisir-tennis"> 🎾 Tennis</label>
+                <label class="eq-check"><input type="checkbox" id="loisir-randonnee"> 🥾 Randonnée</label>
+                <label class="eq-check"><input type="checkbox" id="loisir-resto"> 🍽️ Restos / vie nocturne</label>
+              </div>
+            </div>
+            <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="lancerProjetDeVie()">🌟 Analyser mon projet de vie</button>
+          </div>
+        </div>
+
+        <!-- RÉSULTATS IA -->
+        <div>
+          <div class="ai-box" id="pv-result-box">
+            <h4>🌟 Votre projet de vie analysé par l'IA</h4>
+            <div id="pv-result-content">
+              <div style="text-align:center;padding:30px 0;color:rgba(255,255,255,0.4)">
+                <div style="font-size:40px;margin-bottom:10px">🌟</div>
+                <div style="font-size:13px">Remplissez le formulaire et cliquez sur<br>"Analyser mon projet de vie"</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BIENS RECOMMANDÉS -->
+          <div class="card" id="pv-biens-card" style="display:none">
+            <div class="card-title">🏠 Biens correspondant à votre projet</div>
+            <div id="pv-biens-list"></div>
+          </div>
+
+          <!-- QUARTIERS RECOMMANDÉS -->
+          <div class="card" id="pv-quartiers-card" style="display:none">
+            <div class="card-title">📍 Quartiers recommandés</div>
+            <div id="pv-quartiers-list"></div>
+          </div>
+
+          <!-- SERVICES ASSOCIÉS -->
+          <div class="card" id="pv-services-card" style="display:none">
+            <div class="card-title">🔧 Services pour votre projet</div>
+            <div id="pv-services-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== STATS ==================== -->
     <div class="panel" id="panel-stats">
       <div class="grid4" style="margin-bottom:18px" id="stats-kpis"></div>
@@ -2336,16 +2639,16 @@ const MENUS = {
     {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
   ],
   buy:[
-    {s:'Recherche',items:[{ico:'🏠',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💰',k:'financement'},{ico:'📅',k:'rdv'}]},
-    {s:'Mon espace',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📊',k:'stats'}]},
+    {s:'Recherche',items:[{ico:'🏠',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💰',k:'financement'},{ico:'🌟',k:'projetdevie'}]},
+    {s:'Mon espace',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📅',k:'rdv'}]},
   ],
   agt:[
     {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'},{ico:'💎',k:'estimation'}]},
-    {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'🏗️',k:'artisans'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'📈',k:'stats'}]},
+    {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'🏗️',k:'artisans'},{ico:'👥',k:'crm'},{ico:'⚖️',k:'notaire'},{ico:'📅',k:'rdv'}]},
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
@@ -2396,6 +2699,9 @@ function go(panel){
   if(panel==='marketplace') buildMarketplace();
   if(panel==='matching') buildMatching();
   if(panel==='artisans') buildArtisans();
+  if(panel==='crm') buildCRM();
+  if(panel==='notaire') buildNotaire();
+  if(panel==='projetdevie') updateProjetDeVie();
   if(panel==='messagerie') buildMessagerie();
   if(panel==='depot'){depotStep=1;goDepotStep(1);}
   if(panel==='rdv') buildCal();
@@ -5456,6 +5762,470 @@ function saveAcheteur(){
   if(sb){
     saveUserToSupabase({nom,email:newAch.email,tel,profil:'buy'}).catch(console.error);
   }
+}
+
+// =============================================
+// CRM CLIENTS
+// =============================================
+let CRM_CLIENTS = [
+  {id:1,type:'acheteur',nom:'Marie Lecomte',tel:'+687 43 21 00',email:'marie.l@email.nc',budget:55000000,projet:'F3/F4 Anse Vata ou Baie des Citrons, vue mer impérative',statut:'chaud',relance:'2026-06-15',notes:'Expatriée Total, budget confirmé, doit décider avant fin juillet',dernierContact:'2026-06-05',nbContacts:4},
+  {id:2,type:'vendeur',nom:'Paul & Sophie Roux',tel:'+687 77 88 99',email:'famille.roux@email.nc',budget:70000000,projet:'Vendre maison Dumbéa F5 — acheteur Dumbéa/Mont-Dore',statut:'actif',relance:'2026-06-20',notes:'Veulent vendre avant la rentrée scolaire. Bien estimé 58M.',dernierContact:'2026-06-03',nbContacts:6},
+  {id:3,type:'investisseur',nom:'Antoine Moreau',tel:'+687 55 66 77',email:'a.moreau@invest.nc',budget:20000000,projet:'Studio/F1 rendement >7% — secteur port ou Magenta',statut:'actif',relance:'2026-06-18',notes:'Investisseur expérimenté, 3 biens déjà. Cherche locataire en place.',dernierContact:'2026-06-01',nbContacts:3},
+  {id:4,type:'acheteur',nom:'Isabelle Fontaine',tel:'+687 22 33 44',email:'i.fontaine@email.nc',budget:150000000,projet:'Villa prestige Anse Vata avec piscine et vue lagon',statut:'chaud',relance:'2026-06-12',notes:'CEO entreprise locale. Très sélective mais budget élevé. Motiver !',dernierContact:'2026-06-06',nbContacts:8},
+  {id:5,type:'acheteur',nom:'Thomas Gérard',tel:'+687 11 22 33',email:'t.gerard@email.nc',budget:15000000,projet:'Premier achat — studio ou F1 Nouméa centre',statut:'relance',relance:'2026-06-10',notes:'Jeune actif, hésitant. À relancer avec nouvelles offres.',dernierContact:'2026-05-20',nbContacts:2},
+  {id:6,type:'vendeur',nom:'Hélène Dupuis',tel:'+687 99 00 11',email:'dupuis@email.nc',budget:60000000,projet:'Vendre appartement Val Plaisance F3 75m²',statut:'actif',relance:'2026-06-25',notes:'Départ en métropole prévu septembre. Urgence modérée.',dernierContact:'2026-05-28',nbContacts:3},
+];
+
+let crmFiltered = [...CRM_CLIENTS];
+
+const STATUT_CRM = {
+  chaud:{label:'🔥 Chaud',bg:'#FEF2F2',color:'#DC2626',border:'#FECACA'},
+  actif:{label:'✅ Actif',bg:'#F0FDF4',color:'#16A34A',border:'#BBF7D0'},
+  relance:{label:'🔔 À relancer',bg:'#FFF7ED',color:'#EA580C',border:'#FED7AA'},
+  froid:{label:'❄️ Froid',bg:'#F8FAFC',color:'#64748B',border:'#CBD5E1'},
+};
+const TYPE_CRM = {
+  acheteur:{label:'Acheteur',color:'#2563EB',bg:'#EFF6FF'},
+  vendeur:{label:'Vendeur',color:'#EA580C',bg:'#FFF7ED'},
+  investisseur:{label:'Investisseur',color:'#9333EA',bg:'#FDF4FF'},
+};
+
+function buildCRM(){
+  crmFiltered=[...CRM_CLIENTS];
+  filterCRM();
+  updateCRMStats();
+}
+
+function updateCRMStats(){
+  document.getElementById('crm-nb-acheteurs').textContent=CRM_CLIENTS.filter(c=>c.type==='acheteur').length;
+  document.getElementById('crm-nb-vendeurs').textContent=CRM_CLIENTS.filter(c=>c.type==='vendeur').length;
+  document.getElementById('crm-nb-investisseurs').textContent=CRM_CLIENTS.filter(c=>c.type==='investisseur').length;
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('crm-nb-relances').textContent=CRM_CLIENTS.filter(c=>c.relance&&c.relance<=today).length;
+}
+
+function filterCRM(){
+  const type=document.getElementById('crm-filter-type')?.value||'';
+  const statut=document.getElementById('crm-filter-statut')?.value||'';
+  const search=(document.getElementById('crm-search')?.value||'').toLowerCase();
+  crmFiltered=CRM_CLIENTS.filter(c=>{
+    if(type&&c.type!==type)return false;
+    if(statut&&c.statut!==statut)return false;
+    if(search&&!c.nom.toLowerCase().includes(search)&&!c.projet.toLowerCase().includes(search))return false;
+    return true;
+  });
+  const cnt=document.getElementById('crm-count');
+  if(cnt) cnt.textContent=crmFiltered.length+' client'+(crmFiltered.length>1?'s':'');
+  renderCRMList();
+}
+
+function renderCRMList(){
+  const el=document.getElementById('crm-list');
+  if(!el)return;
+  if(!crmFiltered.length){
+    el.innerHTML='<div style="text-align:center;padding:40px;color:var(--mid)">Aucun client trouvé.<br><button class="btn btn-gold btn-sm" onclick="showAddClientModal()">+ Ajouter</button></div>';
+    return;
+  }
+  const today=new Date().toISOString().split('T')[0];
+  el.innerHTML=crmFiltered.map(c=>{
+    const s=STATUT_CRM[c.statut]||STATUT_CRM.actif;
+    const t=TYPE_CRM[c.type]||TYPE_CRM.acheteur;
+    const relanceUrgente=c.relance&&c.relance<=today;
+    return `<div style="background:#fff;border:1px solid ${relanceUrgente?'#FCA5A5':'#E5E7EB'};border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:.2s" onclick="openClientDetail(${c.id})" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 2px 8px rgba(184,146,42,0.1)'" onmouseout="this.style.borderColor='${relanceUrgente?'#FCA5A5':'#E5E7EB'}';this.style.boxShadow=''">
+      <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:44px;height:44px;border-radius:50%;background:${t.bg};color:${t.color};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0">${c.nom.charAt(0)}</div>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--dark)">${c.nom}</div>
+            <div style="font-size:11px;color:var(--mid)">${c.tel} · ${c.email}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <span style="background:${t.bg};color:${t.color};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">${t.label}</span>
+          <span style="background:${s.bg};color:${s.color};border:1px solid ${s.border};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">${s.label}</span>
+          ${relanceUrgente?'<span style="background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;animation:pulse 1s infinite">📞 À RELANCER</span>':''}
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:10px;background:var(--warm);padding:8px 10px;border-radius:8px;line-height:1.5">💼 ${c.projet}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;gap:12px;font-size:11px;color:var(--mid)">
+          <span>💰 ${conv(c.budget)}</span>
+          <span>📞 ${c.nbContacts} contacts</span>
+          <span>📅 Dernier : ${c.dernierContact}</span>
+          ${c.relance?`<span style="color:${relanceUrgente?'#DC2626':'var(--mid)'}">🔔 Relance : ${c.relance}</span>`:''}
+        </div>
+        <div style="display:flex;gap:5px">
+          <button onclick="event.stopPropagation();relancerClient(${c.id})" class="btn btn-outline btn-sm" style="font-size:10px">💬 Contacter</button>
+          <button onclick="event.stopPropagation();openClientDetail(${c.id})" class="btn btn-gold btn-sm" style="font-size:10px">Fiche →</button>
+        </div>
+      </div>
+      ${c.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic">📝 ${c.notes}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function openClientDetail(id){
+  const c=CRM_CLIENTS.find(x=>x.id===id);
+  if(!c)return;
+  const t=TYPE_CRM[c.type]||TYPE_CRM.acheteur;
+  const s=STATUT_CRM[c.statut]||STATUT_CRM.actif;
+  const matches=getMatchesForAcheteur({
+    budgetMin:c.budget*0.8,budgetMax:c.budget,
+    type:c.type==='acheteur'?'Appartement':'',
+    surfaceMin:60,piecesMin:2,zones:[],features:[],urgence:3
+  });
+  const modal=document.getElementById('client-detail-modal');
+  const content=document.getElementById('client-detail-content');
+  if(!modal||!content)return;
+  content.innerHTML=`
+    <div style="background:linear-gradient(135deg,${t.color},${t.color}CC);padding:22px;border-radius:16px 16px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800">${c.nom.charAt(0)}</div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:700">${c.nom}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.7)">${t.label} · ${s.label}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6)">${c.tel} · ${c.email}</div>
+          </div>
+        </div>
+        <button onclick="document.getElementById('client-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+      </div>
+    </div>
+    <div style="padding:20px">
+      <div style="background:var(--warm);border-radius:10px;padding:12px;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:4px">💼 Projet</div>
+        <div style="font-size:13px;color:var(--dark);line-height:1.6">${c.projet}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+        <div style="background:#F0FDF4;border-radius:8px;padding:10px;text-align:center"><div style="font-size:15px;font-weight:700;color:var(--green)">${conv(c.budget)}</div><div style="font-size:10px;color:var(--mid)">Budget</div></div>
+        <div style="background:#EFF6FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:15px;font-weight:700;color:#2563EB">${c.nbContacts}</div><div style="font-size:10px;color:var(--mid)">Contacts</div></div>
+        <div style="background:#FFF7ED;border-radius:8px;padding:10px;text-align:center"><div style="font-size:15px;font-weight:700;color:#EA580C">${c.relance||'—'}</div><div style="font-size:10px;color:var(--mid)">Relance</div></div>
+      </div>
+      ${c.notes?`<div style="font-size:13px;color:var(--mid);font-style:italic;margin-bottom:14px;padding:10px;border-left:3px solid var(--gold);background:var(--warm);border-radius:0 8px 8px 0">"${c.notes}"</div>`:''}
+      ${matches.length>0?`
+      <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">🤖 ${matches.filter(m=>m.score>=70).length} biens compatibles (Matching IA)</div>
+      ${matches.filter(m=>m.score>=70).slice(0,3).map(m=>`
+      <div style="border:1px solid var(--warm);border-radius:8px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;border-radius:50%;background:${getScoreColor(m.score)};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">${m.score}%</div>
+        <div style="flex:1"><div style="font-size:12px;font-weight:600">${m.bien.titre||m.bien.type+' '+m.bien.quartier}</div><div style="font-size:11px;color:var(--mid)">${conv(m.bien.prix)} · ${m.bien.quartier}</div></div>
+        <button onclick="go('matching')" class="btn btn-gold btn-sm" style="font-size:10px">Voir</button>
+      </div>`).join('')}`:''}
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="btn btn-gold btn-full" onclick="relancerClient(${c.id});document.getElementById('client-detail-modal').style.display='none'">💬 Contacter</button>
+        <button class="btn btn-outline" onclick="document.getElementById('client-detail-modal').style.display='none'">Fermer</button>
+      </div>
+    </div>`;
+  modal.style.display='flex';
+}
+
+function showAddClientModal(){
+  const m=document.getElementById('client-modal');
+  if(m) m.style.display='flex';
+}
+
+function saveClient(){
+  const nom=document.getElementById('cl-nom')?.value?.trim();
+  const tel=document.getElementById('cl-tel')?.value?.trim();
+  if(!nom||!tel){alert('Nom et téléphone requis');return;}
+  CRM_CLIENTS.push({
+    id:Date.now(),
+    type:document.getElementById('cl-type')?.value||'acheteur',
+    nom,tel,
+    email:document.getElementById('cl-email')?.value||'',
+    budget:parseInt(document.getElementById('cl-budget')?.value||0),
+    projet:document.getElementById('cl-projet')?.value||'',
+    statut:document.getElementById('cl-statut')?.value||'actif',
+    relance:document.getElementById('cl-relance')?.value||'',
+    notes:document.getElementById('cl-notes')?.value||'',
+    dernierContact:new Date().toISOString().split('T')[0],
+    nbContacts:0
+  });
+  document.getElementById('client-modal').style.display='none';
+  buildCRM();
+}
+
+function relancerClient(id){
+  const c=CRM_CLIENTS.find(x=>x.id===id);
+  if(!c)return;
+  c.nbContacts++;
+  c.dernierContact=new Date().toISOString().split('T')[0];
+  go('messagerie');
+}
+
+// =============================================
+// NOTAIRE
+// =============================================
+let DOSSIERS_NOTAIRE = [
+  {id:1,bien:'Appartement Baie des Citrons — F4 92m²',vendeur:'M. Bernard',acheteur:'Marie Lecomte',prix:48500000,notaire:'Me Dupont',statut:'compromis',dateCompromis:'2026-05-15',dateActe:'2026-08-15',docs:{offre:true,compromis:true,financement:true,diagnostics:false,titre:false},notes:'Financement BNC en cours. Diagnostics attendus.'},
+  {id:2,bien:'Maison Dumbéa F5 — 148m²',vendeur:'Paul Roux',acheteur:'Famille Martin',prix:58000000,notaire:'Me Leroy',statut:'instruction',dateCompromis:'2026-04-20',dateActe:'2026-07-20',docs:{offre:true,compromis:true,financement:true,diagnostics:true,titre:false},notes:'Titre de propriété attendu de la mairie.'},
+  {id:3,bien:'Studio Motor Pool — 32m²',vendeur:'Particulier',acheteur:'Antoine Moreau',prix:11500000,notaire:'Me Dupont',statut:'offre',dateCompromis:'',dateActe:'',docs:{offre:true,compromis:false,financement:false,diagnostics:false,titre:false},notes:'Offre acceptée verbalement. Compromis à signer.'},
+  {id:4,bien:'Villa Mont-Dore — 185m²',vendeur:'NC Immobilier',acheteur:'Mme Fontaine',prix:78000000,notaire:'Me Bernard',statut:'acte',dateCompromis:'2026-02-10',dateActe:'2026-05-10',docs:{offre:true,compromis:true,financement:true,diagnostics:true,titre:true},notes:'Dossier clos. Commission versée.'},
+];
+
+const STATUT_NOTAIRE = {
+  offre:{label:'Offre acceptée',color:'#854D0E',bg:'#FEF9C3',border:'#FDE047',step:1},
+  compromis:{label:'Compromis signé',color:'#1D4ED8',bg:'#DBEAFE',border:'#93C5FD',step:2},
+  instruction:{label:'En instruction',color:'#9D174D',bg:'#FCE7F3',border:'#F9A8D4',step:3},
+  acte:{label:'Acte signé ✓',color:'#166534',bg:'#DCFCE7',border:'#86EFAC',step:4},
+};
+
+function buildNotaire(){
+  renderDossiers();
+}
+
+function renderDossiers(){
+  const el=document.getElementById('notaire-dossiers');
+  if(!el)return;
+  el.innerHTML=DOSSIERS_NOTAIRE.map(d=>{
+    const s=STATUT_NOTAIRE[d.statut]||STATUT_NOTAIRE.offre;
+    const docsCount=Object.values(d.docs).filter(Boolean).length;
+    const docsTotal=Object.keys(d.docs).length;
+    const pct=Math.round((docsCount/docsTotal)*100);
+    // Jours restants avant acte
+    let joursRestants='';
+    if(d.dateActe){
+      const diff=Math.ceil((new Date(d.dateActe)-new Date())/(1000*60*60*24));
+      joursRestants=diff>0?`${diff} jours restants`:'Date dépassée';
+    }
+    return `<div style="background:#fff;border:1px solid ${s.border};border-left:4px solid ${s.color};border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:3px">${d.bien}</div>
+          <div style="font-size:12px;color:var(--mid)">🏷️ ${d.vendeur} → ${d.acheteur} · Via ${d.notaire}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <span style="background:${s.bg};color:${s.color};border:1px solid ${s.border};padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">${s.label}</span>
+          <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--gold)">${conv(d.prix)}</span>
+        </div>
+      </div>
+      <!-- TIMELINE -->
+      <div style="display:flex;align-items:center;gap:0;margin-bottom:12px">
+        ${['offre','compromis','instruction','acte'].map(step=>{
+          const st=STATUT_NOTAIRE[step];
+          const done=s.step>=st.step;
+          const active=s.step===st.step;
+          return `<div style="flex:1;text-align:center">
+            <div style="width:28px;height:28px;border-radius:50%;background:${done?s.color:'#E5E7EB'};color:#fff;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;${active?'box-shadow:0 0 0 3px '+s.border:''}">${done?'✓':st.step}</div>
+            <div style="font-size:9px;color:${done?s.color:'#9CA3AF'};margin-top:3px;font-weight:${active?700:400}">${st.label.split(' ')[0]}</div>
+          </div>
+          ${step!=='acte'?`<div style="flex:0.5;height:2px;background:${s.step>st.step?s.color:'#E5E7EB'};margin-top:-14px"></div>`:''}`;
+        }).join('')}
+      </div>
+      <!-- DOCS + INFOS -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:80px;height:5px;background:#E5E7EB;border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${pct===100?'#16A34A':s.color}"></div></div>
+          <span style="font-size:11px;color:var(--mid)">${docsCount}/${docsTotal} docs · ${pct}%</span>
+        </div>
+        <div style="font-size:11px;color:var(--mid)">
+          ${d.dateCompromis?`📋 Compromis: ${d.dateCompromis}`:''}
+          ${d.dateActe?` · 🏠 Acte: ${d.dateActe} ${joursRestants?'('+joursRestants+')':''}` :''}
+        </div>
+        <div style="display:flex;gap:5px">
+          <button onclick="updateDossierStatut(${d.id})" class="btn btn-outline btn-sm" style="font-size:10px">✏️ Mettre à jour</button>
+          ${d.statut!=='acte'?`<button onclick="avancerDossier(${d.id})" class="btn btn-gold btn-sm" style="font-size:10px">→ Étape suivante</button>`:''}
+        </div>
+      </div>
+      ${d.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic;padding:6px 10px;background:var(--warm);border-radius:6px">📝 ${d.notes}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function avancerDossier(id){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
+  if(!d)return;
+  const ordre=['offre','compromis','instruction','acte'];
+  const idx=ordre.indexOf(d.statut);
+  if(idx<ordre.length-1){
+    d.statut=ordre[idx+1];
+    renderDossiers();
+    const s=STATUT_NOTAIRE[d.statut];
+    const notif=document.createElement('div');
+    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:'+s.color+';color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2)';
+    notif.textContent='✓ Dossier avancé : '+s.label;
+    document.body.appendChild(notif);
+    setTimeout(()=>document.body.removeChild(notif),3000);
+  }
+}
+
+function updateDossierStatut(id){alert('Mise à jour dossier — fonctionnalité complète bientôt disponible.');}
+
+function showAddDossierModal(){
+  const m=document.getElementById('dossier-modal');
+  if(m) m.style.display='flex';
+}
+
+function saveDossier(){
+  const bien=document.getElementById('dos-bien')?.value?.trim();
+  if(!bien){alert('Veuillez renseigner le bien');return;}
+  DOSSIERS_NOTAIRE.unshift({
+    id:Date.now(),
+    bien,
+    vendeur:document.getElementById('dos-vendeur')?.value||'',
+    acheteur:document.getElementById('dos-acheteur')?.value||'',
+    prix:parseInt(document.getElementById('dos-prix')?.value||0),
+    notaire:document.getElementById('dos-notaire')?.value||'',
+    statut:document.getElementById('dos-statut')?.value||'offre',
+    dateCompromis:document.getElementById('dos-date-compromis')?.value||'',
+    dateActe:document.getElementById('dos-date-acte')?.value||'',
+    docs:{
+      offre:document.getElementById('doc-offre')?.checked||false,
+      compromis:document.getElementById('doc-compromis')?.checked||false,
+      financement:document.getElementById('doc-financement')?.checked||false,
+      diagnostics:document.getElementById('doc-diagnostics')?.checked||false,
+      titre:document.getElementById('doc-titre')?.checked||false,
+    },
+    notes:document.getElementById('dos-notes')?.value||''
+  });
+  document.getElementById('dossier-modal').style.display='none';
+  renderDossiers();
+}
+
+// =============================================
+// PROJET DE VIE IA
+// =============================================
+function lancerProjetDeVie(){
+  const budget=parseInt(document.getElementById('pv-budget')?.value||0);
+  const apport=parseInt(document.getElementById('pv-apport')?.value||0);
+  const famille=document.getElementById('pv-famille')?.value||'';
+  const travail=document.getElementById('pv-travail')?.value||'';
+  const trajet=document.getElementById('pv-trajet')?.value||'30';
+  const type=document.getElementById('pv-type')?.value||'Appartement';
+  const surface=parseInt(document.getElementById('pv-surface')?.value||60);
+
+  if(!budget){alert('Veuillez indiquer votre budget');return;}
+
+  // Collecte des priorités
+  const priorites=[];
+  if(document.getElementById('pv-ecole')?.checked) priorites.push('École/Crèche');
+  if(document.getElementById('pv-mer')?.checked) priorites.push('Mer/lagon');
+  if(document.getElementById('pv-calme')?.checked) priorites.push('Calme/vert');
+  if(document.getElementById('pv-commerce')?.checked) priorites.push('Commerces');
+  if(document.getElementById('pv-sport')?.checked) priorites.push('Sport outdoor');
+  if(document.getElementById('pv-invest')?.checked) priorites.push('Investissement');
+  if(document.getElementById('pv-prestige')?.checked) priorites.push('Prestige');
+  if(document.getElementById('pv-jardin')?.checked) priorites.push('Jardin');
+
+  // Loisirs
+  const loisirs=[];
+  if(document.getElementById('loisir-voile')?.checked) loisirs.push('Voile');
+  if(document.getElementById('loisir-golf')?.checked) loisirs.push('Golf');
+  if(document.getElementById('loisir-surf')?.checked) loisirs.push('Surf/kite');
+  if(document.getElementById('loisir-tennis')?.checked) loisirs.push('Tennis');
+  if(document.getElementById('loisir-randonnee')?.checked) loisirs.push('Randonnée');
+  if(document.getElementById('loisir-resto')?.checked) loisirs.push('Restos/vie nocturne');
+
+  // ANALYSE IA
+  const resultEl=document.getElementById('pv-result-content');
+  if(resultEl) resultEl.innerHTML='<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.5)"><div style="font-size:36px;margin-bottom:10px">🤖</div>Analyse de votre projet de vie en cours...</div>';
+
+  setTimeout(()=>{
+    // Recommandations quartiers selon priorités
+    const quartiers=[];
+    if(priorites.includes('Mer/lagon')||priorites.includes('Prestige'))
+      quartiers.push({nom:'Anse Vata / Baie des Citrons',score:95,raison:'Vue mer, lagon, prestige — le quartier le plus prisé de Nouméa',prix:conv(budget),icons:'🌊🏊💎'});
+    if(priorites.includes('Calme/vert')||priorites.includes('École/Crèche')||famille.includes('enfant'))
+      quartiers.push({nom:'Dumbéa sur Mer / Koutio',score:88,raison:'Quartier familial, calme, écoles, espaces verts — idéal pour familles',prix:conv(Math.round(budget*0.85)),icons:'🏘️🌿🏫'});
+    if(priorites.includes('Investissement'))
+      quartiers.push({nom:'Magenta / Motor Pool',score:82,raison:'Fort rendement locatif, proche port, idéal investisseur',prix:conv(Math.round(budget*0.7)),icons:'📈🏢💰'});
+    if(quartiers.length===0)
+      quartiers.push({nom:'Val Plaisance / Tina',score:78,raison:'Quartier équilibré, vue dégagée, toutes commodités proches',prix:conv(budget),icons:'🏠🌤️🛒'});
+
+    // Mensualité estimée
+    const emprunter=budget-apport;
+    const mensuel=emprunter>0?Math.round(emprunter*(3.5/100/12)*Math.pow(1+3.5/100/12,240)/(Math.pow(1+3.5/100/12,240)-1)):0;
+
+    const html=`
+      <div class="ai-line"><span>Famille</span><span style="color:rgba(255,255,255,0.8)">${famille}</span></div>
+      <div class="ai-line"><span>Travail</span><span style="color:rgba(255,255,255,0.8)">${travail}</span></div>
+      <div class="ai-line"><span>Budget total</span><span style="color:var(--gold-light);font-weight:700">${conv(budget)}</span></div>
+      ${apport>0?`<div class="ai-line"><span>Mensualité estimée</span><span style="color:var(--gold-light)">${conv(mensuel)}/mois sur 20 ans</span></div>`:''}
+      <div class="ai-line"><span>Rayon de recherche</span><span style="color:rgba(255,255,255,0.8)">${trajet} min max</span></div>
+      ${priorites.length>0?`<div class="ai-line"><span>Priorités</span><span style="color:rgba(255,255,255,0.7);font-size:11px">${priorites.join(' · ')}</span></div>`:''}
+      ${loisirs.length>0?`<div class="ai-line"><span>Loisirs</span><span style="color:rgba(255,255,255,0.7);font-size:11px">${loisirs.join(' · ')}</span></div>`:''}
+
+      <div style="margin-top:14px;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;border:1px solid rgba(255,255,255,0.1)">
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🎯 Recommandation IA</div>
+        <div style="font-size:13px;color:#fff;line-height:1.7">
+          Pour une ${famille.toLowerCase()}, ${travail.toLowerCase()}, avec un budget de ${conv(budget)}, l'IA recommande prioritairement
+          <strong style="color:var(--gold-light)">${quartiers[0].nom}</strong>.
+          ${priorites.includes('Mer/lagon')?'La proximité du lagon est un critère déterminant pour votre qualité de vie.':''}
+          ${priorites.includes('École/Crèche')?'Les équipements scolaires de qualité sont disponibles dans ce secteur.':''}
+          ${loisirs.length>0?'Vos activités ('+loisirs.slice(0,2).join(', ')+') sont parfaitement accessibles depuis cette zone.':''}
+        </div>
+      </div>`;
+
+    if(resultEl) resultEl.innerHTML=html;
+
+    // Quartiers recommandés
+    const qCard=document.getElementById('pv-quartiers-card');
+    const qList=document.getElementById('pv-quartiers-list');
+    if(qCard&&qList){
+      qCard.style.display='block';
+      qList.innerHTML=quartiers.map(q=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--warm);border-radius:10px;margin-bottom:8px">
+          <div style="font-size:22px">${q.icons}</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600;color:var(--dark)">${q.nom}</div>
+            <div style="font-size:11px;color:var(--mid);margin-top:2px;line-height:1.5">${q.raison}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-size:16px;font-weight:700;color:${getScoreColor(q.score)}">${q.score}%</div>
+            <div style="font-size:10px;color:var(--mid)">compatibilité</div>
+          </div>
+        </div>`).join('');
+    }
+
+    // Biens recommandés — matching intelligent
+    const biensMatch=BIENS_DATA.filter(b=>b.statut==='En vente').map(b=>{
+      let score=60;
+      if(b.prix<=budget) score+=15;
+      if(b.surface>=surface) score+=10;
+      if(type!=='Indifférent'&&b.type===type) score+=10;
+      if(priorites.includes('Mer/lagon')&&(b.features||[]).some(f=>f.includes('mer')||f.includes('lagon'))) score+=15;
+      if(priorites.includes('Calme/vert')&&(b.quartier||'').includes('Dumbéa')) score+=10;
+      return {...b,pvScore:Math.min(98,score)};
+    }).sort((a,b)=>b.pvScore-a.pvScore).slice(0,4);
+
+    const bCard=document.getElementById('pv-biens-card');
+    const bList=document.getElementById('pv-biens-list');
+    if(bCard&&bList&&biensMatch.length){
+      bCard.style.display='block';
+      bList.innerHTML=biensMatch.map(b=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--warm);border-radius:8px;margin-bottom:6px;cursor:pointer" onclick="openLandingBien(${b.id})">
+          <div style="font-size:24px">${b.photos?b.photos[0]:'🏠'}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type+' '+b.quartier}</div>
+            <div style="font-size:11px;color:var(--mid)">${conv(b.prix)} · ${b.surface}m² · ${b.quartier}</div>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:${getScoreColor(b.pvScore)};flex-shrink:0">${b.pvScore}%</div>
+        </div>`).join('');
+    }
+
+    // Services recommandés
+    const sCard=document.getElementById('pv-services-card');
+    const sList=document.getElementById('pv-services-list');
+    if(sCard&&sList){
+      sCard.style.display='block';
+      const services=[];
+      if(budget<40000000) services.push({ico:'💰',titre:'Simulation financement',desc:'Calculez vos mensualités et optimisez votre apport',action:"go('financement')"});
+      if(priorites.includes('Investissement')) services.push({ico:'📈',titre:'Analyse rendement locatif',desc:'Calculez le rendement de votre investissement NC',action:"go('financement')"});
+      services.push({ico:'🏗️',titre:'Artisans pour travaux',desc:'Trouvez les meilleurs artisans NC pour votre projet',action:"go('artisans')"});
+      services.push({ico:'🤖',titre:'Matching IA personnalisé',desc:'Trouvez des acheteurs pour votre bien actuel',action:"go('matching')"});
+      sList.innerHTML=services.map(s=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--warm);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:.15s" onclick="${s.action}" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background=''">
+          <div style="font-size:24px">${s.ico}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">${s.titre}</div><div style="font-size:11px;color:var(--mid)">${s.desc}</div></div>
+          <span style="color:var(--gold);font-size:16px">→</span>
+        </div>`).join('');
+    }
+
+    setTimeout(applyMobileLayout,50);
+  },1800);
+}
+
+function updateProjetDeVie(){
+  // Mise à jour légère en temps réel
 }
 
 // =============================================
