@@ -189,7 +189,9 @@ textarea{resize:vertical;min-height:80px}
 .btn-blue{background:var(--blue);color:#fff}
 .btn-sm{padding:6px 13px;font-size:12px}
 .btn-full{width:100%;justify-content:center}
-input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
+input[type=range]{padding:0;height:8px;accent-color:var(--gold);cursor:pointer;display:block;width:100%}
+input[type=range]::-webkit-slider-thumb{width:20px;height:20px;background:var(--gold);border-radius:50%;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:var(--warm)}
 
 /* TAGS */
 .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px}
@@ -2479,31 +2481,35 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
               </select>
             </div>
             <div class="field-row">
-              <div class="field">
-                <label style="display:flex;justify-content:space-between;align-items:center">
-                  <span>Budget total (F)</span>
-                  <span id="pv-budget-display" style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--gold)">—</span>
-                </label>
-                <!-- JAUGE BUDGET -->
-                <input type="range" id="pv-budget" min="5000000" max="200000000" step="1000000" value="60000000"
-                  oninput="updateBudgetJauge(this.value);updateProjetDeVie()"
-                  style="width:100%;accent-color:var(--gold);margin:8px 0;cursor:pointer;height:6px">
+              <div class="field" style="grid-column:1/-1">
+                <!-- EN-TÊTE BUDGET -->
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+                  <label style="font-size:13px;font-weight:500;color:var(--dark);margin:0">Budget total (F)</label>
+                  <span id="pv-budget-display" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold)">60M F</span>
+                </div>
+                <!-- JAUGE SLIDER -->
+                <div style="position:relative;padding:4px 0 2px">
+                  <input type="range" id="pv-budget"
+                    min="5000000" max="200000000" step="1000000" value="60000000"
+                    oninput="updateBudgetJauge(this.value);updateProjetDeVie()"
+                    style="width:100%;height:8px;accent-color:var(--gold);cursor:pointer;outline:none;appearance:auto;-webkit-appearance:slider-horizontal">
+                </div>
                 <!-- GRADUATIONS -->
-                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mid);margin-top:2px">
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--soft);margin-top:4px;padding:0 2px">
                   <span>5M</span><span>25M</span><span>50M</span><span>75M</span><span>100M</span><span>150M</span><span>200M+</span>
                 </div>
                 <!-- PRÉSETS RAPIDES -->
-                <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">
-                  <button onclick="setBudgetPreset(20000000)" class="budget-preset-btn">20M</button>
-                  <button onclick="setBudgetPreset(35000000)" class="budget-preset-btn">35M</button>
-                  <button onclick="setBudgetPreset(50000000)" class="budget-preset-btn">50M</button>
-                  <button onclick="setBudgetPreset(75000000)" class="budget-preset-btn">75M</button>
-                  <button onclick="setBudgetPreset(100000000)" class="budget-preset-btn">100M</button>
-                  <button onclick="setBudgetPreset(150000000)" class="budget-preset-btn">150M+</button>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">
+                  <button type="button" onclick="setBudgetPreset(20000000)" class="budget-preset-btn">20M</button>
+                  <button type="button" onclick="setBudgetPreset(35000000)" class="budget-preset-btn">35M</button>
+                  <button type="button" onclick="setBudgetPreset(50000000)" class="budget-preset-btn">50M</button>
+                  <button type="button" onclick="setBudgetPreset(75000000)" class="budget-preset-btn">75M</button>
+                  <button type="button" onclick="setBudgetPreset(100000000)" class="budget-preset-btn">100M</button>
+                  <button type="button" onclick="setBudgetPreset(150000000)" class="budget-preset-btn">150M+</button>
                 </div>
-                <!-- MENSUALITÉ ESTIMÉE -->
-                <div id="pv-budget-mensualite" style="margin-top:8px;padding:8px 10px;background:rgba(42,122,75,0.06);border:1px solid rgba(42,122,75,0.15);border-radius:8px;font-size:11px;color:var(--dark);display:none">
-                  📊 Mensualité estimée sur 20 ans (taux 3.5%) : <strong id="pv-mensualite-val" style="color:var(--green)">—</strong>
+                <!-- MENSUALITÉ EN TEMPS RÉEL -->
+                <div id="pv-budget-mensualite" style="margin-top:10px;padding:10px 12px;background:rgba(42,122,75,0.06);border:1px solid rgba(42,122,75,0.2);border-radius:10px;font-size:12px;color:var(--dark)">
+                  📊 Mensualité estimée sur 20 ans (apport 20% · taux 3.5%) : <strong id="pv-mensualite-val" style="color:var(--green);font-size:14px">—</strong>
                 </div>
               </div>
               <div class="field"><label>Apport (F)</label><input type="number" id="pv-apport" placeholder="12000000" oninput="updateProjetDeVie()"></div>
@@ -8829,7 +8835,12 @@ function setBudgetPreset(val){
 // Init jauge au chargement
 function initBudgetJauge(){
   const slider = document.getElementById('pv-budget');
-  if(slider) updateBudgetJauge(slider.value);
+  if(slider){
+    updateBudgetJauge(slider.value);
+    // Forcer l'affichage visible
+    slider.style.display='block';
+    slider.style.width='100%';
+  }
 }
 
 // =============================================
