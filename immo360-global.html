@@ -2932,6 +2932,34 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
             </div>
             <div class="field"><label>Travaux estimés (F)</label><input type="number" id="fp-travaux" value="0" oninput="calcFinancementPlus()"></div>
             <div class="field"><label>Assurance mensuelle (F)</label><input type="number" id="fp-assurance" value="15000" oninput="calcFinancementPlus()"></div>
+
+            <!-- SITUATION ACQUÉREUR — FRAIS NOTAIRE NC -->
+            <div class="field">
+              <label>Votre situation (frais de notaire NC)</label>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
+                <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;cursor:pointer" id="lbl-primo">
+                  <input type="radio" name="fp-situation" id="fp-primo" value="primo" onchange="calcFinancementPlus()" checked>
+                  <div>
+                    <div style="font-size:13px;font-weight:600;color:var(--dark)">🏠 Résidence principale — Primo-accédant</div>
+                    <div style="font-size:11px;color:var(--mid)">Jamais été propriétaire · Taux réduit NC ≈ 4 à 5%</div>
+                  </div>
+                </label>
+                <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;cursor:pointer" id="lbl-rp">
+                  <input type="radio" name="fp-situation" id="fp-rp" value="rp" onchange="calcFinancementPlus()">
+                  <div>
+                    <div style="font-size:13px;font-weight:600;color:var(--dark)">🔑 Résidence principale — Secundo-accédant</div>
+                    <div style="font-size:11px;color:var(--mid)">Déjà propriétaire · Dispositif résidence principale NC (depuis juil. 2025) ≈ 5 à 6%</div>
+                  </div>
+                </label>
+                <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;cursor:pointer" id="lbl-invest">
+                  <input type="radio" name="fp-situation" id="fp-invest" value="invest" onchange="calcFinancementPlus()">
+                  <div>
+                    <div style="font-size:13px;font-weight:600;color:var(--dark)">📈 Investissement / Résidence secondaire</div>
+                    <div style="font-size:11px;color:var(--mid)">Droit commun NC · Taux plein ≈ 9 à 11%</div>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
 
           <!-- PRÉ-APPROBATION -->
@@ -7500,13 +7528,34 @@ function calcFinancementPlus(){
   const travaux=parseInt(document.getElementById('fp-travaux')?.value||0);
   const assurance=parseInt(document.getElementById('fp-assurance')?.value||15000);
   if(!prix)return;
+
+  // VRAIS TAUX NC — Source : AG Gestion, ImmoCal NC 2025
+  const situation=document.querySelector('input[name="fp-situation"]:checked')?.value||'primo';
+  let tauxNotaire, situationLabel, situationDetail;
+  if(situation==='primo'){
+    tauxNotaire=0.045; // ~4.5% : droits réduits RP primo + émoluments + taxes
+    situationLabel='Primo-accédant résidence principale';
+    situationDetail='Droits réduits NC · Taux ≈ 4.5% (émoluments + taxes + droits réduits)';
+  } else if(situation==='rp'){
+    tauxNotaire=0.057; // ~5.7% : dispositif RP depuis juillet 2025 (0.5% au lieu de 4%) + taxes
+    situationLabel='Résidence principale (secundo-accédant)';
+    situationDetail='Dispositif RP NC (juil. 2025–déc. 2027) · Taux ≈ 5.7%';
+  } else {
+    tauxNotaire=0.10; // ~10% : droit commun NC (4% droits + 1% taxe + émoluments + taxes)
+    situationLabel='Investissement / Résidence secondaire';
+    situationDetail='Droit commun NC · Taux ≈ 10% (droits 4% + taxes + émoluments)';
+  }
+
   const capital=prix-apport;
   const mensuel=capital>0?Math.round(capital*taux*Math.pow(1+taux,duree)/(Math.pow(1+taux,duree)-1)):0;
-  const fraisNotaire=Math.round(prix*0.075);
+  const fraisNotaire=Math.round(prix*tauxNotaire);
   const fraisDossier=150000;
   const coutTotal=capital+(mensuel*duree-capital)+fraisNotaire+fraisDossier+travaux;
   const el=document.getElementById('fp-results');
   if(el) el.innerHTML=`
+    <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:11px;color:rgba(255,255,255,0.6)">
+      📋 <strong style="color:rgba(255,255,255,0.9)">${situationLabel}</strong><br>${situationDetail}
+    </div>
     <div class="ai-line"><span>Prix du bien</span><span style="color:var(--gold-light);font-weight:700">${conv(prix)}</span></div>
     <div class="ai-line"><span>Apport personnel</span><span style="color:var(--gold-light)">${conv(apport)}</span></div>
     <div class="ai-line"><span>Montant emprunté</span><span style="color:var(--gold-light)">${conv(capital)}</span></div>
@@ -7515,12 +7564,12 @@ function calcFinancementPlus(){
     <div class="ai-line"><span>+ Assurance</span><span style="color:rgba(255,255,255,0.7)">${conv(assurance)}/mois</span></div>
     <div class="ai-line"><span>= Charge mensuelle totale</span><span style="color:#6fd98a;font-weight:700">${conv(mensuel+assurance)}/mois</span></div>
     <div style="border-top:1px solid rgba(255,255,255,0.1);margin:10px 0"></div>
-    <div class="ai-line"><span>Frais de notaire (7.5%)</span><span style="color:rgba(255,255,255,0.7)">${conv(fraisNotaire)}</span></div>
+    <div class="ai-line"><span>Frais de notaire (${(tauxNotaire*100).toFixed(1)}% NC)</span><span style="color:rgba(255,255,255,0.7)">${conv(fraisNotaire)}</span></div>
     <div class="ai-line"><span>Frais de dossier</span><span style="color:rgba(255,255,255,0.7)">${conv(fraisDossier)}</span></div>
     ${travaux>0?`<div class="ai-line"><span>Travaux</span><span style="color:rgba(255,255,255,0.7)">${conv(travaux)}</span></div>`:''}
     <div style="border-top:1px solid rgba(255,255,255,0.1);margin:10px 0"></div>
     <div class="ai-line"><span style="font-weight:700">💰 Coût réel total du projet</span><span style="color:var(--gold-light);font-weight:800;font-size:18px">${conv(coutTotal)}</span></div>
-    <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px">Sur ${duree/12} ans · Taux ${(taux*12*100).toFixed(1)}% · Sources : BNC, CFF NC</div>`;
+    <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px">Sur ${duree/12} ans · Taux crédit ${(taux*12*100).toFixed(1)}% · Frais notaire NC ${(tauxNotaire*100).toFixed(1)}% · Sources : AG Gestion, ImmoCal NC</div>`;
 
   // Projection valeur future
   const projEl=document.getElementById('fp-projection');
@@ -7827,7 +7876,7 @@ function ouvrirDossierDetail(id){
           <div style="font-size:10px;color:var(--mid)">Prix de vente</div>
         </div>
         <div style="background:#EFF6FF;border-radius:8px;padding:10px;text-align:center">
-          <div style="font-size:14px;font-weight:700;color:#2563EB">${conv(Math.round(d.prix*0.075))}</div>
+          <div style="font-size:14px;font-weight:700;color:#2563EB">${conv(Math.round(d.prix*0.057))}</div>
           <div style="font-size:10px;color:var(--mid)">Frais notaire</div>
         </div>
         <div style="background:#F0FDF4;border-radius:8px;padding:10px;text-align:center">
@@ -8482,7 +8531,9 @@ function simulerFinancementPublic(prix){
   const taux = 3.5/100/12;
   const duree = 240;
   const mensuel = Math.round(capital * taux * Math.pow(1+taux,duree) / (Math.pow(1+taux,duree)-1));
-  const fraisNotaire = Math.round(prix * 0.075);
+  // Taux NC primo-accédant par défaut pour l'estimation publique
+  const fraisNotaire = Math.round(prix * 0.045); // 4.5% primo-accédant NC
+  const fraisNotairePlein = Math.round(prix * 0.10); // 10% droit commun NC
   const coutTotal = prix + fraisNotaire;
 
   ov.innerHTML = `<div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:420px">
@@ -8507,8 +8558,11 @@ function simulerFinancementPublic(prix){
       </div>
     </div>
     <div style="font-size:12px;color:var(--mid);margin-bottom:14px;padding:10px;background:var(--cream);border-radius:8px;line-height:1.6">
-      Frais de notaire estimés : <strong>${conv(fraisNotaire)}</strong><br>
-      Coût total du projet : <strong style="color:var(--dark)">${conv(coutTotal)}</strong>
+      <div style="font-weight:600;color:var(--dark);margin-bottom:4px">Frais de notaire NC estimés :</div>
+      <div>🏠 Primo-accédant résidence principale : <strong style="color:var(--green)">${conv(fraisNotaire)}</strong> <span style="font-size:10px">(≈4.5%)</span></div>
+      <div style="margin-top:2px">📈 Investissement / Résidence secondaire : <strong>${conv(fraisNotairePlein)}</strong> <span style="font-size:10px">(≈10%)</span></div>
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--warm)">Coût total estimé (primo RP) : <strong style="color:var(--dark)">${conv(coutTotal)}</strong></div>
+      <div style="font-size:10px;color:var(--soft);margin-top:4px">Source : AG Gestion · ImmoCal NC 2025</div>
     </div>
     <div style="text-align:center;padding:12px;background:var(--warm);border-radius:10px">
       <div style="font-size:12px;color:var(--mid);margin-bottom:8px">Simulation complète + pré-approbation bancaire</div>
