@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.shell{display:none;height:100vh;overflow:hidden}
+.shell{display:none;height:100vh;overflow:hidden;flex-direction:row}
 
 /* SIDEBAR */
 .sidebar{width:230px;min-width:230px;background:var(--dark);display:flex;flex-direction:column}
@@ -421,7 +421,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 <body>
 <!-- ═══════════════════════════════════
      PAGE D'ACCUEIL — STYLE LEBONCOIN
-═══════════════════════════════════ 
+═══════════════════════════════════ -->
   <div id="landing-page" style="background:#F8F6F1;color:var(--dark);overflow-y:auto;flex:1;display:flex;flex-direction:column">
 
   <!-- ═══ HEADER STICKY ═══ -->
@@ -838,7 +838,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 </div>
 
 <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
-<div class="shell">
+<div class="shell" id="main-shell" style="display:none">
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
@@ -4472,9 +4472,9 @@ function loginAs(profil){
 
 function showLanding(){
   const lp=document.getElementById('landing-page');
-  const shell=document.querySelector('.shell');
-  if(shell) shell.style.display='none';
-  if(lp){lp.style.display='flex';lp.style.flexDirection='column';}
+  const shell=document.getElementById('main-shell')||document.querySelector('.shell');
+  if(shell){ shell.style.display='none'; shell.style.visibility='hidden'; }
+  if(lp){ lp.style.display='flex'; lp.style.flexDirection='column'; lp.style.visibility='visible'; }
   activeQuickFilter='';
   ldFiltered=[...BIENS_DATA];
   ['ld-type','ld-zone','ld-budget'].forEach(id=>{
@@ -4831,9 +4831,9 @@ function contactFromLanding(bienId){
 
 function hideLanding(){
   const lp=document.getElementById('landing-page');
-  const shell=document.querySelector('.shell');
-  if(lp) lp.style.display='none';
-  if(shell) shell.style.display='flex';
+  const shell=document.getElementById('main-shell')||document.querySelector('.shell');
+  if(lp){ lp.style.display='none'; lp.style.visibility='hidden'; }
+  if(shell){ shell.style.display='flex'; shell.style.visibility='visible'; }
 }
 
 // loginAs défini plus haut
