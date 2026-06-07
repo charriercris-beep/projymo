@@ -457,7 +457,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <div onclick="window.scrollTo({top:0,behavior:'smooth'})" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);cursor:pointer">Immo<span style="color:var(--gold)">360</span><span style="font-size:10px;color:var(--mid);font-family:'DM Sans',sans-serif;font-weight:400;margin-left:6px">Nouvelle-Calédonie</span></div>
     <div style="display:flex;align-items:center;gap:10px">
       <button onclick="showLoginModal('buy')" class="btn btn-outline btn-sm" style="font-size:12px">Se connecter</button>
-      <button onclick="showLoginModal('buy')" class="btn btn-gold btn-sm" style="font-size:12px">Commencer gratuitement</button>
+      <button onclick="showLoginModal('buy')" class="btn btn-gold btn-sm" style="font-size:12px">S'inscrire gratuitement</button>
       <button id="hamburger-btn" onclick="toggleMenu('hamburger')" style="display:none;background:none;border:none;font-size:22px;cursor:pointer;padding:4px">☰</button>
     </div>
   </div>
@@ -504,9 +504,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <!-- Accès pro discret -->
       <div style="font-size:12px;color:rgba(255,255,255,0.3)">
         Professionnel ?
-        <span onclick="loginAs('agt')" style="color:rgba(255,255,255,0.55);cursor:pointer;text-decoration:underline">Espace agent</span> ·
-        <span onclick="showLoginModal('agt')" style="color:rgba(255,255,255,0.35);cursor:pointer">Notaires</span> ·
-        <span onclick="showLoginModal('agt')" style="color:rgba(255,255,255,0.35);cursor:pointer">Artisans</span>
+        <span onclick="showLoginModal('agt')" style="color:rgba(255,255,255,0.45);cursor:pointer;text-decoration:underline">Espace professionnel (Agent · Notaire · Artisan · Courtier)</span>
       </div>
     </div>
   </div>
@@ -662,32 +660,72 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <!-- BARRE RECHERCHE PRINCIPALE -->
       <div style="background:#fff;border-radius:16px;padding:18px 20px;border:1px solid var(--warm);margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <select id="ld-type" onchange="landingSearchPublic()" style="flex:1;min-width:130px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
-            <option value="">🏠 Tous types</option>
-            <option>Appartement</option><option>Maison</option><option>Villa</option>
-            <option>Studio</option><option>Terrain</option>
-          </select>
-          <select id="ld-zone" onchange="landingSearchPublic()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
-            <option value="">📍 Toute la NC</option>
-            <optgroup label="Nouméa — Quartiers">
-              <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option><option>Tina</option>
-              <option>Motor Pool</option><option>Magenta</option><option>Faubourg Blanchot</option><option>Centre Ville</option>
-              <option>Trianon</option><option>Robinson</option><option>Rivière Salée</option><option>Vallée du Tir</option>
-              <option>Ducos</option><option>Portes de Fer</option><option>Normandie</option><option>7ème km</option>
-              <option>Receiving</option><option>Montravel</option><option>Tuband</option><option>Kaméré</option>
-            </optgroup>
-            <optgroup label="Grand Nouméa">
-              <option>Dumbéa sur Mer</option><option>Dumbéa Centre</option><option>Dumbéa Nord</option><option>Koutio</option>
-              <option>Katiramona</option><option>Savannah</option><option>Tonghoué</option><option>Pahéa</option>
-              <option>Mont-Dore Centre</option><option>Boulari</option><option>Plum</option>
-              <option>Païta Centre</option><option>Boulouparis</option>
-            </optgroup>
-            <optgroup label="Autres communes NC">
-              <option>La Foa</option><option>Bourail</option><option>Koné</option><option>Voh</option>
-              <option>Koumac</option><option>Poindimié</option><option>Poum</option><option>Kaala-Gomen</option>
-              <option>Maré</option><option>Lifou</option><option>Ouvéa</option>
-            </optgroup>
-          </select>
+
+          <!-- TYPE — MULTI-CHECK -->
+          <div class="ld-filter-group" style="flex:1;min-width:140px">
+            <button type="button" class="ld-dropdown-btn" id="btn-type" onclick="toggleDropdown('dd-type-top')" style="width:100%;justify-content:space-between">
+              🏠 Type &nbsp;<span id="lbl-type-top">Tous</span> ▾
+            </button>
+            <div class="ld-dropdown" id="dd-type-top">
+              <div class="ld-dd-title">Type de bien</div>
+              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Appartement" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏢 Appartement</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Maison" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏠 Maison</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Villa" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏡 Villa</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Studio" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏙️ Studio</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Terrain" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🌿 Terrain</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Local commercial" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏪 Local commercial</label>
+              <button class="ld-dd-clear" onclick="clearMultiFilterTop('type');landingSearchPublic()">✕ Effacer</button>
+            </div>
+          </div>
+
+          <!-- ZONE — MULTI-CHECK -->
+          <div class="ld-filter-group" style="flex:1;min-width:160px">
+            <button type="button" class="ld-dropdown-btn" id="btn-zone" onclick="toggleDropdown('dd-zone-top')" style="width:100%;justify-content:space-between">
+              📍 Zone &nbsp;<span id="lbl-zone-top">Toute la NC</span> ▾
+            </button>
+            <div class="ld-dropdown" id="dd-zone-top" style="min-width:220px;max-height:360px">
+              <div class="ld-dd-title">Secteur / Quartier</div>
+              <div style="padding:4px 14px 6px;font-size:10px;font-weight:700;color:var(--gold)">NOUMÉA</div>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Anse Vata" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Anse Vata</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Baie des Citrons" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Baie des Citrons</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Val Plaisance" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Val Plaisance</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Tina" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Tina</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Motor Pool" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Motor Pool</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Magenta" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Magenta</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Faubourg Blanchot" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Faubourg Blanchot</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Centre Ville" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Centre Ville</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Trianon" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Trianon</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Robinson" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Robinson</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Rivière Salée" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Rivière Salée</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Vallée du Tir" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Vallée du Tir</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Ducos" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Ducos</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Normandie" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Normandie</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="7ème km" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> 7ème km</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Montravel" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Montravel</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Tuband" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Tuband</label>
+              <div style="padding:6px 14px 4px;font-size:10px;font-weight:700;color:var(--gold);border-top:1px solid var(--warm);margin-top:4px">GRAND NOUMÉA</div>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Dumbéa sur Mer" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Dumbéa sur Mer</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Koutio" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Koutio</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Katiramona" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Katiramona</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Savannah" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Savannah</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Tonghoué" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Tonghoué</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Mont-Dore" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Mont-Dore</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Boulari" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Boulari</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Plum" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Plum</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Païta" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Païta</label>
+              <div style="padding:6px 14px 4px;font-size:10px;font-weight:700;color:var(--gold);border-top:1px solid var(--warm);margin-top:4px">AUTRES COMMUNES</div>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Bourail" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Bourail</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Koné" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Koné</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Koumac" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Koumac</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Maré" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Maré</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Lifou" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Lifou</label>
+              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Ouvéa" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Ouvéa</label>
+              <button class="ld-dd-clear" onclick="clearMultiFilterTop('zone');landingSearchPublic()">✕ Effacer</button>
+            </div>
+          </div>
+
+          <!-- (suite : jauge budget + bouton) - ne pas modifier ces éléments -->
+          
           <div style="flex:1;min-width:180px;background:#fff;border:1px solid var(--warm);border-radius:8px;padding:8px 14px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
               <span style="font-size:12px;color:var(--mid)">💰 Budget max</span>
@@ -706,39 +744,6 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <!-- FILTRES AVANCÉS -->
         <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--warm)">
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-
-            <!-- TYPE -->
-            <div class="ld-filter-group">
-              <select id="ld-type" onchange="landingSearchPublic()" class="ld-filter-select">
-                <option value="">🏠 Tous types</option>
-                <option>Appartement</option><option>Maison</option><option>Villa</option>
-                <option>Studio</option><option>Terrain</option><option>Local commercial</option>
-              </select>
-            </div>
-
-            <!-- ZONE -->
-            <div class="ld-filter-group" style="min-width:160px">
-              <select id="ld-zone" onchange="landingSearchPublic()" class="ld-filter-select">
-                <option value="">📍 Toute la NC</option>
-                <optgroup label="Nouméa — Quartiers">
-                  <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option><option>Tina</option>
-                  <option>Motor Pool</option><option>Magenta</option><option>Faubourg Blanchot</option><option>Centre Ville</option>
-                  <option>Trianon</option><option>Robinson</option><option>Rivière Salée</option><option>Vallée du Tir</option>
-                  <option>Ducos</option><option>Portes de Fer</option><option>Normandie</option><option>7ème km</option>
-                  <option>Receiving</option><option>Montravel</option><option>Tuband</option><option>Kaméré</option>
-                </optgroup>
-                <optgroup label="Grand Nouméa">
-                  <option>Dumbéa sur Mer</option><option>Dumbéa Centre</option><option>Dumbéa Nord</option><option>Koutio</option>
-                  <option>Katiramona</option><option>Savannah</option><option>Tonghoué</option><option>Pahéa</option>
-                  <option>Mont-Dore Centre</option><option>Boulari</option><option>Plum</option><option>Païta Centre</option>
-                </optgroup>
-                <optgroup label="Autres communes NC">
-                  <option>Boulouparis</option><option>La Foa</option><option>Bourail</option><option>Koné</option>
-                  <option>Voh</option><option>Koumac</option><option>Poindimié</option><option>Poum</option>
-                  <option>Maré</option><option>Lifou</option><option>Ouvéa</option>
-                </optgroup>
-              </select>
-            </div>
 
             <!-- PIÈCES — MULTI-CHECK -->
             <div class="ld-filter-group">
@@ -994,23 +999,37 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <div id="form-register" style="padding:20px 28px;display:none">
         <!-- CHOIX PROFIL -->
         <div style="margin-bottom:16px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Je suis</label>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-            <div class="reg-profil-opt active" id="rp-buy" onclick="selectRegProfil('buy')" style="border:1.5px solid var(--gold);background:rgba(184,146,42,0.06);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s">
-              <div style="font-size:20px;margin-bottom:3px">🔍</div>
-              <div style="font-size:11px;font-weight:600;color:var(--dark)">Acheteur</div>
-              <div style="font-size:9px;color:var(--mid)">Je cherche</div>
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--mid);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Je suis</label>
+
+          <!-- PARTICULIER -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div class="reg-profil-opt active" id="rp-buy" onclick="selectRegProfil('buy')" style="border:1.5px solid var(--gold);background:rgba(184,146,42,0.06);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s">
+              <div style="font-size:24px;margin-bottom:5px">🔍</div>
+              <div style="font-size:13px;font-weight:700;color:var(--dark)">Acheteur</div>
+              <div style="font-size:10px;color:var(--mid);margin-top:2px">Je cherche un bien</div>
             </div>
-            <div class="reg-profil-opt" id="rp-sell" onclick="selectRegProfil('sell')" style="border:1.5px solid var(--warm);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s">
-              <div style="font-size:20px;margin-bottom:3px">🏠</div>
-              <div style="font-size:11px;font-weight:600;color:var(--dark)">Vendeur</div>
-              <div style="font-size:9px;color:var(--mid)">Je vends</div>
+            <div class="reg-profil-opt" id="rp-sell" onclick="selectRegProfil('sell')" style="border:1.5px solid var(--warm);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s">
+              <div style="font-size:24px;margin-bottom:5px">🏠</div>
+              <div style="font-size:13px;font-weight:700;color:var(--dark)">Vendeur</div>
+              <div style="font-size:10px;color:var(--mid);margin-top:2px">Je vends un bien</div>
             </div>
-            <div class="reg-profil-opt" id="rp-agt" onclick="selectRegProfil('agt')" style="border:1.5px solid var(--warm);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s">
-              <div style="font-size:20px;margin-bottom:3px">🤝</div>
-              <div style="font-size:11px;font-weight:600;color:var(--dark)">Agent</div>
-              <div style="font-size:9px;color:var(--mid)">Pro immo</div>
+          </div>
+
+          <!-- SÉPARATEUR -->
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <div style="flex:1;height:1px;background:var(--warm)"></div>
+            <span style="font-size:10px;font-weight:600;color:var(--soft);text-transform:uppercase;letter-spacing:1px">Professionnel</span>
+            <div style="flex:1;height:1px;background:var(--warm)"></div>
+          </div>
+
+          <!-- PROFESSIONNEL — un seul bouton large -->
+          <div class="reg-profil-opt" id="rp-agt" onclick="selectRegProfil('agt')" style="border:1.5px solid var(--warm);border-radius:10px;padding:12px 16px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:12px">
+            <div style="font-size:28px;flex-shrink:0">💼</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700;color:var(--dark)">Professionnel de l'immobilier</div>
+              <div style="font-size:10px;color:var(--mid);margin-top:2px">(Agent immobilier · Notaire · Promoteur · Artisan · Courtier)</div>
             </div>
+            <div style="font-size:16px;color:var(--soft)">›</div>
           </div>
         </div>
         <div class="field-row">
@@ -4916,8 +4935,9 @@ function resetAllFilters(){
 }
 
 function landingSearch(){
-  const type=document.getElementById('ld-type')?.value||'';
-  const zone=document.getElementById('ld-zone')?.value||'';
+  // Multi-filtres top
+  const typeVals=getMultiFilterTopValues('type');
+  const zoneVals=getMultiFilterTopValues('zone');
   const budgetVal=parseInt(document.getElementById('ld-budget-range')?.value||200000000);
   const budget=budgetVal>=200000000?0:budgetVal;
   const surface=parseInt(document.getElementById('ld-surface')?.value||0);
@@ -8702,9 +8722,11 @@ function filtreRapidePublic(feature){
 function resetFiltresPublic(){
   filtreRapideActif='';
   // Reset tous les filtres
-  ['ld-type','ld-zone','ld-dpe'].forEach(id=>{
+  ['ld-dpe'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
+  clearMultiFilterTop('type');
+  clearMultiFilterTop('zone');
   ['pieces','surface','etat','equip'].forEach(type=>clearMultiFilter(type));
   // Reset jauge budget
   const budgetSlider=document.getElementById('ld-budget');
@@ -8757,8 +8779,8 @@ function buildLandingBiensPublic(){
 
   let biens=BIENS_DATA.filter(b=>{
     if(b.statut!=='En vente') return false;
-    if(type&&b.type!==type) return false;
-    if(zone&&!(b.quartier||'').includes(zone)&&!(b.ville||'').includes(zone)) return false;
+    if(typeVals.length&&!typeVals.includes(b.type||'')) return false;
+    if(zoneVals.length&&!zoneVals.some(z=>(b.quartier||'').includes(z)||(b.ville||'').includes(z))) return false;
     if(budget>0&&b.prix>budget) return false;
     // Pièces : correspond à l'une des valeurs cochées
     if(piecesVals.length){
@@ -9084,6 +9106,32 @@ document.addEventListener('click', function(e){
     document.querySelectorAll('.ld-dropdown.open').forEach(d=>d.classList.remove('open'));
   }
 });
+
+function updateMultiFilterTop(type){
+  const checks = [...document.querySelectorAll(`input[name="ld-${type}"]:checked`)];
+  const btn = document.getElementById('btn-'+type);
+  const lbl = document.getElementById(`lbl-${type}-top`);
+  if(!lbl) return;
+  if(checks.length===0){
+    lbl.textContent = type==='type'?'Tous':'Toute la NC';
+    if(btn) btn.classList.remove('has-selection');
+  } else if(checks.length===1){
+    lbl.textContent = checks[0].value.substring(0,14);
+    if(btn) btn.classList.add('has-selection');
+  } else {
+    lbl.textContent = checks.length+' sélectionnés';
+    if(btn) btn.classList.add('has-selection');
+  }
+}
+
+function clearMultiFilterTop(type){
+  document.querySelectorAll(`input[name="ld-${type}"]`).forEach(cb=>cb.checked=false);
+  updateMultiFilterTop(type);
+}
+
+function getMultiFilterTopValues(type){
+  return [...document.querySelectorAll(`input[name="ld-${type}"]:checked`)].map(cb=>cb.value);
+}
 
 function toggleDropdown(id){
   const dd = document.getElementById(id);
