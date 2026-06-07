@@ -1130,7 +1130,7 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
                 </div>
                 <div class="doc-cat-body" id="body-copro" style="display:none">
                   <div class="doc-drop-zone" onclick="addDocToCategory('copro')" data-cat="copro">
-                    <span style="font-size:11px;color:var(--mid)">+ PV d'AG · Règlement copro · Carnet d'entretien · Budget prévisionnel</span>
+                    <span style="font-size:11px;color:var(--mid)">+ PV d\'AG · Règlement copro · Carnet d'entretien · Budget prévisionnel</span>
                   </div>
                   <div class="doc-list" id="list-copro"></div>
                 </div>
@@ -2690,6 +2690,216 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
+    <!-- ==================== PARCOURS ACHAT ==================== -->
+    <div class="panel" id="panel-parcours">
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🗺️ Mon Parcours d'Achat</h2>
+        <p style="font-size:13px;color:var(--mid)">Votre guide étape par étape — vous saurez toujours quoi faire ensuite</p>
+      </div>
+
+      <!-- PROGRESSION GLOBALE -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-size:14px;font-weight:600;color:var(--dark)">Avancement de votre projet</div>
+          <div style="font-size:20px;font-weight:800;color:var(--gold)" id="parcours-pct">0%</div>
+        </div>
+        <div style="height:10px;background:var(--warm);border-radius:5px;overflow:hidden;margin-bottom:6px">
+          <div id="parcours-bar" style="height:100%;background:linear-gradient(90deg,var(--gold),#2A7A4B);border-radius:5px;width:0%;transition:.6s"></div>
+        </div>
+        <div style="font-size:11px;color:var(--mid)" id="parcours-next">Commencez par définir votre projet d'achat</div>
+      </div>
+
+      <!-- ÉTAPES CHECKLIST -->
+      <div id="parcours-steps" style="display:grid;gap:10px"></div>
+    </div>
+
+    <!-- ==================== COMPARATEUR BIENS ==================== -->
+    <div class="panel" id="panel-comparateur">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">⚖️ Comparateur de biens</h2>
+          <p style="font-size:13px;color:var(--mid)">Comparez jusqu'à 3 biens côte à côte — plus d'onglets ouverts</p>
+        </div>
+        <button class="btn btn-gold" onclick="showAddCompareModal()">+ Ajouter un bien</button>
+      </div>
+
+      <div id="comparateur-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
+
+      <!-- RÉSUMÉ COMPARATIF -->
+      <div id="comparateur-resume" style="display:none;margin-top:20px">
+        <div class="card">
+          <div class="card-title">🏆 Recommandation IA</div>
+          <div id="comparateur-ia-result"></div>
+        </div>
+      </div>
+
+      <!-- MODAL AJOUT -->
+      <div id="compare-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">Ajouter un bien à comparer</h3>
+            <button onclick="document.getElementById('compare-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+          </div>
+          <p style="font-size:13px;color:var(--mid);margin-bottom:14px">Choisissez parmi les biens disponibles :</p>
+          <div id="compare-biens-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ASSISTANT VISITE ==================== -->
+    <div class="panel" id="panel-assistantvisite">
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🔍 Assistant Visite</h2>
+        <p style="font-size:13px;color:var(--mid)">Checklist, notes et comparaison pendant et après vos visites</p>
+      </div>
+
+      <div class="grid2">
+        <!-- CHECKLIST VISITE -->
+        <div>
+          <div class="card">
+            <div class="card-title">✅ Checklist de visite</div>
+            <div style="font-size:12px;color:var(--mid);margin-bottom:12px">Cochée automatiquement selon votre avancement</div>
+            <div id="checklist-visite"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">📸 Photos annotées</div>
+            <div class="upload-zone" onclick="document.getElementById('visite-photos').click()" style="margin-bottom:10px">
+              <input type="file" id="visite-photos" accept="image/*" multiple style="display:none" onchange="handleVisitePhotos(event)">
+              <div style="font-size:28px;margin-bottom:6px">📸</div>
+              <div style="font-size:12px;color:var(--mid)">Ajoutez vos photos de visite</div>
+            </div>
+            <div id="visite-photos-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"></div>
+          </div>
+        </div>
+
+        <!-- NOTES + AVIS -->
+        <div>
+          <div class="card">
+            <div class="card-title">💬 Mes notes de visite</div>
+            <div class="field"><label>Bien visité</label><input type="text" id="av-bien" placeholder="Appartement Anse Vata..."></div>
+            <div class="field"><label>Date de visite</label><input type="date" id="av-date"></div>
+            <div class="field"><label>👍 Ce qui m'a plu</label>
+              <textarea id="av-positif" rows="3" placeholder="Luminosité, vue, cuisine moderne..."></textarea>
+            </div>
+            <div class="field"><label>👎 Ce qui m'inquiète</label>
+              <textarea id="av-negatif" rows="3" placeholder="Travaux à prévoir, charges élevées, bruit..."></textarea>
+            </div>
+            <div class="field"><label>Mon impression générale</label>
+              <div style="display:flex;gap:8px;margin-top:4px">
+                <button class="av-note-btn" onclick="setAvNote(this,1)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Pas pour moi">😐</button>
+                <button class="av-note-btn" onclick="setAvNote(this,2)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Peut-être">🤔</button>
+                <button class="av-note-btn" onclick="setAvNote(this,3)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Intéressant">😊</button>
+                <button class="av-note-btn" onclick="setAvNote(this,4)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Coup de cœur">❤️</button>
+              </div>
+            </div>
+            <button class="btn btn-gold btn-full" onclick="saveAssistantVisite()">💾 Sauvegarder mes notes</button>
+          </div>
+
+          <!-- BIENS VISITÉS -->
+          <div class="card">
+            <div class="card-title">📋 Biens visités</div>
+            <div id="biens-visites-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FINANCEMENT COMPLET ==================== -->
+    <div class="panel" id="panel-financementplus">
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">💰 Financement & Coût Réel</h2>
+        <p style="font-size:13px;color:var(--mid)">Le coût total réel de votre projet — mensualités, notaire, travaux, tout compris</p>
+      </div>
+
+      <div class="grid2">
+        <!-- SIMULATEUR ÉTENDU -->
+        <div>
+          <div class="card">
+            <div class="card-title">🏦 Simulation complète</div>
+            <div class="field"><label>Prix du bien (F)</label><input type="number" id="fp-prix" value="45000000" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Apport personnel (F)</label><input type="number" id="fp-apport" value="9000000" oninput="calcFinancementPlus()"></div>
+            <div class="field-row">
+              <div class="field"><label>Taux (%)</label><input type="number" id="fp-taux" value="3.5" step="0.1" oninput="calcFinancementPlus()"></div>
+              <div class="field"><label>Durée (ans)</label>
+                <select id="fp-duree" onchange="calcFinancementPlus()">
+                  <option value="10">10 ans</option><option value="15">15 ans</option>
+                  <option value="20" selected>20 ans</option><option value="25">25 ans</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label>Travaux estimés (F)</label><input type="number" id="fp-travaux" value="0" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Assurance mensuelle (F)</label><input type="number" id="fp-assurance" value="15000" oninput="calcFinancementPlus()"></div>
+          </div>
+
+          <!-- PRÉ-APPROBATION -->
+          <div class="card">
+            <div class="card-title">🏦 Pré-approbation bancaire</div>
+            <p style="font-size:12px;color:var(--mid);margin-bottom:12px">Estimez votre capacité d'emprunt et initiez votre dossier</p>
+            <div class="field-row">
+              <div class="field"><label>Revenus nets mensuels (F)</label><input type="number" id="pa-revenus" value="400000" oninput="calcPreAppro()"></div>
+              <div class="field"><label>Charges mensuelles (F)</label><input type="number" id="pa-charges" value="50000" oninput="calcPreAppro()"></div>
+            </div>
+            <div id="pa-result" style="background:var(--warm);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="font-size:11px;color:var(--mid);margin-bottom:6px">Capacité d'emprunt estimée</div>
+              <div style="font-size:24px;font-weight:800;color:var(--gold)" id="pa-capacite">—</div>
+              <div style="font-size:11px;color:var(--mid);margin-top:3px" id="pa-taux-endettement">Taux d'endettement : —</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="border:1px solid var(--warm);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showPreApproContact('BNC')">
+                <div style="font-size:24px">🏦</div><div><div style="font-size:13px;font-weight:600">BNC — Banque de NC</div><div style="font-size:11px;color:var(--mid)">Spécialiste marché NC · Taux dès 3.2%</div></div>
+                <button class="btn btn-gold btn-sm" style="margin-left:auto">Contactez →</button>
+              </div>
+              <div style="border:1px solid var(--warm);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showPreApproContact('Courtier')">
+                <div style="font-size:24px">🤝</div><div><div style="font-size:13px;font-weight:600">Courtier partenaire</div><div style="font-size:11px;color:var(--mid)">Compare toutes les banques NC</div></div>
+                <button class="btn btn-outline btn-sm" style="margin-left:auto">En savoir +</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RÉSULTATS COÛT RÉEL -->
+        <div>
+          <div class="ai-box">
+            <h4>💡 Coût réel total de votre projet</h4>
+            <div id="fp-results"></div>
+          </div>
+
+          <!-- PROJECTION VALEUR FUTURE -->
+          <div class="card">
+            <div class="card-title">📈 Projection valeur future</div>
+            <div style="font-size:12px;color:var(--mid);margin-bottom:12px">Basée sur les tendances du marché NC</div>
+            <div id="fp-projection"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SUIVI DOSSIER ACHETEUR ==================== -->
+    <div class="panel" id="panel-suiviachat">
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">📍 Où en est mon achat ?</h2>
+        <p style="font-size:13px;color:var(--mid)">Statut en temps réel de votre dossier — plus jamais d'incertitude</p>
+      </div>
+
+      <!-- PIPELINE ACHAT -->
+      <div class="card" style="margin-bottom:20px">
+        <div id="suivi-pipeline"></div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-title">🔔 Dernières notifications</div>
+        <div id="suivi-notifs"></div>
+      </div>
+
+      <!-- DOCUMENTS À FOURNIR -->
+      <div class="card">
+        <div class="card-title">📁 Documents à préparer</div>
+        <div id="suivi-documents"></div>
+      </div>
+    </div>
+
     <!-- ==================== STATS ==================== -->
     <div class="panel" id="panel-stats">
       <div class="grid4" style="margin-bottom:18px" id="stats-kpis"></div>
@@ -2873,8 +3083,9 @@ const MENUS = {
     {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
   ],
   buy:[
-    {s:'Recherche',items:[{ico:'🏠',k:'dashboard'},{ico:'🔭',k:'marketplace'},{ico:'💰',k:'financement'},{ico:'🌟',k:'projetdevie'}]},
-    {s:'Mon espace',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📅',k:'rdv'}]},
+    {s:'Mon projet',items:[{ico:'🌟',k:'projetdevie'},{ico:'🗺️',k:'parcours'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'}]},
+    {s:'Mes outils',items:[{ico:'⚖️',k:'comparateur'},{ico:'✍️',k:'assistantvisite'},{ico:'💰',k:'financementplus'},{ico:'📍',k:'suiviachat'}]},
+    {s:'Services',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'}]},
   ],
   agt:[
     {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'📋',k:'mandats'},{ico:'🤖',k:'matching'},{ico:'👥',k:'crm'}]},
@@ -2882,7 +3093,7 @@ const MENUS = {
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',parcours:'Mon Parcours',comparateur:'Comparateur',assistantvisite:'Assistant Visite',financementplus:'Financement Réel',suiviachat:'Suivi de mon achat',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
@@ -2936,6 +3147,11 @@ function go(panel){
   if(panel==='mandats') buildMandats();
   if(panel==='visites') buildVisites();
   if(panel==='statsannonces') buildStatsAnnonces();
+  if(panel==='parcours') buildParcours();
+  if(panel==='comparateur') buildComparateur();
+  if(panel==='assistantvisite') buildAssistantVisite();
+  if(panel==='financementplus') buildFinancementPlus();
+  if(panel==='suiviachat') buildSuiviAchat();
   if(panel==='crm') buildCRM();
   if(panel==='notaire') buildNotaire();
   if(panel==='projetdevie') updateProjetDeVie();
@@ -6867,6 +7083,418 @@ function renderStatsEvolution(){
       <div style="font-size:9px;color:var(--mid)">${jours[i]}</div>
     </div>`).join('')}
   </div>`;
+}
+
+// =============================================
+// PARCOURS D'ACHAT GUIDÉ
+// =============================================
+const PARCOURS_STEPS = [
+  {id:'projet',label:'Définir mon projet',desc:'Budget, localisation, critères de vie',icon:'🎯',panel:'projetdevie',done:false},
+  {id:'matching',label:'Trouver mes biens',desc:'Matching IA — biens compatibles',icon:'🤖',panel:'marketplace',done:false},
+  {id:'visite',label:'Planifier une visite',desc:'Agenda, confirmation, assistant visite',icon:'🏠',panel:'rdv',done:false},
+  {id:"assistantvisite",label:"Compléter l'assistant visite",desc:"Checklist, notes, photos annotées",icon:"✍️",panel:"assistantvisite",done:false},
+  {id:'comparer',label:'Comparer les biens',desc:'Comparateur IA — choisir sans stress',icon:'⚖️',panel:'comparateur',done:false},
+  {id:'financement',label:'Simuler le financement',desc:'Coût réel total, pré-approbation',icon:'💰',panel:'financementplus',done:false},
+  {id:"offre",label:"Faire une offre",desc:"Rédiger et envoyer une offre d\'achat",icon:"✉️",panel:"messagerie",done:false},
+  {id:'compromis',label:'Signer le compromis',desc:'Avec le notaire et le vendeur',icon:'📋',panel:'notaire',done:false},
+  {id:"acte",label:"Signer l'acte définitif",desc:"Vous êtes propriétaire !",icon:"🎉",panel:"notaire",done:false},
+];
+
+let parcoursProgress = {projet:false,matching:false,visite:false,assistantvisite:false,comparer:false,financement:false,offre:false,compromis:false,acte:false};
+
+function buildParcours(){
+  renderParcoursSteps();
+  updateParcoursProgress();
+  setTimeout(applyMobileLayout,50);
+}
+
+function renderParcoursSteps(){
+  const el=document.getElementById('parcours-steps');
+  if(!el)return;
+  el.innerHTML=PARCOURS_STEPS.map((step,i)=>{
+    const done=parcoursProgress[step.id];
+    const isNext=!done&&i>0&&parcoursProgress[PARCOURS_STEPS[i-1]?.id];
+    const locked=i>0&&!parcoursProgress[PARCOURS_STEPS[i-1]?.id]&&!done;
+    return `<div style="background:#fff;border:${done?'2px solid #16A34A':isNext?'2px solid var(--gold)':'1px solid #E5E7EB'};border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px;cursor:${locked?'default':'pointer'};opacity:${locked?0.5:1};transition:.2s" onclick="${locked?'':('goParcoursStep("'+step.id+'")')}">
+      <div style="width:44px;height:44px;border-radius:50%;background:${done?'#DCFCE7':isNext?'rgba(184,146,42,0.12)':'#F9FAFB'};border:2px solid ${done?'#16A34A':isNext?'var(--gold)':'#E5E7EB'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${done?'✅':step.icon}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700;color:${done?'#16A34A':isNext?'var(--gold)':'var(--dark)'}">${i+1}. ${step.label}</div>
+        <div style="font-size:11px;color:var(--mid);margin-top:2px">${step.desc}</div>
+      </div>
+      ${done?'<span style="color:#16A34A;font-size:20px">✓</span>':isNext?'<button class="btn btn-gold btn-sm" style="white-space:nowrap">Faire →</button>':'<span style="color:#D1D5DB;font-size:16px">›</span>'}
+    </div>`;
+  }).join('');
+}
+
+function goParcoursStep(stepId){
+  const step=PARCOURS_STEPS.find(s=>s.id===stepId);
+  if(!step)return;
+  parcoursProgress[stepId]=true;
+  go(step.panel);
+  updateParcoursProgress();
+}
+
+function updateParcoursProgress(){
+  const done=Object.values(parcoursProgress).filter(Boolean).length;
+  const total=PARCOURS_STEPS.length;
+  const pct=Math.round((done/total)*100);
+  const barEl=document.getElementById('parcours-bar');
+  const pctEl=document.getElementById('parcours-pct');
+  const nextEl=document.getElementById('parcours-next');
+  if(barEl) barEl.style.width=pct+'%';
+  if(pctEl) pctEl.textContent=pct+'%';
+  const nextStep=PARCOURS_STEPS.find(s=>!parcoursProgress[s.id]);
+  if(nextEl) nextEl.textContent=nextStep?('Prochaine étape : '+nextStep.label):'🎉 Projet complété !';
+  renderParcoursSteps();
+}
+
+// =============================================
+// COMPARATEUR DE BIENS
+// =============================================
+let BIENS_COMPARES = [];
+
+function buildComparateur(){
+  renderComparateur();
+  setTimeout(applyMobileLayout,50);
+}
+
+function showAddCompareModal(){
+  if(BIENS_COMPARES.length>=3){alert('Maximum 3 biens à comparer');return;}
+  const modal=document.getElementById('compare-modal');
+  const list=document.getElementById('compare-biens-list');
+  if(!modal||!list)return;
+  const disponibles=BIENS_DATA.filter(b=>!BIENS_COMPARES.find(c=>c.id===b.id));
+  list.innerHTML=disponibles.map(b=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--warm);border-radius:8px;cursor:pointer;transition:.15s" onclick="addToCompare(${b.id})" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+      <div style="font-size:24px">${b.photos?b.photos[0]:'🏠'}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">${b.titre||b.type+' '+b.quartier}</div><div style="font-size:11px;color:var(--mid)">${conv(b.prix)} · ${b.surface}m² · ${b.quartier}</div></div>
+      <span style="color:var(--gold);font-size:18px">+</span>
+    </div>`).join('');
+  modal.style.display='flex';
+}
+
+function addToCompare(id){
+  const b=BIENS_DATA.find(x=>x.id===id);
+  if(b&&!BIENS_COMPARES.find(c=>c.id===id)){BIENS_COMPARES.push(b);}
+  document.getElementById('compare-modal').style.display='none';
+  renderComparateur();
+}
+
+function removeFromCompare(id){
+  BIENS_COMPARES=BIENS_COMPARES.filter(b=>b.id!==id);
+  renderComparateur();
+}
+
+function renderComparateur(){
+  const el=document.getElementById('comparateur-grid');
+  const resume=document.getElementById('comparateur-resume');
+  if(!el)return;
+
+  if(!BIENS_COMPARES.length){
+    el.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--mid)"><div style="font-size:48px;margin-bottom:12px">⚖️</div><div style="font-size:15px;font-weight:500;margin-bottom:8px">Aucun bien sélectionné</div><div style="font-size:13px;margin-bottom:16px">Ajoutez jusqu'à 3 biens pour les comparer</div><button class="btn btn-gold" onclick="showAddCompareModal()">+ Ajouter un bien</button></div>`;
+    if(resume) resume.style.display='none';
+    return;
+  }
+
+  // Scores de projet (si projet de vie défini)
+  const rows=[
+    {label:'Prix',key:'prix',format:b=>conv(b.prix)},
+    {label:'Surface',key:'surface',format:b=>b.surface+'m²'},
+    {label:'Pièces',key:'pieces',format:b=>b.pieces||'—'},
+    {label:'Prix/m²',key:'pm2',format:b=>conv(Math.round(b.prix/(b.surface||1)))},
+    {label:'DPE',key:'dpe',format:b=>b.dpe||'NC'},
+    {label:'État',key:'etat',format:b=>b.etat||'Bon état'},
+    {label:'Quartier',key:'quartier',format:b=>b.quartier||b.ville||'NC'},
+    {label:'Équipements',key:'features',format:b=>(b.features||[]).slice(0,2).join(', ')||'—'},
+  ];
+
+  // Trouver le meilleur/moins cher
+  const minPrix=Math.min(...BIENS_COMPARES.map(b=>b.prix));
+  const maxSurf=Math.max(...BIENS_COMPARES.map(b=>b.surface||0));
+
+  el.innerHTML=`
+    <!-- EN-TÊTES -->
+    <div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${BIENS_COMPARES.length+1},1fr);gap:10px">
+      <div></div>
+      ${BIENS_COMPARES.map(b=>`
+      <div style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;text-align:center;position:relative">
+        <button onclick="removeFromCompare(${b.id})" style="position:absolute;top:6px;right:6px;background:none;border:none;color:var(--mid);cursor:pointer;font-size:14px">✕</button>
+        <div style="font-size:28px;margin-bottom:6px">${b.photos?b.photos[0]:'🏠'}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:4px">${(b.titre||b.type+' '+b.quartier).substring(0,30)}</div>
+        ${b.prix===minPrix?'<span style="background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700">💚 Meilleur prix</span>':''}
+        ${b.surface===maxSurf?'<span style="background:#EFF6FF;color:#1D4ED8;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700">📐 Plus grand</span>':''}
+      </div>`).join('')}
+    </div>
+    <!-- LIGNES DE COMPARAISON -->
+    ${rows.map((row,ri)=>`
+    <div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${BIENS_COMPARES.length+1},1fr);gap:10px">
+      <div style="display:flex;align-items:center;padding:10px 12px;background:${ri%2===0?'var(--warm)':'#fff'};border-radius:8px;font-size:12px;font-weight:600;color:var(--mid)">${row.label}</div>
+      ${BIENS_COMPARES.map(b=>`
+      <div style="display:flex;align-items:center;justify-content:center;padding:10px;background:${ri%2===0?'var(--warm)':'#fff'};border-radius:8px;font-size:13px;font-weight:600;color:var(--dark);text-align:center">${row.format(b)}</div>`).join('')}
+    </div>`).join('')}
+    <!-- BOUTONS -->
+    <div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${BIENS_COMPARES.length+1},1fr);gap:10px">
+      <div></div>
+      ${BIENS_COMPARES.map(b=>`<button class="btn btn-gold btn-full btn-sm" onclick="openLandingBien(${b.id})">Voir l'annonce →</button>`).join('')}
+    </div>`;
+
+  // Recommandation IA
+  if(resume&&BIENS_COMPARES.length>=2){
+    resume.style.display='block';
+    const best=BIENS_COMPARES.reduce((a,b)=>
+      (a.surface/a.prix)>(b.surface/b.prix)?a:b
+    );
+    document.getElementById('comparateur-ia-result').innerHTML=`
+      <div style="display:flex;align-items:start;gap:12px;padding:14px;background:var(--warm);border-radius:10px">
+        <div style="font-size:32px">${best.photos?best.photos[0]:'🏠'}</div>
+        <div><div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px">${best.titre||best.type+' '+best.quartier}</div>
+        <div style="font-size:12px;color:var(--mid);line-height:1.6">Ce bien offre le meilleur rapport surface/prix avec <strong>${best.surface}m² à ${conv(Math.round(best.prix/best.surface))}/m²</strong>. ${best.prix===minPrix?'C\'est également le moins cher de votre sélection.':''}</div>
+        <button class="btn btn-gold btn-sm" style="margin-top:8px" onclick="openLandingBien(${best.id})">Voir ce bien →</button></div>
+      </div>`;
+  }
+}
+
+// =============================================
+// ASSISTANT VISITE
+// =============================================
+let avNote = 0;
+let biensVisites = [];
+let visitesPhotos = [];
+
+const CHECKLIST_VISITE = [
+  {id:'exterieur',label:'Extérieur & façade',items:['État de la façade','Toiture visible','Jardins/parties communes','Accès et stationnement']},
+  {id:'entree',label:'Entrée & circulation',items:['Hall d\'entrée','Escaliers / Ascenseur','Isolation phonique','Boîtes aux lettres']},
+  {id:'salon',label:'Séjour / Salon',items:['Luminosité naturelle','État des murs et plafond','État du sol','Orientation et vue']},
+  {id:'cuisine',label:'Cuisine',items:['État général cuisine','Équipements inclus','Ventilation','Raccordements eau/gaz']},
+  {id:'chambre',label:'Chambres',items:['Surface de chaque chambre','Placards / Rangements','Fenêtres et lumière','Isolation phonique']},
+  {id:'sdb',label:'Salle de bain / WC',items:['État carrelage et sanitaires','Ventilation','Chauffe-eau','WC séparé ou non']},
+  {id:'technique',label:'Éléments techniques',items:['Tableau électrique','Compteur eau','Chaudière / Clim','DPE affiché']},
+  {id:'charges',label:'Charges & copropriété',items:['Montant charges mensuelles','Fonds travaux','Derniers PV d\'AG','Procédures en cours']},
+];
+
+function buildAssistantVisite(){
+  renderChecklistVisite();
+  renderBiensVisites();
+  setTimeout(applyMobileLayout,50);
+}
+
+function renderChecklistVisite(){
+  const el=document.getElementById('checklist-visite');
+  if(!el)return;
+  el.innerHTML=CHECKLIST_VISITE.map(section=>`
+    <div style="margin-bottom:12px">
+      <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;padding:6px 8px;background:var(--warm);border-radius:6px">${section.label}</div>
+      ${section.items.map(item=>`
+      <label style="display:flex;align-items:center;gap:8px;padding:5px 6px;cursor:pointer;border-radius:5px;transition:.15s;font-size:12px;color:var(--dark)" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background=''">
+        <input type="checkbox" style="accent-color:var(--gold);width:14px;height:14px;cursor:pointer"> ${item}
+      </label>`).join('')}
+    </div>`).join('');
+}
+
+function setAvNote(btn,note){
+  avNote=note;
+  document.querySelectorAll('.av-note-btn').forEach(b=>{
+    b.style.background=b===btn?'rgba(184,146,42,0.12)':'#fff';
+    b.style.borderColor=b===btn?'var(--gold)':'var(--warm)';
+  });
+}
+
+function handleVisitePhotos(event){
+  Array.from(event.target.files).slice(0,9-visitesPhotos.length).forEach(f=>{
+    visitesPhotos.push({url:URL.createObjectURL(f),name:f.name});
+  });
+  const grid=document.getElementById('visite-photos-grid');
+  if(grid) grid.innerHTML=visitesPhotos.map((p,i)=>`
+    <div style="aspect-ratio:1;position:relative;border-radius:6px;overflow:hidden">
+      <img src="${p.url}" style="width:100%;height:100%;object-fit:cover">
+      <div onclick="visitesPhotos.splice(${i},1);handleVisitePhotos({target:{files:[]}})" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.6);color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px">✕</div>
+    </div>`).join('');
+}
+
+function saveAssistantVisite(){
+  const bien=document.getElementById('av-bien')?.value?.trim();
+  const date=document.getElementById('av-date')?.value;
+  if(!bien){alert('Veuillez indiquer le bien visité');return;}
+  const notes={emoji:['😐','🤔','😊','❤️'][avNote-1]||'😐',positif:document.getElementById('av-positif')?.value||'',negatif:document.getElementById('av-negatif')?.value||''};
+  biensVisites.unshift({id:Date.now(),bien,date:date||new Date().toISOString().split('T')[0],note:avNote,notes,photos:visitesPhotos.length});
+  visitesPhotos=[];
+  ['av-bien','av-positif','av-negatif'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  avNote=0;document.querySelectorAll('.av-note-btn').forEach(b=>{b.style.background='#fff';b.style.borderColor='var(--warm)';});
+  renderBiensVisites();
+  parcoursProgress.assistantvisite=true;
+  updateParcoursProgress();
+  const notif=document.createElement('div');
+  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999';
+  notif.textContent='✅ Notes de visite sauvegardées';
+  document.body.appendChild(notif);
+  setTimeout(()=>document.body.removeChild(notif),2500);
+}
+
+function renderBiensVisites(){
+  const el=document.getElementById('biens-visites-list');
+  if(!el)return;
+  if(!biensVisites.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--mid);font-size:13px">Aucune visite enregistrée</div>';return;}
+  const EMOJIS=['','😐','🤔','😊','❤️'];
+  el.innerHTML=biensVisites.map(b=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--warm);border-radius:8px;margin-bottom:6px">
+      <div style="font-size:22px">${EMOJIS[b.note]||'🏠'}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">${b.bien}</div><div style="font-size:11px;color:var(--mid)">${b.date} · ${b.photos} photo(s)</div></div>
+      <button onclick="addToCompare(0)" class="btn btn-outline btn-sm" style="font-size:10px">⚖️ Comparer</button>
+    </div>`).join('');
+}
+
+// =============================================
+// FINANCEMENT COMPLET
+// =============================================
+function buildFinancementPlus(){
+  calcFinancementPlus();
+  calcPreAppro();
+}
+
+function calcFinancementPlus(){
+  const prix=parseInt(document.getElementById('fp-prix')?.value||0);
+  const apport=parseInt(document.getElementById('fp-apport')?.value||0);
+  const taux=parseFloat(document.getElementById('fp-taux')?.value||3.5)/100/12;
+  const duree=parseInt(document.getElementById('fp-duree')?.value||20)*12;
+  const travaux=parseInt(document.getElementById('fp-travaux')?.value||0);
+  const assurance=parseInt(document.getElementById('fp-assurance')?.value||15000);
+  if(!prix)return;
+  const capital=prix-apport;
+  const mensuel=capital>0?Math.round(capital*taux*Math.pow(1+taux,duree)/(Math.pow(1+taux,duree)-1)):0;
+  const fraisNotaire=Math.round(prix*0.075);
+  const fraisDossier=150000;
+  const coutTotal=capital+(mensuel*duree-capital)+fraisNotaire+fraisDossier+travaux;
+  const el=document.getElementById('fp-results');
+  if(el) el.innerHTML=`
+    <div class="ai-line"><span>Prix du bien</span><span style="color:var(--gold-light);font-weight:700">${conv(prix)}</span></div>
+    <div class="ai-line"><span>Apport personnel</span><span style="color:var(--gold-light)">${conv(apport)}</span></div>
+    <div class="ai-line"><span>Montant emprunté</span><span style="color:var(--gold-light)">${conv(capital)}</span></div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);margin:10px 0"></div>
+    <div class="ai-line"><span>Mensualité crédit</span><span style="color:#6fd98a;font-weight:700;font-size:16px">${conv(mensuel)}/mois</span></div>
+    <div class="ai-line"><span>+ Assurance</span><span style="color:rgba(255,255,255,0.7)">${conv(assurance)}/mois</span></div>
+    <div class="ai-line"><span>= Charge mensuelle totale</span><span style="color:#6fd98a;font-weight:700">${conv(mensuel+assurance)}/mois</span></div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);margin:10px 0"></div>
+    <div class="ai-line"><span>Frais de notaire (7.5%)</span><span style="color:rgba(255,255,255,0.7)">${conv(fraisNotaire)}</span></div>
+    <div class="ai-line"><span>Frais de dossier</span><span style="color:rgba(255,255,255,0.7)">${conv(fraisDossier)}</span></div>
+    ${travaux>0?`<div class="ai-line"><span>Travaux</span><span style="color:rgba(255,255,255,0.7)">${conv(travaux)}</span></div>`:''}
+    <div style="border-top:1px solid rgba(255,255,255,0.1);margin:10px 0"></div>
+    <div class="ai-line"><span style="font-weight:700">💰 Coût réel total du projet</span><span style="color:var(--gold-light);font-weight:800;font-size:18px">${conv(coutTotal)}</span></div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px">Sur ${duree/12} ans · Taux ${(taux*12*100).toFixed(1)}% · Sources : BNC, CFF NC</div>`;
+
+  // Projection valeur future
+  const projEl=document.getElementById('fp-projection');
+  if(projEl){
+    const rates=[{y:5,r:-2},{y:10,r:5},{y:15,r:12},{y:20,r:22}];
+    projEl.innerHTML=rates.map(r=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--warm)">
+        <span style="font-size:12px;color:var(--mid)">Dans ${r.y} ans</span>
+        <div style="text-align:right">
+          <div style="font-size:13px;font-weight:700;color:var(--dark)">${conv(Math.round(prix*(1+r.r/100)))}</div>
+          '<div style="font-size:10px;color:'+(r.r>=0?'#16A34A':'#DC2626')+'">'+(r.r>=0?'+':'')+r.r+'% (tendance NC)</div>'
+        </div>
+      </div>`).join('');
+  }
+
+  parcoursProgress.financement=true;
+  updateParcoursProgress();
+}
+
+function calcPreAppro(){
+  const revenus=parseInt(document.getElementById('pa-revenus')?.value||0);
+  const charges=parseInt(document.getElementById('pa-charges')?.value||0);
+  if(!revenus)return;
+  const mensuelMax=Math.round((revenus-charges)*0.33);
+  const capacite=Math.round(mensuelMax*Math.pow(1+3.5/100/12,240)/(3.5/100/12)/Math.pow(1+3.5/100/12,240)*0.9);
+  const tauxEndettement=Math.round(charges/revenus*100);
+  const el=document.getElementById('pa-capacite');
+  const te=document.getElementById('pa-taux-endettement');
+  if(el) el.textContent=conv(capacite);
+  if(te) te.textContent=`Taux d'endettement actuel : ${tauxEndettement}% · Mensualité max : ${conv(mensuelMax)}`;
+}
+
+function showPreApproContact(type){
+  alert("📞 Mise en relation "+type+"\n\nVotre dossier sera transmis à un conseiller qui vous contactera sous 24h pour affiner votre capacité d'emprunt et vous proposer les meilleures offres disponibles en NC.");
+
+}
+
+// =============================================
+// SUIVI DOSSIER ACHETEUR
+// =============================================
+function buildSuiviAchat(){
+  renderSuiviPipeline();
+  renderSuiviNotifs();
+  renderSuiviDocuments();
+  setTimeout(applyMobileLayout,50);
+}
+
+function renderSuiviPipeline(){
+  const el=document.getElementById('suivi-pipeline');
+  if(!el)return;
+  const etapes=[
+    {label:'Recherche',icon:'🔍',statut:'done',date:'En cours',desc:'Matching IA actif'},
+    {label:'Visite',icon:'🏠',statut:'active',date:'Prochaine étape',desc:'Planifiez votre première visite'},
+    {label:"Offre",icon:"✉️",statut:"todo",date:"À venir",desc:"Rédiger une offre d'achat"},
+    {label:'Compromis',icon:'📋',statut:"todo",date:"À venir",desc:'Avec le notaire'},
+    {label:'Financement',icon:'💰',statut:"todo",date:"À venir",desc:'Accord de prêt'},
+    {label:'Acte',icon:'🎉',statut:"todo",date:"À venir",desc:'Vous serez propriétaire'},
+  ];
+  const colors={done:'#16A34A',active:'var(--gold)',todo:'#9CA3AF'};
+  el.innerHTML=`<div style="display:flex;align-items:start;gap:0;overflow-x:auto;padding:10px 0">
+    ${etapes.map((e,i)=>`
+    <div style="display:flex;flex-direction:column;align-items:center;min-width:100px;text-align:center;flex:1">
+      <div style="width:44px;height:44px;border-radius:50%;background:${e.statut==='done'?'#DCFCE7':e.statut==='active'?'rgba(184,146,42,0.12)':'#F3F4F6'};border:2px solid ${colors[e.statut]};display:flex;align-items:center;justify-content:center;font-size:20px;position:relative;z-index:1">${e.icon}</div>
+      ${i<etapes.length-1?`<div style="position:absolute;width:calc(100%/6);height:2px;background:${e.statut==='done'?'#16A34A':'#E5E7EB'};top:22px;left:50%;z-index:0"></div>`:''}
+      <div style="font-size:11px;font-weight:700;color:${colors[e.statut]};margin-top:6px">${e.label}</div>
+      <div style="font-size:9px;color:var(--mid)">${e.date}</div>
+    </div>
+    ${i<etapes.length-1?`<div style="flex:0.5;height:2px;background:${e.statut==='done'?'#16A34A':'#E5E7EB'};margin-top:21px"></div>`:''}
+    `).join('')}
+  </div>
+  <div style="margin-top:14px;padding:12px;background:rgba(184,146,42,0.06);border:1px solid rgba(184,146,42,0.2);border-radius:10px">
+    <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">🎯 Prochaine action recommandée</div>
+    <div style="font-size:12px;color:var(--mid)">Planifiez une visite sur un bien compatible à plus de 80% avec votre projet.</div>
+    <button class="btn btn-gold btn-sm" style="margin-top:8px" onclick="go('marketplace')">Voir mes biens compatibles →</button>
+  </div>`;
+}
+
+function renderSuiviNotifs(){
+  const el=document.getElementById('suivi-notifs');
+  if(!el)return;
+  const notifs=[
+    {ico:'🤖',text:'3 nouveaux biens correspondent à votre projet à +85%',time:'Il y a 2h',color:'#2563EB'},
+    {ico:'📱',text:'Confirmation de visite envoyée pour Appartement Anse Vata',time:'Hier',color:'#16A34A'},
+    {ico:'💰',text:'Taux immobilier NC mis à jour : 3.5% sur 20 ans',time:'Il y a 3 jours',color:'#9333EA'},
+    {ico:'🏠',text:'Nouveau bien publié dans votre zone : Val Plaisance F3',time:'Il y a 5 jours',color:'#EA580C'},
+  ];
+  el.innerHTML=notifs.map(n=>`
+    <div style="display:flex;align-items:start;gap:10px;padding:10px 0;border-bottom:1px solid #F3F4F6">
+      <div style="width:32px;height:32px;border-radius:50%;background:${n.color}15;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${n.ico}</div>
+      <div style="flex:1"><div style="font-size:12px;color:var(--dark)">${n.text}</div><div style="font-size:10px;color:var(--mid);margin-top:2px">${n.time}</div></div>
+    </div>`).join('');
+}
+
+function renderSuiviDocuments(){
+  const el=document.getElementById('suivi-documents');
+  if(!el)return;
+  const docs=[
+    {label:"Pièce d'identité",done:true},
+    {label:'3 derniers bulletins de salaire',done:true},
+    {label:'Avis d\'imposition 2024',done:true},
+    {label:'Relevés de compte 3 mois',done:false},
+    {label:'Justificatif d\'apport',done:false},
+    {label:"Promesse de vente signée",done:false},
+    {label:"Accord de prêt bancaire",done:false},
+  ];
+  const pct=Math.round(docs.filter(d=>d.done).length/docs.length*100);
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="flex:1;height:6px;background:var(--warm);border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:var(--gold)"></div></div>
+      <span style="font-size:12px;font-weight:700;color:var(--gold)">${pct}%</span>
+    </div>
+    ${docs.map(d=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #F9FAFB">
+      <span style="font-size:16px">${d.done?'✅':'⬜'}</span>
+      <span style="font-size:13px;color:${d.done?'var(--mid)':'var(--dark)'};${d.done?'text-decoration:line-through':''}">${d.label}</span>
+    </div>`).join('')}`;
 }
 
 // =============================================
