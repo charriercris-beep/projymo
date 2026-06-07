@@ -1023,6 +1023,12 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
               <button class="btn btn-outline btn-sm" onclick="go('analyse')">📷 Analyser photos</button>
               <button class="btn btn-outline btn-sm" onclick="go('financement')">💰 Financement</button>
             </div>
+            <!-- SATELLITE CONTEXTUEL : artisans si état moyen/travaux -->
+            <div id="ctx-artisans-banner" style="display:none;margin-top:12px;background:linear-gradient(135deg,rgba(22,163,74,0.06),rgba(184,146,42,0.06));border:1px solid rgba(22,163,74,0.2);border-radius:10px;padding:12px">
+              <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:4px">🏗️ Des travaux peuvent valoriser ce bien</div>
+              <div style="font-size:11px;color:var(--mid);margin-bottom:8px">L'IA a détecté un potentiel de +15% après rénovation. Nos artisans partenaires peuvent vous proposer des devis.</div>
+              <button onclick="go('artisans')" class="btn btn-sm" style="background:var(--green);color:#fff;border:none;font-size:11px">Voir les artisans NC →</button>
+            </div>
           </div>
 
           <!-- PLAN DE TRAVAUX IA -->
@@ -2835,6 +2841,12 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
           <div class="card">
             <div class="card-title">📋 Biens visités</div>
             <div id="biens-visites-list"></div>
+            <!-- SATELLITE CONTEXTUEL : comparateur après 2 visites -->
+            <div id="ctx-compare-banner" style="display:none;margin-top:10px;background:rgba(147,51,234,0.05);border:1px solid rgba(147,51,234,0.15);border-radius:10px;padding:12px">
+              <div style="font-size:12px;font-weight:600;color:#9333EA;margin-bottom:3px">⚖️ Vous avez visité plusieurs biens</div>
+              <div style="font-size:11px;color:var(--mid);margin-bottom:6px">Utilisez le comparateur pour choisir sans stress — côte à côte, avec recommandation IA.</div>
+              <button onclick="go('comparateur')" class="btn btn-sm" style="background:#9333EA;color:#fff;border:none;font-size:11px">Comparer mes biens →</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2888,6 +2900,12 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
               <div style="border:1px solid var(--warm);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showPreApproContact('Courtier')">
                 <div style="font-size:24px">🤝</div><div><div style="font-size:13px;font-weight:600">Courtier partenaire</div><div style="font-size:11px;color:var(--mid)">Compare toutes les banques NC</div></div>
                 <button class="btn btn-outline btn-sm" style="margin-left:auto">En savoir +</button>
+              </div>
+              <!-- SATELLITE CONTEXTUEL : notaire si financement avancé -->
+              <div style="margin-top:10px;background:rgba(29,78,216,0.05);border:1px solid rgba(29,78,216,0.15);border-radius:10px;padding:12px;cursor:pointer" onclick="go('notaire')">
+                <div style="font-size:12px;font-weight:600;color:#1D4ED8;margin-bottom:3px">⚖️ Prêt pour la prochaine étape ?</div>
+                <div style="font-size:11px;color:var(--mid)">Une fois votre financement validé, le dossier notaire peut être préparé automatiquement depuis votre projet.</div>
+                <div style="font-size:11px;color:#1D4ED8;font-weight:600;margin-top:6px">Préparer le dossier notaire →</div>
               </div>
             </div>
           </div>
@@ -3113,14 +3131,14 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 // =============================================
 const MENUS = {
   sell:[
-    {s:'Vente',items:[{ico:'🏠',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'💎',k:'estimation'},{ico:'📷',k:'analyse'},{ico:'🎨',k:'decoration'},{ico:'📣',k:'annonces'}]},
-    {s:'Services',items:[{ico:'🏗️',k:'artisans'},{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'}]},
+    {s:'Mon bien',items:[{ico:'🏠',k:'dashboard'},{ico:'💎',k:'estimation'},{ico:'📝',k:'depot'},{ico:'📷',k:'analyse'},{ico:'📣',k:'annonces'}]},
+    {s:'Suivi vente',items:[{ico:'📅',k:'rdv'},{ico:'🔄',k:'suivi'},{ico:'💬',k:'messagerie'},{ico:'🏗️',k:'artisans'}]},
     {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
   ],
   buy:[
-    {s:'Mon projet',items:[{ico:'🌟',k:'projetdevie'},{ico:'🗺️',k:'parcours'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'}]},
-    {s:'Mes outils',items:[{ico:'⚖️',k:'comparateur'},{ico:'✍️',k:'assistantvisite'},{ico:'💰',k:'financementplus'},{ico:'📍',k:'suiviachat'}]},
-    {s:'Services',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'}]},
+    {s:'Mon projet',items:[{ico:'🌟',k:'projetdevie'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'},{ico:'🗺️',k:'parcours'}]},
+    {s:'Ma décision',items:[{ico:'💰',k:'financementplus'},{ico:'⚖️',k:'comparateur'},{ico:'✍️',k:'assistantvisite'},{ico:'📍',k:'suiviachat'}]},
+    {s:'Services',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'📅',k:'rdv'}]},
   ],
   agt:[
     {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'📋',k:'mandats'},{ico:'🤖',k:'matching'},{ico:'👥',k:'crm'}]},
@@ -3187,6 +3205,10 @@ function go(panel){
   if(panel==='assistantvisite') buildAssistantVisite();
   if(panel==='financementplus') buildFinancementPlus();
   if(panel==='suiviachat') buildSuiviAchat();
+  // Déclenchements contextuels
+  checkContextualTriggers(panel);
+  // Dashboard intelligent
+  if(panel==='dashboard') buildSmartDashboard();
   if(panel==='crm') buildCRM();
   if(panel==='notaire') buildNotaire();
   if(panel==='projetdevie') updateProjetDeVie();
@@ -3258,6 +3280,9 @@ function calcEstim(){
   const age=2026-annee;
   if(age<3)pm2*=1.10;else if(age<10)pm2*=1.02;else if(age<20)pm2*=0.97;else if(age<30)pm2*=0.90;else pm2*=0.80;
   if(etat==='excellent')pm2*=1.15;else if(etat==='bon')pm2*=1.0;else if(etat==='moyen')pm2*=0.87;else pm2*=0.70;
+  // Déclencher le module artisans si état = moyen ou travaux
+  const banner=document.getElementById('ctx-artisans-banner');
+  if(banner) banner.style.display=(etat==='moyen'||etat==='travaux')?'block':'none';
   if(document.getElementById('opt-piscine')?.checked)pm2*=1.13;
   if(document.getElementById('opt-vue')?.checked)pm2*=1.20;
   if(document.getElementById('opt-garage')?.checked)pm2*=1.04;
@@ -8023,6 +8048,124 @@ function saveDossier(){
 }
 
 // =============================================
+// DÉCLENCHEMENTS CONTEXTUELS (philosophie satellite)
+// =============================================
+function checkContextualTriggers(panel){
+
+  // Artisans → si état du bien = moyen ou travaux dans l'estimation
+  if(panel==='estimation'){
+    const etat=document.getElementById('est-etat')?.value||'bon';
+    const banner=document.getElementById('ctx-artisans-banner');
+    if(banner) banner.style.display=(etat==='moyen'||etat==='travaux')?'block':'none';
+  }
+
+  // Comparateur → après 2+ biens visités dans l'assistant visite
+  if(panel==='assistantvisite'){
+    const banner=document.getElementById('ctx-compare-banner');
+    if(banner) banner.style.display=biensVisites.length>=2?'block':'none';
+  }
+
+  // Notaire → si on a validé le financement (financement+ ouvert)
+  if(panel==='financementplus'){
+    // Affiché automatiquement dans le panel — rien de plus à faire
+  }
+}
+
+// =============================================
+// DASHBOARD INTELLIGENT — page d'accueil selon profil
+// =============================================
+function buildSmartDashboard(){
+  const profil=S.country==='NC'?APP_STATE.user?.profil||'buy':'buy';
+  const dash=document.getElementById('panel-dashboard');
+  if(!dash) return;
+
+  // Calculer les stats selon le profil
+  if(APP_STATE.user?.profil==='buy'||APP_STATE.user?.profil==='demo-buy'){
+    // Dashboard acheteur — état du projet
+    const matchCount=ACHETEURS.length>0?getMatchesForAcheteur(ACHETEURS[0]).filter(m=>m.score>=80).length:0;
+    dash.innerHTML=`
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:4px">Bonjour 👋</h2>
+        <p style="font-size:13px;color:var(--mid)">Voici l'état de votre projet immobilier</p>
+      </div>
+      <!-- NEXT ACTION -->
+      <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:14px;padding:20px;margin-bottom:20px;cursor:pointer" onclick="go('projetdevie')">
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Prochaine action recommandée</div>
+        <div style="font-size:17px;font-weight:600;color:#fff;margin-bottom:4px">🌟 Définissez votre projet de vie</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.55)">L'IA analyse vos besoins et trouve les biens compatibles automatiquement</div>
+        <div style="margin-top:12px;display:inline-block;background:var(--gold);color:#fff;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Commencer →</div>
+      </div>
+      <!-- RACCOURCIS -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px">
+        <div onclick="go('marketplace')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">🔭</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">${BIENS_DATA.filter(b=>b.statut==='En vente').length} biens</div>
+          <div style="font-size:10px;color:var(--mid)">en ligne NC</div>
+        </div>
+        <div onclick="go('financementplus')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">💰</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">Financement</div>
+          <div style="font-size:10px;color:var(--mid)">Simulez le coût réel</div>
+        </div>
+        <div onclick="go('matching')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">🤖</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">Matching IA</div>
+          <div style="font-size:10px;color:var(--mid)">Biens compatibles</div>
+        </div>
+        <div onclick="go('artisans')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">🏗️</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">Artisans NC</div>
+          <div style="font-size:10px;color:var(--mid)">Devis travaux</div>
+        </div>
+      </div>
+      <!-- MARCHÉ NC -->
+      <div class="card">
+        <div class="card-title">📊 Marché immobilier NC aujourd'hui</div>
+        <div class="ai-line"><span>Prix médian appartement</span><span style="color:var(--gold);font-weight:700">${conv(NC_MARKET.global.mediane_apt)}/m²</span></div>
+        <div class="ai-line"><span>Prix médian maison</span><span style="color:var(--gold);font-weight:700">${conv(NC_MARKET.global.mediane_maison)}/m²</span></div>
+        <div class="ai-line"><span>Biens disponibles NC</span><span>${NC_MARKET.global.nb_annonces} annonces</span></div>
+        <div class="ai-line"><span>Délai de vente moyen</span><span>${NC_MARKET.global.delai_moyen}</span></div>
+      </div>`;
+  } else if(APP_STATE.user?.profil==='sell'){
+    dash.innerHTML=`
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:4px">Mon espace vendeur</h2>
+        <p style="font-size:13px;color:var(--mid)">Gérez votre vente de A à Z</p>
+      </div>
+      <!-- NEXT ACTION -->
+      <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:14px;padding:20px;margin-bottom:20px;cursor:pointer" onclick="go('estimation')">
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Étape recommandée</div>
+        <div style="font-size:17px;font-weight:600;color:#fff;margin-bottom:4px">💎 Estimez votre bien avec l'IA</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.55)">Prix au m², comparaison marché NC, plan de travaux pour maximiser votre prix de vente</div>
+        <div style="margin-top:12px;display:inline-block;background:var(--gold);color:#fff;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Estimer mon bien →</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
+        <div onclick="go('depot')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">📝</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">Déposer</div>
+          <div style="font-size:10px;color:var(--mid)">Mon annonce</div>
+        </div>
+        <div onclick="go('analyse')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">📷</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">Analyser</div>
+          <div style="font-size:10px;color:var(--mid)">Photos + IA</div>
+        </div>
+        <div onclick="go('rdv')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">📅</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">Visites</div>
+          <div style="font-size:10px;color:var(--mid)">Gérer le calendrier</div>
+        </div>
+        <div onclick="go('suivi')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
+          <div style="font-size:24px;margin-bottom:6px">🔄</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark)">Suivi</div>
+          <div style="font-size:10px;color:var(--mid)">État de la vente</div>
+        </div>
+      </div>`;
+  }
+  setTimeout(applyMobileLayout,50);
+}
+
+// =============================================
 // INIT
 // =============================================
 buildDPE('C');
@@ -8036,4 +8179,35 @@ go('dashboard');
 </script>
 
 </body>
-</html>
+</html><!-- HERO -->
+      <div style="text-align:center;padding:48px 24px 32px;max-width:700px;margin:0 auto">
+        <div style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Nouvelle-Calédonie · Plateforme IA immobilière</div>
+        <h1 style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:var(--dark);line-height:1.15;margin-bottom:16px">Votre projet immobilier,<br>guidé par l'intelligence artificielle</h1>
+        <p style="font-size:16px;color:var(--mid);max-width:480px;margin:0 auto 36px;line-height:1.7">Une seule intention. L'IA analyse, recommande et accompagne chaque étape jusqu'à la transaction.</p>
+
+        <!-- 2 BOUTONS PRINCIPAUX -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:520px;margin:0 auto 20px">
+          <div onclick="loginAs('buy')" style="background:var(--dark);border-radius:14px;padding:24px 20px;cursor:pointer;text-align:left;transition:.2s;border:2px solid transparent" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='transparent'">
+            <div style="font-size:28px;margin-bottom:10px">🔍</div>
+            <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:6px">Je cherche un bien</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5">Créez votre projet de vie — l'IA trouve les biens compatibles et guide votre achat</div>
+            <div style="margin-top:14px;display:inline-block;background:var(--gold);color:#fff;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Commencer →</div>
+          </div>
+          <div onclick="loginAs('sell')" style="background:#fff;border:1.5px solid var(--warm);border-radius:14px;padding:24px 20px;cursor:pointer;text-align:left;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 4px 20px rgba(184,146,42,0.12)'" onmouseout="this.style.borderColor='var(--warm)';this.style.boxShadow=''">
+            <div style="font-size:28px;margin-bottom:10px">🏠</div>
+            <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px">Je vends un bien</div>
+            <div style="font-size:12px;color:var(--mid);line-height:1.5">Estimation IA instantanée, publication en 5 min et suivi complet de votre vente</div>
+            <div style="margin-top:14px;display:inline-block;background:var(--warm);color:var(--dark);padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Estimer mon bien →</div>
+          </div>
+        </div>
+
+        <!-- Accès pro discret -->
+        <div style="font-size:12px;color:var(--soft)">
+          Professionnel ?
+          <span onclick="loginAs('agt')" style="color:var(--gold);cursor:pointer;font-weight:600">Espace agent immobilier</span>
+          · <span onclick="go('notaire')" style="color:var(--mid);cursor:pointer">Notaires</span>
+          · <span onclick="go('artisans')" style="color:var(--mid);cursor:pointer">Artisans</span>
+        </div>
+      </div>
+
+
