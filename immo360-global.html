@@ -339,6 +339,10 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
 .depot-step.done .depot-step-lbl{color:var(--green)}
 .depot-step-line{flex:1;height:2px;background:var(--warm);margin-top:-20px}
 
+/* ── JAUGE BUDGET ── */
+.budget-preset-btn{background:#fff;border:1px solid var(--warm);color:var(--mid);padding:4px 10px;border-radius:16px;font-size:11px;cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif}
+.budget-preset-btn:hover,.budget-preset-btn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+
 /* ── FILTRES RAPIDES LANDING ── */
 .filtre-rapide-btn{background:#fff;border:1px solid var(--warm);color:var(--mid);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif}
 .filtre-rapide-btn:hover,.filtre-rapide-btn.active{background:var(--dark);color:#fff;border-color:var(--dark)}
@@ -645,9 +649,24 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
           </select>
           <select id="ld-zone" onchange="landingSearchPublic()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
             <option value="">📍 Toute la NC</option>
-            <option>Nouméa</option><option>Dumbéa</option><option>Mont-Dore</option><option>Païta</option>
-            <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option>
-            <option>Magenta</option><option>Faubourg Blanchot</option>
+            <optgroup label="Nouméa — Quartiers">
+              <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option><option>Tina</option>
+              <option>Motor Pool</option><option>Magenta</option><option>Faubourg Blanchot</option><option>Centre Ville</option>
+              <option>Trianon</option><option>Robinson</option><option>Rivière Salée</option><option>Vallée du Tir</option>
+              <option>Ducos</option><option>Portes de Fer</option><option>Normandie</option><option>7ème km</option>
+              <option>Receiving</option><option>Montravel</option><option>Tuband</option><option>Kaméré</option>
+            </optgroup>
+            <optgroup label="Grand Nouméa">
+              <option>Dumbéa sur Mer</option><option>Dumbéa Centre</option><option>Dumbéa Nord</option><option>Koutio</option>
+              <option>Katiramona</option><option>Savannah</option><option>Tonghoué</option><option>Pahéa</option>
+              <option>Mont-Dore Centre</option><option>Boulari</option><option>Plum</option>
+              <option>Païta Centre</option><option>Boulouparis</option>
+            </optgroup>
+            <optgroup label="Autres communes NC">
+              <option>La Foa</option><option>Bourail</option><option>Koné</option><option>Voh</option>
+              <option>Koumac</option><option>Poindimié</option><option>Poum</option><option>Kaala-Gomen</option>
+              <option>Maré</option><option>Lifou</option><option>Ouvéa</option>
+            </optgroup>
           </select>
           <select id="ld-budget" onchange="landingSearchPublic()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
             <option value="">💰 Tous budgets</option>
@@ -2460,7 +2479,33 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
               </select>
             </div>
             <div class="field-row">
-              <div class="field"><label>Budget total (F)</label><input type="number" id="pv-budget" placeholder="60000000" oninput="updateProjetDeVie()"></div>
+              <div class="field">
+                <label style="display:flex;justify-content:space-between;align-items:center">
+                  <span>Budget total (F)</span>
+                  <span id="pv-budget-display" style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--gold)">—</span>
+                </label>
+                <!-- JAUGE BUDGET -->
+                <input type="range" id="pv-budget" min="5000000" max="200000000" step="1000000" value="60000000"
+                  oninput="updateBudgetJauge(this.value);updateProjetDeVie()"
+                  style="width:100%;accent-color:var(--gold);margin:8px 0;cursor:pointer;height:6px">
+                <!-- GRADUATIONS -->
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mid);margin-top:2px">
+                  <span>5M</span><span>25M</span><span>50M</span><span>75M</span><span>100M</span><span>150M</span><span>200M+</span>
+                </div>
+                <!-- PRÉSETS RAPIDES -->
+                <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">
+                  <button onclick="setBudgetPreset(20000000)" class="budget-preset-btn">20M</button>
+                  <button onclick="setBudgetPreset(35000000)" class="budget-preset-btn">35M</button>
+                  <button onclick="setBudgetPreset(50000000)" class="budget-preset-btn">50M</button>
+                  <button onclick="setBudgetPreset(75000000)" class="budget-preset-btn">75M</button>
+                  <button onclick="setBudgetPreset(100000000)" class="budget-preset-btn">100M</button>
+                  <button onclick="setBudgetPreset(150000000)" class="budget-preset-btn">150M+</button>
+                </div>
+                <!-- MENSUALITÉ ESTIMÉE -->
+                <div id="pv-budget-mensualite" style="margin-top:8px;padding:8px 10px;background:rgba(42,122,75,0.06);border:1px solid rgba(42,122,75,0.15);border-radius:8px;font-size:11px;color:var(--dark);display:none">
+                  📊 Mensualité estimée sur 20 ans (taux 3.5%) : <strong id="pv-mensualite-val" style="color:var(--green)">—</strong>
+                </div>
+              </div>
               <div class="field"><label>Apport (F)</label><input type="number" id="pv-apport" placeholder="12000000" oninput="updateProjetDeVie()"></div>
             </div>
             <div class="field"><label>Temps de trajet max</label>
@@ -3011,6 +3056,113 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
+    <!-- ==================== FAIRE UNE OFFRE ==================== -->
+    <div class="panel" id="panel-offre">
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">✉️ Faire une offre d'achat</h2>
+        <p style="font-size:13px;color:var(--mid)">Rédigez et envoyez votre offre — elle sera transmise au vendeur ou à son agent</p>
+      </div>
+
+      <div style="max-width:640px;margin:0 auto">
+        <!-- BIEN CIBLÉ -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">🏠 Bien concerné</div>
+          <div class="field"><label>Référence ou description du bien *</label>
+            <input type="text" id="offre-bien" placeholder="Ex: Appartement F4 Anse Vata — 92m² · Ref IMM-2026-001">
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Vendeur / Agent</label>
+              <input type="text" id="offre-vendeur" placeholder="Nom du vendeur ou de l'agence">
+            </div>
+            <div class="field"><label>Prix affiché (F)</label>
+              <input type="number" id="offre-prix-affiche" placeholder="45000000" oninput="updateOffreCompar()">
+            </div>
+          </div>
+        </div>
+
+        <!-- OFFRE -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">💰 Votre offre</div>
+          <div class="field"><label>Montant de votre offre (F) *</label>
+            <input type="number" id="offre-montant" placeholder="42000000" oninput="updateOffreCompar()">
+          </div>
+          <!-- Comparaison prix affiché vs offre -->
+          <div id="offre-compar" style="display:none;background:var(--warm);border-radius:8px;padding:12px;margin-top:4px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+              <div><div style="font-size:10px;color:var(--mid)">Prix affiché</div><div style="font-size:14px;font-weight:700;color:var(--dark)" id="oc-affiche">—</div></div>
+              <div><div style="font-size:10px;color:var(--mid)">Votre offre</div><div style="font-size:14px;font-weight:700;color:var(--gold)" id="oc-offre">—</div></div>
+              <div><div style="font-size:10px;color:var(--mid)">Écart</div><div style="font-size:14px;font-weight:700" id="oc-ecart">—</div></div>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px"><label>Conditions de l'offre</label>
+            <select id="offre-condition">
+              <option value="ferme">Offre ferme — sans condition</option>
+              <option value="financement">Sous condition de financement obtenu</option>
+              <option value="vente">Sous condition de vente de mon bien actuel</option>
+              <option value="expertise">Sous condition d'expertise favorable</option>
+            </select>
+          </div>
+          <div class="field"><label>Délai de validité de l'offre</label>
+            <select id="offre-delai">
+              <option value="48h">48 heures</option>
+              <option value="72h">72 heures</option>
+              <option value="1semaine">1 semaine</option>
+              <option value="libre">Délai libre — à négocier</option>
+            </select>
+          </div>
+          <div class="field"><label>Date de signature souhaitée pour l'acte</label>
+            <input type="date" id="offre-date-acte">
+          </div>
+        </div>
+
+        <!-- FINANCEMENT -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">🏦 Votre financement</div>
+          <div class="field-row">
+            <div class="field"><label>Apport personnel (F)</label>
+              <input type="number" id="offre-apport" placeholder="9000000">
+            </div>
+            <div class="field"><label>Banque / Courtier</label>
+              <input type="text" id="offre-banque" placeholder="Ex: BNC · CIC NC · Courtier">
+            </div>
+          </div>
+          <label class="eq-check" style="padding:8px 10px;border:1px solid var(--warm);border-radius:8px;margin-top:4px">
+            <input type="checkbox" id="offre-preappro"> ✅ J'ai un accord de principe / pré-approbation bancaire
+          </label>
+        </div>
+
+        <!-- VOS COORDONNÉES -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">👤 Vos coordonnées</div>
+          <div class="field-row">
+            <div class="field"><label>Nom complet *</label>
+              <input type="text" id="offre-nom" placeholder="Jean Dupont">
+            </div>
+            <div class="field"><label>Téléphone *</label>
+              <input type="tel" id="offre-tel" placeholder="+687 00 00 00">
+            </div>
+          </div>
+          <div class="field"><label>Email</label>
+            <input type="email" id="offre-email" placeholder="jean@email.com">
+          </div>
+          <div class="field"><label>Message personnel (optionnel)</label>
+            <textarea id="offre-message" rows="3" placeholder="Présentez-vous brièvement, expliquez votre motivation pour ce bien..."></textarea>
+          </div>
+        </div>
+
+        <!-- ENVOI -->
+        <div class="card">
+          <div class="card-title">📤 Envoi de l'offre</div>
+          <div style="background:var(--warm);border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--mid);line-height:1.7">
+            ⚠️ <strong style="color:var(--dark)">Important :</strong> Une offre d'achat est un engagement juridique. Elle lie l'acheteur si elle est acceptée. Nous recommandons de la faire relire par un notaire avant envoi.
+          </div>
+          <div id="offre-notif" style="display:none;margin-bottom:12px;padding:12px;border-radius:8px;font-size:13px"></div>
+          <button class="btn btn-gold btn-full" onclick="envoyerOffre()" id="btn-envoyer-offre">✉️ Envoyer mon offre d'achat</button>
+          <button class="btn btn-outline btn-full" style="margin-top:8px" onclick="go('parcours')">← Retour au parcours</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== SUIVI DOSSIER ACHETEUR ==================== -->
     <div class="panel" id="panel-suiviachat">
       <div style="margin-bottom:20px">
@@ -3229,7 +3381,7 @@ const MENUS = {
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',parcours:'Mon Parcours',comparateur:'Comparateur',assistantvisite:'Assistant Visite',financementplus:'Financement Réel',suiviachat:'Suivi de mon achat',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  fr:{dashboard:'Tableau de bord',offre:'Faire une offre',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',parcours:'Mon Parcours',comparateur:'Comparateur',assistantvisite:'Assistant Visite',financementplus:'Financement Réel',suiviachat:'Suivi de mon achat',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
@@ -3279,6 +3431,7 @@ function go(panel){
   if(panel==='financement') calcFin();
   if(panel==='marketplace') buildMarketplace();
   if(panel==='matching') buildMatching();
+  if(panel==='projetdevie') setTimeout(initBudgetJauge,100);
   if(panel==='artisans') buildArtisans();
   if(panel==='mandats') buildMandats();
   if(panel==='visites') buildVisites();
@@ -3288,6 +3441,7 @@ function go(panel){
   if(panel==='assistantvisite') buildAssistantVisite();
   if(panel==='financementplus') buildFinancementPlus();
   if(panel==='suiviachat') buildSuiviAchat();
+  if(panel==='offre'){/* panel statique */}
   // Déclenchements contextuels
   checkContextualTriggers(panel);
   // Dashboard intelligent
@@ -7264,7 +7418,7 @@ const PARCOURS_STEPS = [
   {id:"assistantvisite",label:"Compléter l'assistant visite",desc:"Checklist, notes, photos annotées",icon:"✍️",panel:"assistantvisite",done:false},
   {id:'comparer',label:'Comparer les biens',desc:'Comparateur IA — choisir sans stress',icon:'⚖️',panel:'comparateur',done:false},
   {id:'financement',label:'Simuler le financement',desc:'Coût réel total, pré-approbation',icon:'💰',panel:'financementplus',done:false},
-  {id:"offre",label:"Faire une offre",desc:"Rédiger et envoyer une offre d\'achat",icon:"✉️",panel:"messagerie",done:false},
+  {id:"offre",label:"Faire une offre",desc:"Rédiger et envoyer une offre d\'achat",icon:"✉️",panel:"offre",done:false},
   {id:'compromis',label:'Signer le compromis',desc:'Avec le notaire et le vendeur',icon:'📋',panel:'notaire',done:false},
   {id:"acte",label:"Signer l'acte définitif",desc:"Vous êtes propriétaire !",icon:"🎉",panel:"notaire",done:false},
 ];
@@ -8575,6 +8729,107 @@ function simulerFinancementPublic(prix){
 function contactFromLanding(bienId){
   // Visiteur veut contacter — ouvrir modal inscription
   showLoginModal('buy');
+}
+
+// =============================================
+// OFFRE D'ACHAT
+// =============================================
+function updateOffreCompar(){
+  const affiche=parseInt(document.getElementById('offre-prix-affiche')?.value||0);
+  const offre=parseInt(document.getElementById('offre-montant')?.value||0);
+  const el=document.getElementById('offre-compar');
+  if(!el)return;
+  if(!affiche||!offre){el.style.display='none';return;}
+  el.style.display='block';
+  const ecart=Math.round((offre/affiche-1)*100);
+  document.getElementById('oc-affiche').textContent=conv(affiche);
+  document.getElementById('oc-offre').textContent=conv(offre);
+  const ecartEl=document.getElementById('oc-ecart');
+  ecartEl.textContent=(ecart>=0?'+':'')+ecart+'%';
+  ecartEl.style.color=ecart>=0?'var(--red)':'var(--green)';
+}
+
+function envoyerOffre(){
+  const bien=document.getElementById('offre-bien')?.value?.trim();
+  const montant=document.getElementById('offre-montant')?.value;
+  const nom=document.getElementById('offre-nom')?.value?.trim();
+  const tel=document.getElementById('offre-tel')?.value?.trim();
+  if(!bien){alert('Veuillez indiquer le bien concerné');return;}
+  if(!montant){alert('Veuillez indiquer le montant de votre offre');return;}
+  if(!nom||!tel){alert('Veuillez indiquer vos coordonnées');return;}
+
+  const btn=document.getElementById('btn-envoyer-offre');
+  const notif=document.getElementById('offre-notif');
+  if(btn){btn.innerHTML='⏳ Envoi en cours...';btn.disabled=true;}
+
+  setTimeout(()=>{
+    if(notif){
+      notif.style.display='block';
+      notif.style.background='rgba(42,122,75,0.1)';
+      notif.style.border='1px solid rgba(42,122,75,0.3)';
+      notif.style.color='var(--green)';
+      notif.innerHTML=`🎉 <strong>Offre envoyée avec succès !</strong><br>
+        Votre offre de <strong>${conv(parseInt(montant))}</strong> pour <em>${bien}</em> a été transmise au vendeur.<br>
+        <small style="opacity:.8">Vous recevrez une réponse sous ${document.getElementById('offre-delai')?.value||'48h'}. Un email de confirmation vous a été envoyé.</small>`;
+    }
+    if(btn){btn.innerHTML='✅ Offre envoyée';btn.disabled=true;}
+    // Marquer l'étape comme faite dans le parcours
+    parcoursProgress.offre=true;
+    updateParcoursProgress();
+    // Sauvegarder dans Supabase si dispo
+    if(sb){
+      saveMessageToSupabase({
+        bien_id:null,from_user:null,to_user:null,
+        contenu:'OFFRE: '+conv(parseInt(montant))+' pour '+bien+' — '+nom+' '+tel,
+        lu:false
+      }).catch(()=>{});
+    }
+  },1500);
+}
+
+// =============================================
+// JAUGE BUDGET PROJET DE VIE
+// =============================================
+function updateBudgetJauge(val){
+  val = parseInt(val);
+  const display = document.getElementById('pv-budget-display');
+  const mensualiteEl = document.getElementById('pv-budget-mensualite');
+  const mensualiteVal = document.getElementById('pv-mensualite-val');
+
+  if(display) display.textContent = conv(val);
+
+  // Mensualité estimée (20 ans, 3.5%, apport 20%)
+  if(val > 0){
+    const apport = val * 0.2;
+    const capital = val - apport;
+    const taux = 3.5/100/12;
+    const duree = 240;
+    const mensuel = Math.round(capital * taux * Math.pow(1+taux,duree) / (Math.pow(1+taux,duree)-1));
+    if(mensualiteEl) mensualiteEl.style.display = 'block';
+    if(mensualiteVal) mensualiteVal.textContent = conv(mensuel)+'/mois';
+
+    // Mettre en valeur le preset correspondant
+    document.querySelectorAll('.budget-preset-btn').forEach(btn=>{
+      btn.classList.remove('active');
+    });
+  }
+}
+
+function setBudgetPreset(val){
+  const slider = document.getElementById('pv-budget');
+  if(slider){ slider.value = val; }
+  updateBudgetJauge(val);
+  updateProjetDeVie();
+  // Highlight le bon preset
+  document.querySelectorAll('.budget-preset-btn').forEach(btn=>{
+    btn.classList.toggle('active', parseInt(btn.textContent.replace('M+','000000').replace('M','000000')) === val);
+  });
+}
+
+// Init jauge au chargement
+function initBudgetJauge(){
+  const slider = document.getElementById('pv-budget');
+  if(slider) updateBudgetJauge(slider.value);
 }
 
 // =============================================
