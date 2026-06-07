@@ -670,28 +670,112 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               <option>Maré</option><option>Lifou</option><option>Ouvéa</option>
             </optgroup>
           </select>
-          <select id="ld-budget" onchange="landingSearchPublic()" style="flex:1;min-width:150px;border:1px solid var(--warm);padding:10px 12px;font-size:13px;border-radius:8px;color:var(--dark);background:#fff">
-            <option value="">💰 Tous budgets</option>
-            <option value="20000000">- de 20M F</option>
-            <option value="40000000">- de 40M F</option>
-            <option value="60000000">- de 60M F</option>
-            <option value="80000000">- de 80M F</option>
-            <option value="100000000">- de 100M F</option>
-            <option value="999999999">+ de 100M F</option>
-          </select>
+          <div style="flex:1;min-width:180px;background:#fff;border:1px solid var(--warm);border-radius:8px;padding:8px 14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:12px;color:var(--mid)">💰 Budget max</span>
+              <span id="ld-budget-label" style="font-size:13px;font-weight:700;color:var(--gold)">Tous budgets</span>
+            </div>
+            <input type="range" id="ld-budget" min="0" max="200000000" step="5000000" value="0"
+              oninput="updateLdBudgetJauge(this.value);landingSearchPublic()"
+              style="width:100%;height:6px;accent-color:var(--gold);cursor:pointer;display:block;margin:0">
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--soft);margin-top:3px">
+              <span>Sans limite</span><span>50M</span><span>100M</span><span>150M</span><span>200M+</span>
+            </div>
+          </div>
           <button onclick="landingSearchPublic()" class="btn btn-gold" style="white-space:nowrap;padding:10px 24px;font-size:14px">🔍 Rechercher</button>
         </div>
 
-        <!-- FILTRES RAPIDES -->
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--warm)">
-          <span style="font-size:11px;color:var(--mid);display:flex;align-items:center;margin-right:4px">Filtres rapides :</span>
-          <button onclick="filtreRapidePublic('Vue mer')" class="filtre-rapide-btn">🌊 Vue mer</button>
-          <button onclick="filtreRapidePublic('Piscine')" class="filtre-rapide-btn">🏊 Piscine</button>
-          <button onclick="filtreRapidePublic('Terrasse')" class="filtre-rapide-btn">🌿 Terrasse</button>
-          <button onclick="filtreRapidePublic('Garage')" class="filtre-rapide-btn">🚗 Garage</button>
-          <button onclick="filtreRapidePublic('Jardin')" class="filtre-rapide-btn">🌳 Jardin</button>
-          <button onclick="filtreRapidePublic('neuf')" class="filtre-rapide-btn">🆕 Neuf</button>
-          <button onclick="resetFiltresPublic()" style="background:none;border:none;color:var(--mid);font-size:11px;cursor:pointer;padding:3px 6px;text-decoration:underline">Tout effacer</button>
+        <!-- FILTRES AVANCÉS -->
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--warm)">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
+
+            <!-- Pièces -->
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:110px">
+              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Pièces</span>
+              <select id="ld-pieces" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
+                <option value="">Toutes</option>
+                <option value="1">Studio / T1</option>
+                <option value="2">2 pièces</option>
+                <option value="3">3 pièces</option>
+                <option value="4">4 pièces</option>
+                <option value="5">5 pièces +</option>
+              </select>
+            </div>
+
+            <!-- Surface -->
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:120px">
+              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Surface min</span>
+              <select id="ld-surface" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
+                <option value="0">Toutes tailles</option>
+                <option value="20">20m² min</option>
+                <option value="40">40m² min</option>
+                <option value="60">60m² min</option>
+                <option value="80">80m² min</option>
+                <option value="100">100m² min</option>
+                <option value="150">150m² min</option>
+                <option value="200">200m² min</option>
+              </select>
+            </div>
+
+            <!-- DPE -->
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:100px">
+              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">DPE</span>
+              <select id="ld-dpe" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
+                <option value="">Tous</option>
+                <option value="A">A — Excellent</option>
+                <option value="B">B — Très bon</option>
+                <option value="C">C — Bon</option>
+                <option value="D">D — Moyen</option>
+              </select>
+            </div>
+
+            <!-- État -->
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:130px">
+              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">État du bien</span>
+              <select id="ld-etat" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
+                <option value="">Tous états</option>
+                <option value="neuf">Neuf / VEFA</option>
+                <option value="excellent">Excellent état</option>
+                <option value="bon">Bon état</option>
+                <option value="moyen">À rafraîchir</option>
+                <option value="travaux">Travaux à prévoir</option>
+              </select>
+            </div>
+
+            <!-- Équipements -->
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:140px">
+              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Équipements</span>
+              <select id="ld-equip" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
+                <option value="">Tous</option>
+                <option value="Vue mer">🌊 Vue mer</option>
+                <option value="Piscine">🏊 Piscine</option>
+                <option value="Terrasse">🌿 Terrasse</option>
+                <option value="Garage">🚗 Garage</option>
+                <option value="Jardin">🌳 Jardin</option>
+                <option value="Parking">🅿️ Parking</option>
+                <option value="Climatisation">❄️ Climatisation</option>
+                <option value="Sécurité">🔒 Sécurité / Gardien</option>
+                <option value="Ascenseur">🛗 Ascenseur</option>
+                <option value="Cuisine équipée">🍳 Cuisine équipée</option>
+                <option value="Dressing">🚪 Dressing</option>
+                <option value="Balcon">🏡 Balcon</option>
+              </select>
+            </div>
+
+            <!-- Tri -->
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:140px">
+              <span style="font-size:10px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px">Trier par</span>
+              <select id="ld-tri" onchange="landingSearchPublic()" style="border:1px solid var(--warm);padding:6px 10px;font-size:12px;border-radius:7px;background:#fff;color:var(--dark)">
+                <option value="recent">Plus récent</option>
+                <option value="prix-asc">Prix croissant</option>
+                <option value="prix-desc">Prix décroissant</option>
+                <option value="surface-desc">Surface décroissante</option>
+                <option value="pm2-asc">Prix/m² croissant</option>
+              </select>
+            </div>
+
+            <button onclick="resetFiltresPublic()" style="align-self:flex-end;background:none;border:1px solid var(--warm);color:var(--mid);font-size:11px;cursor:pointer;padding:6px 12px;border-radius:7px;transition:.15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)';this.style.color='var(--mid)'">✕ Effacer</button>
+          </div>
         </div>
       </div>
 
@@ -8554,9 +8638,15 @@ function filtreRapidePublic(feature){
 
 function resetFiltresPublic(){
   filtreRapideActif='';
-  document.querySelectorAll('.filtre-rapide-btn').forEach(b=>b.classList.remove('active'));
-  const selects=['ld-type','ld-zone','ld-budget'];
-  selects.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  // Reset tous les filtres
+  ['ld-type','ld-zone','ld-pieces','ld-surface','ld-dpe','ld-etat','ld-equip'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  // Reset jauge budget
+  const budgetSlider=document.getElementById('ld-budget');
+  if(budgetSlider){budgetSlider.value=0;updateLdBudgetJauge(0);}
+  // Reset tri
+  const tri=document.getElementById('ld-tri');if(tri)tri.value='recent';
   buildLandingBiensPublic();
 }
 
@@ -8573,6 +8663,15 @@ function setViewPublic(vue){
   document.getElementById('view-list-btn').style.color=vue==='list'?'#fff':'var(--mid)';
 }
 
+function updateLdBudgetJauge(val){
+  val=parseInt(val);
+  const label=document.getElementById('ld-budget-label');
+  if(!label) return;
+  if(!val||val===0) label.textContent='Tous budgets';
+  else if(val>=200000000) label.textContent='200M F +';
+  else label.textContent='≤ '+conv(val);
+}
+
 function buildLandingBiensPublic(){
   const grid=document.getElementById('landing-biens-grid');
   const countEl=document.getElementById('ld-results-count');
@@ -8580,19 +8679,35 @@ function buildLandingBiensPublic(){
   const countMore=document.getElementById('ld-count-more');
   if(!grid) return;
 
-  // Filtres
+  // Filtres étendus
   const type=document.getElementById('ld-type')?.value||'';
   const zone=document.getElementById('ld-zone')?.value||'';
   const budget=parseInt(document.getElementById('ld-budget')?.value||0);
+  const pieces=parseInt(document.getElementById('ld-pieces')?.value||0);
+  const surface=parseInt(document.getElementById('ld-surface')?.value||0);
+  const dpe=document.getElementById('ld-dpe')?.value||'';
+  const etat=document.getElementById('ld-etat')?.value||'';
+  const equip=document.getElementById('ld-equip')?.value||'';
+  const tri=document.getElementById('ld-tri')?.value||'recent';
 
   let biens=BIENS_DATA.filter(b=>{
     if(b.statut!=='En vente') return false;
     if(type&&b.type!==type) return false;
     if(zone&&!(b.quartier||'').includes(zone)&&!(b.ville||'').includes(zone)) return false;
-    if(budget&&b.prix>budget) return false;
-    if(filtreRapideActif&&!(b.features||[]).some(f=>f.toLowerCase().includes(filtreRapideActif.toLowerCase()))) return false;
+    if(budget>0&&b.prix>budget) return false;
+    if(pieces>0&&(b.pieces||0)<pieces) return false;
+    if(surface>0&&(b.surface||0)<surface) return false;
+    if(dpe&&(b.dpe||'')!==dpe) return false;
+    if(etat&&(b.etat||'')!==etat) return false;
+    if(equip&&!(b.features||[]).some(f=>f.toLowerCase().includes(equip.toLowerCase()))) return false;
     return true;
   });
+
+  // Tri
+  if(tri==='prix-asc') biens.sort((a,b)=>a.prix-b.prix);
+  else if(tri==='prix-desc') biens.sort((a,b)=>b.prix-a.prix);
+  else if(tri==='surface-desc') biens.sort((a,b)=>(b.surface||0)-(a.surface||0));
+  else if(tri==='pm2-asc') biens.sort((a,b)=>(a.prix/(a.surface||1))-(b.prix/(b.surface||1)));
 
   const total=biens.length;
   const affiches=biens.slice(0,18); // 18 biens en public
@@ -8617,7 +8732,26 @@ function buildLandingBiensPublic(){
       <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:14px;cursor:pointer;display:flex;gap:0;align-items:stretch;overflow:hidden;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,0.05)" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 4px 16px rgba(184,146,42,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)'">
         <!-- Photo large -->
         <div style="width:200px;min-width:200px;background:linear-gradient(135deg,var(--warm),var(--cream));display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden">
-          ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:b.photos?b.photos[0]:'🏠'}
+          ${b.photoUrl
+            ?`<img src="${b.photoUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`
+            :`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${
+              b.type==='Villa'?'#2d5016,#4a7c23':
+              b.type==='Appartement'?'#1a3a5c,#2d6a9f':
+              b.type==='Maison'?'#5c3d1a,#9f6b2d':
+              b.type==='Studio'?'#3d1a5c,#6b2d9f':
+              b.type==='Terrain'?'#1a5c3d,#2d9f6b':
+              '#1c1a16,#3d3830'
+            });display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px">
+              <div style="font-size:42px">${
+                b.type==='Villa'?'🏡':
+                b.type==='Appartement'?'🏢':
+                b.type==='Maison'?'🏠':
+                b.type==='Studio'?'🏙️':
+                b.type==='Terrain'?'🌿':
+                '🏘️'
+              }</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:500">${b.type||'Bien immobilier'}</div>
+            </div>`}
           <div style="position:absolute;top:8px;left:8px"><span style="background:var(--green);color:#fff;padding:3px 8px;border-radius:8px;font-size:9px;font-weight:700">${b.statut}</span></div>
         </div>
         <!-- Contenu -->
@@ -8643,7 +8777,26 @@ function buildLandingBiensPublic(){
       <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:16px;overflow:hidden;cursor:pointer;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 28px rgba(184,146,42,0.13)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.06)'">
         <!-- PHOTO -->
         <div style="height:210px;background:linear-gradient(135deg,var(--warm),var(--cream));position:relative;display:flex;align-items:center;justify-content:center;font-size:56px;overflow:hidden">
-          ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:b.photos?b.photos[0]:'🏠'}
+          ${b.photoUrl
+            ?`<img src="${b.photoUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`
+            :`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${
+              b.type==='Villa'?'#2d5016,#4a7c23':
+              b.type==='Appartement'?'#1a3a5c,#2d6a9f':
+              b.type==='Maison'?'#5c3d1a,#9f6b2d':
+              b.type==='Studio'?'#3d1a5c,#6b2d9f':
+              b.type==='Terrain'?'#1a5c3d,#2d9f6b':
+              '#1c1a16,#3d3830'
+            });display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px">
+              <div style="font-size:42px">${
+                b.type==='Villa'?'🏡':
+                b.type==='Appartement'?'🏢':
+                b.type==='Maison'?'🏠':
+                b.type==='Studio'?'🏙️':
+                b.type==='Terrain'?'🌿':
+                '🏘️'
+              }</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:500">${b.type||'Bien immobilier'}</div>
+            </div>`}
           <!-- Overlay gradient bas -->
           <div style="position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(0,0,0,0.35))"></div>
           <!-- Badges -->
