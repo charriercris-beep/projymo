@@ -2246,77 +2246,112 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
-    <!-- ==================== NOTAIRE ==================== -->
+    <!-- ==================== NOTAIRE COMPLET ==================== -->
     <div class="panel" id="panel-notaire">
+
+      <!-- HEADER -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
         <div>
-          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">⚖️ Module Notaire</h2>
-          <p style="font-size:13px;color:var(--mid)">Suivi des compromis, dossiers et signatures — toutes vos transactions en un clic</p>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">⚖️ Espace Notaire</h2>
+          <p style="font-size:13px;color:var(--mid)">Dossiers centralisés, documents structurés, signatures — tout est déjà prêt pour le notaire</p>
         </div>
         <button class="btn btn-gold" onclick="showAddDossierModal()">+ Nouveau dossier</button>
       </div>
 
-      <!-- PIPELINE -->
+      <!-- PIPELINE GLOBAL -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-        <div style="background:#FEF9C3;border:2px solid #FDE047;border-radius:12px;padding:14px;text-align:center">
-          <div style="font-size:22px;font-weight:800;color:#854D0E" id="not-nb-offre">2</div>
-          <div style="font-size:12px;font-weight:600;color:#92400E">Offre acceptée</div>
+        <div style="background:#FEF9C3;border:2px solid #FDE047;border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="filterDossiers('offre')">
+          <div style="font-size:24px;font-weight:800;color:#854D0E" id="not-nb-offre">0</div>
+          <div style="font-size:11px;font-weight:600;color:#92400E">📝 Offre acceptée</div>
         </div>
-        <div style="background:#DBEAFE;border:2px solid #93C5FD;border-radius:12px;padding:14px;text-align:center">
-          <div style="font-size:22px;font-weight:800;color:#1D4ED8" id="not-nb-compromis">3</div>
-          <div style="font-size:12px;font-weight:600;color:#1E40AF">Compromis signé</div>
+        <div style="background:#DBEAFE;border:2px solid #93C5FD;border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="filterDossiers('compromis')">
+          <div style="font-size:24px;font-weight:800;color:#1D4ED8" id="not-nb-compromis">0</div>
+          <div style="font-size:11px;font-weight:600;color:#1E40AF">📋 Compromis</div>
         </div>
-        <div style="background:#FCE7F3;border:2px solid #F9A8D4;border-radius:12px;padding:14px;text-align:center">
-          <div style="font-size:22px;font-weight:800;color:#9D174D" id="not-nb-instruction">1</div>
-          <div style="font-size:12px;font-weight:600;color:#831843">En instruction</div>
+        <div style="background:#FCE7F3;border:2px solid #F9A8D4;border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="filterDossiers('instruction')">
+          <div style="font-size:24px;font-weight:800;color:#9D174D" id="not-nb-instruction">0</div>
+          <div style="font-size:11px;font-weight:600;color:#831843">🔍 En instruction</div>
         </div>
-        <div style="background:#DCFCE7;border:2px solid #86EFAC;border-radius:12px;padding:14px;text-align:center">
-          <div style="font-size:22px;font-weight:800;color:#166534" id="not-nb-acte">5</div>
-          <div style="font-size:12px;font-weight:600;color:#15803D">Acte signé ✓</div>
+        <div style="background:#DCFCE7;border:2px solid #86EFAC;border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="filterDossiers('acte')">
+          <div style="font-size:24px;font-weight:800;color:#166534" id="not-nb-acte">0</div>
+          <div style="font-size:11px;font-weight:600;color:#15803D">🎉 Acte signé</div>
         </div>
       </div>
 
-      <!-- DOSSIERS EN COURS -->
-      <div id="notaire-dossiers"></div>
+      <!-- ONGLETS -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--warm);margin-bottom:20px">
+        <button class="artisan-tab active" id="not-tab-dossiers" onclick="switchNotTab('dossiers')">📁 Dossiers</button>
+        <button class="artisan-tab" id="not-tab-documents" onclick="switchNotTab('documents')">📄 Documents</button>
+        <button class="artisan-tab" id="not-tab-planning" onclick="switchNotTab('planning')">📅 Planning signatures</button>
+        <button class="artisan-tab" id="not-tab-conformite" onclick="switchNotTab('conformite')">✅ Conformité</button>
+      </div>
 
-      <!-- MODAL DOSSIER -->
+      <!-- DOSSIERS -->
+      <div id="not-dossiers">
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <select id="not-filter-statut" onchange="renderNotaireDossiers()" style="border:1px solid var(--warm);padding:8px 12px;border-radius:8px;font-size:13px;background:#fff">
+            <option value="">Tous les dossiers</option>
+            <option value="offre">Offre acceptée</option>
+            <option value="compromis">Compromis</option>
+            <option value="instruction">En instruction</option>
+            <option value="acte">Acte signé</option>
+          </select>
+          <input type="text" id="not-search" placeholder="🔍 Rechercher..." oninput="renderNotaireDossiers()" style="flex:1;border:1px solid var(--warm);padding:8px 12px;border-radius:8px;font-size:13px">
+        </div>
+        <div id="notaire-dossiers-list"></div>
+      </div>
+
+      <!-- DOCUMENTS COLLECTE -->
+      <div id="not-documents" style="display:none">
+        <div style="font-size:13px;color:var(--mid);margin-bottom:16px">Suivi de collecte des documents pour chaque dossier actif</div>
+        <div id="not-docs-grid"></div>
+      </div>
+
+      <!-- PLANNING -->
+      <div id="not-planning" style="display:none">
+        <div id="not-planning-content"></div>
+      </div>
+
+      <!-- CONFORMITÉ -->
+      <div id="not-conformite" style="display:none">
+        <div id="not-conformite-content"></div>
+      </div>
+
+      <!-- MODAL DOSSIER DÉTAIL -->
+      <div id="dossier-detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;width:100%;max-width:680px;max-height:92vh;overflow-y:auto" id="dossier-detail-content"></div>
+      </div>
+
+      <!-- MODAL NOUVEAU DOSSIER -->
       <div id="dossier-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
-        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <h3 style="font-family:'Playfair Display',serif;font-size:18px">Nouveau dossier notaire</h3>
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">⚖️ Nouveau dossier notaire</h3>
             <button onclick="document.getElementById('dossier-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
           </div>
-          <div class="field"><label>Bien concerné</label><input type="text" id="dos-bien" placeholder="Ex: Appartement Anse Vata — F4 92m²"></div>
+          <div class="field"><label>Référence dossier</label><input type="text" id="dos-ref" placeholder="Ex: NOT-2026-001"></div>
+          <div class="field"><label>Bien immobilier *</label><input type="text" id="dos-bien" placeholder="Ex: Appartement F4 Anse Vata — 92m²"></div>
           <div class="field-row">
-            <div class="field"><label>Vendeur</label><input type="text" id="dos-vendeur" placeholder="Nom du vendeur"></div>
-            <div class="field"><label>Acheteur</label><input type="text" id="dos-acheteur" placeholder="Nom de l'acheteur"></div>
+            <div class="field"><label>Vendeur *</label><input type="text" id="dos-vendeur" placeholder="Nom complet"></div>
+            <div class="field"><label>Acheteur *</label><input type="text" id="dos-acheteur" placeholder="Nom complet"></div>
           </div>
           <div class="field-row">
-            <div class="field"><label>Prix de vente (F)</label><input type="number" id="dos-prix" placeholder="42500000"></div>
-            <div class="field"><label>Notaire</label><input type="text" id="dos-notaire" placeholder="Me Dupont"></div>
+            <div class="field"><label>Prix de vente (F)</label><input type="number" id="dos-prix" placeholder="45000000"></div>
+            <div class="field"><label>Notaire référent</label><input type="text" id="dos-notaire" placeholder="Me Dupont"></div>
           </div>
-          <div class="field"><label>Statut</label>
+          <div class="field"><label>Agent immobilier</label><input type="text" id="dos-agent" placeholder="Nom de l'agent"></div>
+          <div class="field"><label>Statut initial</label>
             <select id="dos-statut">
               <option value="offre">Offre acceptée</option>
               <option value="compromis">Compromis signé</option>
               <option value="instruction">En instruction</option>
-              <option value="acte">Acte signé</option>
             </select>
           </div>
           <div class="field-row">
             <div class="field"><label>Date compromis</label><input type="date" id="dos-date-compromis"></div>
             <div class="field"><label>Date acte prévue</label><input type="date" id="dos-date-acte"></div>
           </div>
-          <div class="field"><label>Documents reçus</label>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
-              <label class="eq-check"><input type="checkbox" id="doc-offre"> Offre d'achat</label>
-              <label class="eq-check"><input type="checkbox" id="doc-compromis"> Compromis</label>
-              <label class="eq-check"><input type="checkbox" id="doc-financement"> Accord financement</label>
-              <label class="eq-check"><input type="checkbox" id="doc-diagnostics"> Diagnostics</label>
-              <label class="eq-check"><input type="checkbox" id="doc-titre"> Titre de propriété</label>
-            </div>
-          </div>
-          <div class="field"><label>Notes</label><textarea id="dos-notes" rows="2" placeholder="Observations..."></textarea></div>
+          <div class="field"><label>Notes</label><textarea id="dos-notes" rows="2" placeholder="Observations, conditions particulières..."></textarea></div>
           <button class="btn btn-gold btn-full" onclick="saveDossier()">✅ Créer le dossier</button>
         </div>
       </div>
@@ -3089,7 +3124,7 @@ const MENUS = {
   ],
   agt:[
     {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'📋',k:'mandats'},{ico:'🤖',k:'matching'},{ico:'👥',k:'crm'}]},
-    {s:'Business',items:[{ico:'🗓️',k:'visites'},{ico:'⚖️',k:'notaire'},{ico:'📊',k:'statsannonces'},{ico:'🏗️',k:'artisans'},{ico:'💎',k:'estimation'}]},
+    {s:'Business',items:[{ico:'🗓️',k:'visites'},{ico:'⚖️',k:'notaire'},{ico:'📊',k:'statsannonces'},{ico:'🏗️',k:'artisans'},{ico:'📈',k:'stats'}]},
   ],
 };
 const LABELS = {
@@ -7495,6 +7530,496 @@ function renderSuiviDocuments(){
       <span style="font-size:16px">${d.done?'✅':'⬜'}</span>
       <span style="font-size:13px;color:${d.done?'var(--mid)':'var(--dark)'};${d.done?'text-decoration:line-through':''}">${d.label}</span>
     </div>`).join('')}`;
+}
+
+// =============================================
+// NOTAIRE COMPLET
+// =============================================
+
+const STATUT_NOT = {
+  offre:{label:'Offre acceptée',color:'#854D0E',bg:'#FEF9C3',border:'#FDE047',step:1},
+  compromis:{label:'Compromis signé',color:'#1D4ED8',bg:'#DBEAFE',border:'#93C5FD',step:2},
+  instruction:{label:'En instruction',color:'#9D174D',bg:'#FCE7F3',border:'#F9A8D4',step:3},
+  acte:{label:'Acte signé ✓',color:'#166534',bg:'#DCFCE7',border:'#86EFAC',step:4},
+};
+
+const DOC_STATUT = {
+  valide:{label:'✅ Validé',color:'#166534',bg:'#DCFCE7'},
+  'en-attente':{label:'⏳ En attente',color:'#854D0E',bg:'#FEF9C3'},
+  manquant:{label:'❌ Manquant',color:'#DC2626',bg:'#FEF2F2'},
+};
+
+let notActiveTab = 'dossiers';
+let notFilterStatut = '';
+
+function buildNotaire(){
+  updateNotaireStats();
+  renderNotaireDossiers();
+  renderNotDocs();
+  renderNotPlanning();
+  renderNotConformite();
+  setTimeout(applyMobileLayout,50);
+}
+
+function updateNotaireStats(){
+  ['offre','compromis','instruction','acte'].forEach(s=>{
+    const el=document.getElementById('not-nb-'+s);
+    if(el) el.textContent=DOSSIERS_NOTAIRE.filter(d=>d.statut===s).length;
+  });
+}
+
+function switchNotTab(tab){
+  notActiveTab=tab;
+  ['dossiers','documents','planning','conformite'].forEach(t=>{
+    const el=document.getElementById('not-'+t);
+    const btn=document.getElementById('not-tab-'+t);
+    if(el) el.style.display=t===tab?'block':'none';
+    if(btn) btn.classList.toggle('active',t===tab);
+  });
+}
+
+function filterDossiers(statut){
+  notFilterStatut=statut;
+  const sel=document.getElementById('not-filter-statut');
+  if(sel) sel.value=statut;
+  switchNotTab('dossiers');
+  renderNotaireDossiers();
+}
+
+function renderNotaireDossiers(){
+  const el=document.getElementById('notaire-dossiers-list');
+  if(!el) return;
+  const filterStatut=document.getElementById('not-filter-statut')?.value||notFilterStatut||'';
+  const search=(document.getElementById('not-search')?.value||'').toLowerCase();
+  let dossiers=DOSSIERS_NOTAIRE.filter(d=>{
+    if(filterStatut&&d.statut!==filterStatut) return false;
+    if(search&&!d.bien.toLowerCase().includes(search)&&!d.vendeur.toLowerCase().includes(search)&&!d.acheteur.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  if(!dossiers.length){
+    el.innerHTML='<div style="text-align:center;padding:40px;color:var(--mid)">Aucun dossier trouvé.</div>';
+    return;
+  }
+
+  el.innerHTML=dossiers.map(d=>{
+    const s=STATUT_NOT[d.statut]||STATUT_NOT.offre;
+    const docs=Object.values(d.docs);
+    const docsValides=docs.filter(doc=>doc.statut==='valide').length;
+    const docsManquants=docs.filter(doc=>doc.statut==='manquant').length;
+    const pct=Math.round(docsValides/docs.length*100);
+    const joursRestants=d.dateActe?Math.ceil((new Date(d.dateActe)-new Date())/(1000*60*60*24)):null;
+    const urgent=joursRestants!==null&&joursRestants<=30&&joursRestants>0;
+
+    return `<div style="background:#fff;border:1px solid ${urgent?'#FECACA':s.border};border-left:4px solid ${s.color};border-radius:12px;margin-bottom:14px;overflow:hidden">
+      <!-- EN-TÊTE -->
+      <div style="padding:16px;display:flex;align-items:start;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:10px;font-weight:700;color:var(--mid);background:var(--warm);padding:2px 8px;border-radius:8px">${d.ref}</span>
+            <span style="background:${s.bg};color:${s.color};border:1px solid ${s.border};padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700">${s.label}</span>
+            ${urgent?`<span style="background:#FEF2F2;color:#DC2626;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ${joursRestants}j restants</span>`:''}
+          </div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px">${d.bien}</div>
+          <div style="font-size:12px;color:var(--mid)">🏷️ <strong>${d.vendeur}</strong> → <strong>${d.acheteur}</strong></div>
+          <div style="font-size:11px;color:var(--mid);margin-top:2px">Agent: ${d.agent} · Notaire: ${d.notaire}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold)">${conv(d.prix)}</div>
+          ${d.dateActe?`<div style="font-size:11px;color:var(--mid)">Acte: ${d.dateActe}</div>`:''}
+          ${d.dateCompromis?`<div style="font-size:11px;color:var(--mid)">Compromis: ${d.dateCompromis}</div>`:''}
+        </div>
+      </div>
+
+      <!-- TIMELINE -->
+      <div style="padding:0 16px 12px">
+        <div style="display:flex;align-items:center;gap:0">
+          ${['offre','compromis','instruction','acte'].map((step,i)=>{
+            const st=STATUT_NOT[step];
+            const done=s.step>=st.step;
+            const active=s.step===st.step;
+            return `<div style="flex:1;text-align:center">
+              <div style="width:26px;height:26px;border-radius:50%;background:${done?s.color:'#E5E7EB'};color:#fff;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;${active?'box-shadow:0 0 0 3px '+s.border+';outline:none':''}">
+                ${done?'✓':st.step}
+              </div>
+              <div style="font-size:9px;color:${done?s.color:'#9CA3AF'};margin-top:3px;font-weight:${active?700:400}">${st.label.split(' ')[0]}</div>
+            </div>
+            ${i<3?`<div style="flex:0.5;height:2px;background:${s.step>st.step?s.color:'#E5E7EB'};margin-bottom:14px"></div>`:''}`;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- DOCUMENTS -->
+      <div style="padding:10px 16px;background:#F9FAFB;border-top:1px solid #F3F4F6;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="flex:1">
+          <div style="font-size:11px;color:var(--mid);margin-bottom:4px">Documents collectés : ${docsValides}/${docs.length}</div>
+          <div style="height:5px;background:#E5E7EB;border-radius:3px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${pct===100?'#16A34A':s.color};transition:.5s"></div>
+          </div>
+        </div>
+        ${docsManquants>0?`<span style="background:#FEF2F2;color:#DC2626;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">⚠️ ${docsManquants} manquant${docsManquants>1?'s':''}</span>`:''}
+        <div style="display:flex;gap:6px">
+          <button onclick="ouvrirDossierDetail(${d.id})" class="btn btn-gold btn-sm" style="font-size:11px">📁 Ouvrir le dossier</button>
+          ${d.statut!=='acte'?`<button onclick="avancerDossier(${d.id})" class="btn btn-outline btn-sm" style="font-size:11px">→ Avancer</button>`:''}
+        </div>
+      </div>
+
+      <!-- PRÊT STATUS -->
+      ${d.pret.statut!=='non-commence'?`
+      <div style="padding:8px 16px;background:${d.pret.statut==='debloque'?'#F0FDF4':d.pret.statut==='valide'?'#EFF6FF':'#FFF7ED'};border-top:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+        <div style="font-size:11px;font-weight:600;color:${d.pret.statut==='debloque'?'#166534':d.pret.statut==='valide'?'#1D4ED8':'#92400E'}">
+          🏦 ${d.pret.banque} — ${d.pret.statut==='debloque'?'Fonds débloqués ✅':d.pret.statut==='valide'?'Accord validé ✅':'Accord de principe'}
+        </div>
+        <div style="font-size:11px;color:var(--mid)">${conv(d.pret.montant)} · Déblocage: ${d.pret.deblocage||'—'}</div>
+      </div>`:``}
+
+      <!-- MESSAGERIE DOSSIER -->
+      ${d.messages.length?`
+      <div style="padding:10px 16px;border-top:1px solid #F3F4F6">
+        <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:6px">💬 Derniers messages</div>
+        ${d.messages.slice(-2).map(m=>`
+        <div style="display:flex;gap:8px;margin-bottom:4px">
+          <span style="font-size:10px;font-weight:700;color:${m.from==='notaire'?'#9333EA':m.from==='banque'?'#2563EB':'var(--gold)'};min-width:60px">${m.from==='notaire'?'Notaire':m.from==='banque'?'Banque':m.from==='agent'?'Agent':'Acheteur'}</span>
+          <span style="font-size:11px;color:var(--mid);flex:1">${m.text}</span>
+          <span style="font-size:10px;color:#D1D5DB">${m.date}</span>
+        </div>`).join('')}
+      </div>`:``}
+    </div>`;
+  }).join('');
+}
+
+function ouvrirDossierDetail(id){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
+  if(!d) return;
+  const s=STATUT_NOT[d.statut]||STATUT_NOT.offre;
+  const modal=document.getElementById('dossier-detail-modal');
+  const content=document.getElementById('dossier-detail-content');
+  if(!modal||!content) return;
+
+  const docs=Object.values(d.docs);
+  const docsValides=docs.filter(doc=>doc.statut==='valide').length;
+
+  content.innerHTML=`
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,${s.color},${s.color}CC);padding:22px;border-radius:16px 16px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px">${d.ref}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-weight:700;margin-bottom:4px">${d.bien}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7)">${d.vendeur} → ${d.acheteur}</div>
+          <div style="margin-top:6px"><span style="background:rgba(255,255,255,0.2);color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${s.label}</span></div>
+        </div>
+        <button onclick="document.getElementById('dossier-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+      </div>
+    </div>
+
+    <div style="padding:20px">
+      <!-- INFOS CLÉS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px">
+        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:14px;font-weight:700;color:var(--gold)">${conv(d.prix)}</div>
+          <div style="font-size:10px;color:var(--mid)">Prix de vente</div>
+        </div>
+        <div style="background:#EFF6FF;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:14px;font-weight:700;color:#2563EB">${conv(Math.round(d.prix*0.075))}</div>
+          <div style="font-size:10px;color:var(--mid)">Frais notaire</div>
+        </div>
+        <div style="background:#F0FDF4;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:14px;font-weight:700;color:#16A34A">${docsValides}/${docs.length}</div>
+          <div style="font-size:10px;color:var(--mid)">Documents OK</div>
+        </div>
+      </div>
+
+      <!-- COLLECTE DOCUMENTS -->
+      <div style="margin-bottom:18px">
+        <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:10px">📄 Collecte des documents</div>
+        ${Object.entries(d.docs).map(([key,doc])=>{
+          const ds=DOC_STATUT[doc.statut]||DOC_STATUT.manquant;
+          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid ${doc.statut==='valide'?'#BBF7D0':doc.statut==='en-attente'?'#FDE68A':'#FECACA'};background:${ds.bg};border-radius:8px;margin-bottom:5px">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--dark)">${doc.label}</div>
+              ${doc.date?`<div style="font-size:10px;color:var(--mid)">Reçu le ${doc.date}</div>`:''}
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:10px;font-weight:700;color:${ds.color}">${ds.label}</span>
+              ${doc.statut!=='valide'?`<button onclick="validerDoc(${d.id},'${key}')" style="background:${s.color};color:#fff;border:none;padding:2px 8px;border-radius:5px;font-size:10px;cursor:pointer">Valider</button>`:''}
+              ${doc.statut==='manquant'?`<button onclick="relancerDoc(${d.id},'${doc.label}')" style="background:#fff;color:${s.color};border:1px solid ${s.color};padding:2px 8px;border-radius:5px;font-size:10px;cursor:pointer">Relancer</button>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- FINANCEMENT -->
+      <div style="background:#F8FAFC;border-radius:10px;padding:14px;margin-bottom:18px">
+        <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:10px">🏦 Statut du financement</div>
+        <div class="ai-line" style="border-color:#E5E7EB"><span>Banque</span><span>${d.pret.banque||'—'}</span></div>
+        <div class="ai-line" style="border-color:#E5E7EB"><span>Montant</span><span style="font-weight:700;color:var(--gold)">${d.pret.montant?conv(d.pret.montant):'—'}</span></div>
+        <div class="ai-line" style="border-color:#E5E7EB"><span>Statut prêt</span><span style="font-weight:700;color:${d.pret.statut==='debloque'?'#16A34A':d.pret.statut==='valide'?'#2563EB':'#D97706'}">${d.pret.statut==='debloque'?'✅ Fonds débloqués':d.pret.statut==='valide'?'✅ Accord validé':d.pret.statut==='accord-principe'?'⏳ Accord de principe':'🔄 Non commencé'}</span></div>
+        <div class="ai-line" style="border-color:#E5E7EB"><span>Déblocage prévu</span><span>${d.pret.deblocage||'—'}</span></div>
+      </div>
+
+      <!-- MESSAGERIE DOSSIER -->
+      <div style="margin-bottom:18px">
+        <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:10px">💬 Fil de discussion</div>
+        <div style="border:1px solid #E5E7EB;border-radius:10px;overflow:hidden">
+          <div style="max-height:180px;overflow-y:auto;padding:12px;background:#FAFAFA">
+            ${d.messages.map(m=>`
+            <div style="margin-bottom:8px;display:flex;gap:8px;align-items:start">
+              <div style="width:28px;height:28px;border-radius:50%;background:${m.from==='notaire'?'#9333EA':m.from==='banque'?'#2563EB':m.from==='acheteur'?'#16A34A':'var(--gold)'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${m.from==='notaire'?'N':m.from==='banque'?'B':m.from==='acheteur'?'A':'Ag'}</div>
+              <div style="flex:1;background:#fff;border-radius:0 8px 8px 8px;padding:8px 10px;border:1px solid #E5E7EB">
+                <div style="font-size:10px;font-weight:700;color:${m.from==='notaire'?'#9333EA':m.from==='banque'?'#2563EB':m.from==='acheteur'?'#16A34A':'var(--gold)'};margin-bottom:2px">${m.from==='notaire'?'Notaire':m.from==='banque'?'Banque':m.from==='acheteur'?'Acheteur':'Agent'} · ${m.date}</div>
+                <div style="font-size:12px;color:var(--dark)">${m.text}</div>
+              </div>
+            </div>`).join('')}
+          </div>
+          <div style="padding:10px 12px;border-top:1px solid #E5E7EB;display:flex;gap:8px">
+            <input type="text" id="msg-input-${d.id}" placeholder="Envoyer un message..." style="flex:1;border:1px solid #E5E7EB;border-radius:6px;padding:6px 10px;font-size:12px">
+            <button onclick="envoyerMessageDossier(${d.id})" class="btn btn-gold btn-sm">Envoyer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${d.statut!=='acte'?`<button onclick="avancerDossier(${d.id});document.getElementById('dossier-detail-modal').style.display='none'" class="btn btn-gold" style="flex:1">→ Étape suivante</button>`:''}
+        <button onclick="genererCompromis(${d.id})" class="btn btn-outline" style="flex:1">📝 Générer compromis</button>
+        <button onclick="exporterDossier(${d.id})" class="btn btn-outline">📥 Exporter</button>
+      </div>
+      ${d.notes?`<div style="margin-top:10px;padding:8px 12px;background:var(--warm);border-radius:8px;font-size:12px;color:var(--mid);font-style:italic">📝 ${d.notes}</div>`:''}
+    </div>`;
+
+  modal.style.display='flex';
+}
+
+function validerDoc(dossierId, docKey){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===dossierId);
+  if(!d||!d.docs[docKey]) return;
+  d.docs[docKey].statut='valide';
+  d.docs[docKey].date=new Date().toISOString().split('T')[0];
+  ouvrirDossierDetail(dossierId);
+  renderNotaireDossiers();
+  updateNotaireStats();
+}
+
+function relancerDoc(dossierId, docLabel){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===dossierId);
+  if(!d) return;
+  const partie=d.acheteur;
+  const notif=document.createElement('div');
+  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;max-width:300px';
+  notif.innerHTML='📨 Relance envoyée à '+partie+'<br><small style="font-weight:400">Document demandé : '+docLabel+'</small>';
+  document.body.appendChild(notif);
+  setTimeout(()=>document.body.removeChild(notif),4000);
+}
+
+function envoyerMessageDossier(id){
+  const input=document.getElementById('msg-input-'+id);
+  if(!input||!input.value.trim()) return;
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
+  if(!d) return;
+  d.messages.push({from:'agent',text:input.value.trim(),date:new Date().toISOString().split('T')[0]});
+  input.value='';
+  ouvrirDossierDetail(id);
+}
+
+function genererCompromis(id){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
+  if(!d) return;
+
+
+
+
+
+
+
+
+
+}
+
+function exporterDossier(id){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
+  if(!d) return;
+
+
+
+
+
+
+
+
+
+}
+
+function avancerDossier(id){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
+  if(!d) return;
+  const ordre=['offre','compromis','instruction','acte'];
+  const idx=ordre.indexOf(d.statut);
+  if(idx<ordre.length-1){
+    d.statut=ordre[idx+1];
+    buildNotaire();
+    const s=STATUT_NOT[d.statut];
+    const notif=document.createElement('div');
+    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:'+s.color+';color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999';
+    notif.textContent='✓ Dossier avancé : '+s.label;
+    document.body.appendChild(notif);
+    setTimeout(()=>document.body.removeChild(notif),3000);
+  }
+}
+
+function renderNotDocs(){
+  const el=document.getElementById('not-docs-grid');
+  if(!el) return;
+  const actifs=DOSSIERS_NOTAIRE.filter(d=>d.statut!=='acte');
+  el.innerHTML=actifs.map(d=>{
+    const docs=Object.entries(d.docs);
+    const manquants=docs.filter(([k,v])=>v.statut==='manquant');
+    const enAttente=docs.filter(([k,v])=>v.statut==='en-attente');
+    const valides=docs.filter(([k,v])=>v.statut==='valide');
+    const pct=Math.round(valides.length/docs.length*100);
+    const s=STATUT_NOT[d.statut]||STATUT_NOT.offre;
+    return `<div style="background:#fff;border:1px solid #E5E7EB;border-left:4px solid ${s.color};border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--dark)">${d.ref} — ${d.bien.substring(0,40)}</div>
+          <div style="font-size:11px;color:var(--mid)">${d.vendeur} → ${d.acheteur}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          ${manquants.length>0?`<span style="background:#FEF2F2;color:#DC2626;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">❌ ${manquants.length} manquant${manquants.length>1?'s':''}</span>`:''}
+          ${enAttente.length>0?`<span style="background:#FEF9C3;color:#854D0E;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">⏳ ${enAttente.length} en attente</span>`:''}
+          <span style="font-size:13px;font-weight:700;color:${pct===100?'#16A34A':s.color}">${pct}%</span>
+        </div>
+      </div>
+      <div style="height:6px;background:#F3F4F6;border-radius:3px;overflow:hidden;margin-bottom:10px">
+        <div style="width:${pct}%;height:100%;background:${pct===100?'#16A34A':s.color}"></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${docs.map(([k,v])=>{
+          const ds=DOC_STATUT[v.statut]||DOC_STATUT.manquant;
+          return `<span style="background:${ds.bg};color:${ds.color};border:1px solid ${ds.color}30;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500" title="${v.label}">${v.statut==='valide'?'✅':v.statut==='en-attente'?'⏳':'❌'} ${v.label.split(' ').slice(0,2).join(' ')}</span>`;
+        }).join('')}
+      </div>
+      ${manquants.length>0?`<button onclick="relancerTousManquants(${d.id})" class="btn btn-gold btn-sm" style="margin-top:10px;font-size:11px">📨 Relancer pour les ${manquants.length} manquants</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+function relancerTousManquants(id){
+  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
+  if(!d) return;
+  const manquants=Object.values(d.docs).filter(v=>v.statut==='manquant').map(v=>v.label);
+  const notif=document.createElement('div');
+  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;max-width:320px';
+  notif.innerHTML='📨 Relances envoyées<br><small style="font-weight:400">'+manquants.length+' documents demandés à '+d.acheteur+' et '+d.vendeur+'</small>';
+  document.body.appendChild(notif);
+  setTimeout(()=>document.body.removeChild(notif),4000);
+}
+
+function renderNotPlanning(){
+  const el=document.getElementById('not-planning-content');
+  if(!el) return;
+  const rdvs=[
+    {ref:'NOT-2026-001',type:'Signature compromis',parties:'M. Laurent + Mme Lecomte',date:'2026-06-15',heure:'14:00',lieu:'Étude Me Dupont — Nouméa',mode:'présentiel',statut:'confirme'},
+    {ref:'NOT-2026-002',type:'Signature acte définitif',parties:'M. Roux + Famille Martin',date:'2026-07-20',heure:'10:00',lieu:'Visioconférence',mode:'visio',statut:'confirme'},
+    {ref:'NOT-2026-003',type:'Signature compromis',parties:'M. Blanc + M. Moreau',date:'2026-06-25',heure:'11:00',lieu:'À définir',mode:'présentiel',statut:'en-attente'},
+  ];
+  el.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:14px;font-weight:600;color:var(--dark)">${rdvs.length} signatures planifiées</div>
+        onclick="alert('Planification RDV signature — envoi invitation calendrier aux parties')">
+    </div>
+    ${rdvs.map(r=>`
+    <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="text-align:center;background:${r.statut==='confirme'?'#DCFCE7':'#FEF9C3'};border-radius:10px;padding:10px 14px;min-width:80px">
+        <div style="font-size:13px;font-weight:800;color:${r.statut==='confirme'?'#166534':'#854D0E'}">${r.date.split('-')[2]}/${r.date.split('-')[1]}</div>
+        <div style="font-size:11px;color:var(--mid)">${r.heure}</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px">${r.type}</div>
+        <div style="font-size:11px;color:var(--mid);margin-bottom:2px">👥 ${r.parties}</div>
+        <div style="font-size:11px;color:var(--mid)">📍 ${r.lieu} · ${r.mode==='visio'?'🖥️ Visio':'🏢 Présentiel'}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <span style="background:${r.statut==='confirme'?'#DCFCE7':'#FEF9C3'};color:${r.statut==='confirme'?'#166534':'#854D0E'};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">${r.statut==='confirme'?'✅ Confirmé':'⏳ En attente'}</span>
+        <span style="font-size:10px;color:var(--mid);text-align:center">${r.ref}</span>
+      </div>
+    </div>`).join('')}`;
+}
+
+function renderNotConformite(){
+  const el=document.getElementById('not-conformite-content');
+  if(!el) return;
+  const checks=DOSSIERS_NOTAIRE.filter(d=>d.statut!=='acte').map(d=>{
+    const docs=Object.values(d.docs);
+    const docsValides=docs.filter(v=>v.statut==='valide').length;
+    const pct=Math.round(docsValides/docs.length*100);
+    const s=STATUT_NOT[d.statut]||STATUT_NOT.offre;
+    const alertes=[];
+    if(Object.values(d.docs).some(v=>v.statut==='manquant')) alertes.push('Documents manquants');
+    if(d.pret.statut==='non-commence'&&d.statut!=='offre') alertes.push('Financement non initié');
+    if(!d.dateActe&&d.statut==='instruction') alertes.push('Date acte non définie');
+    return {d,pct,alertes,s};
+  });
+
+  el.innerHTML=`
+    <div style="font-size:13px;color:var(--mid);margin-bottom:16px">Vérification automatique de la conformité de chaque dossier actif</div>
+    ${checks.map(({d,pct,alertes,s})=>`
+    <div style="background:#fff;border:1px solid ${alertes.length?'#FECACA':'#BBF7D0'};border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--dark)">${d.ref} — ${d.bien.substring(0,35)}</div>
+          <div style="font-size:11px;color:var(--mid)">${d.vendeur} → ${d.acheteur}</div>
+        </div>
+        <span style="font-size:18px;font-weight:800;color:${pct===100?'#16A34A':pct>=75?'#D97706':'#DC2626'}">${pct}%</span>
+      </div>
+      ${alertes.length>0?`
+      <div style="background:#FEF2F2;border-radius:8px;padding:10px;margin-bottom:8px">
+        ${alertes.map(a=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#DC2626;margin-bottom:3px">⚠️ ${a}</div>`).join('')}
+      </div>`:`<div style="font-size:12px;color:#16A34A;margin-bottom:8px">✅ Dossier conforme — aucune alerte</div>`}
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button onclick="ouvrirDossierDetail(${d.id})" class="btn btn-gold btn-sm" style="font-size:11px">📁 Voir le dossier</button>
+        ${alertes.length>0?`<button onclick="relancerTousManquants(${d.id})" class="btn btn-outline btn-sm" style="font-size:11px">📨 Relancer les parties</button>`:''}
+      </div>
+    </div>`).join('')}`;
+}
+
+function showAddDossierModal(){
+  const m=document.getElementById('dossier-modal');
+  if(m) m.style.display='flex';
+}
+
+function saveDossier(){
+  const bien=document.getElementById('dos-bien')?.value?.trim();
+  const vendeur=document.getElementById('dos-vendeur')?.value?.trim();
+  const acheteur=document.getElementById('dos-acheteur')?.value?.trim();
+  if(!bien||!vendeur||!acheteur){alert('Bien, vendeur et acheteur requis');return;}
+  const newId=Date.now();
+  const ref='NOT-2026-00'+(DOSSIERS_NOTAIRE.length+1);
+  DOSSIERS_NOTAIRE.unshift({
+    id:newId, ref,
+    bien, vendeur, acheteur,
+    agent:document.getElementById('dos-agent')?.value||'',
+    notaire:document.getElementById('dos-notaire')?.value||'',
+    prix:parseInt(document.getElementById('dos-prix')?.value||0),
+    statut:document.getElementById('dos-statut')?.value||'offre',
+    dateCompromis:document.getElementById('dos-date-compromis')?.value||'',
+    dateActe:document.getElementById('dos-date-acte')?.value||'',
+    messages:[{from:'agent',text:'Dossier créé sur Immo360',date:new Date().toISOString().split('T')[0]}],
+    docs:{
+      identiteVendeur:{label:"Pièce d'identité vendeur",statut:'manquant',date:null},
+      identiteAcheteur:{label:"Pièce d'identité acheteur",statut:'manquant',date:null},
+      titreProprietee:{label:'Titre de propriété',statut:'manquant',date:null},
+      diagnostics:{label:'Diagnostics techniques',statut:'manquant',date:null},
+      taxeFonciere:{label:'Taxe foncière',statut:'manquant',date:null},
+      attestationBancaire:{label:'Attestation bancaire',statut:'manquant',date:null},
+      livreFamille:{label:'Livret de famille',statut:'manquant',date:null},
+      compromis:{label:'Compromis signé',statut:'manquant',date:null},
+    },
+    pret:{statut:'non-commence',banque:'',montant:0,deblocage:''},
+    notes:document.getElementById('dos-notes')?.value||''
+  });
+  document.getElementById('dossier-modal').style.display='none';
+  buildNotaire();
 }
 
 // =============================================
