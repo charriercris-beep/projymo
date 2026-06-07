@@ -2456,6 +2456,240 @@ input[type=range]{padding:0;height:6px;accent-color:var(--gold)}
       </div>
     </div>
 
+    <!-- ==================== MANDATS ==================== -->
+    <div class="panel" id="panel-mandats">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">📋 Gestion des Mandats</h2>
+          <p style="font-size:13px;color:var(--mid)">Mandats de vente, exclusivités, signatures et renouvellements</p>
+        </div>
+        <button class="btn btn-gold" onclick="showAddMandatModal()">+ Créer un mandat</button>
+      </div>
+
+      <!-- STATS -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div style="background:linear-gradient(135deg,#DBEAFE,#EFF6FF);border-radius:12px;padding:14px;text-align:center;border:1px solid #93C5FD">
+          <div style="font-size:26px;font-weight:800;color:#1D4ED8" id="mand-nb-actifs">0</div>
+          <div style="font-size:11px;color:#1E40AF;font-weight:600">Mandats actifs</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#FEF9C3,#FEFCE8);border-radius:12px;padding:14px;text-align:center;border:1px solid #FDE047">
+          <div style="font-size:26px;font-weight:800;color:#854D0E" id="mand-nb-exclusifs">0</div>
+          <div style="font-size:11px;color:#92400E;font-weight:600">Exclusifs</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#FCE7F3,#FDF2F8);border-radius:12px;padding:14px;text-align:center;border:1px solid #F9A8D4">
+          <div style="font-size:26px;font-weight:800;color:#9D174D" id="mand-nb-renouveler">0</div>
+          <div style="font-size:11px;color:#831843;font-weight:600">À renouveler</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#DCFCE7,#F0FDF4);border-radius:12px;padding:14px;text-align:center;border:1px solid #86EFAC">
+          <div style="font-size:26px;font-weight:800;color:#166534" id="mand-nb-signes">0</div>
+          <div style="font-size:11px;color:#15803D;font-weight:600">Signés électroniquement</div>
+        </div>
+      </div>
+
+      <!-- ALERTES RENOUVELLEMENT -->
+      <div id="mand-alertes" style="margin-bottom:16px"></div>
+
+      <!-- LISTE MANDATS -->
+      <div id="mandats-list"></div>
+
+      <!-- MODAL MANDAT -->
+      <div id="mandat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">📋 Nouveau mandat</h3>
+            <button onclick="document.getElementById('mandat-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Type de mandat *</label>
+              <select id="mand-type">
+                <option value="exclusif">Mandat exclusif</option>
+                <option value="simple">Mandat simple</option>
+                <option value="semi-exclusif">Semi-exclusif</option>
+              </select>
+            </div>
+            <div class="field"><label>Durée (mois)</label>
+              <select id="mand-duree">
+                <option value="3">3 mois</option>
+                <option value="6" selected>6 mois</option>
+                <option value="12">12 mois</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Bien concerné *</label><input type="text" id="mand-bien" placeholder="Ex: Appartement F4 Anse Vata — 92m²"></div>
+          <div class="field-row">
+            <div class="field"><label>Vendeur *</label><input type="text" id="mand-vendeur" placeholder="Nom du propriétaire"></div>
+            <div class="field"><label>Téléphone</label><input type="tel" id="mand-tel" placeholder="+687 00 00 00"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Prix de vente (F) *</label><input type="number" id="mand-prix" placeholder="45000000"></div>
+            <div class="field"><label>Honoraires (%)</label><input type="number" id="mand-honoraires" value="5" step="0.5"></div>
+          </div>
+          <div class="field"><label>Date de début</label><input type="date" id="mand-debut"></div>
+          <div class="field"><label>Conditions particulières</label><textarea id="mand-conditions" rows="2" placeholder="Conditions spécifiques, restrictions..."></textarea></div>
+          <div style="background:var(--warm);border-radius:8px;padding:12px;margin-bottom:14px">
+            <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px">📝 Signature électronique</div>
+            <div style="font-size:11px;color:var(--mid);margin-bottom:8px">Le mandat sera envoyé par email au vendeur pour signature électronique sécurisée.</div>
+            <label class="eq-check"><input type="checkbox" id="mand-esign" checked> Activer la signature électronique</label>
+          </div>
+          <button class="btn btn-gold btn-full" onclick="saveMandat()">✅ Créer et envoyer pour signature</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VISITES & COMPTES-RENDUS ==================== -->
+    <div class="panel" id="panel-visites">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🗓️ Gestion des Visites</h2>
+          <p style="font-size:13px;color:var(--mid)">Agenda, confirmations SMS, comptes-rendus et bons de visite</p>
+        </div>
+        <button class="btn btn-gold" onclick="showAddVisiteModal()">+ Planifier une visite</button>
+      </div>
+
+      <div class="grid2">
+        <!-- AGENDA -->
+        <div>
+          <div class="card">
+            <div class="card-title">📅 Agenda des visites</div>
+            <div id="visites-agenda"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">📊 Statistiques visites</div>
+            <div id="visites-stats"></div>
+          </div>
+        </div>
+
+        <!-- COMPTES-RENDUS -->
+        <div>
+          <div class="card">
+            <div class="card-title">📝 Comptes-rendus de visite
+              <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showCRVisiteModal()">+ Nouveau CR</button>
+            </div>
+            <div id="cr-visites-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL VISITE -->
+      <div id="visite-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">📅 Planifier une visite</h3>
+            <button onclick="document.getElementById('visite-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+          </div>
+          <div class="field"><label>Bien *</label><input type="text" id="vis-bien" placeholder="Appartement Anse Vata..."></div>
+          <div class="field-row">
+            <div class="field"><label>Acheteur *</label><input type="text" id="vis-acheteur" placeholder="Nom de l'acheteur"></div>
+            <div class="field"><label>Téléphone *</label><input type="tel" id="vis-tel" placeholder="+687 00 00 00"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Date *</label><input type="date" id="vis-date"></div>
+            <div class="field"><label>Heure *</label><input type="time" id="vis-heure" value="10:00"></div>
+          </div>
+          <div class="field"><label>Durée</label>
+            <select id="vis-duree">
+              <option value="30">30 min</option>
+              <option value="60" selected>1 heure</option>
+              <option value="90">1h30</option>
+              <option value="120">2 heures</option>
+            </select>
+          </div>
+          <div class="field"><label>Notes</label><textarea id="vis-notes" rows="2" placeholder="Particularités, accès, codes..."></textarea></div>
+          <div style="background:#EFF6FF;border-radius:8px;padding:12px;margin-bottom:14px">
+            <label class="eq-check"><input type="checkbox" id="vis-sms" checked> 📱 Envoyer confirmation SMS à l'acheteur</label>
+            <label class="eq-check" style="margin-top:6px"><input type="checkbox" id="vis-bon" checked> 📋 Générer bon de visite automatiquement</label>
+          </div>
+          <button class="btn btn-gold btn-full" onclick="saveVisite()">✅ Confirmer la visite</button>
+        </div>
+      </div>
+
+      <!-- MODAL COMPTE-RENDU -->
+      <div id="cr-visite-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px">📝 Compte-rendu de visite</h3>
+            <button onclick="document.getElementById('cr-visite-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+          </div>
+          <div class="field"><label>Bien visité</label><input type="text" id="cr-bien" placeholder="Appartement Anse Vata..."></div>
+          <div class="field-row">
+            <div class="field"><label>Acheteur</label><input type="text" id="cr-acheteur" placeholder="Nom"></div>
+            <div class="field"><label>Date de visite</label><input type="date" id="cr-date"></div>
+          </div>
+          <div class="field"><label>Intérêt de l'acheteur</label>
+            <select id="cr-interet">
+              <option value="tres-interesse">🔥 Très intéressé — offre probable</option>
+              <option value="interesse">✅ Intéressé — à relancer</option>
+              <option value="mitige">🟡 Mitigé — hésitant</option>
+              <option value="non-interesse">❌ Pas intéressé</option>
+            </select>
+          </div>
+          <div class="field"><label>Points positifs relevés</label>
+            <textarea id="cr-positifs" rows="2" placeholder="Ce qui a plu à l'acheteur..."></textarea>
+          </div>
+          <div class="field"><label>Points négatifs / Objections</label>
+            <textarea id="cr-negatifs" rows="2" placeholder="Objections, réserves..."></textarea>
+          </div>
+          <div class="field"><label>Suite à donner</label>
+            <textarea id="cr-suite" rows="2" placeholder="Actions prévues, relance, contre-proposition..."></textarea>
+          </div>
+          <div style="background:var(--warm);border-radius:8px;padding:10px;margin-bottom:14px">
+            <label class="eq-check"><input type="checkbox" id="cr-signature"> ✍️ Demander signature du bon de visite</label>
+          </div>
+          <button class="btn btn-gold btn-full" onclick="saveCRVisite()">✅ Enregistrer le compte-rendu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== STATS ANNONCES ==================== -->
+    <div class="panel" id="panel-statsannonces">
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">📊 Statistiques des annonces</h2>
+        <p style="font-size:13px;color:var(--mid)">Vues, contacts, taux de conversion et performances par portail</p>
+      </div>
+
+      <!-- KPIs GLOBAUX -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+        <div style="background:linear-gradient(135deg,#1C1A16,#2a2520);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:var(--gold)">2 847</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px">Vues totales ce mois</div>
+          <div style="font-size:10px;color:#6fd98a;margin-top:2px">↑ +23% vs mois dernier</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#1D4ED8,#2563EB);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:#fff">184</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px">Contacts reçus</div>
+          <div style="font-size:10px;color:#86EFAC;margin-top:2px">↑ +12 cette semaine</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#16A34A,#22C55E);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:#fff">6.5%</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px">Taux de conversion</div>
+          <div style="font-size:10px;color:#86EFAC;margin-top:2px">Moy. marché NC : 3.2%</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#9333EA,#A855F7);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:#fff">18</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px">Visites planifiées</div>
+          <div style="font-size:10px;color:#E9D5FF;margin-top:2px">5 cette semaine</div>
+        </div>
+      </div>
+
+      <!-- STATS PAR ANNONCE -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-title">🏠 Performance par annonce</div>
+        <div id="stats-annonces-table"></div>
+      </div>
+
+      <!-- STATS PAR PORTAIL -->
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">🌐 Vues par portail</div>
+          <div id="stats-portails"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📈 Évolution des vues (7 jours)</div>
+          <div id="stats-evolution"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== STATS ==================== -->
     <div class="panel" id="panel-stats">
       <div class="grid4" style="margin-bottom:18px" id="stats-kpis"></div>
@@ -2643,12 +2877,12 @@ const MENUS = {
     {s:'Mon espace',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'🎨',k:'decoration'},{ico:'📅',k:'rdv'}]},
   ],
   agt:[
-    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'},{ico:'💎',k:'estimation'}]},
-    {s:'Business',items:[{ico:'📣',k:'annonces'},{ico:'🏗️',k:'artisans'},{ico:'👥',k:'crm'},{ico:'⚖️',k:'notaire'},{ico:'📅',k:'rdv'}]},
+    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'📋',k:'mandats'},{ico:'🤖',k:'matching'},{ico:'👥',k:'crm'}]},
+    {s:'Business',items:[{ico:'🗓️',k:'visites'},{ico:'⚖️',k:'notaire'},{ico:'📊',k:'statsannonces'},{ico:'🏗️',k:'artisans'},{ico:'💎',k:'estimation'}]},
   ],
 };
 const LABELS = {
-  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
+  fr:{dashboard:'Tableau de bord',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
 };
 const lbl = k=>(LABELS[S.lang]||LABELS.fr)[k]||k;
@@ -2699,6 +2933,9 @@ function go(panel){
   if(panel==='marketplace') buildMarketplace();
   if(panel==='matching') buildMatching();
   if(panel==='artisans') buildArtisans();
+  if(panel==='mandats') buildMandats();
+  if(panel==='visites') buildVisites();
+  if(panel==='statsannonces') buildStatsAnnonces();
   if(panel==='crm') buildCRM();
   if(panel==='notaire') buildNotaire();
   if(panel==='projetdevie') updateProjetDeVie();
@@ -6226,6 +6463,410 @@ function lancerProjetDeVie(){
 
 function updateProjetDeVie(){
   // Mise à jour légère en temps réel
+}
+
+// =============================================
+// MANDATS
+// =============================================
+let MANDATS = [
+  {id:1,type:'exclusif',bien:'Appartement F4 Anse Vata — 92m²',vendeur:'M. Bernard Laurent',tel:'+687 43 21 00',prix:48500000,honoraires:5,debut:'2026-03-01',fin:'2026-09-01',statut:'actif',signe:true,conditions:'Visite sur rendez-vous uniquement'},
+  {id:2,type:'simple',bien:'Maison F5 Dumbéa — 148m²',vendeur:'Paul & Sophie Roux',tel:'+687 77 88 99',prix:58000000,honoraires:4,debut:'2026-04-15',fin:'2026-10-15',statut:'actif',signe:true,conditions:''},
+  {id:3,type:'exclusif',bien:'Villa Mont-Dore — 185m²',vendeur:'NC Immobilier',tel:'+687 27 73 00',prix:78000000,honoraires:5,debut:'2026-01-01',fin:'2026-07-01',statut:'renouveler',signe:true,conditions:'Exclusivité totale 6 mois'},
+  {id:4,type:'simple',bien:'Studio Magenta — 35m²',vendeur:'Particulier',tel:'+687 99 12 34',prix:9900000,honoraires:3,debut:'2026-05-01',fin:'2026-11-01',statut:'actif',signe:false,conditions:''},
+];
+
+function buildMandats(){
+  updateMandatStats();
+  renderMandats();
+  renderMandatAlertes();
+}
+
+function updateMandatStats(){
+  const today=new Date();
+  const in30=new Date(today.getTime()+30*24*60*60*1000).toISOString().split('T')[0];
+  document.getElementById('mand-nb-actifs').textContent=MANDATS.filter(m=>m.statut==='actif').length;
+  document.getElementById('mand-nb-exclusifs').textContent=MANDATS.filter(m=>m.type==='exclusif').length;
+  document.getElementById('mand-nb-renouveler').textContent=MANDATS.filter(m=>m.fin<=in30).length;
+  document.getElementById('mand-nb-signes').textContent=MANDATS.filter(m=>m.signe).length;
+}
+
+function renderMandatAlertes(){
+  const el=document.getElementById('mand-alertes');
+  if(!el)return;
+  const today=new Date();
+  const in30=new Date(today.getTime()+30*24*60*60*1000).toISOString().split('T')[0];
+  const alertes=MANDATS.filter(m=>m.fin<=in30);
+  if(!alertes.length){el.innerHTML='';return;}
+  el.innerHTML=`<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px;margin-bottom:16px">
+    <div style="font-size:13px;font-weight:700;color:#DC2626;margin-bottom:8px">🔔 ${alertes.length} mandat${alertes.length>1?'s':''} à renouveler dans les 30 jours</div>
+    ${alertes.map(m=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid #FECACA">
+      <div><div style="font-size:12px;font-weight:600;color:var(--dark)">${m.bien}</div><div style="font-size:11px;color:var(--mid)">Expire le ${m.fin} · ${m.vendeur}</div></div>
+      <button onclick="renouvelerMandat(${m.id})" class="btn btn-sm" style="background:#DC2626;color:#fff;border:none;font-size:11px">Renouveler</button>
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderMandats(){
+  const el=document.getElementById('mandats-list');
+  if(!el)return;
+  const TYPE_COLORS={exclusif:{bg:'#FEF9C3',color:'#854D0E',label:'Exclusif'},simple:{bg:'#EFF6FF',color:'#1D4ED8',label:'Simple'},'semi-exclusif':{bg:'#F0FDF4',color:'#15803D',label:'Semi-exclusif'}};
+  el.innerHTML=MANDATS.map(m=>{
+    const tc=TYPE_COLORS[m.type]||TYPE_COLORS.simple;
+    const honorairesMontant=Math.round(m.prix*(m.honoraires/100));
+    const joursRestants=Math.ceil((new Date(m.fin)-new Date())/(1000*60*60*24));
+    const urgent=joursRestants<=30;
+    return `<div style="background:#fff;border:1px solid ${urgent?'#FECACA':'#E5E7EB'};border-left:4px solid ${urgent?'#DC2626':tc.color};border-radius:12px;padding:16px;margin-bottom:10px">
+      <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:3px">${m.bien}</div>
+          <div style="font-size:12px;color:var(--mid)">👤 ${m.vendeur} · ${m.tel}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <span style="background:${tc.bg};color:${tc.color};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">${tc.label}</span>
+          ${m.signe?'<span style="background:#DCFCE7;color:#166534;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">✍️ Signé</span>':'<span style="background:#FFF7ED;color:#EA580C;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">⏳ En attente signature</span>'}
+          ${urgent?`<span style="background:#FEF2F2;color:#DC2626;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">⚠️ ${joursRestants}j restants</span>`:''}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+        <div style="background:#F9FAFB;border-radius:8px;padding:8px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--gold)">${conv(m.prix)}</div><div style="font-size:9px;color:var(--mid)">Prix vente</div></div>
+        <div style="background:#F9FAFB;border-radius:8px;padding:8px;text-align:center"><div style="font-size:13px;font-weight:700;color:#16A34A">${m.honoraires}%</div><div style="font-size:9px;color:var(--mid)">Honoraires</div></div>
+        <div style="background:#F9FAFB;border-radius:8px;padding:8px;text-align:center"><div style="font-size:13px;font-weight:700;color:#9333EA">${conv(honorairesMontant)}</div><div style="font-size:9px;color:var(--mid)">Commission</div></div>
+        <div style="background:${urgent?'#FEF2F2':'#F9FAFB'};border-radius:8px;padding:8px;text-align:center"><div style="font-size:13px;font-weight:700;color:${urgent?'#DC2626':'var(--dark)'}">${joursRestants}j</div><div style="font-size:9px;color:var(--mid)">Restants</div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--mid);flex-wrap:wrap;gap:8px">
+        <span>📅 Du ${m.debut} au ${m.fin}</span>
+        <div style="display:flex;gap:5px">
+          ${!m.signe?`<button onclick="signerMandat(${m.id})" class="btn btn-gold btn-sm" style="font-size:10px">✍️ Signer électroniquement</button>`:''}
+          <button onclick="renouvelerMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">🔄 Renouveler</button>
+          <button onclick="archiverMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">📁 Archiver</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showAddMandatModal(){
+  const m=document.getElementById('mandat-modal');
+  if(m){m.style.display='flex';document.getElementById('mand-debut').value=new Date().toISOString().split('T')[0];}
+}
+
+function saveMandat(){
+  const bien=document.getElementById('mand-bien')?.value?.trim();
+  const vendeur=document.getElementById('mand-vendeur')?.value?.trim();
+  if(!bien||!vendeur){alert('Bien et vendeur requis');return;}
+  const debut=document.getElementById('mand-debut')?.value||new Date().toISOString().split('T')[0];
+  const duree=parseInt(document.getElementById('mand-duree')?.value||6);
+  const finDate=new Date(debut);
+  finDate.setMonth(finDate.getMonth()+duree);
+  const sms=document.getElementById('mand-esign')?.checked;
+  MANDATS.unshift({
+    id:Date.now(),
+    type:document.getElementById('mand-type')?.value||'simple',
+    bien,vendeur,
+    tel:document.getElementById('mand-tel')?.value||'',
+    prix:parseInt(document.getElementById('mand-prix')?.value||0),
+    honoraires:parseFloat(document.getElementById('mand-honoraires')?.value||5),
+    debut,
+    fin:finDate.toISOString().split('T')[0],
+    statut:'actif',
+    signe:!sms,
+    conditions:document.getElementById('mand-conditions')?.value||''
+  });
+  document.getElementById('mandat-modal').style.display='none';
+  buildMandats();
+  if(sms){
+    const notif=document.createElement('div');
+    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:#16A34A;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999';
+    notif.innerHTML='✍️ Mandat envoyé à '+vendeur+' pour signature électronique';
+    document.body.appendChild(notif);
+    setTimeout(()=>document.body.removeChild(notif),3500);
+  }
+}
+
+function signerMandat(id){
+  const m=MANDATS.find(x=>x.id===id);
+  if(!m)return;
+  m.signe=true;
+  renderMandats();
+  updateMandatStats();
+  alert('✍️ Demande de signature envoyée à '+m.vendeur+' par email. La signature électronique est sécurisée et juridiquement valable.');
+}
+
+function renouvelerMandat(id){
+  const m=MANDATS.find(x=>x.id===id);
+  if(!m)return;
+  const finDate=new Date(m.fin);
+  finDate.setMonth(finDate.getMonth()+6);
+  m.fin=finDate.toISOString().split('T')[0];
+  m.statut='actif';
+  buildMandats();
+  const notif=document.createElement('div');
+  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999';
+  notif.textContent="✅ Mandat renouvelé jusqu'au "+m.fin;
+  document.body.appendChild(notif);
+  setTimeout(()=>document.body.removeChild(notif),3000);
+}
+
+function archiverMandat(id){
+  if(!confirm('Archiver ce mandat ?'))return;
+  MANDATS=MANDATS.filter(m=>m.id!==id);
+  buildMandats();
+}
+
+// =============================================
+// VISITES & COMPTES-RENDUS
+// =============================================
+let VISITES=[
+  {id:1,bien:'Appartement Anse Vata F4',acheteur:'Marie Lecomte',tel:'+687 43 21 00',date:'2026-06-10',heure:'10:00',duree:60,notes:'Clé chez le gardien',smsSent:true,bonVisite:true,statut:'confirmee'},
+  {id:2,bien:'Maison Dumbéa F5',acheteur:'Famille Roux',tel:'+687 77 88 99',date:'2026-06-11',heure:'14:30',duree:90,notes:'',smsSent:true,bonVisite:false,statut:'confirmee'},
+  {id:3,bien:'Villa Mont-Dore',acheteur:'Isabelle Fontaine',tel:'+687 22 33 44',date:'2026-06-14',heure:'09:00',duree:120,notes:'Visiter avec son architecte',smsSent:false,bonVisite:false,statut:'planifiee'},
+];
+let CR_VISITES=[
+  {id:1,bien:'Studio Magenta',acheteur:'Thomas Gérard',date:'2026-06-05',interet:'interesse',positifs:'Bon emplacement, prix attractif, lumineux',negatifs:'Cuisine petite, pas de parking',suite:'Relancer dans 1 semaine avec alternative F1 Motor Pool',signe:false},
+  {id:2,bien:"Appartement Val Plaisance",acheteur:"Hélène Dupuis",date:"2026-06-03",interet:"tres-interesse",positifs:"Vue, terrasse, luminosité excellente",negatifs:"Aucun",suite:"Offre d'achat en cours de rédaction",signe:true},
+];
+
+function buildVisites(){
+  renderVisitesAgenda();
+  renderVisitesStats();
+  renderCRVisites();
+  setTimeout(applyMobileLayout,50);
+}
+
+function renderVisitesAgenda(){
+  const el=document.getElementById('visites-agenda');
+  if(!el)return;
+  const STATUT_V={confirmee:{label:'Confirmée',bg:'#DCFCE7',color:'#166534'},planifiee:{label:'Planifiée',bg:'#DBEAFE',color:'#1D4ED8'},annulee:{label:'Annulée',bg:'#FEE2E2',color:'#DC2626'}};
+  el.innerHTML=VISITES.map(v=>{
+    const s=STATUT_V[v.statut]||STATUT_V.planifiee;
+    return `<div style="border:1px solid #E5E7EB;border-radius:10px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--dark)">${v.bien}</div>
+          <div style="font-size:11px;color:var(--mid)">👤 ${v.acheteur} · ${v.tel}</div>
+        </div>
+        <span style="background:${s.bg};color:${s.color};padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700">${s.label}</span>
+      </div>
+      <div style="display:flex;gap:12px;font-size:11px;color:var(--mid);margin-bottom:8px;flex-wrap:wrap">
+        <span>📅 ${v.date}</span><span>🕐 ${v.heure}</span><span>⏱️ ${v.duree} min</span>
+        ${v.smsSent?'<span style="color:#16A34A">📱 SMS envoyé</span>':'<span style="color:#EA580C">📱 SMS non envoyé</span>'}
+        ${v.bonVisite?'<span style="color:#9333EA">📋 Bon visite généré</span>':''}
+      </div>
+      ${v.notes?`<div style="font-size:11px;color:var(--soft);font-style:italic;margin-bottom:6px">📝 ${v.notes}</div>`:''}
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        ${!v.smsSent?`<button onclick="envoyerSMS(${v.id})" class="btn btn-gold btn-sm" style="font-size:10px">📱 Envoyer SMS</button>`:''}
+        ${!v.bonVisite?`<button onclick="genererBonVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">📋 Bon de visite</button>`:''}
+        <button onclick="showCRVisiteModalFor(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">📝 Compte-rendu</button>
+        <button onclick="annulerVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px;color:var(--red)">✕ Annuler</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderVisitesStats(){
+  const el=document.getElementById('visites-stats');
+  if(!el)return;
+  const confirmees=VISITES.filter(v=>v.statut==='confirmee').length;
+  const smsSent=VISITES.filter(v=>v.smsSent).length;
+  const bons=VISITES.filter(v=>v.bonVisite).length;
+  const interesses=CR_VISITES.filter(c=>c.interet==='tres-interesse'||c.interet==='interesse').length;
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#DCFCE7;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#166534">${confirmees}</div><div style="font-size:10px;color:#15803D">Confirmées</div></div>
+      <div style="background:#EFF6FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#2563EB">${smsSent}</div><div style="font-size:10px;color:#1D4ED8">SMS envoyés</div></div>
+      <div style="background:#FDF4FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#9333EA">${bons}</div><div style="font-size:10px;color:#7E22CE">Bons signés</div></div>
+      <div style="background:#FFF7ED;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#EA580C">${interesses}</div><div style="font-size:10px;color:#C2410C">Intéressés</div></div>
+    </div>`;
+}
+
+function renderCRVisites(){
+  const el=document.getElementById('cr-visites-list');
+  if(!el)return;
+  const INTERET={
+    'tres-interesse':{label:'🔥 Très intéressé',color:'#DC2626',bg:'#FEF2F2'},
+    'interesse':{label:'✅ Intéressé',color:'#16A34A',bg:'#DCFCE7'},
+    'mitige':{label:'🟡 Mitigé',color:'#D97706',bg:'#FEF3C7'},
+    'non-interesse':{label:'❌ Pas intéressé',color:'#6B7280',bg:'#F3F4F6'},
+  };
+  if(!CR_VISITES.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--mid)">Aucun compte-rendu</div>';return;}
+  el.innerHTML=CR_VISITES.map(cr=>{
+    const int=INTERET[cr.interet]||INTERET.mitige;
+    return `<div style="border:1px solid #E5E7EB;border-radius:10px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+        <div><div style="font-size:13px;font-weight:700;color:var(--dark)">${cr.bien}</div><div style="font-size:11px;color:var(--mid)">${cr.acheteur} · ${cr.date}</div></div>
+        <span style="background:${int.bg};color:${int.color};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">${int.label}</span>
+      </div>
+      ${cr.positifs?`<div style="font-size:11px;color:#16A34A;margin-bottom:4px">✅ ${cr.positifs}</div>`:''}
+      ${cr.negatifs?`<div style="font-size:11px;color:#DC2626;margin-bottom:4px">❌ ${cr.negatifs}</div>`:''}
+      ${cr.suite?`<div style="font-size:11px;color:#2563EB;margin-bottom:6px">→ ${cr.suite}</div>`:''}
+      ${cr.signe?'<span style="background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">✍️ Bon signé</span>':''}
+    </div>`;
+  }).join('');
+}
+
+function showAddVisiteModal(){
+  const m=document.getElementById('visite-modal');
+  if(m){m.style.display='flex';document.getElementById('vis-date').value=new Date().toISOString().split('T')[0];}
+}
+
+function saveVisite(){
+  const bien=document.getElementById('vis-bien')?.value?.trim();
+  const acheteur=document.getElementById('vis-acheteur')?.value?.trim();
+  if(!bien||!acheteur){alert('Bien et acheteur requis');return;}
+  const smsSend=document.getElementById('vis-sms')?.checked;
+  const bonV=document.getElementById('vis-bon')?.checked;
+  VISITES.unshift({
+    id:Date.now(),bien,acheteur,
+    tel:document.getElementById('vis-tel')?.value||'',
+    date:document.getElementById('vis-date')?.value||'',
+    heure:document.getElementById('vis-heure')?.value||'10:00',
+    duree:parseInt(document.getElementById('vis-duree')?.value||60),
+    notes:document.getElementById('vis-notes')?.value||'',
+    smsSent:smsSend,bonVisite:bonV,statut:'confirmee'
+  });
+  document.getElementById('visite-modal').style.display='none';
+  buildVisites();
+  if(smsSend){
+    const notif=document.createElement('div');
+    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:#16A34A;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999';
+    notif.innerHTML='📱 SMS de confirmation envoyé à '+acheteur;
+    document.body.appendChild(notif);
+    setTimeout(()=>document.body.removeChild(notif),3000);
+  }
+}
+
+function envoyerSMS(id){
+  const v=VISITES.find(x=>x.id===id);
+  if(!v)return;
+  v.smsSent=true;
+  renderVisitesAgenda();
+  const notif=document.createElement('div');
+  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:#16A34A;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999';
+  notif.innerHTML='📱 SMS envoyé à '+v.acheteur+' : "Visite confirmée le '+v.date+' à '+v.heure+'"';
+  document.body.appendChild(notif);
+  setTimeout(()=>document.body.removeChild(notif),4000);
+}
+
+function genererBonVisite(id){
+  const v=VISITES.find(x=>x.id===id);
+  if(!v)return;
+  v.bonVisite=true;
+  renderVisitesAgenda();
+  alert("📋 Bon de visite généré pour "+v.acheteur+"\n\nLe bon a été envoyé par email pour signature électronique.\nIl sera archivé automatiquement une fois signé.");
+
+
+
+}
+
+function showCRVisiteModal(){document.getElementById('cr-visite-modal').style.display='flex';}
+function showCRVisiteModalFor(visiteId){
+  const v=VISITES.find(x=>x.id===visiteId);
+  if(v){
+    document.getElementById('cr-bien').value=v.bien;
+    document.getElementById('cr-acheteur').value=v.acheteur;
+    document.getElementById('cr-date').value=v.date;
+  }
+  document.getElementById('cr-visite-modal').style.display='flex';
+}
+
+function saveCRVisite(){
+  const bien=document.getElementById('cr-bien')?.value?.trim();
+  const acheteur=document.getElementById('cr-acheteur')?.value?.trim();
+  if(!bien||!acheteur){alert('Bien et acheteur requis');return;}
+  CR_VISITES.unshift({
+    id:Date.now(),bien,acheteur,
+    date:document.getElementById('cr-date')?.value||new Date().toISOString().split('T')[0],
+    interet:document.getElementById('cr-interet')?.value||'interesse',
+    positifs:document.getElementById('cr-positifs')?.value||'',
+    negatifs:document.getElementById('cr-negatifs')?.value||'',
+    suite:document.getElementById('cr-suite')?.value||'',
+    signe:document.getElementById('cr-signature')?.checked||false
+  });
+  document.getElementById('cr-visite-modal').style.display='none';
+  renderCRVisites();
+}
+
+function annulerVisite(id){
+  const v=VISITES.find(x=>x.id===id);
+  if(!v)return;
+  v.statut='annulee';
+  renderVisitesAgenda();
+}
+
+// =============================================
+// STATS ANNONCES
+// =============================================
+function buildStatsAnnonces(){
+  renderStatsTable();
+  renderStatsPortails();
+  renderStatsEvolution();
+  setTimeout(applyMobileLayout,50);
+}
+
+function renderStatsTable(){
+  const el=document.getElementById('stats-annonces-table');
+  if(!el)return;
+  const annonceStats=BIENS_DATA.slice(0,6).map(b=>({
+    titre:b.titre||(b.type+' '+b.quartier),
+    vues:Math.floor(Math.random()*500+100),
+    contacts:Math.floor(Math.random()*20+2),
+    visites:Math.floor(Math.random()*8+1),
+    jours:Math.floor(Math.random()*30+5),
+  }));
+  el.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead><tr style="background:var(--warm)">
+      <th style="padding:8px 10px;text-align:left;color:var(--mid);font-weight:600;border-radius:6px 0 0 6px">Annonce</th>
+      <th style="padding:8px 10px;text-align:right;color:var(--mid);font-weight:600">👁️ Vues</th>
+      <th style="padding:8px 10px;text-align:right;color:var(--mid);font-weight:600">📩 Contacts</th>
+      <th style="padding:8px 10px;text-align:right;color:var(--mid);font-weight:600">🏠 Visites</th>
+      <th style="padding:8px 10px;text-align:right;color:var(--mid);font-weight:600">📅 Jours</th>
+      <th style="padding:8px 10px;text-align:right;color:var(--mid);font-weight:600;border-radius:0 6px 6px 0">Conversion</th>
+    </tr></thead>
+    <tbody>${annonceStats.map((a,i)=>`<tr style="border-bottom:1px solid #F3F4F6;${i%2===0?'background:#FAFAFA':''}">
+      <td style="padding:10px;font-weight:500;color:var(--dark);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.titre}</td>
+      <td style="padding:10px;text-align:right;font-weight:700;color:var(--dark)">${a.vues}</td>
+      <td style="padding:10px;text-align:right;color:#2563EB;font-weight:600">${a.contacts}</td>
+      <td style="padding:10px;text-align:right;color:#16A34A;font-weight:600">${a.visites}</td>
+      <td style="padding:10px;text-align:right;color:var(--mid)">${a.jours}j</td>
+      <td style="padding:10px;text-align:right"><span style="background:${a.contacts/a.vues*100>5?'#DCFCE7':'#FEF3C7'};color:${a.contacts/a.vues*100>5?'#166534':'#92400E'};padding:2px 8px;border-radius:10px;font-weight:700">${(a.contacts/a.vues*100).toFixed(1)}%</span></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function renderStatsPortails(){
+  const el=document.getElementById('stats-portails');
+  if(!el)return;
+  const portails=[
+    {nom:'Immo360',vues:1450,color:'#B8922A',pct:51},
+    {nom:'Immobilier.nc',vues:680,color:'#2563EB',pct:24},
+    {nom:'ImmoNC.com',vues:420,color:'#16A34A',pct:15},
+    {nom:'Properstar',vues:180,color:'#9333EA',pct:6},
+    {nom:'Facebook',vues:117,color:'#EA580C',pct:4},
+  ];
+  el.innerHTML=portails.map(p=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:600;color:var(--dark);min-width:100px">${p.nom}</div>
+      <div style="flex:1;height:8px;background:#F3F4F6;border-radius:4px;overflow:hidden">
+        <div style="width:${p.pct}%;height:100%;background:${p.color};border-radius:4px;transition:.6s"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:${p.color};min-width:40px;text-align:right">${p.vues}</div>
+      <div style="font-size:10px;color:var(--mid);min-width:30px;text-align:right">${p.pct}%</div>
+    </div>`).join('');
+}
+
+function renderStatsEvolution(){
+  const el=document.getElementById('stats-evolution');
+  if(!el)return;
+  const jours=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const vues=[312,287,405,356,489,523,475];
+  const max=Math.max(...vues);
+  el.innerHTML=`<div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding-bottom:20px;position:relative">
+    ${vues.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="font-size:9px;color:var(--mid)">${v}</div>
+      <div style="width:100%;background:var(--gold);border-radius:4px 4px 0 0;height:${Math.round((v/max)*90)}px;transition:.6s;opacity:0.85"></div>
+      <div style="font-size:9px;color:var(--mid)">${jours[i]}</div>
+    </div>`).join('')}
+  </div>`;
 }
 
 // =============================================
