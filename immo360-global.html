@@ -612,11 +612,231 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             </div>
             <div>
               <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Quartier / Ville</label>
-              <input type="text" id="estim-quartier" placeholder="Anse Vata, Dumbéa..." style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
+              <select id="estim-quartier" onchange="updatePrixMarche()" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
+                <option value="">-- Choisir un quartier --</option>
+                <option value="Anse Vata" data-pm2="596000">Anse Vata</option>
+                <option value="Baie des Citrons" data-pm2="580000">Baie des Citrons</option>
+                <option value="Val Plaisance" data-pm2="570000">Val Plaisance</option>
+                <option value="Tina" data-pm2="540000">Tina</option>
+                <option value="Faubourg Blanchot" data-pm2="540000">Faubourg Blanchot</option>
+                <option value="Centre Ville Nouméa" data-pm2="480000">Centre Ville Nouméa</option>
+                <option value="Motor Pool" data-pm2="460000">Motor Pool</option>
+                <option value="Magenta" data-pm2="420000">Magenta</option>
+                <option value="Trianon" data-pm2="410000">Trianon</option>
+                <option value="Robinson" data-pm2="390000">Robinson</option>
+                <option value="Montravel" data-pm2="380000">Montravel</option>
+                <option value="Tuband" data-pm2="370000">Tuband</option>
+                <option value="Receiving" data-pm2="360000">Receiving</option>
+                <option value="Rivière Salée" data-pm2="340000">Rivière Salée</option>
+                <option value="Vallée du Tir" data-pm2="330000">Vallée du Tir</option>
+                <option value="Normandie" data-pm2="320000">Normandie</option>
+                <option value="7ème km" data-pm2="310000">7ème km</option>
+                <option value="Portes de Fer" data-pm2="300000">Portes de Fer</option>
+                <option value="Ducos" data-pm2="290000">Ducos</option>
+                <option value="Kaméré" data-pm2="270000">Kaméré</option>
+                <option value="Dumbéa sur Mer" data-pm2="320000">Dumbéa sur Mer</option>
+                <option value="Koutio" data-pm2="300000">Koutio</option>
+                <option value="Katiramona" data-pm2="285000">Katiramona</option>
+                <option value="Savannah" data-pm2="275000">Savannah</option>
+                <option value="Tonghoué" data-pm2="265000">Tonghoué</option>
+                <option value="Dumbéa Centre" data-pm2="260000">Dumbéa Centre</option>
+                <option value="Dumbéa Nord" data-pm2="250000">Dumbéa Nord</option>
+                <option value="Pahéa" data-pm2="240000">Pahéa</option>
+                <option value="Mont-Dore Centre" data-pm2="260000">Mont-Dore Centre</option>
+                <option value="Boulari" data-pm2="240000">Boulari</option>
+                <option value="Plum" data-pm2="220000">Plum</option>
+                <option value="Yaté" data-pm2="180000">Yaté</option>
+                <option value="Thio" data-pm2="130000">Thio</option>
+                <option value="Païta Centre" data-pm2="230000">Païta Centre</option>
+                <option value="Boulouparis" data-pm2="190000">Boulouparis</option>
+                <option value="La Foa" data-pm2="160000">La Foa</option>
+                <option value="Bourail" data-pm2="155000">Bourail</option>
+                <option value="Sarraméa" data-pm2="120000">Sarraméa</option>
+                <option value="Farino" data-pm2="120000">Farino</option>
+                <option value="Moindou" data-pm2="115000">Moindou</option>
+                <option value="Canala" data-pm2="110000">Canala</option>
+                <option value="Kouaoua" data-pm2="105000">Kouaoua</option>
+                <option value="Koné" data-pm2="150000">Koné</option>
+                <option value="Voh" data-pm2="130000">Voh</option>
+                <option value="Koumac" data-pm2="120000">Koumac</option>
+                <option value="Poum" data-pm2="100000">Poum</option>
+                <option value="Kaala-Gomen" data-pm2="100000">Kaala-Gomen</option>
+                <option value="Poindimié" data-pm2="140000">Poindimié</option>
+                <option value="Touho" data-pm2="120000">Touho</option>
+                <option value="Ponérihouen" data-pm2="110000">Ponérihouen</option>
+                <option value="Houaïlou" data-pm2="100000">Houaïlou</option>
+                <option value="Poya" data-pm2="110000">Poya</option>
+                <option value="Pambrun" data-pm2="105000">Pambrun</option>
+                <option value="Ouégoa" data-pm2="95000">Ouégoa</option>
+                <option value="Lifou" data-pm2="90000">Lifou</option>
+                <option value="Maré" data-pm2="85000">Maré</option>
+                <option value="Ouvéa" data-pm2="80000">Ouvéa</option>
+              </select>
+              <!-- PRIX MARCHÉ EN TEMPS RÉEL -->
+              <div id="estim-pm2-display" style="margin-top:6px;font-size:11px;color:rgba(255,255,255,0.4);display:flex;align-items:center;gap:6px">
+                <span>Prix marché :</span>
+                <span id="estim-pm2-val" style="color:var(--gold);font-weight:600">596 000 F/m²</span>
+                <span id="estim-pm2-valeur" style="color:rgba(255,255,255,0.3)"></span>
+              </div>
             </div>
             <div>
               <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Année de construction</label>
               <input type="number" id="estim-annee" placeholder="1990" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+
+          <!-- ÉQUIPEMENTS DÉTAILLÉS -->
+          <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
+            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Équipements & caractéristiques</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" id="equip-grid">
+
+              <!-- JARDIN -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                  <input type="checkbox" id="eq-jardin" onchange="toggleEquip('jardin')" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🌳 Jardin</span>
+                </label>
+                <div id="detail-jardin" style="display:none;margin-top:8px">
+                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin-bottom:3px">Surface jardin (m²)</label>
+                  <input type="number" id="eq-jardin-surface" placeholder="200" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
+                  <select id="eq-jardin-type" style="width:100%;margin-top:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
+                    <option value="entretenu">Jardin entretenu</option>
+                    <option value="tropical">Jardin tropical</option>
+                    <option value="brut">Terrain brut</option>
+                    <option value="potager">Potager / verger</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- PISCINE -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                  <input type="checkbox" id="eq-piscine" onchange="toggleEquip('piscine')" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🏊 Piscine</span>
+                </label>
+                <div id="detail-piscine" style="display:none;margin-top:8px">
+                  <select id="eq-piscine-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
+                    <option value="enterree">Enterrée</option>
+                    <option value="semi">Semi-enterrée</option>
+                    <option value="hors-sol">Hors-sol</option>
+                  </select>
+                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin:4px 0 3px">Surface piscine (m²)</label>
+                  <input type="number" id="eq-piscine-surface" placeholder="30" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
+                </div>
+              </div>
+
+              <!-- GARAGE -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                  <input type="checkbox" id="eq-garage" onchange="toggleEquip('garage')" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🚗 Garage</span>
+                </label>
+                <div id="detail-garage" style="display:none;margin-top:8px">
+                  <select id="eq-garage-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
+                    <option value="ferme">Garage fermé</option>
+                    <option value="ouvert">Carport / Ouvert</option>
+                    <option value="double">Double garage</option>
+                    <option value="sous-sol">Sous-sol</option>
+                  </select>
+                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin:4px 0 3px">Nb de places</label>
+                  <input type="number" id="eq-garage-places" placeholder="1" min="1" max="5" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
+                </div>
+              </div>
+
+              <!-- TERRASSE -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                  <input type="checkbox" id="eq-terrasse" onchange="toggleEquip('terrasse')" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🌿 Terrasse</span>
+                </label>
+                <div id="detail-terrasse" style="display:none;margin-top:8px">
+                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin-bottom:3px">Surface terrasse (m²)</label>
+                  <input type="number" id="eq-terrasse-surface" placeholder="20" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
+                  <select id="eq-terrasse-type" style="width:100%;margin-top:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
+                    <option value="couverte">Couverte</option>
+                    <option value="ouverte">Ouverte</option>
+                    <option value="rooftop">Rooftop</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- CLIMATISATION -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                  <input type="checkbox" id="eq-clim" onchange="toggleEquip('clim')" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">❄️ Climatisation</span>
+                </label>
+                <div id="detail-clim" style="display:none;margin-top:8px">
+                  <select id="eq-clim-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
+                    <option value="centrale">Centrale (toutes pièces)</option>
+                    <option value="partielle">Partielle (chambres)</option>
+                    <option value="salon">Salon uniquement</option>
+                    <option value="reversible">Réversible (chauffage)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- VIDÉOSURVEILLANCE -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                  <input type="checkbox" id="eq-video" onchange="toggleEquip('video')" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">📹 Vidéosurveillance</span>
+                </label>
+                <div id="detail-video" style="display:none;margin-top:8px">
+                  <select id="eq-video-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
+                    <option value="cameras">Caméras extérieures</option>
+                    <option value="complet">Système complet int+ext</option>
+                    <option value="alarme">Alarme + détecteurs</option>
+                    <option value="gardien">Gardien / Interphone</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- VUE -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                  <input type="checkbox" id="eq-vue" onchange="toggleEquip('vue')" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🌊 Vue exceptionnelle</span>
+                </label>
+                <div id="detail-vue" style="display:none;margin-top:8px">
+                  <select id="eq-vue-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
+                    <option value="mer">Vue mer</option>
+                    <option value="lagon">Vue lagon</option>
+                    <option value="montagne">Vue montagne</option>
+                    <option value="panoramique">Vue panoramique 180°</option>
+                    <option value="ville">Vue ville</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- CASES SIMPLES -->
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="eq-ascenseur" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🛗 Ascenseur</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="eq-parking" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🅿️ Parking extérieur</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="eq-dressing" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🚪 Dressing</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="eq-cuisine-eq" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🍳 Cuisine équipée</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="eq-cave" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">🗄️ Cave / Cellier</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="eq-solaire" style="accent-color:var(--gold);width:15px;height:15px">
+                  <span style="font-size:13px;color:#fff">☀️ Panneaux solaires</span>
+                </label>
+              </div>
+
             </div>
           </div>
 
@@ -9513,9 +9733,11 @@ async function lancerAnalyseIA(){
     // Préparer les images en base64
     const allFiles = Object.values(estimPhotos).flat().slice(0,6);
     const surface = document.getElementById('estim-surface')?.value || '80';
-    const quartier = document.getElementById('estim-quartier')?.value || 'Nouméa';
+    const quartier = document.getElementById('estim-quartier')?.value || 'Noumea';
     const typeBien = document.getElementById('estim-type-bien')?.value || 'appartement';
     const annee = document.getElementById('estim-annee')?.value || '2000';
+    const equipements = getEquipementsSummary();
+    const pm2Local = NC_PM2[quartier] || 340000;
 
     let imageContents = [];
     for(const file of allFiles){
@@ -9526,38 +9748,12 @@ async function lancerAnalyseIA(){
       });
     }
 
-    const prompt = `Tu es un expert immobilier en Nouvelle-Calédonie. Analyse ces photos d'un ${typeBien} de ${surface}m² situé à ${quartier} (construit en ${annee}).
-
-Réponds UNIQUEMENT en JSON valide avec cette structure exacte :
-{
-  "score_global": 84,
-  "scores": {
-    "marche": 85,
-    "presentation": 72,
-    "etat_general": 88,
-    "attractivite": 79,
-    "luminosite": 82,
-    "entretien": 78
-  },
-  "valeur_basse": 42000000,
-  "valeur_centrale": 44500000,
-  "valeur_haute": 47000000,
-  "positionnement": "Légèrement sous la moyenne du secteur de ${quartier}",
-  "positionnement_pct": 68,
-  "points_forts": ["Luminosité excellente", "Vue dégagée", "Bon état général"],
-  "points_faibles": ["Cuisine datée", "Salle de bain à rafraîchir"],
-  "recommandations": [
-    {
-      "piece": "Cuisine",
-      "score_actuel": 58,
-      "actions": ["Remplacer les poignées", "Repeindre les façades", "Changer la crédence"],
-      "cout_xpf": 150000,
-      "gain_xpf": 800000,
-      "roi": 5.3
-    }
-  ],
-  "potentiel_total_xpf": 3200000
-}`;
+    const pm2Str = (NC_PM2[quartier]||340000).toLocaleString();
+    const equipStr = getEquipementsSummary().join(", ")||"Aucun equipement declare";
+    const vb = Math.round((NC_PM2[quartier]||340000)*parseInt(surface||80)*0.88);
+    const vc = Math.round((NC_PM2[quartier]||340000)*parseInt(surface||80));
+    const vh = Math.round((NC_PM2[quartier]||340000)*parseInt(surface||80)*1.12);
+    const prompt = "Tu es expert immobilier NC. Analyse ces photos d'un "+typeBien+" "+surface+"m2 a "+quartier+" ("+annee+"). Prix marche: "+pm2Str+" F/m2. Equipements: "+equipStr+". Reponds UNIQUEMENT en JSON: {score_global:84,scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:78},valeur_basse:"+vb+",valeur_centrale:"+vc+",valeur_haute:"+vh+",positionnement:'texte',positionnement_pct:68,points_forts:['f1','f2'],points_faibles:['w1'],recommandations:[{piece:'Cuisine',score_actuel:58,actions:['action1'],cout_xpf:150000,gain_xpf:800000,roi:5.3}],potentiel_total_xpf:3200000}";
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
@@ -9586,17 +9782,19 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte :
     clearInterval(interval);
     console.error('Erreur API:', err);
     // Résultat de démonstration si l'API échoue
+    const pm2Demo = NC_PM2[quartier] || 340000;
+    const surfNum = parseInt(surface||80);
     const demoResult = {
       score_global: 81,
       scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:75},
-      valeur_basse: Math.round(parseInt(surface||80)*340000*0.92),
-      valeur_centrale: Math.round(parseInt(surface||80)*340000),
-      valeur_haute: Math.round(parseInt(surface||80)*340000*1.08),
-      positionnement: 'Dans la moyenne du secteur '+quartier,
+      valeur_basse: Math.round(surfNum*pm2Demo*0.92),
+      valeur_centrale: Math.round(surfNum*pm2Demo),
+      valeur_haute: Math.round(surfNum*pm2Demo*1.08),
+      positionnement: "Dans la moyenne du secteur "+quartier,
       positionnement_pct: 55,
-      points_forts:['Bon état général','Luminosité naturelle','Agencement fonctionnel'],
-      points_faibles:['Finitions à moderniser','Cuisine à rafraîchir'],
-      potentiel_total_xpf: Math.round(parseInt(surface||80)*340000*0.07)
+      points_forts:["Bon état général","Luminosité naturelle","Agencement fonctionnel"],
+      points_faibles:["Finitions à moderniser","Cuisine à rafraîchir"],
+      potentiel_total_xpf: Math.round(surfNum*pm2Demo*0.07)
     };
     setTimeout(()=>afficherResultats(demoResult, surface, quartier), 500);
   }
@@ -9673,8 +9871,10 @@ function afficherResultats(result, surface, quartier){
   const marcheEl = document.getElementById('estim-marche-txt');
   if(marcheEl){
     const pct = result.positionnement_pct||55;
-    marcheEl.innerHTML = `Votre bien est <strong style="color:var(--gold)">mieux présenté que ${pct}% des biens comparables</strong> dans le secteur de ${quartier}.<br>
-    <span style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;display:block">Basé sur ${Math.round(parseInt(surface||80)*340000/1000000*10)/10}M F × marché NC · Properstar · ImmoNC</span>`;
+    const pm2Local = NC_PM2[quartier] || 340000;
+    const valeurMarche = Math.round(pm2Local * parseInt(surface||80) / 1000000 * 10)/10;
+    marcheEl.innerHTML = "<span>Votre bien est <strong style=\"color:var(--gold)\">mieux présenté que "+pct+"% des biens comparables</strong> dans le secteur de "+quartier+".</span><br>"
+      + "<span style=\"font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;display:block\">Prix marché "+quartier+" : "+(pm2Local/1000).toFixed(0)+"k F/m² · Valeur marché brute : "+valeurMarche+"M F · Sources : Properstar · ImmoNC</span>";
   }
 
   // Points forts / faibles
@@ -9708,10 +9908,131 @@ function lancerNouvelleAnalyse(){
 }
 
 // =============================================
+// PRIX MARCHÉ NC PAR QUARTIER
+// =============================================
+const NC_PM2 = {
+  // Nouméa Prestige
+  "Anse Vata":596000,"Baie des Citrons":580000,"Val Plaisance":570000,
+  "Tina":540000,"Faubourg Blanchot":540000,
+  // Nouméa Centre
+  "Centre Ville":480000,"Motor Pool":460000,"Magenta":420000,
+  "Trianon":410000,"Robinson":390000,"Montravel":380000,"Tuband":370000,
+  // Nouméa Périphérie
+  "Rivière Salée":340000,"Vallée du Tir":330000,"Normandie":320000,
+  "7ème km":310000,"Portes de Fer":300000,"Ducos":290000,
+  "Receiving":280000,"Kaméré":270000,
+  // Dumbéa
+  "Dumbéa sur Mer":320000,"Koutio":300000,"Katiramona":285000,
+  "Savannah":275000,"Tonghoué":265000,"Dumbéa Centre":260000,
+  "Dumbéa Nord":250000,"Pahéa":240000,
+  // Mont-Dore
+  "Mont-Dore Centre":260000,"Boulari":240000,"Plum":220000,"Yaté":180000,
+  // Païta
+  "Païta Centre":230000,"Boulouparis":190000,
+  // Province Sud
+  "La Foa":160000,"Bourail":155000,"Thio":130000,
+  "Sarraméa":120000,"Farino":120000,
+  // Province Nord
+  "Koné":150000,"Voh":130000,"Koumac":120000,"Poum":100000,
+  "Kaala-Gomen":100000,"Poindimié":140000,"Touho":120000,
+  "Ponérihouen":110000,"Houaïlou":100000,"Poya":110000,
+  // Îles Loyauté
+  "Lifou":90000,"Maré":85000,"Ouvéa":80000,
+};
+
+function updatePrixMarche(){
+  const sel = document.getElementById('estim-quartier');
+  if(!sel) return;
+  const quartier = sel.value;
+  const pm2 = NC_PM2[quartier] || 340000;
+  const surface = parseInt(document.getElementById('estim-surface')?.value || 80);
+
+  // Afficher le prix/m²
+  const pm2El = document.getElementById('estim-pm2-val');
+  if(pm2El) pm2El.textContent = pm2.toLocaleString('fr-FR') + ' F/m²';
+
+  // Calculer valeur estimée selon surface
+  const valEl = document.getElementById('estim-pm2-valeur');
+  if(valEl && surface > 0){
+    const val = pm2 * surface;
+    valEl.textContent = '→ ' + (val/1000000).toFixed(1).replace('.',',') + 'M F pour ' + surface + 'm²';
+  }
+}
+
+// =============================================
+// ÉQUIPEMENTS DYNAMIQUES ESTIMATION
+// =============================================
+function toggleEquip(id){
+  const cb = document.getElementById('eq-'+id);
+  const detail = document.getElementById('detail-'+id);
+  if(!detail) return;
+  detail.style.display = cb?.checked ? 'block' : 'none';
+}
+
+function getEquipementsSummary(){
+  const equips = [];
+  // Jardin
+  if(document.getElementById('eq-jardin')?.checked){
+    const surf = document.getElementById('eq-jardin-surface')?.value;
+    const type = document.getElementById('eq-jardin-type')?.value;
+    equips.push('Jardin '+(type||'entretenu')+(surf?' de '+surf+'m²':''));
+  }
+  // Piscine
+  if(document.getElementById('eq-piscine')?.checked){
+    const type = document.getElementById('eq-piscine-type')?.value;
+    const surf = document.getElementById('eq-piscine-surface')?.value;
+    equips.push('Piscine '+(type||'enterree')+(surf?' '+surf+'m²':''));
+  }
+  // Garage
+  if(document.getElementById('eq-garage')?.checked){
+    const type = document.getElementById('eq-garage-type')?.value;
+    const places = document.getElementById('eq-garage-places')?.value;
+    equips.push('Garage '+(type||'ferme')+(places?' '+places+' place(s)':''));
+  }
+  // Terrasse
+  if(document.getElementById('eq-terrasse')?.checked){
+    const surf = document.getElementById('eq-terrasse-surface')?.value;
+    const type = document.getElementById('eq-terrasse-type')?.value;
+    equips.push('Terrasse '+(type||'couverte')+(surf?' '+surf+'m²':''));
+  }
+  // Clim
+  if(document.getElementById('eq-clim')?.checked){
+    const type = document.getElementById('eq-clim-type')?.value;
+    equips.push('Climatisation '+(type||'centrale'));
+  }
+  // Vidéo
+  if(document.getElementById('eq-video')?.checked){
+    const type = document.getElementById('eq-video-type')?.value;
+    equips.push('Securite '+(type||'cameras'));
+  }
+  // Vue
+  if(document.getElementById('eq-vue')?.checked){
+    const type = document.getElementById('eq-vue-type')?.value;
+    equips.push('Vue '+(type||'mer'));
+  }
+  // Simples
+  ['ascenseur','parking','dressing','cuisine-eq','cave','solaire'].forEach(id=>{
+    if(document.getElementById('eq-'+id)?.checked){
+      const labels = {
+        'ascenseur':'Ascenseur',
+        'parking':'Parking exterieur',
+        'dressing':'Dressing',
+        'cuisine-eq':'Cuisine equipee',
+        'cave':'Cave/Cellier',
+        'solaire':'Panneaux solaires'
+      };
+      equips.push(labels[id]||id);
+    }
+  });
+  return equips;
+}
+
+// =============================================
 // INIT
 // =============================================
 buildDPE('C');
 updateDeco();
+setTimeout(updatePrixMarche, 200);
 calcFin();
 initSupabase();
 // Afficher la page d'accueil au démarrage
