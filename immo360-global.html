@@ -968,7 +968,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div>
 
 <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
-<div class="shell" id="main-shell" style="display:none">
+<div class="shell" id="main-shell" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:500;background:var(--cream)">
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
@@ -4938,7 +4938,6 @@ function doLoginDemo(){
   APP_STATE.loggedIn=true;
   S.profile=profil;
   closeLoginModal();
-  document.getElementById('landing-page').style.display='none';
   document.getElementById('main-shell').style.display='flex';
   buildSB();
   go('dashboard');
@@ -4962,7 +4961,6 @@ function loginAs(profil){
     APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
-    document.getElementById('landing-page').style.display='none';
     document.getElementById('main-shell').style.display='flex';
     buildSB();
     go('dashboard');
@@ -4974,7 +4972,6 @@ function loginAs(profil){
 
 
 function showLanding(){
-  document.getElementById('landing-page').style.display='block';
   document.getElementById('main-shell').style.display='none';
 }
 
@@ -5316,7 +5313,6 @@ function contactFromLanding(bienId){
 }
 
 function hideLanding(){
-  document.getElementById('landing-page').style.display='none';
   document.getElementById('main-shell').style.display='flex';
 }
 
