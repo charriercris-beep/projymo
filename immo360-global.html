@@ -3280,9 +3280,8 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 // =============================================
 const MENUS = {
   sell:[
-    {s:'Mon bien',items:[{ico:'🏠',k:'dashboard'},{ico:'💎',k:'estimation'},{ico:'📝',k:'depot'},{ico:'📷',k:'analyse'},{ico:'📣',k:'annonces'}]},
-    {s:'Suivi vente',items:[{ico:'📅',k:'rdv'},{ico:'🔄',k:'suivi'},{ico:'💬',k:'messagerie'},{ico:'🏗️',k:'artisans'}]},
-    {s:'Suivi',items:[{ico:'📅',k:'rdv'},{ico:'💬',k:'messagerie'},{ico:'🔄',k:'suivi'},{ico:'📊',k:'stats'}]},
+    {s:'Mon bien',items:[{ico:'🏠',k:'dashboard',l:'Tableau de bord'},{ico:'💎',k:'estimation',l:'Estimation IA'},{ico:'📝',k:'depot',l:'Déposer annonce'},{ico:'📣',k:'annonces',l:'Mes annonces'}]},
+    {s:'Suivi vente',items:[{ico:'📅',k:'rdv',l:'Mes visites'},{ico:'🔄',k:'suivi',l:'Suivi vente'},{ico:'💬',k:'messagerie',l:'Messages'},{ico:'🏗️',k:'artisans',l:'Artisans'}]},
   ],
   buy:[
     {s:'Mon projet',items:[{ico:'🌟',k:'projetdevie'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'},{ico:'🗺️',k:'parcours'}]},
