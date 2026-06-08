@@ -4389,11 +4389,16 @@ function setCountry(){
 }
 function setCurr(){const sel=document.getElementById('devsel');const opt=sel.options[sel.selectedIndex];S.curr=opt.value;S.sym=opt.dataset.s;go(S.panel);}
 function setProfile(p,btn){
-  S.profile=p;document.querySelectorAll('.prof-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  S.profile=p;
+  // Mettre à jour APP_STATE aussi pour que buildSmartDashboard le lise
+  if(APP_STATE.user) APP_STATE.user.profil=p;
+  document.querySelectorAll('.prof-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
   const badge=document.getElementById('profile-badge');
-  badge.textContent={sell:'Vendeur',buy:'Acheteur',agt:'Agent'}[p];
-  badge.className='topbar-badge badge-'+p;
-  go('dashboard');
+  const labels={sell:'Vendeur',buy:'Acheteur',agt:'Agent',not:'Notaire',art:'Artisan'};
+  if(badge){ badge.textContent=labels[p]||p; badge.className='topbar-badge '+(p==='sell'?'badge-sell':p==='buy'?'badge-buy':'badge-agt'); }
+  buildSB();
+  buildSmartDashboard();
 }
 
 // =============================================
