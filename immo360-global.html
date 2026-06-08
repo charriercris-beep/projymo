@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.shell{display:none;height:100vh;overflow:hidden;flex-direction:row}
+.shell{display:flex;height:100vh;overflow:hidden;flex-direction:row}
 
 /* SIDEBAR */
 .sidebar{width:230px;min-width:230px;background:var(--dark);display:flex;flex-direction:column}
@@ -453,7 +453,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <!-- ═══════════════════════════════════
      PAGE D'ACCUEIL — STYLE LEBONCOIN
 ═══════════════════════════════════ -->
-  <div id="landing-page" style="background:#fff;color:var(--dark);overflow-y:auto;flex:1;display:flex;flex-direction:column">
+  <div id="landing-page" style="position:fixed;inset:0;background:#fff;color:var(--dark);overflow-y:auto;z-index:50;display:flex;flex-direction:column">
 
   <!-- ══ HEADER FIXE ══ -->
   <div style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.06);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px">
@@ -968,7 +968,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div>
 
 <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
-<div class="shell" id="main-shell" style="display:none">
+<div class="shell" id="main-shell">
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
@@ -4963,17 +4963,27 @@ function doLoginConfirm(){
 
 function doLogin(){doLoginConfirm();}
 function loginAs(profil){
-  // Accès rapide démo sans modal si profil déjà connu
   if(profil==='sell'||profil==='buy'||profil==='agt'){
-    APP_STATE.user={nom:'Démo',email:'demo@immo360.nc',profil};
+    APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
-    hideLanding();
-    if(typeof buildSB==='function') buildSB();
-    go('dashboard');
+    // 1. Cacher landing
+    const lp=document.getElementById('landing-page');
+    if(lp) lp.style.display='none';
+    // 2. Afficher shell
+    const shell=document.getElementById('main-shell')||document.querySelector('.shell');
+    if(shell){
+      shell.style.display='flex';
+      shell.style.visibility='visible';
+      shell.style.opacity='1';
+    }
+    // 3. Construire UI
+    try { buildSB(); } catch(e){ console.error('buildSB error:',e); }
+    try { go('dashboard'); } catch(e){ console.error('go error:',e); }
     setTimeout(()=>{
-      if(typeof buildSmartDashboard==='function') buildSmartDashboard();
-    },100);
+      try { buildSmartDashboard(); } catch(e){}
+      try { updateUserDisplay(); } catch(e){}
+    },150);
   } else {
     showLoginModal(profil);
   }
@@ -4982,9 +4992,7 @@ function loginAs(profil){
 
 function showLanding(){
   const lp=document.getElementById('landing-page');
-  const shell=document.getElementById('main-shell')||document.querySelector('.shell');
-  if(shell){ shell.style.display='none'; shell.style.visibility='hidden'; }
-  if(lp){ lp.style.display='flex'; lp.style.flexDirection='column'; lp.style.visibility='visible'; }
+  if(lp){ lp.style.display='flex'; lp.style.flexDirection='column'; lp.style.visibility='visible'; lp.style.zIndex='50'; }
   activeQuickFilter='';
   ldFiltered=[...BIENS_DATA];
   ['ld-type','ld-zone','ld-budget'].forEach(id=>{
@@ -5342,9 +5350,7 @@ function contactFromLanding(bienId){
 
 function hideLanding(){
   const lp=document.getElementById('landing-page');
-  const shell=document.getElementById('main-shell')||document.querySelector('.shell');
-  if(lp){ lp.style.display='none'; lp.style.visibility='hidden'; }
-  if(shell){ shell.style.display='flex'; shell.style.visibility='visible'; }
+  if(lp){ lp.style.display='none'; lp.style.visibility='hidden'; lp.style.zIndex='-1'; }
 }
 
 // loginAs défini plus haut
