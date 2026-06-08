@@ -3343,12 +3343,22 @@ function go(panel){
     p.style.display='none';
   });
   // Afficher le panel cible
-  const el=document.getElementById('panel-'+panel);
+  let el=document.getElementById('panel-'+panel);
+  if(!el){
+    // Créer le panel s'il n'existe pas dans le DOM
+    const cnt=document.querySelector('.content');
+    if(cnt){
+      el=document.createElement('div');
+      el.className='panel';
+      el.id='panel-'+panel;
+      cnt.appendChild(el);
+    }
+  }
   if(el){
     el.classList.add('active');
     el.style.display='block';
-  } else {
-    console.warn('Panel introuvable: panel-'+panel);
+    // Construire le contenu si vide
+    if(!el.innerHTML.trim()) buildPanelContent(panel, el);
   }
   const tt=document.getElementById('topbar-title');
   if(tt) tt.textContent=lbl(panel)||panel;
@@ -8223,6 +8233,25 @@ function checkContextualTriggers(panel){
 // =============================================
 // DASHBOARD INTELLIGENT — page d'accueil selon profil
 // =============================================
+function buildPanelContent(panel, el){
+  // Déclencher la construction du panel selon son nom
+  if(panel==='dashboard'){ buildSmartDashboard(); return; }
+  if(panel==='analyse'){ calcEstim(); return; }
+  if(panel==='crm'){ buildCRM(); return; }
+  if(panel==='notaire'){ buildNotaire(); return; }
+  if(panel==='matching'){ buildMatching(); return; }
+  if(panel==='projetdevie'){ buildProjetDeVie(); return; }
+  if(panel==='marketplace'){ buildMarketplace(); return; }
+  if(panel==='financementplus'){ buildFinancementPlus(); return; }
+  if(panel==='comparateur'){ buildComparateur(); return; }
+  if(panel==='mandats'){ buildMandats(); return; }
+  if(panel==='visites'){ buildVisites(); return; }
+  if(panel==='statsannonces'){ buildStatsAnnonces(); return; }
+  if(panel==='suiviachat'){ buildSuiviAchat(); return; }
+  // Pour les autres panels, afficher un message
+  if(el) el.innerHTML='<div style="padding:40px;text-align:center;color:var(--mid)"><div style="font-size:40px;margin-bottom:12px">🚧</div><div style="font-size:16px;font-weight:600">Module en chargement...</div></div>';
+}
+
 function buildSmartDashboard(){
   const bcProfil=document.getElementById('breadcrumb-profil');
   if(bcProfil){
@@ -9911,6 +9940,12 @@ calcFin();
 initSupabase();
 // Afficher la page d'accueil au démarrage
 showLanding();
+// Debug panels
+setTimeout(()=>{
+  const panels = document.querySelectorAll('.panel');
+  console.log('[DEBUG] Panels trouvés dans le DOM:', panels.length);
+  panels.forEach(p=>console.log(' -', p.id));
+}, 1000);
 // Forcer la sidebar visible sur desktop
 (function fixSidebar(){
   const sb = document.getElementById('sidebar');
