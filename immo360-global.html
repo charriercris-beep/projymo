@@ -4986,8 +4986,15 @@ function loginAs(profil){
     }
     console.log('[Immo360] Landing cachée, shell affiché');
     // 3. Construire UI
-    try { buildSB(); } catch(e){ console.error('buildSB error:',e); }
-    try { go('dashboard'); } catch(e){ console.error('go error:',e); }
+    try { buildSB(); console.log('[Immo360] buildSB OK'); } catch(e){ console.error('buildSB error:',e); }
+    try { go('dashboard'); console.log('[Immo360] go dashboard OK'); } catch(e){ console.error('go error:',e); }
+    // Forcer l'affichage du panel dashboard
+    setTimeout(()=>{
+      const pd = document.getElementById('panel-dashboard');
+      console.log('[Immo360] panel-dashboard:', pd ? 'trouvé' : 'ABSENT', pd ? pd.classList.toString() : '');
+      const shell = document.querySelector('.shell');
+      console.log('[Immo360] shell display:', shell ? shell.style.display : 'ABSENT');
+    }, 200);
     setTimeout(()=>{
       try { buildSmartDashboard(); } catch(e){}
       try { updateUserDisplay(); } catch(e){}
