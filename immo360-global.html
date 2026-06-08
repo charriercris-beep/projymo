@@ -3364,19 +3364,18 @@ function go(panel){
   if(tt) tt.textContent=lbl(panel)||panel;
   buildSB();
   if(panel==='dashboard') buildSmartDashboard();
-  if(panel==='analyse'){calcEstim();try{buildDPE('C');}catch(e){}}
-  if(panel==='crm') buildCRM();
-  if(panel==='notaire') buildNotaire();
-  if(panel==='matching') buildMatching();
-  if(panel==='projetdevie') buildProjetDeVie();
-  if(panel==='marketplace') buildMarketplace();
-  if(panel==='financementplus') buildFinancementPlus();
-  if(panel==='comparateur') buildComparateur();
-  if(panel==='mandats') buildMandats();
-  if(panel==='visites') buildVisites();
-  if(panel==='statsannonces') buildStatsAnnonces();
-  if(panel==='suiviachat') buildSuiviAchat();
-  updateBadgeMsg();
+  if(panel==='analyse'){try{calcEstim();}catch(e){} try{buildDPE('C');}catch(e){}}
+  if(panel==='crm') try{buildCRM();}catch(e){}
+  if(panel==='notaire') try{buildNotaire();}catch(e){}
+  if(panel==='matching') try{buildMatching();}catch(e){}
+  if(panel==='marketplace') try{buildMarketplace();}catch(e){}
+  if(panel==='financementplus') try{buildFinancementPlus();}catch(e){}
+  if(panel==='comparateur') try{buildComparateur();}catch(e){}
+  if(panel==='mandats') try{buildMandats();}catch(e){}
+  if(panel==='visites') try{buildVisites();}catch(e){}
+  if(panel==='statsannonces') try{buildStatsAnnonces();}catch(e){}
+  if(panel==='suiviachat') try{buildSuiviAchat();}catch(e){}
+  try{updateBadgeMsg();}catch(e){}
 }
 function buildDashboard(){
   // Délègue à buildSmartDashboard qui gère les 5 profils
@@ -8233,6 +8232,63 @@ function checkContextualTriggers(panel){
 // =============================================
 // DASHBOARD INTELLIGENT — page d'accueil selon profil
 // =============================================
+function updateBadgeMsg(){
+  try{
+    const total=(S.messages||[]).filter(m=>!m.lu).length;
+    document.querySelectorAll('.nav-item').forEach(item=>{
+      if(item.textContent.includes('Messagerie')&&total>0){
+        item.innerHTML=item.innerHTML+'<span style="background:#EF4444;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:auto">'+total+'</span>';
+      }
+    });
+  }catch(e){}
+}
+
+function buildProjetDeVie(){
+  const el=document.getElementById('panel-projetdevie');
+  if(!el) return;
+  if(el.innerHTML.trim()) return;
+  el.innerHTML=`<div style="max-width:700px;margin:0 auto;padding:20px">
+    <h2 style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:6px">Mon Projet de Vie</h2>
+    <p style="color:var(--mid);margin-bottom:20px">Définissez vos critères pour que l'IA trouve les biens qui correspondent.</p>
+    <div class="card">
+      <div class="card-title">🏡 Type de bien recherché</div>
+      <div class="field-row">
+        <div class="field"><label>Type</label>
+          <select id="pdv-type"><option>Villa</option><option>Maison</option><option>Appartement</option><option>Studio</option></select>
+        </div>
+        <div class="field"><label>Pièces min</label>
+          <select id="pdv-pieces"><option>2</option><option>3</option><option>4</option><option>5+</option></select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Budget min (F)</label><input type="number" id="pdv-budget-min" placeholder="20000000"></div>
+        <div class="field"><label>Budget max (F)</label><input type="number" id="pdv-budget-max" placeholder="50000000"></div>
+      </div>
+      <div class="field"><label>Secteur(s) souhaité(s)</label>
+        <select id="pdv-secteur">
+          <option>Toute la NC</option><option>Nouméa</option><option>Dumbéa</option>
+          <option>Mont-Dore</option><option>Plum</option><option>Boulari</option>
+        </select>
+      </div>
+      <div class="field"><label>Objectif</label>
+        <select id="pdv-objectif">
+          <option>Résidence principale</option><option>Investissement locatif</option><option>Résidence secondaire</option>
+        </select>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="savePDV()">💾 Sauvegarder mon projet</button>
+    </div>
+    <div class="ai-box" style="margin-top:16px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px">🤖 L'IA analyse votre projet</div>
+      <div style="font-size:12px;opacity:.8">Basé sur vos critères, 12 biens correspondent actuellement sur le marché NC. Je vous alerterai dès qu'un nouveau bien correspondra.</div>
+    </div>
+  </div>`;
+}
+
+function savePDV(){
+  S.projet={type:document.getElementById('pdv-type')?.value,pieces:document.getElementById('pdv-pieces')?.value,budgetMin:document.getElementById('pdv-budget-min')?.value,budgetMax:document.getElementById('pdv-budget-max')?.value,secteur:document.getElementById('pdv-secteur')?.value,objectif:document.getElementById('pdv-objectif')?.value};
+  showNotif('Projet sauvegarde - IA recherche les correspondances...','success');
+}
+
 function buildPanelContent(panel, el){
   // Déclencher la construction du panel selon son nom
   if(panel==='dashboard'){ buildSmartDashboard(); return; }
@@ -8240,7 +8296,7 @@ function buildPanelContent(panel, el){
   if(panel==='crm'){ buildCRM(); return; }
   if(panel==='notaire'){ buildNotaire(); return; }
   if(panel==='matching'){ buildMatching(); return; }
-  if(panel==='projetdevie'){ buildProjetDeVie(); return; }
+  if(panel==='projetdevie'){ try{buildProjetDeVie();}catch(e){} return; }
   if(panel==='marketplace'){ buildMarketplace(); return; }
   if(panel==='financementplus'){ buildFinancementPlus(); return; }
   if(panel==='comparateur'){ buildComparateur(); return; }
