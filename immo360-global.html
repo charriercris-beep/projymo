@@ -3332,52 +3332,42 @@ function closeSidebar(){
 
 // Close sidebar when a nav item is clicked on mobile
 function go(panel){
-  // Alias pour panels renommés
   const aliases={estimation:'analyse',stats:'statsannonces'};
   if(aliases[panel]) panel=aliases[panel];
   S.panel=panel;
   closeSidebar();
-  setTimeout(applyMobileLayout, 50);
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  setTimeout(applyMobileLayout,50);
+  // Cacher tous les panels
+  document.querySelectorAll('.panel').forEach(p=>{
+    p.classList.remove('active');
+    p.style.display='none';
+  });
+  // Afficher le panel cible
   const el=document.getElementById('panel-'+panel);
-  if(el) el.classList.add('active');
-  document.getElementById('topbar-title').textContent=lbl(panel)||panel;
+  if(el){
+    el.classList.add('active');
+    el.style.display='block';
+  } else {
+    console.warn('Panel introuvable: panel-'+panel);
+  }
+  const tt=document.getElementById('topbar-title');
+  if(tt) tt.textContent=lbl(panel)||panel;
   buildSB();
-  // buildDashboard() remplacé par buildSmartDashboard() ci-dessous
-  if(panel==='estimation'){calcEstim();buildDPE();buildMarketSources();buildQuartiersTable();if(prixBase>0)buildTravauxList(document.getElementById('est-etat')?.value||'bon',document.getElementById('est-type')?.value||'apt',parseInt(document.getElementById('est-surface')?.value)||85);}
-  if(panel==='financement') calcFin();
-  if(panel==='marketplace') buildMarketplace();
+  if(panel==='dashboard') buildSmartDashboard();
+  if(panel==='analyse'){calcEstim();try{buildDPE('C');}catch(e){}}
+  if(panel==='crm') buildCRM();
+  if(panel==='notaire') buildNotaire();
   if(panel==='matching') buildMatching();
-  if(panel==='projetdevie') setTimeout(initBudgetJauge,100);
-  if(panel==='artisans') buildArtisans();
+  if(panel==='projetdevie') buildProjetDeVie();
+  if(panel==='marketplace') buildMarketplace();
+  if(panel==='financementplus') buildFinancementPlus();
+  if(panel==='comparateur') buildComparateur();
   if(panel==='mandats') buildMandats();
   if(panel==='visites') buildVisites();
   if(panel==='statsannonces') buildStatsAnnonces();
-  if(panel==='parcours') buildParcours();
-  if(panel==='comparateur') buildComparateur();
-  if(panel==='assistantvisite') buildAssistantVisite();
-  if(panel==='financementplus') buildFinancementPlus();
   if(panel==='suiviachat') buildSuiviAchat();
-  if(panel==='offre'){/* panel statique */}
-  // Déclenchements contextuels
-  checkContextualTriggers(panel);
-  // Dashboard intelligent
-  if(panel==='dashboard') buildSmartDashboard();
-  if(panel==='crm') buildCRM();
-  if(panel==='notaire') buildNotaire();
-  if(panel==='projetdevie') updateProjetDeVie();
-  if(panel==='messagerie') buildMessagerie();
-  if(panel==='depot'){depotStep=1;goDepotStep(1);}
-  if(panel==='rdv') buildCal();
-  if(panel==='biens') buildBiens();
-  if(panel==='suivi') buildSuivi();
-  if(panel==='stats') buildStats();
-  if(panel==='decoration') {updateDeco();}
+  updateBadgeMsg();
 }
-
-// =============================================
-// DASHBOARD
-// =============================================
 function buildDashboard(){
   // Délègue à buildSmartDashboard qui gère les 5 profils
   buildSmartDashboard();
@@ -4575,8 +4565,12 @@ function loginAs(profil){
       _sb.style.top = '0';
       _sb.style.zIndex = '1';
     }
+    // Forcer panel-dashboard visible
+    document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
+    const pd=document.getElementById('panel-dashboard');
+    if(pd){pd.style.display='block';pd.classList.add('active');}
+    buildSmartDashboard();
     go('dashboard');
-    setTimeout(buildSmartDashboard, 100);
   } else {
     showLoginModal(profil);
   }
