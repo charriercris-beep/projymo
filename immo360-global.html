@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.shell{display:flex;height:100vh;overflow:hidden;flex-direction:row}
+.shell{display:none;height:100vh;overflow:hidden;flex-direction:row}
 
 /* SIDEBAR */
 .sidebar{width:230px;min-width:230px;background:var(--dark);display:flex;flex-direction:column}
@@ -453,7 +453,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <!-- ═══════════════════════════════════
      PAGE D'ACCUEIL — STYLE LEBONCOIN
 ═══════════════════════════════════ -->
-  <div id="landing-page" style="position:fixed;inset:0;background:#fff;color:var(--dark);overflow-y:auto;z-index:50;display:flex;flex-direction:column">
+  <div class="landing" id="landing-page" style="display:flex;flex-direction:column">
 
   <!-- ══ HEADER FIXE ══ -->
   <div style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.06);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px">
@@ -4992,7 +4992,9 @@ function loginAs(profil){
 
 function showLanding(){
   const lp=document.getElementById('landing-page');
-  if(lp){ lp.style.display='flex'; lp.style.flexDirection='column'; lp.style.visibility='visible'; lp.style.zIndex='50'; }
+  if(lp) lp.style.display='flex';
+  const shell=document.querySelector('.shell');
+  if(shell) shell.style.display='none';
   activeQuickFilter='';
   ldFiltered=[...BIENS_DATA];
   ['ld-type','ld-zone','ld-budget'].forEach(id=>{
@@ -5350,7 +5352,9 @@ function contactFromLanding(bienId){
 
 function hideLanding(){
   const lp=document.getElementById('landing-page');
-  if(lp){ lp.style.display='none'; lp.style.visibility='hidden'; lp.style.zIndex='-1'; }
+  if(lp) lp.style.display='none';
+  const shell=document.querySelector('.shell');
+  if(shell) shell.style.display='flex';
 }
 
 // loginAs défini plus haut
