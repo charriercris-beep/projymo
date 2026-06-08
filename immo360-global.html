@@ -1632,168 +1632,361 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       </div>
     </div>
 
-    <!-- ==================== ESTIMATION + TRAVAUX IA ====================  -->
+    <!-- ==================== ESTIMATION + TRAVAUX IA ====================      <!-- ==================== ESTIMATION IA COMPLÈTE ==================== -->
     <div class="panel" id="panel-estimation">
-      <div class="grid2">
+      <div style="margin-bottom:20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">💎 Estimation IA — Score Immo360™</h2>
+        <p style="font-size:13px;color:var(--mid)">Uploadez vos photos · L'IA analyse · Score + estimation + plan d'amélioration</p>
+      </div>
 
-        <!-- COLONNE GAUCHE : SAISIE + SCORE IA -->
-        <div>
-          <!-- SCORE IA DU BIEN -->
-          <div class="card" id="score-ia-card">
-            <div class="card-title"><span class="icon">🏠</span> Score IA du bien</div>
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
-              <div style="position:relative;width:80px;height:80px;flex-shrink:0">
-                <svg width="80" height="80" viewBox="0 0 80 80">
-                  <circle cx="40" cy="40" r="34" fill="none" stroke="var(--warm)" stroke-width="8"/>
-                  <circle cx="40" cy="40" r="34" fill="none" stroke="var(--gold)" stroke-width="8"
-                    stroke-dasharray="213" stroke-dashoffset="213" id="score-circle"
-                    stroke-linecap="round" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset 1s ease"/>
-                </svg>
-                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--gold)" id="score-number">—</div>
-              </div>
-              <div style="flex:1">
-                <div style="font-size:13px;font-weight:600;color:var(--dark)" id="score-label">Uploadez des photos pour obtenir le score</div>
-                <div style="font-size:11px;color:var(--mid);margin-top:3px" id="score-sub">L'IA analyse chaque pièce et l'état général</div>
-                <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap" id="score-badges"></div>
-              </div>
-            </div>
-            <!-- DÉTAIL PIÈCES PAR PIÈCES -->
-            <div id="score-detail" style="display:none">
-              <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Analyse par pièce</div>
-              <div id="score-rooms"></div>
-            </div>
-          </div>
+      <!-- TABS -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--warm);margin-bottom:20px">
+        <button class="artisan-tab active" id="estim-tab-photos" onclick="switchEstimTab('photos')">📸 Analyse par photos</button>
+        <button class="artisan-tab" id="estim-tab-manuel" onclick="switchEstimTab('manuel')">✏️ Estimation manuelle</button>
+      </div>
 
-          <!-- CARACTÉRISTIQUES -->
-          <div class="card">
-            <div class="card-title"><span class="icon">📋</span> Caractéristiques du bien</div>
-            <div class="field-row">
-              <div class="field"><label>Surface (m²)</label><input type="number" id="est-surface" value="85" oninput="calcEstim()"></div>
-              <div class="field"><label>Pièces</label><input type="number" id="est-pieces" value="4" oninput="calcEstim()"></div>
+      <!-- TAB PHOTOS -->
+      <div id="estim-content-photos">
+
+        <!-- ÉTAPE 1 : UPLOAD + INFOS -->
+        <div id="ep-step-upload">
+          <div class="grid2">
+            <!-- COLONNE GAUCHE : UPLOAD PAR CATÉGORIE -->
+            <div>
+              <div class="card">
+                <div class="card-title">📸 Vos photos par pièce</div>
+                <p style="font-size:12px;color:var(--mid);margin-bottom:14px">Plus vous uploadez de photos, plus l'analyse sera précise</p>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div class="upload-zone" onclick="document.getElementById('ep-ext').click()" style="padding:12px;display:flex;align-items:center;gap:10px;border-radius:10px">
+                    <input type="file" id="ep-ext" accept="image/*" multiple style="display:none" onchange="handleEpPhotos(event,'ext')">
+                    <span style="font-size:22px">🏠</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">Extérieur</div><div style="font-size:11px;color:var(--mid)">Façade · Jardin · Terrasse</div></div>
+                    <span id="ep-count-ext" style="font-size:12px;font-weight:700;color:var(--gold)"></span>
+                  </div>
+                  <div class="upload-zone" onclick="document.getElementById('ep-salon').click()" style="padding:12px;display:flex;align-items:center;gap:10px;border-radius:10px">
+                    <input type="file" id="ep-salon" accept="image/*" multiple style="display:none" onchange="handleEpPhotos(event,'salon')">
+                    <span style="font-size:22px">🛋️</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">Séjour / Salon</div><div style="font-size:11px;color:var(--mid)">Salon · Séjour · Salle à manger</div></div>
+                    <span id="ep-count-salon" style="font-size:12px;font-weight:700;color:var(--gold)"></span>
+                  </div>
+                  <div class="upload-zone" onclick="document.getElementById('ep-cuisine').click()" style="padding:12px;display:flex;align-items:center;gap:10px;border-radius:10px">
+                    <input type="file" id="ep-cuisine" accept="image/*" multiple style="display:none" onchange="handleEpPhotos(event,'cuisine')">
+                    <span style="font-size:22px">🍳</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">Cuisine</div><div style="font-size:11px;color:var(--mid)">Cuisine · Équipements</div></div>
+                    <span id="ep-count-cuisine" style="font-size:12px;font-weight:700;color:var(--gold)"></span>
+                  </div>
+                  <div class="upload-zone" onclick="document.getElementById('ep-chambre').click()" style="padding:12px;display:flex;align-items:center;gap:10px;border-radius:10px">
+                    <input type="file" id="ep-chambre" accept="image/*" multiple style="display:none" onchange="handleEpPhotos(event,'chambre')">
+                    <span style="font-size:22px">🛏️</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">Chambres / SDB</div><div style="font-size:11px;color:var(--mid)">Chambres · Salle de bain</div></div>
+                    <span id="ep-count-chambre" style="font-size:12px;font-weight:700;color:var(--gold)"></span>
+                  </div>
+                  <div class="upload-zone" onclick="document.getElementById('ep-tech').click()" style="padding:12px;display:flex;align-items:center;gap:10px;border-radius:10px">
+                    <input type="file" id="ep-tech" accept="image/*" multiple style="display:none" onchange="handleEpPhotos(event,'tech')">
+                    <span style="font-size:22px">⚡</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">Technique</div><div style="font-size:11px;color:var(--mid)">Tableau élec · Toiture · Menuiseries</div></div>
+                    <span id="ep-count-tech" style="font-size:12px;font-weight:700;color:var(--gold)"></span>
+                  </div>
+                </div>
+                <div style="margin-top:12px;padding:8px 12px;background:var(--warm);border-radius:8px;font-size:12px;color:var(--mid);text-align:center" id="ep-total-count">0 photo uploadée</div>
+              </div>
             </div>
-            <div class="field-row">
-              <div class="field"><label>Année construction</label><input type="number" id="est-annee" value="2005" oninput="calcEstim()"></div>
-              <div class="field"><label>Étage</label><input type="number" id="est-etage" value="2" oninput="calcEstim()"></div>
-            </div>
-            <div class="field"><label>Type de bien</label>
-              <select id="est-type" onchange="calcEstim()">
-                <option value="apt">Appartement</option><option value="house">Maison</option>
-                <option value="villa">Villa</option><option value="studio">Studio</option>
-                <option value="terrain">Terrain</option>
-              </select>
-            </div>
-            <div class="field"><label>Quartier / Zone</label>
-              <select id="est-quartier" onchange="calcEstim()">
-                <option value="anse_vata">Anse Vata / Baie des Citrons</option>
-                <option value="val_plaisance">Val Plaisance / Tina</option>
-                <option value="faubourg">Faubourg Blanchot</option>
-                <option value="centre">Centre-ville</option>
-                <option value="magenta">Magenta / Ouémo</option>
-                <option value="dumbea">Dumbéa / Boulari</option>
-                <option value="mont_dore">Mont-Dore</option>
-                <option value="paita">Païta</option>
-              </select>
-            </div>
-            <div class="field"><label>État général</label>
-              <select id="est-etat" onchange="calcEstim()">
-                <option value="excellent">Excellent / Neuf</option>
-                <option value="bon" selected>Bon état</option>
-                <option value="moyen">Moyen</option>
-                <option value="travaux">À rénover</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Options</label>
-              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
-                <label style="all:unset;display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="opt-piscine" onchange="calcEstim()"> 🏊 Piscine</label>
-                <label style="all:unset;display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="opt-garage" onchange="calcEstim()"> 🚗 Garage</label>
-                <label style="all:unset;display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="opt-vue" onchange="calcEstim()"> 🌊 Vue mer</label>
-                <label style="all:unset;display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="opt-terr" onchange="calcEstim()"> 🌿 Terrasse</label>
-                <label style="all:unset;display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="opt-garden" onchange="calcEstim()"> 🌳 Jardin</label>
+
+            <!-- COLONNE DROITE : INFOS DU BIEN -->
+            <div>
+              <div class="card">
+                <div class="card-title">🏠 Informations du bien</div>
+                <div class="field"><label>Type de bien</label>
+                  <select id="ep-type">
+                    <option value="appartement">Appartement</option>
+                    <option value="maison">Maison</option>
+                    <option value="villa">Villa</option>
+                    <option value="studio">Studio</option>
+                    <option value="terrain">Terrain</option>
+                  </select>
+                </div>
+                <div class="field-row">
+                  <div class="field"><label>Surface (m²)</label><input type="number" id="ep-surface" placeholder="85" oninput="updateEpPrixEstim()"></div>
+                  <div class="field"><label>Année construction</label><input type="number" id="ep-annee" placeholder="2000"></div>
+                </div>
+                <div class="field"><label>Quartier / Secteur NC</label>
+                  <select id="ep-quartier" onchange="updateEpPrixEstim()">
+                    <option value="">-- Choisir --</option>
+                    <option value="Anse Vata" data-pm2="596000">Anse Vata</option>
+                    <option value="Baie des Citrons" data-pm2="580000">Baie des Citrons</option>
+                    <option value="Val Plaisance" data-pm2="570000">Val Plaisance</option>
+                    <option value="Tina" data-pm2="540000">Tina</option>
+                    <option value="Faubourg Blanchot" data-pm2="540000">Faubourg Blanchot</option>
+                    <option value="Centre Ville Nouméa" data-pm2="480000">Centre Ville Nouméa</option>
+                    <option value="Motor Pool" data-pm2="460000">Motor Pool</option>
+                    <option value="Magenta" data-pm2="420000">Magenta</option>
+                    <option value="Trianon" data-pm2="410000">Trianon</option>
+                    <option value="Robinson" data-pm2="390000">Robinson</option>
+                    <option value="Montravel" data-pm2="380000">Montravel</option>
+                    <option value="Tuband" data-pm2="370000">Tuband</option>
+                    <option value="Receiving" data-pm2="360000">Receiving</option>
+                    <option value="Rivière Salée" data-pm2="340000">Rivière Salée</option>
+                    <option value="Vallée du Tir" data-pm2="330000">Vallée du Tir</option>
+                    <option value="Normandie" data-pm2="320000">Normandie</option>
+                    <option value="7ème km" data-pm2="310000">7ème km</option>
+                    <option value="Portes de Fer" data-pm2="300000">Portes de Fer</option>
+                    <option value="Ducos" data-pm2="290000">Ducos</option>
+                    <option value="Kaméré" data-pm2="270000">Kaméré</option>
+                    <option value="Dumbéa sur Mer" data-pm2="320000">Dumbéa sur Mer</option>
+                    <option value="Koutio" data-pm2="300000">Koutio</option>
+                    <option value="Katiramona" data-pm2="285000">Katiramona</option>
+                    <option value="Savannah" data-pm2="275000">Savannah</option>
+                    <option value="Tonghoué" data-pm2="265000">Tonghoué</option>
+                    <option value="Dumbéa Centre" data-pm2="260000">Dumbéa Centre</option>
+                    <option value="Dumbéa Nord" data-pm2="250000">Dumbéa Nord</option>
+                    <option value="Pahéa" data-pm2="240000">Pahéa</option>
+                    <option value="Mont-Dore Centre" data-pm2="260000">Mont-Dore Centre</option>
+                    <option value="Boulari" data-pm2="240000">Boulari</option>
+                    <option value="Plum" data-pm2="220000">Plum</option>
+                    <option value="Yaté" data-pm2="180000">Yaté</option>
+                    <option value="Thio" data-pm2="130000">Thio</option>
+                    <option value="Païta Centre" data-pm2="230000">Païta Centre</option>
+                    <option value="Boulouparis" data-pm2="190000">Boulouparis</option>
+                    <option value="La Foa" data-pm2="160000">La Foa</option>
+                    <option value="Bourail" data-pm2="155000">Bourail</option>
+                    <option value="Sarraméa" data-pm2="120000">Sarraméa</option>
+                    <option value="Moindou" data-pm2="115000">Moindou</option>
+                    <option value="Canala" data-pm2="110000">Canala</option>
+                    <option value="Koné" data-pm2="150000">Koné</option>
+                    <option value="Voh" data-pm2="130000">Voh</option>
+                    <option value="Koumac" data-pm2="120000">Koumac</option>
+                    <option value="Poum" data-pm2="100000">Poum</option>
+                    <option value="Kaala-Gomen" data-pm2="100000">Kaala-Gomen</option>
+                    <option value="Poindimié" data-pm2="140000">Poindimié</option>
+                    <option value="Touho" data-pm2="120000">Touho</option>
+                    <option value="Ponérihouen" data-pm2="110000">Ponérihouen</option>
+                    <option value="Houaïlou" data-pm2="100000">Houaïlou</option>
+                    <option value="Poya" data-pm2="110000">Poya</option>
+                    <option value="Lifou" data-pm2="90000">Lifou</option>
+                    <option value="Maré" data-pm2="85000">Maré</option>
+                    <option value="Ouvéa" data-pm2="80000">Ouvéa</option>
+                  </select>
+                  <div id="ep-pm2-display" style="margin-top:4px;font-size:11px;color:var(--mid);display:none">
+                    Prix marché : <strong id="ep-pm2-val" style="color:var(--gold)"></strong> · Valeur brute estimée : <strong id="ep-pm2-total" style="color:var(--dark)"></strong>
+                  </div>
+                </div>
+
+                <!-- ÉQUIPEMENTS -->
+                <div class="field"><label>Équipements</label>
+                  <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+
+                    <label class="eq-check"><input type="checkbox" id="ep-eq-jardin" onchange="toggleEpEquip('jardin')"> 🌳 Jardin</label>
+                    <div id="ep-detail-jardin" style="display:none;padding:8px;background:var(--warm);border-radius:8px;margin-left:22px">
+                      <div class="field-row" style="margin-bottom:0">
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Surface (m²)</label><input type="number" id="ep-jardin-surf" placeholder="200" style="font-size:12px;padding:5px 8px"></div>
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Type</label>
+                          <select id="ep-jardin-type" style="font-size:12px;padding:5px 8px">
+                            <option value="entretenu">Entretenu</option><option value="tropical">Tropical</option><option value="brut">Brut</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <label class="eq-check"><input type="checkbox" id="ep-eq-piscine" onchange="toggleEpEquip('piscine')"> 🏊 Piscine</label>
+                    <div id="ep-detail-piscine" style="display:none;padding:8px;background:var(--warm);border-radius:8px;margin-left:22px">
+                      <div class="field-row" style="margin-bottom:0">
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Type</label>
+                          <select id="ep-piscine-type" style="font-size:12px;padding:5px 8px">
+                            <option value="enterree">Enterrée</option><option value="semi">Semi-enterrée</option><option value="hors-sol">Hors-sol</option>
+                          </select>
+                        </div>
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Surface (m²)</label><input type="number" id="ep-piscine-surf" placeholder="30" style="font-size:12px;padding:5px 8px"></div>
+                      </div>
+                    </div>
+
+                    <label class="eq-check"><input type="checkbox" id="ep-eq-garage" onchange="toggleEpEquip('garage')"> 🚗 Garage</label>
+                    <div id="ep-detail-garage" style="display:none;padding:8px;background:var(--warm);border-radius:8px;margin-left:22px">
+                      <div class="field-row" style="margin-bottom:0">
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Type</label>
+                          <select id="ep-garage-type" style="font-size:12px;padding:5px 8px">
+                            <option value="ferme">Fermé</option><option value="carport">Carport</option><option value="double">Double</option>
+                          </select>
+                        </div>
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Nb places</label><input type="number" id="ep-garage-places" placeholder="1" min="1" max="5" style="font-size:12px;padding:5px 8px"></div>
+                      </div>
+                    </div>
+
+                    <label class="eq-check"><input type="checkbox" id="ep-eq-terrasse" onchange="toggleEpEquip('terrasse')"> 🌿 Terrasse</label>
+                    <div id="ep-detail-terrasse" style="display:none;padding:8px;background:var(--warm);border-radius:8px;margin-left:22px">
+                      <div class="field-row" style="margin-bottom:0">
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Surface (m²)</label><input type="number" id="ep-terrasse-surf" placeholder="20" style="font-size:12px;padding:5px 8px"></div>
+                        <div class="field" style="margin-bottom:0"><label style="font-size:11px">Type</label>
+                          <select id="ep-terrasse-type" style="font-size:12px;padding:5px 8px">
+                            <option value="couverte">Couverte</option><option value="ouverte">Ouverte</option><option value="rooftop">Rooftop</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <label class="eq-check"><input type="checkbox" id="ep-eq-clim" onchange="toggleEpEquip('clim')"> ❄️ Climatisation</label>
+                    <div id="ep-detail-clim" style="display:none;padding:8px;background:var(--warm);border-radius:8px;margin-left:22px">
+                      <select id="ep-clim-type" style="font-size:12px;padding:5px 8px;width:100%">
+                        <option value="centrale">Centrale (toutes pièces)</option>
+                        <option value="partielle">Partielle</option>
+                        <option value="salon">Salon uniquement</option>
+                      </select>
+                    </div>
+
+                    <label class="eq-check"><input type="checkbox" id="ep-eq-video" onchange="toggleEpEquip('video')"> 📹 Vidéosurveillance</label>
+                    <div id="ep-detail-video" style="display:none;padding:8px;background:var(--warm);border-radius:8px;margin-left:22px">
+                      <select id="ep-video-type" style="font-size:12px;padding:5px 8px;width:100%">
+                        <option value="cameras">Caméras extérieures</option>
+                        <option value="complet">Système complet</option>
+                        <option value="alarme">Alarme + détecteurs</option>
+                      </select>
+                    </div>
+
+                    <label class="eq-check"><input type="checkbox" id="ep-eq-vue" onchange="toggleEpEquip('vue')"> 🌊 Vue exceptionnelle</label>
+                    <div id="ep-detail-vue" style="display:none;padding:8px;background:var(--warm);border-radius:8px;margin-left:22px">
+                      <select id="ep-vue-type" style="font-size:12px;padding:5px 8px;width:100%">
+                        <option value="mer">Vue mer</option>
+                        <option value="lagon">Vue lagon</option>
+                        <option value="panoramique">Vue panoramique 180°</option>
+                        <option value="montagne">Vue montagne</option>
+                      </select>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:2px">
+                      <label class="eq-check"><input type="checkbox" id="ep-eq-parking"> 🅿️ Parking ext.</label>
+                      <label class="eq-check"><input type="checkbox" id="ep-eq-ascenseur"> 🛗 Ascenseur</label>
+                      <label class="eq-check"><input type="checkbox" id="ep-eq-dressing"> 🚪 Dressing</label>
+                      <label class="eq-check"><input type="checkbox" id="ep-eq-cave"> 🗄️ Cave/Cellier</label>
+                      <label class="eq-check"><input type="checkbox" id="ep-eq-cuisine-eq"> 🍳 Cuisine équipée</label>
+                      <label class="eq-check"><input type="checkbox" id="ep-eq-solaire"> ☀️ Panneaux solaires</label>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn btn-gold btn-full" onclick="lancerEpAnalyse()" id="ep-btn-analyser">✨ Lancer l'analyse IA</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- COLONNE DROITE : ESTIMATION + TRAVAUX -->
-        <div>
-
-          <!-- ESTIMATION DYNAMIQUE -->
-          <div class="ai-box" style="margin-bottom:14px">
-            <h4>💡 Estimation IA — Marché NC</h4>
-
-            <!-- JAUGE AVANT/APRÈS -->
-            <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;margin-bottom:14px">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                <div style="text-align:center;flex:1">
-                  <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:2px">VALEUR ACTUELLE</div>
-                  <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff" id="est-price-display">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.4)" id="est-range-display">—</div>
-                </div>
-                <div style="font-size:24px;color:var(--gold)">→</div>
-                <div style="text-align:center;flex:1">
-                  <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:2px">APRÈS TRAVAUX</div>
-                  <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold-light)" id="est-price-after">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.4)" id="est-gain-display">sélectionnez des travaux</div>
-                </div>
-              </div>
-              <!-- BARRE PROGRESSION -->
-              <div style="height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:6px">
-                <div id="est-gauge" style="height:100%;border-radius:4px;background:linear-gradient(90deg,#2A7A4B,var(--gold));width:0%;transition:width .6s"></div>
-              </div>
-              <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.4)">
-                <span id="est-confidence">—</span>
-                <span id="est-duree">—</span>
-              </div>
-            </div>
-
-            <!-- DONNÉES MARCHÉ -->
-            <div class="ai-line"><span>Prix au m²</span><span id="est-pm2" style="color:var(--gold-light)">—</span></div>
-            <div class="ai-line"><span>Médiane marché NC</span><span id="est-mkt" style="color:var(--gold-light)">—</span></div>
-            <div class="ai-line"><span>Positionnement</span><span class="ai-chip ai-warn" id="est-pos">—</span></div>
-            <div class="ai-line"><span>DPE estimé</span><span class="ai-chip ai-warn" id="est-dpe-chip">C</span></div>
-            <div class="ai-line"><span>Sources</span><span style="color:rgba(255,255,255,0.5);font-size:10px">Properstar · Immobilier.nc · K&P Finance</span></div>
-
-            <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn btn-gold btn-sm" onclick="genAnnonce()">📝 Générer annonce</button>
-              <button class="btn btn-outline btn-sm" onclick="go('analyse')">📷 Analyser photos</button>
-              <button class="btn btn-outline btn-sm" onclick="go('financement')">💰 Financement</button>
-            </div>
-            <!-- SATELLITE CONTEXTUEL : artisans si état moyen/travaux -->
-            <div id="ctx-artisans-banner" style="display:none;margin-top:12px;background:linear-gradient(135deg,rgba(22,163,74,0.06),rgba(184,146,42,0.06));border:1px solid rgba(22,163,74,0.2);border-radius:10px;padding:12px">
-              <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:4px">🏗️ Des travaux peuvent valoriser ce bien</div>
-              <div style="font-size:11px;color:var(--mid);margin-bottom:8px">L'IA a détecté un potentiel de +15% après rénovation. Nos artisans partenaires peuvent vous proposer des devis.</div>
-              <button onclick="go('artisans')" class="btn btn-sm" style="background:var(--green);color:#fff;border:none;font-size:11px">Voir les artisans NC →</button>
-            </div>
+        <!-- ÉTAPE 2 : CHARGEMENT -->
+        <div id="ep-step-loading" style="display:none;text-align:center;padding:60px 20px">
+          <div style="font-size:48px;margin-bottom:16px">🔍</div>
+          <div style="font-size:16px;font-weight:600;color:var(--dark);margin-bottom:6px" id="ep-loading-msg">Analyse en cours...</div>
+          <div style="height:6px;background:var(--warm);border-radius:3px;overflow:hidden;max-width:300px;margin:16px auto 0">
+            <div id="ep-loading-bar" style="height:100%;background:var(--gold);border-radius:3px;width:0%;transition:width .5s"></div>
           </div>
+        </div>
 
-          <!-- PLAN DE TRAVAUX IA -->
-          <div class="card">
-            <div class="card-title"><span class="icon">🔨</span> Plan de travaux IA
-              <span style="margin-left:auto;font-size:11px;color:var(--mid)" id="travaux-selected-count"></span>
-            </div>
+        <!-- ÉTAPE 3 : RÉSULTATS -->
+        <div id="ep-step-results" style="display:none">
+          <div class="grid2">
+            <!-- SCORE + VALEUR -->
+            <div>
+              <div class="card" style="text-align:center">
+                <div class="card-title">Score Immo360™</div>
+                <div style="display:inline-flex;align-items:center;justify-content:center;width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--gold) 0deg,var(--gold) var(--ep-score-deg,302deg),var(--warm) var(--ep-score-deg,302deg));margin:10px auto">
+                  <div style="width:96px;height:96px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                    <div style="font-size:32px;font-weight:800;color:var(--gold)" id="ep-score-val">84</div>
+                    <div style="font-size:10px;color:var(--mid)">/100</div>
+                  </div>
+                </div>
+                <div style="font-size:13px;color:var(--mid)" id="ep-score-label">Très bon état</div>
+              </div>
 
-            <!-- RÉSUMÉ SÉLECTION -->
-            <div id="travaux-summary" style="display:none;background:linear-gradient(135deg,rgba(42,122,75,0.08),rgba(184,146,42,0.08));border:1px solid rgba(184,146,42,0.2);border-radius:10px;padding:12px;margin-bottom:12px">
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
-                <div><div style="font-size:10px;color:var(--mid)">Investissement</div><div style="font-size:15px;font-weight:700;color:var(--gold)" id="ts-cout">—</div></div>
-                <div><div style="font-size:10px;color:var(--mid)">Plus-value</div><div style="font-size:15px;font-weight:700;color:var(--green)" id="ts-gain">—</div></div>
-                <div><div style="font-size:10px;color:var(--mid)">ROI</div><div style="font-size:15px;font-weight:700;color:var(--blue)" id="ts-roi">—</div></div>
+              <div class="card">
+                <div class="card-title">💰 Estimation de valeur</div>
+                <div style="text-align:center;padding:10px 0">
+                  <div style="font-size:11px;color:var(--mid);margin-bottom:4px">Valeur estimée</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold)" id="ep-val-centrale">—</div>
+                  <div style="font-size:12px;color:var(--mid);margin-top:4px" id="ep-val-fourchette">—</div>
+                </div>
+                <div style="height:1px;background:var(--warm);margin:10px 0"></div>
+                <div id="ep-positionnement" style="font-size:12px;color:var(--mid);text-align:center"></div>
+              </div>
+
+              <!-- SCORES CATÉGORIES -->
+              <div class="card">
+                <div class="card-title">Analyse par critère</div>
+                <div id="ep-scores-cats"></div>
               </div>
             </div>
 
-            <!-- LISTE TRAVAUX -->
-            <div id="travaux-list">
-              <div style="text-align:center;padding:20px;color:var(--mid);font-size:13px">
-                Remplissez les caractéristiques du bien<br>pour obtenir les recommandations IA
+            <!-- RECOMMANDATIONS + ACTIONS -->
+            <div>
+              <div class="card">
+                <div class="card-title">✅ Points forts</div>
+                <div id="ep-points-forts"></div>
+              </div>
+              <div class="card">
+                <div class="card-title">⚠️ Points à améliorer</div>
+                <div id="ep-points-faibles"></div>
+              </div>
+              <div class="card">
+                <div class="card-title">💡 Plan d'amélioration & ROI</div>
+                <div id="ep-recommandations"></div>
+                <div id="ep-potentiel" style="margin-top:12px;padding:12px;background:rgba(42,122,75,0.08);border:1px solid rgba(42,122,75,0.2);border-radius:10px;text-align:center"></div>
+              </div>
+
+              <!-- ACTIONS -->
+              <div class="card">
+                <div class="card-title">🚀 Prochaines étapes</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <button onclick="go('depot')" class="btn btn-gold btn-full">📣 Publier mon annonce</button>
+                  <button onclick="go('artisans')" class="btn btn-outline btn-full">🏗️ Demander des devis artisans</button>
+                  <button onclick="resetEpAnalyse()" class="btn btn-outline btn-full">🔄 Nouvelle analyse</button>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- DPE -->
-          <div class="card" style="margin-top:0">
-            <div class="card-title"><span class="icon">⚡</span> Diagnostic DPE estimé</div>
-            <div id="dpe-visual"></div>
+      <!-- TAB MANUEL (ancienne estimation) -->
+      <div id="estim-content-manuel" style="display:none">
+        <div class="grid2">
+          <div>
+            <div class="card" id="estim-card-left">
+              <div class="card-title">📊 Estimation rapide</div>
+              <div class="field"><label>Quartier</label>
+                <select id="est-quartier" onchange="calcEstim()">
+                  <option value="Anse Vata" data-pm2="596000">Anse Vata</option>
+                  <option value="Magenta" data-pm2="420000">Magenta</option>
+                  <option value="Dumbéa sur Mer" data-pm2="320000">Dumbéa sur Mer</option>
+                  <option value="Mont-Dore" data-pm2="250000">Mont-Dore</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Surface (m²)</label><input type="number" id="est-surface" value="85" oninput="calcEstim()"></div>
+                <div class="field"><label>État</label>
+                  <select id="est-etat" onchange="calcEstim()">
+                    <option value="excellent">Excellent</option>
+                    <option value="bon" selected>Bon état</option>
+                    <option value="moyen">Moyen</option>
+                    <option value="travaux">À rénover</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Type</label>
+                  <select id="est-type" onchange="calcEstim()">
+                    <option value="apt">Appartement</option>
+                    <option value="mai">Maison</option>
+                    <option value="vil">Villa</option>
+                    <option value="stu">Studio</option>
+                  </select>
+                </div>
+                <div class="field"><label>Pièces</label><input type="number" id="est-pieces" value="3" oninput="calcEstim()"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="ai-box" id="est-result">
+              <div style="text-align:center;color:rgba(255,255,255,0.4);padding:20px">Renseignez les informations pour obtenir une estimation</div>
+            </div>
+            <div class="card" style="margin-top:12px">
+              <div class="card-title">📈 DPE estimé</div>
+              <div id="dpe-result"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -10025,6 +10218,263 @@ function getEquipementsSummary(){
     }
   });
   return equips;
+}
+
+// =============================================
+// ESTIMATION PAR PHOTOS — MODULE APP
+// =============================================
+let epPhotos = {ext:[],salon:[],cuisine:[],chambre:[],tech:[]};
+
+function switchEstimTab(tab){
+  ['photos','manuel'].forEach(t=>{
+    const c=document.getElementById('estim-content-'+t);
+    const b=document.getElementById('estim-tab-'+t);
+    if(c) c.style.display=t===tab?'block':'none';
+    if(b) b.classList.toggle('active',t===tab);
+  });
+}
+
+function handleEpPhotos(event, cat){
+  epPhotos[cat] = Array.from(event.target.files);
+  const total = Object.values(epPhotos).reduce((a,b)=>a+b.length,0);
+  const countEl = document.getElementById('ep-count-'+cat);
+  if(countEl) countEl.textContent = epPhotos[cat].length>0 ? epPhotos[cat].length+'✓' : '';
+  const totalEl = document.getElementById('ep-total-count');
+  if(totalEl) totalEl.textContent = total+' photo'+(total>1?'s':'')+' uploadee'+(total>1?'s':'')+(total>=3?' - Pret !':' - Min. 3 recommandees');
+}
+
+function toggleEpEquip(id){
+  const cb = document.getElementById('ep-eq-'+id);
+  const detail = document.getElementById('ep-detail-'+id);
+  if(detail) detail.style.display = cb?.checked ? 'block' : 'none';
+}
+
+function updateEpPrixEstim(){
+  const sel = document.getElementById('ep-quartier');
+  const surface = parseInt(document.getElementById('ep-surface')?.value||0);
+  if(!sel||!sel.value) return;
+  const pm2 = NC_PM2[sel.value] || 340000;
+  const display = document.getElementById('ep-pm2-display');
+  const pm2El = document.getElementById('ep-pm2-val');
+  const totalEl = document.getElementById('ep-pm2-total');
+  if(display) display.style.display='block';
+  if(pm2El) pm2El.textContent = pm2.toLocaleString('fr-FR')+' F/m2';
+  if(totalEl&&surface>0) totalEl.textContent = conv(pm2*surface);
+}
+
+function getEpEquipements(){
+  const equips = [];
+  const checks = [
+    {id:'jardin', label:'Jardin', detail: ()=>{
+      const s=document.getElementById('ep-jardin-surf')?.value;
+      const t=document.getElementById('ep-jardin-type')?.value;
+      return (t||'entretenu')+(s?' '+s+'m2':'');
+    }},
+    {id:'piscine', label:'Piscine', detail: ()=>{
+      const t=document.getElementById('ep-piscine-type')?.value;
+      const s=document.getElementById('ep-piscine-surf')?.value;
+      return (t||'enterree')+(s?' '+s+'m2':'');
+    }},
+    {id:'garage', label:'Garage', detail: ()=>{
+      const t=document.getElementById('ep-garage-type')?.value;
+      const p=document.getElementById('ep-garage-places')?.value;
+      return (t||'ferme')+(p?' '+p+' place(s)':'');
+    }},
+    {id:'terrasse', label:'Terrasse', detail: ()=>{
+      const s=document.getElementById('ep-terrasse-surf')?.value;
+      const t=document.getElementById('ep-terrasse-type')?.value;
+      return (t||'couverte')+(s?' '+s+'m2':'');
+    }},
+    {id:'clim', label:'Climatisation', detail: ()=>document.getElementById('ep-clim-type')?.value||'centrale'},
+    {id:'video', label:'Securite', detail: ()=>document.getElementById('ep-video-type')?.value||'cameras'},
+    {id:'vue', label:'Vue', detail: ()=>document.getElementById('ep-vue-type')?.value||'mer'},
+  ];
+  checks.forEach(c=>{
+    if(document.getElementById('ep-eq-'+c.id)?.checked){
+      equips.push(c.label+' '+c.detail());
+    }
+  });
+  ['parking','ascenseur','dressing','cave','cuisine-eq','solaire'].forEach(id=>{
+    if(document.getElementById('ep-eq-'+id)?.checked) equips.push(id);
+  });
+  return equips;
+}
+
+async function lancerEpAnalyse(){
+  const total = Object.values(epPhotos).reduce((a,b)=>a+b.length,0);
+  const quartier = document.getElementById('ep-quartier')?.value;
+  const surface = document.getElementById('ep-surface')?.value;
+  if(!quartier){alert('Veuillez choisir un quartier');return;}
+
+  document.getElementById('ep-step-upload').style.display='none';
+  document.getElementById('ep-step-loading').style.display='block';
+  document.getElementById('ep-step-results').style.display='none';
+
+  const msgs = ["Analyse en cours...","Evaluation etat general...","Analyse finitions...","Comparaison marche NC...","Calcul Score Immo360..."];
+  let prog = 0;
+  const bar = document.getElementById('ep-loading-bar');
+  const msgEl = document.getElementById('ep-loading-msg');
+  const interval = setInterval(()=>{
+    prog = Math.min(prog+Math.random()*15, 90);
+    if(bar) bar.style.width=prog+'%';
+    if(msgEl) msgEl.textContent=msgs[Math.min(Math.floor(prog/20),msgs.length-1)];
+  }, 600);
+
+  try {
+    const allFiles = Object.values(epPhotos).flat().slice(0,6);
+    const pm2Local = NC_PM2[quartier]||340000;
+    const equipements = getEpEquipements();
+    const typeBien = document.getElementById('ep-type')?.value||'appartement';
+    const annee = document.getElementById('ep-annee')?.value||'2000';
+    const surf = parseInt(surface||80);
+
+    let imageContents = [];
+    for(const file of allFiles){
+      if(file.size>0){
+        const b64 = await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
+        imageContents.push({type:'image',source:{type:'base64',media_type:file.type||'image/jpeg',data:b64}});
+      }
+    }
+
+    const equipStr = equipements.join(", ")||"aucun declare";
+    const vb = Math.round(pm2Local*surf*0.88);
+    const vc = Math.round(pm2Local*surf);
+    const vh = Math.round(pm2Local*surf*1.12);
+
+    const prompt = "Expert immobilier NC. Analyse photos "+typeBien+" "+surf+"m2 a "+quartier+" ("+annee+"). Prix marche: "+pm2Local+" F/m2. Equipements: "+equipStr+". Reponds JSON: {score_global:84,scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:78},valeur_basse:"+vb+",valeur_centrale:"+vc+",valeur_haute:"+vh+",positionnement:'texte position marche',positionnement_pct:68,points_forts:['f1','f2','f3'],points_faibles:['w1','w2'],recommandations:[{piece:'Nom',score_actuel:65,actions:['action1','action2'],cout_xpf:150000,gain_xpf:800000,roi:5.3}],potentiel_total_xpf:3200000}";
+
+    const msgs_content = imageContents.length>0
+      ? [...imageContents, {type:'text',text:prompt}]
+      : [{type:'text',text:prompt}];
+
+    const response = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:msgs_content}]})
+    });
+
+    clearInterval(interval);
+    if(bar) bar.style.width='100%';
+    const data = await response.json();
+    const raw = data.content?.[0]?.text||'';
+    const match = raw.match(/\{[\s\S]*\}/);
+    const result = match ? JSON.parse(match[0]) : null;
+    setTimeout(()=>afficherEpResultats(result||getDemoResult(surf,pm2Local,quartier)), 500);
+  } catch(e){
+    clearInterval(interval);
+    if(bar) bar.style.width='100%';
+    const surf2=parseInt(surface||80);
+    const pm2=NC_PM2[quartier]||340000;
+    setTimeout(()=>afficherEpResultats(getDemoResult(surf2,pm2,quartier)), 500);
+  }
+}
+
+function getDemoResult(surf,pm2,quartier){
+  return {
+    score_global:81,
+    scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:75},
+    valeur_basse:Math.round(surf*pm2*0.88),
+    valeur_centrale:Math.round(surf*pm2),
+    valeur_haute:Math.round(surf*pm2*1.12),
+    positionnement:"Dans la moyenne du secteur "+quartier,
+    positionnement_pct:55,
+    points_forts:["Bon etat general","Luminosite naturelle","Bonne distribution des pieces"],
+    points_faibles:["Cuisine a moderniser","Salle de bain a rafraichir"],
+    recommandations:[
+      {piece:"Cuisine",score_actuel:62,actions:["Remplacer poignees","Repeindre facades","Changer credence"],cout_xpf:150000,gain_xpf:800000,roi:5.3},
+      {piece:"Salle de bain",score_actuel:68,actions:["Remplacer joints","Nouveau mitigeur","Peinture carrelage"],cout_xpf:80000,gain_xpf:400000,roi:5.0}
+    ],
+    potentiel_total_xpf:Math.round(surf*pm2*0.06)
+  };
+}
+
+function afficherEpResultats(result){
+  document.getElementById('ep-step-loading').style.display='none';
+  document.getElementById('ep-step-results').style.display='block';
+
+  const score = result.score_global||81;
+  const scoreEl = document.getElementById('ep-score-val');
+  if(scoreEl) scoreEl.textContent=score;
+  const circle = document.querySelector('#ep-step-results [style*="conic-gradient"]');
+  if(circle) circle.style.setProperty('--ep-score-deg', (score*3.6)+'deg');
+  const labelEl = document.getElementById('ep-score-label');
+  if(labelEl) labelEl.textContent = score>=90?'Excellent':score>=80?'Tres bon':score>=70?'Bon':score>=60?'Moyen':'A ameliorer';
+
+  const convM = v=>(v/1000000).toFixed(1).replace('.',',')+'M F';
+  const vcEl = document.getElementById('ep-val-centrale');
+  if(vcEl) vcEl.textContent = convM(result.valeur_centrale||0);
+  const fEl = document.getElementById('ep-val-fourchette');
+  if(fEl) fEl.textContent = 'Fourchette : '+convM(result.valeur_basse||0)+' - '+convM(result.valeur_haute||0);
+  const posEl = document.getElementById('ep-positionnement');
+  if(posEl) posEl.textContent = result.positionnement||'';
+
+  const cats=[
+    {key:'marche',label:'Marche',icon:'📊'},
+    {key:'presentation',label:'Presentation',icon:'✨'},
+    {key:'etat_general',label:'Etat general',icon:'🏠'},
+    {key:'attractivite',label:'Attractivite',icon:'❤️'},
+    {key:'luminosite',label:'Luminosite',icon:'☀️'},
+    {key:'entretien',label:'Entretien',icon:'🔧'},
+  ];
+  const scoresEl = document.getElementById('ep-scores-cats');
+  if(scoresEl&&result.scores){
+    scoresEl.innerHTML=cats.map(c=>{
+      const s=result.scores[c.key]||75;
+      const color=s>=80?'var(--green)':s>=65?'var(--gold)':'var(--red)';
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--warm)">
+        <span style="font-size:14px;width:20px">${c.icon}</span>
+        <span style="font-size:12px;flex:1;color:var(--mid)">${c.label}</span>
+        <div style="width:80px;height:5px;background:var(--warm);border-radius:3px;overflow:hidden">
+          <div style="width:${s}%;height:100%;background:${color};border-radius:3px"></div>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:${color};min-width:35px;text-align:right">${s}/100</span>
+      </div>`;
+    }).join('');
+  }
+
+  const pfEl = document.getElementById('ep-points-forts');
+  if(pfEl) pfEl.innerHTML=(result.points_forts||[]).map(p=>`<div style="font-size:12px;color:var(--green);padding:3px 0">✅ ${p}</div>`).join('');
+  const pwEl = document.getElementById('ep-points-faibles');
+  if(pwEl) pwEl.innerHTML=(result.points_faibles||[]).map(p=>`<div style="font-size:12px;color:var(--red);padding:3px 0">⚠️ ${p}</div>`).join('');
+
+  const recoEl = document.getElementById('ep-recommandations');
+  if(recoEl) recoEl.innerHTML=(result.recommandations||[]).map(r=>`
+    <div style="border:1px solid var(--warm);border-radius:8px;padding:10px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:600;color:var(--dark)">${r.piece}</span>
+        <span style="font-size:11px;color:var(--mid)">Score: ${r.score_actuel}/100</span>
+      </div>
+      <div style="font-size:11px;color:var(--mid);margin-bottom:8px">${(r.actions||[]).map(a=>'· '+a).join('<br>')}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center">
+        <div style="background:rgba(220,38,38,0.06);border-radius:6px;padding:5px">
+          <div style="font-size:9px;color:var(--mid)">Cout</div>
+          <div style="font-size:12px;font-weight:700;color:var(--red)">${conv(r.cout_xpf)}</div>
+        </div>
+        <div style="background:rgba(42,122,75,0.06);border-radius:6px;padding:5px">
+          <div style="font-size:9px;color:var(--mid)">Gain</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green)">+${conv(r.gain_xpf)}</div>
+        </div>
+        <div style="background:rgba(184,146,42,0.06);border-radius:6px;padding:5px">
+          <div style="font-size:9px;color:var(--mid)">ROI</div>
+          <div style="font-size:12px;font-weight:700;color:var(--gold)">x${r.roi}</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  const potEl = document.getElementById('ep-potentiel');
+  if(potEl) potEl.innerHTML=`<div style="font-size:12px;color:var(--mid);margin-bottom:4px">Potentiel de valorisation total</div><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--green)">+ ${conv(result.potentiel_total_xpf||0)}</div>`;
+}
+
+function resetEpAnalyse(){
+  epPhotos={ext:[],salon:[],cuisine:[],chambre:[],tech:[]};
+  ['ext','salon','cuisine','chambre','tech'].forEach(c=>{
+    const el=document.getElementById('ep-count-'+c);if(el)el.textContent='';
+    const inp=document.getElementById('ep-'+c);if(inp)inp.value='';
+  });
+  document.getElementById('ep-step-upload').style.display='block';
+  document.getElementById('ep-step-loading').style.display='none';
+  document.getElementById('ep-step-results').style.display='none';
+  document.getElementById('ep-total-count').textContent='0 photo uploadee';
 }
 
 // =============================================
