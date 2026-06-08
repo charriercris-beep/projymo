@@ -4963,20 +4963,28 @@ function doLoginConfirm(){
 
 function doLogin(){doLoginConfirm();}
 function loginAs(profil){
+  console.log('[Immo360] loginAs appelé:', profil);
   if(profil==='sell'||profil==='buy'||profil==='agt'){
     APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
     // 1. Cacher landing
     const lp=document.getElementById('landing-page');
-    if(lp) lp.style.display='none';
+    if(lp){
+      lp.style.setProperty('display','none','important');
+      lp.style.visibility='hidden';
+      lp.style.pointerEvents='none';
+      lp.style.zIndex='-999';
+    }
     // 2. Afficher shell
     const shell=document.getElementById('main-shell')||document.querySelector('.shell');
     if(shell){
-      shell.style.display='flex';
+      shell.style.setProperty('display','flex','important');
       shell.style.visibility='visible';
       shell.style.opacity='1';
+      shell.style.zIndex='1';
     }
+    console.log('[Immo360] Landing cachée, shell affiché');
     // 3. Construire UI
     try { buildSB(); } catch(e){ console.error('buildSB error:',e); }
     try { go('dashboard'); } catch(e){ console.error('go error:',e); }
