@@ -8636,337 +8636,384 @@ function buildSmartDashboard(){
   }
 
   const profil=APP_STATE.user?.profil||S.profile||'buy';
+  const nom=APP_STATE.user?.nom||'vous';
   const dash=document.getElementById('panel-dashboard');
   if(!dash) return;
 
-  // ── COMPOSANTS PARTAGÉS ──
-  const W=(v,l,c='#B8922A',sub='')=>`
-    <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:16px 18px;text-align:center">
-      <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:${c};line-height:1">${v}</div>
-      <div style="font-size:11px;color:rgba(0,0,0,0.35);text-transform:uppercase;letter-spacing:1px;margin-top:5px;font-family:'DM Sans',sans-serif">${l}</div>
-      ${sub?`<div style="font-size:11px;color:${c};font-weight:600;margin-top:3px">${sub}</div>`:''}
-    </div>`;
-
+  // ── COMPOSANTS COMMUNS ──
   const BTN=(label,panel,primary=false)=>`
     <button type="button" onclick="go('${panel}')"
       style="display:flex;align-items:center;justify-content:space-between;width:100%;
       background:${primary?'#0d1117':'#F9F7F3'};color:${primary?'#fff':'#0d1117'};
       border:${primary?'none':'1px solid rgba(0,0,0,0.07)'};border-radius:11px;
-      padding:13px 16px;font-size:13px;font-weight:600;cursor:pointer;
+      padding:12px 15px;font-size:13px;font-weight:600;cursor:pointer;
       font-family:'DM Sans',sans-serif;margin-bottom:8px;transition:.2s"
       onmouseover="this.style.background='${primary?'#B8922A':'rgba(184,146,42,0.08)'}'"
       onmouseout="this.style.background='${primary?'#0d1117':'#F9F7F3'}'">
       ${label}
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>`;
 
-  const HERO=(emoji,titre,sous,couleur='#0d1117')=>`
-    <div style="background:linear-gradient(135deg,${couleur},${couleur}dd);border-radius:18px;padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:-40px;right:-20px;width:180px;height:180px;border-radius:50%;background:rgba(184,146,42,0.06)"></div>
-      <div style="position:absolute;bottom:-50px;left:30%;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.03)"></div>
-      <div style="position:relative">
-        <div style="font-size:32px;margin-bottom:10px">${emoji}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:8px">${titre}</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif">${sous}</div>
-      </div>
+  const W=(v,l,c='#B8922A',sub='')=>`
+    <div style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.07);padding:14px 16px;text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:${c};line-height:1">${v}</div>
+      <div style="font-size:10px;color:rgba(0,0,0,0.35);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-family:'DM Sans',sans-serif">${l}</div>
+      ${sub?`<div style="font-size:10px;color:${c};font-weight:600;margin-top:2px">${sub}</div>`:''}
     </div>`;
 
-  const IA_BLOC=(msg)=>`
-    <div style="background:rgba(184,146,42,0.08);border:1px solid rgba(184,146,42,0.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px">
-      <div style="font-size:18px;flex-shrink:0">🤖</div>
+  const IA=(msg)=>`
+    <div style="background:rgba(184,146,42,0.07);border:1px solid rgba(184,146,42,0.18);border-radius:12px;padding:12px 14px;margin-bottom:16px;display:flex;gap:10px">
+      <div style="font-size:16px;flex-shrink:0">🤖</div>
       <div>
-        <div style="font-size:11px;font-weight:700;color:#B8922A;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-family:'DM Sans',sans-serif">Recommandation IA</div>
-        <div style="font-size:13px;color:#0d1117;font-family:'DM Sans',sans-serif;line-height:1.5">${msg}</div>
+        <div style="font-size:10px;font-weight:700;color:#B8922A;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-family:'DM Sans',sans-serif">IA Immo360</div>
+        <div style="font-size:12px;color:#0d1117;font-family:'DM Sans',sans-serif;line-height:1.6">${msg}</div>
       </div>
     </div>`;
 
-  const STEP=(steps,current=0)=>`
-    <div style="display:flex;align-items:center">
-      ${steps.map((s,i)=>`
-        <div style="flex:1;text-align:center">
-          <div style="width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
-            background:${i<current?'#B8922A':i===current?'#0d1117':'#F3F4F6'};
-            color:${i<current?'#fff':i===current?'#fff':'#9CA3AF'};
-            border:${i===current?'2px solid #B8922A':'none'};
-            box-shadow:${i===current?'0 0 0 3px rgba(184,146,42,0.15)':'none'}">
-            ${i<current?'✓':i+1}
-          </div>
-          <div style="font-size:10px;font-weight:600;color:${i<=current?'#0d1117':'#9CA3AF'};font-family:'DM Sans',sans-serif">${s}</div>
-        </div>
-        ${i<steps.length-1?`<div style="flex:0.5;height:1px;background:${i<current?'#B8922A':'#E5E7EB'};margin-bottom:18px"></div>`:''}
-      `).join('')}
-    </div>`;
-
   // ════════════════════════════════
-  // DASHBOARD ACHETEUR
+  // VENDEUR
   // ════════════════════════════════
-  if(profil==='buy'){
-    dash.innerHTML=`<div style="max-width:860px;margin:0 auto;padding:4px 0">
+  if(profil==='sell'){
+    // Biens du vendeur (démo)
+    const mesBiens = (S.biens||BIENS_DATA||[]).slice(0,3);
 
-      ${HERO('🔍','Votre conseiller IA est actif','3 biens correspondent à votre projet · Marché analysé en temps réel')}
-
-      ${IA_BLOC('Villa F4 · Koutio · 44,5M F — Score 91/100. Ce bien correspond à 94% de votre projet. Quartier en hausse de +8% sur 12 mois. Recommandation : visiter en priorité.')}
-
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-        ${W('3','Nouvelles correspondances','#22C55E')}
-        ${W('311','Biens sur le marché','#2563EB')}
-        ${W('340k','F/m² médian','#B8922A','Dumbéa')}
-        ${W('52j','Délai moyen vente','#9333EA')}
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Mon projet</div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#F9F7F3;border-radius:8px">
-              <span style="font-size:12px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Budget</span>
-              <span style="font-size:13px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif">35 – 50M F</span>
+    const bienCard=(b)=>`
+      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);overflow:hidden;margin-bottom:12px">
+        <div style="display:flex;align-items:stretch">
+          <div style="width:90px;min-height:80px;background:linear-gradient(135deg,#1a3d1a,#2d5a1a);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">🏡</div>
+          <div style="flex:1;padding:12px 16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+              <div style="font-size:14px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif">${b.titre||b.type+' · '+b.quartier}</div>
+              <div style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:${b.statut==='En vente'?'#F0FDF4':'#FEF3C7'};color:${b.statut==='En vente'?'#166534':'#B45309'}">${b.statut||'En vente'}</div>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#F9F7F3;border-radius:8px">
-              <span style="font-size:12px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Secteur</span>
-              <span style="font-size:13px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif">Dumbéa · Plum</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#F9F7F3;border-radius:8px">
-              <span style="font-size:12px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Type</span>
-              <span style="font-size:13px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif">Villa / Maison</span>
-            </div>
-          </div>
-          ${BTN('🏡 Explorer les biens','marketplace',true)}
-          ${BTN('🤖 Matching IA','matching')}
-          ${BTN('💰 Financement','financementplus')}
-        </div>
-
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Opportunités détectées</div>
-          ${[
-            {icon:'📉',name:'Appt F3 · Magenta',sub:'−8% cette semaine',tag:'-8%',tc:'#DC2626',bg:'#FEF2F2'},
-            {icon:'✨',name:'Villa · Plum',sub:'Nouveau · Score 88/100',tag:'Nouveau',tc:'#166534',bg:'#F0FDF4'},
-            {icon:'❤️',name:'Maison · Boulari',sub:'En favoris · Baisse probable',tag:'Suivi',tc:'#C2410C',bg:'#FFF7ED'},
-            {icon:'🔥',name:'Villa · Dumbéa sur Mer',sub:'3 offres en cours · Urgent',tag:'Urgent',tc:'#9333EA',bg:'#F5F3FF'},
-          ].map(o=>`
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F1F5F9">
-              <div style="display:flex;align-items:center;gap:9px">
-                <div style="width:30px;height:30px;border-radius:8px;background:${o.bg};display:flex;align-items:center;justify-content:center;font-size:13px">${o.icon}</div>
-                <div>
-                  <div style="font-size:12px;font-weight:600;color:#0d1117;font-family:'DM Sans',sans-serif">${o.name}</div>
-                  <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">${o.sub}</div>
-                </div>
+            <div style="font-size:12px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif;margin-bottom:8px">📍 ${b.quartier||b.ville} · ${b.surface}m² · ${b.pieces||'—'} pièces</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#B8922A">${(b.prix/1000000).toFixed(1).replace('.',',')}M F</div>
+              <div style="display:flex;gap:6px">
+                <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">👁 ${Math.floor(Math.random()*200+50)} vues</div>
+                <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">· 💬 ${Math.floor(Math.random()*10+2)} contacts</div>
               </div>
-              <div style="font-size:10px;font-weight:700;color:${o.tc};background:${o.bg};padding:3px 8px;border-radius:6px">${o.tag}</div>
-            </div>`).join('')}
+            </div>
+          </div>
         </div>
-      </div>
+      </div>`;
 
-      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-        <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;font-family:'DM Sans',sans-serif">Parcours d'achat</div>
-        ${STEP(['Projet','Matching','Visite','Financement','Offre','Acte'],1)}
-      </div>
-    </div>`;
-
-  // ════════════════════════════════
-  // DASHBOARD VENDEUR
-  // ════════════════════════════════
-  } else if(profil==='sell'){
     dash.innerHTML=`<div style="max-width:860px;margin:0 auto;padding:4px 0">
 
-      ${HERO('💎','Votre expert valorisation IA','Score Immo360™ calculé · Plan d\'amélioration personnalisé')}
+      <!-- BONJOUR -->
+      <div style="margin-bottom:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#0d1117;margin-bottom:4px">Bonjour ${nom} 👋</div>
+        <div style="font-size:14px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Votre espace vendeur · Marché NC favorable actuellement</div>
+      </div>
 
-      <!-- SCORE HERO -->
-      <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:28px">
-        <div style="position:relative;width:100px;height:100px;flex-shrink:0">
-          <svg viewBox="0 0 100 100" style="width:100px;height:100px;transform:rotate(-90deg)">
-            <circle cx="50" cy="50" r="42" fill="none" stroke="#F3F4F6" stroke-width="8"/>
-            <circle cx="50" cy="50" r="42" fill="none" stroke="#B8922A" stroke-width="8" stroke-dasharray="264" stroke-dashoffset="34" stroke-linecap="round"/>
-          </svg>
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-            <div style="font-size:28px;font-weight:800;color:#B8922A;line-height:1;font-family:'DM Sans',sans-serif">87</div>
-            <div style="font-size:10px;color:rgba(0,0,0,0.3);font-family:'DM Sans',sans-serif">/100</div>
-          </div>
+      <!-- ACTION PRINCIPALE -->
+      <div style="background:#0d1117;border-radius:16px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s" onclick="go('depot')" onmouseover="this.style.background='#1a2332'" onmouseout="this.style.background='#0d1117'">
+        <div>
+          <div style="font-size:11px;color:#B8922A;text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:6px">Mettre en vente un bien</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px">+ Déposer une nouvelle annonce</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif">Estimation IA · Publication · Suivi complet</div>
         </div>
-        <div style="flex:1">
-          <div style="font-size:12px;font-weight:700;color:#B8922A;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:'DM Sans',sans-serif">🤖 Score Immo360™ — Villa F4 · Koutio</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-            <div style="text-align:center;background:#F9F7F3;border-radius:10px;padding:12px">
-              <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif;margin-bottom:4px">Valeur estimée</div>
-              <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#0d1117">44,5M F</div>
-            </div>
-            <div style="text-align:center;background:#F9F7F3;border-radius:10px;padding:12px">
-              <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif;margin-bottom:4px">Valeur optimisée</div>
-              <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#16A34A">48,2M F</div>
-            </div>
-            <div style="text-align:center;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:12px">
-              <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif;margin-bottom:4px">Gain potentiel</div>
-              <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#16A34A">+ 3,7M F</div>
-            </div>
-          </div>
+        <div style="background:#B8922A;border-radius:10px;padding:12px 20px;color:#fff;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;flex-shrink:0;margin-left:20px">
+          Commencer →
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-        ${W('247','Vues','#2563EB','↑ +18%')}
+      ${IA('Votre bien a reçu 247 vues cette semaine (+18%). 3 visiteurs ont manifesté un intérêt fort. Recommandation : rafraîchir les photos et baisser le prix de 3% pour accélérer la vente.')}
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        ${W('247','Vues totales','#2563EB','↑ +18%')}
         ${W('12','Contacts','#22C55E','↑ +3')}
         ${W('4','Visites','#B8922A','2 en attente')}
-        ${W('0','Offres','#9333EA','En attente')}
+        ${W('87','Score Immo360™','#9333EA','/100')}
       </div>
 
-      ${IA_BLOC('3 actions peuvent augmenter votre valeur de +3,7M F. ROI moyen : ×5,5. Priorité : home staging cuisine (3 jours, ROI ×7,3). Moment idéal pour mettre en vente : marché favorable à Koutio (+8% sur 12 mois).')}
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Actions recommandées · ROI</div>
-          ${[
-            {icon:'🌿',titre:'Home staging jardin',cout:'45k F',roi:'×7,3',gain:'+330k F',bg:'#F0FDF4'},
-            {icon:'🎨',titre:'Peinture intérieure',cout:'120k F',roi:'×4,2',gain:'+504k F',bg:'#FEF3C7'},
-            {icon:'🍳',titre:'Cuisine — façades',cout:'180k F',roi:'×5,1',gain:'+918k F',bg:'#EFF6FF'},
-          ].map(a=>`
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F1F5F9">
-              <div style="display:flex;align-items:center;gap:9px">
-                <div style="width:32px;height:32px;border-radius:8px;background:${a.bg};display:flex;align-items:center;justify-content:center;font-size:15px">${a.icon}</div>
-                <div>
-                  <div style="font-size:12px;font-weight:600;color:#0d1117;font-family:'DM Sans',sans-serif">${a.titre}</div>
-                  <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Coût : ${a.cout} · Gain : ${a.gain}</div>
-                </div>
-              </div>
-              <div style="font-size:11px;font-weight:700;color:#166534;background:#F0FDF4;padding:3px 8px;border-radius:6px">ROI ${a.roi}</div>
-            </div>`).join('')}
-          <button type="button" onclick="go('artisans')" style="width:100%;background:#0d1117;color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;margin-top:12px;font-family:'DM Sans',sans-serif;transition:.2s" onmouseover="this.style.background='#B8922A'" onmouseout="this.style.background='#0d1117'">🏗️ Recevoir des devis artisans →</button>
+      <!-- MES BIENS EN VENTE -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Mes biens en vente</div>
+          ${mesBiens.length?mesBiens.map(bienCard).join(''):`
+            <div style="background:#F9F7F3;border-radius:12px;padding:24px;text-align:center;border:2px dashed rgba(0,0,0,0.1)">
+              <div style="font-size:32px;margin-bottom:10px">🏠</div>
+              <div style="font-size:14px;font-weight:600;color:#0d1117;font-family:'DM Sans',sans-serif;margin-bottom:6px">Aucun bien en vente</div>
+              <div style="font-size:12px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Déposez votre première annonce</div>
+            </div>`}
         </div>
-
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Gérer ma vente</div>
-          ${BTN('💎 Estimation IA complète','estimation',true)}
-          ${BTN('📝 Déposer mon annonce','depot')}
-          ${BTN('📅 Mes visites','rdv')}
-          ${BTN('📊 Analyse du marché','analyse')}
-          <div style="background:#F9F7F3;border-radius:10px;padding:12px;margin-top:8px">
-            <div style="font-size:10px;color:rgba(0,0,0,0.35);font-family:'DM Sans',sans-serif;margin-bottom:6px">PARCOURS DE VENTE</div>
-            ${STEP(['Estimation','Annonce','Visites','Offre','Compromis','Acte'],0)}
+        <div>
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Actions</div>
+          ${BTN('💎 Estimation IA de mon bien','estimation',true)}
+          ${BTN('📝 Déposer une annonce','depot')}
+          ${BTN('📅 Gérer mes visites','rdv')}
+          ${BTN('🏗️ Demander des devis','artisans')}
+          ${BTN('💬 Messagerie','messagerie')}
+          <div style="background:#F9F7F3;border-radius:10px;padding:12px;margin-top:8px;text-align:center">
+            <div style="font-size:11px;color:rgba(0,0,0,0.35);font-family:'DM Sans',sans-serif;margin-bottom:4px">Valeur potentielle estimée</div>
+            <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#22C55E">48,2 M F</div>
+            <div style="font-size:10px;color:#22C55E;font-family:'DM Sans',sans-serif">+ 3,7M F après travaux recommandés</div>
           </div>
         </div>
       </div>
     </div>`;
 
   // ════════════════════════════════
-  // DASHBOARD AGENT
+  // ACHETEUR
   // ════════════════════════════════
-  } else if(profil==='agt'){
-    const today=new Date();
-    const dateStr=today.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-    dash.innerHTML=`<div style="max-width:900px;margin:0 auto;padding:4px 0">
+  } else if(profil==='buy'){
+    // Biens disponibles filtrés
+    const biensDispos=(BIENS_DATA||[]).filter(b=>b.statut==='En vente').slice(0,4);
 
-      ${HERO('🤝','Votre assistant commercial IA','Aujourd\'hui · '+dateStr,'#0d1117')}
+    const bienMiniCard=(b)=>`
+      <div onclick="go('marketplace')" style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.07);overflow:hidden;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='#B8922A';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(0,0,0,0.07)';this.style.transform=''">
+        <div style="height:90px;background:linear-gradient(135deg,#0f1e3d,#1a3566);display:flex;align-items:center;justify-content:center;font-size:24px;position:relative">
+          🏡
+          <div style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.95);border-radius:6px;padding:2px 7px;font-size:10px;font-weight:700;color:#22C55E">${72+Math.floor((b.id||1)*7.3)%20}/100</div>
+        </div>
+        <div style="padding:10px 12px">
+          <div style="font-size:12px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type}</div>
+          <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">${b.quartier||b.ville} · ${b.surface}m²</div>
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#B8922A;margin-top:4px">${(b.prix/1000000).toFixed(1).replace('.',',')}M F</div>
+        </div>
+      </div>`;
 
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-        ${W('8','Mandats actifs','#B8922A')}
-        ${W('3','Prospects chauds','#EF4444','À contacter')}
-        ${W('2','Visites aujourd\'hui','#22C55E','14h · 16h30')}
-        ${W('94%','Taux de succès','#9333EA')}
+    dash.innerHTML=`<div style="max-width:860px;margin:0 auto;padding:4px 0">
+
+      <!-- BONJOUR -->
+      <div style="margin-bottom:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#0d1117;margin-bottom:4px">Bonjour ${nom} 👋</div>
+        <div style="font-size:14px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Votre conseiller IA immobilier est actif · ${biensDispos.length} biens correspondent à votre profil</div>
       </div>
 
-      ${IA_BLOC('3 actions prioritaires aujourd\'hui : (1) Rappeler M. Dupont — offre expire dans 48h, probabilité signature 87%. (2) Relancer Mme Martin — intérêt fort, 3 visites effectuées. (3) Répondre à la demande de visite pour le mandat #124 — prospect qualifié.')}
+      ${IA('Nouvelle correspondance détectée : Villa F4 · Koutio · 44,5M F — Score 91/100, correspond à 94% de vos critères. Marché en hausse à Dumbéa (+8% sur 12 mois). Recommandation : visiter en priorité.')}
 
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Mandats</div>
-          ${BTN('📋 Gestion mandats','mandats',true)}
-          ${BTN('📊 Stats annonces','statsannonces')}
-          ${BTN('💎 Estimation IA','estimation')}
-        </div>
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Clients & Matching</div>
-          ${BTN('👥 CRM Clients','crm',true)}
-          ${BTN('🤖 Matching IA','matching')}
-          ${BTN('🗓️ Visites & CR','visites')}
-        </div>
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Transaction</div>
-          ${BTN('⚖️ Module Notaire','notaire',true)}
-          ${BTN('🏗️ Artisans NC','artisans')}
-          ${BTN('💬 Messagerie','messagerie')}
+      <!-- RECHERCHE RAPIDE -->
+      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;margin-bottom:20px">
+        <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Recherche rapide</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <select onchange="buildLandingBiensSimple()" style="flex:1;min-width:140px;border:1px solid rgba(0,0,0,0.08);padding:9px 12px;font-size:13px;border-radius:10px;background:#F9F7F3;color:#0d1117;font-family:'DM Sans',sans-serif;outline:none">
+            <option>📍 Toute la NC</option>
+            <option>Anse Vata</option><option>Dumbéa sur Mer</option><option>Koutio</option>
+            <option>Mont-Dore</option><option>Plum</option><option>Magenta</option>
+          </select>
+          <select style="flex:1;min-width:120px;border:1px solid rgba(0,0,0,0.08);padding:9px 12px;font-size:13px;border-radius:10px;background:#F9F7F3;color:#0d1117;font-family:'DM Sans',sans-serif;outline:none">
+            <option>🏠 Tous types</option>
+            <option>Appartement</option><option>Maison</option><option>Villa</option><option>Studio</option>
+          </select>
+          <select style="flex:1;min-width:120px;border:1px solid rgba(0,0,0,0.08);padding:9px 12px;font-size:13px;border-radius:10px;background:#F9F7F3;color:#0d1117;font-family:'DM Sans',sans-serif;outline:none">
+            <option>💰 Tout budget</option>
+            <option>< 20M F</option><option>20–35M F</option><option>35–50M F</option><option>> 50M F</option>
+          </select>
+          <button type="button" onclick="go('marketplace')" style="background:#0d1117;color:#fff;border:none;padding:9px 20px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:.2s" onmouseover="this.style.background='#B8922A'" onmouseout="this.style.background='#0d1117'">Rechercher →</button>
         </div>
       </div>
 
-      <!-- PROSPECTS CHAUDS -->
-      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-        <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">🤖 Prospects — Actions IA recommandées</div>
+      <!-- ALERTES NOTIFICATIONS -->
+      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif">Mes alertes · Nouveaux biens</div>
+          <button type="button" onclick="go('matching')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);color:#0d1117;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Configurer mes alertes</button>
+        </div>
         ${[
-          {init:'DU',nom:'M. Dupont',action:'Rappeler maintenant',detail:'Offre expire dans 48h · Probabilité signature : 87%',urgence:'Urgent',tc:'#DC2626',bg:'#FEF2F2'},
-          {init:'MA',nom:'Mme Martin',action:'Relancer aujourd\'hui',detail:'3 visites · Très intéressée · En comparaison avec 2 autres biens',urgence:'Chaud',tc:'#D97706',bg:'#FEF3C7'},
-          {init:'BE',nom:'M. Bernard',action:'Envoyer proposition',detail:'Budget confirmé · Cherche F4 Dumbéa · Score match 94%',urgence:'Nouveau',tc:'#166534',bg:'#F0FDF4'},
-        ].map(p=>`
-          <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #F1F5F9">
-            <div style="width:38px;height:38px;border-radius:50%;background:#0d1117;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0;font-family:'DM Sans',sans-serif">${p.init}</div>
+          {icon:'🔔',titre:'Villa F4 · Koutio',detail:'Nouveau · Correspond à vos critères à 94%',prix:'44,5M F',tag:'Nouveau',tc:'#166534',bg:'#F0FDF4',time:'Il y a 2h'},
+          {icon:'📉',titre:'Appt F3 · Magenta',detail:'Baisse de prix −8% · Dans votre budget',prix:'28,2M F',tag:'−8%',tc:'#DC2626',bg:'#FEF2F2',time:'Il y a 5h'},
+          {icon:'⚡',titre:'Maison F5 · Plum',detail:'Nouveau bien · Rare dans ce secteur',prix:'38,5M F',tag:'Rare',tc:'#7C3AED',bg:'#F5F3FF',time:'Hier'},
+        ].map(a=>`
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F9F7F3;cursor:pointer" onclick="go('marketplace')">
+            <div style="width:34px;height:34px;border-radius:9px;background:${a.bg};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${a.icon}</div>
             <div style="flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif;margin-bottom:2px">${p.nom}</div>
-              <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">${p.detail}</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <div style="font-size:13px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif">${a.titre}</div>
+                <div style="font-size:10px;font-weight:700;color:${a.tc};background:${a.bg};padding:2px 7px;border-radius:5px">${a.tag}</div>
+              </div>
+              <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">${a.detail}</div>
             </div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="font-size:10px;font-weight:700;color:${p.tc};background:${p.bg};padding:3px 8px;border-radius:6px">${p.urgence}</div>
-              <button type="button" onclick="go('crm')" style="background:#0d1117;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">${p.action} →</button>
+            <div style="text-align:right">
+              <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#B8922A">${a.prix}</div>
+              <div style="font-size:10px;color:rgba(0,0,0,0.25);font-family:'DM Sans',sans-serif">${a.time}</div>
             </div>
           </div>`).join('')}
+
+        <!-- Config notification -->
+        <div style="margin-top:12px;background:#F9F7F3;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#0d1117;font-family:'DM Sans',sans-serif">🔔 Notifications en temps réel</div>
+            <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">SMS · Email · App · Dès qu'un bien correspond à vos critères</div>
+          </div>
+          <button type="button" onclick="go('projetdevie')" style="background:#0d1117;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0">Activer →</button>
+        </div>
+      </div>
+
+      <!-- BIENS CORRESPONDANTS + OUTILS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Biens correspondants</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            ${biensDispos.map(bienMiniCard).join('')}
+          </div>
+          <button type="button" onclick="go('marketplace')" style="width:100%;background:#F9F7F3;color:#0d1117;border:1px solid rgba(0,0,0,0.07);border-radius:10px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s" onmouseover="this.style.background='rgba(184,146,42,0.08)'" onmouseout="this.style.background='#F9F7F3'">Voir tous les biens →</button>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Outils d'aide à l'achat</div>
+          ${BTN('🤖 Matching IA — mon projet','matching',true)}
+          ${BTN('💰 Simuler mon financement','financementplus')}
+          ${BTN('📍 Assistant visite','assistantvisite')}
+          ${BTN('⚖️ Comparateur de biens','comparateur')}
+          ${BTN('📊 Suivi de mon achat','suiviachat')}
+          <div style="background:#F9F7F3;border-radius:10px;padding:12px;margin-top:4px">
+            <div style="font-size:10px;color:rgba(0,0,0,0.35);font-family:'DM Sans',sans-serif;margin-bottom:6px">PARCOURS D'ACHAT</div>
+            <div style="display:flex;align-items:center;gap:4px">
+              ${['Projet','Match','Visite','Offre','Acte'].map((s,i)=>`
+                <div style="flex:1;text-align:center">
+                  <div style="width:24px;height:24px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;
+                    background:${i===0?'#B8922A':i===1?'rgba(184,146,42,0.15)':'#F3F4F6'};
+                    color:${i===0?'#fff':i===1?'#B8922A':'#9CA3AF'};
+                    border:${i===1?'1.5px solid #B8922A':'none'}">
+                    ${i===0?'✓':i+1}
+                  </div>
+                  <div style="font-size:9px;color:${i<=1?'#0d1117':'#9CA3AF'};font-family:'DM Sans',sans-serif;font-weight:600">${s}</div>
+                </div>
+                ${i<4?`<div style="width:8px;height:1px;background:${i===0?'#B8922A':'#E5E7EB'};flex-shrink:0;margin-bottom:14px"></div>`:''}
+              `).join('')}
+            </div>
+          </div>
+        </div>
       </div>
     </div>`;
 
   // ════════════════════════════════
-  // DASHBOARD NOTAIRE
+  // AGENT
   // ════════════════════════════════
-  } else if(profil==='not'){
-    dash.innerHTML=`<div style="max-width:860px;margin:0 auto;padding:4px 0">
+  } else if(profil==='agt'){
+    const biens=S.biens||BIENS_DATA||[];
+    const enVente=biens.filter(b=>b.statut==='En vente');
 
-      ${HERO('⚖️','Assistant transactionnel','Efficacité maximale · Documents · Signatures · Alertes','#0d1117')}
+    const ligneTabl=(b,i)=>`
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 80px 80px 90px;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid #F9F7F3;font-size:12px;font-family:'DM Sans',sans-serif;${i%2===0?'':'background:#FAFAFA'}">
+        <div>
+          <div style="font-weight:700;color:#0d1117;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type+' '+b.quartier}</div>
+          <div style="font-size:11px;color:rgba(0,0,0,0.4)">📍 ${b.quartier||b.ville} · ${b.surface}m²</div>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;color:#B8922A">${(b.prix/1000000).toFixed(1).replace('.',',')}M F</div>
+        <div style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-align:center;background:#F0FDF4;color:#166534">${b.statut||'En vente'}</div>
+        <div style="color:rgba(0,0,0,0.5);text-align:center">👁 ${Math.floor(Math.random()*200+30)}</div>
+        <div style="color:rgba(0,0,0,0.5);text-align:center">💬 ${Math.floor(Math.random()*12+1)}</div>
+        <button type="button" onclick="go('mandats')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);color:#0d1117;border-radius:7px;padding:5px 8px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%">Gérer →</button>
+      </div>`;
 
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-        ${W('4','Dossiers en cours','#B8922A')}
-        ${W('3','Documents manquants','#EF4444','Action requise')}
-        ${W('2','Signatures cette semaine','#22C55E','Mardi · Jeudi')}
-        ${W('1','Alerte délai','#F59E0B','Dossier #12')}
+    dash.innerHTML=`<div style="max-width:920px;margin:0 auto;padding:4px 0">
+
+      <!-- BONJOUR + CTA AJOUTER -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#0d1117;margin-bottom:4px">Bonjour ${nom} 👋</div>
+          <div style="font-size:14px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">${enVente.length} biens en portefeuille · Marché actif</div>
+        </div>
+        <button type="button" onclick="go('depot')" style="display:flex;align-items:center;gap:8px;background:#0d1117;color:#fff;border:none;padding:13px 22px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;flex-shrink:0" onmouseover="this.style.background='#B8922A'" onmouseout="this.style.background='#0d1117'">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          Ajouter une annonce
+        </button>
       </div>
 
-      ${IA_BLOC('Priorité aujourd\'hui : Dossier Dupont-Fontaine — 3 documents manquants, acte prévu le 15/07. Envoyer rappel automatique. Dossier Martin — compromis signé, délai SRU expire dans 4 jours.')}
+      ${IA('3 actions prioritaires aujourd\'hui : Rappeler M. Dupont (offre expire dans 48h, probabilité signature 87%). Relancer Mme Martin (3 visites, très intéressée). Répondre à la demande de visite #124.')}
 
-      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px;margin-bottom:16px">
+      <!-- KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px">
+        ${W(enVente.length||8,'Mandats actifs','#B8922A')}
+        ${W('3','Prospects chauds','#EF4444','À contacter')}
+        ${W('2','Visites auj.','#22C55E','14h · 16h30')}
+        ${W('94%','Taux succès','#9333EA')}
+        ${W('52j','Délai moyen','#2563EB','NC')}
+      </div>
+
+      <!-- TABLEAU DES BIENS -->
+      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);overflow:hidden;margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid #F3F4F6">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif">Mes biens en cours</div>
+          <button type="button" onclick="go('mandats')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);color:#0d1117;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Voir tous →</button>
+        </div>
+        <!-- EN-TÊTE TABLEAU -->
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 80px 80px 90px;gap:8px;padding:8px 14px;background:#F9F7F3;font-size:10px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1px;font-family:'DM Sans',sans-serif">
+          <div>Bien</div><div>Prix</div><div>Statut</div><div style="text-align:center">Vues</div><div style="text-align:center">Contacts</div><div></div>
+        </div>
+        ${(enVente.length?enVente:BIENS_DATA).slice(0,6).map(ligneTabl).join('')}
+      </div>
+
+      <!-- ACTIONS RAPIDES -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Mandats</div>
+          ${BTN('📋 Gestion mandats','mandats',true)}
+          ${BTN('💎 Estimation IA','estimation')}
+        </div>
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Clients</div>
+          ${BTN('👥 CRM Clients','crm',true)}
+          ${BTN('🤖 Matching IA','matching')}
+        </div>
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Outils</div>
+          ${BTN('🗓️ Visites & CR','visites',true)}
+          ${BTN('⚖️ Notaire','notaire')}
+        </div>
+      </div>
+    </div>`;
+
+  // ════════════════════════════════
+  // NOTAIRE
+  // ════════════════════════════════
+  } else if(profil==='not'){
+    const today=new Date();
+    const dateStr=today.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+    dash.innerHTML=`<div style="max-width:860px;margin:0 auto;padding:4px 0">
+      <div style="margin-bottom:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#0d1117;margin-bottom:4px">Bonjour ${nom} 👋</div>
+        <div style="font-size:14px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">Aujourd'hui · ${dateStr}</div>
+      </div>
+      ${IA('Priorité : Dossier Dupont-Fontaine — 3 documents manquants, acte prévu le 15/07. Dossier Martin — délai SRU expire dans 4 jours. Action requise immédiate.')}
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        ${W('4','Dossiers actifs','#B8922A')}
+        ${W('3','Docs manquants','#EF4444','Urgent')}
+        ${W('2','Signatures sem.','#22C55E','Mar · Jeu')}
+        ${W('1','Alerte délai','#F59E0B','Dossier #12')}
+      </div>
+      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;margin-bottom:16px">
         <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Transactions en cours</div>
         ${[
-          {ref:'#124',nom:'Dupont — Fontaine',bien:'Villa F4 · Koutio',statut:'Docs manquants',etat:'⚠️',tc:'#D97706',bg:'#FEF3C7',prog:65},
-          {ref:'#118',nom:'Martin — Leroy',bien:'Appt F3 · Magenta',statut:'Délai SRU — J-4',etat:'🔴',tc:'#DC2626',bg:'#FEF2F2',prog:45},
-          {ref:'#131',nom:'Bernard — Kawa',bien:'Maison F5 · Plum',statut:'En cours — normal',etat:'✅',tc:'#166534',bg:'#F0FDF4',prog:30},
-          {ref:'#108',nom:'Leclerc — Aoua',bien:'Studio · Centre Ville',statut:'Acte à signer',etat:'📅',tc:'#2563EB',bg:'#EFF6FF',prog:90},
+          {ref:'#124',nom:'Dupont — Fontaine',bien:'Villa F4 · Koutio',statut:'⚠️ Docs manquants',tc:'#D97706',bg:'#FEF3C7',prog:65},
+          {ref:'#118',nom:'Martin — Leroy',bien:'Appt F3 · Magenta',statut:'🔴 Délai SRU J-4',tc:'#DC2626',bg:'#FEF2F2',prog:45},
+          {ref:'#131',nom:'Bernard — Kawa',bien:'Maison F5 · Plum',statut:'✅ En cours',tc:'#166534',bg:'#F0FDF4',prog:30},
+          {ref:'#108',nom:'Leclerc — Aoua',bien:'Studio · Centre Ville',statut:'📅 Acte à signer',tc:'#2563EB',bg:'#EFF6FF',prog:90},
         ].map(d=>`
-          <div style="padding:12px 0;border-bottom:1px solid #F1F5F9">
+          <div style="padding:10px 0;border-bottom:1px solid #F9F7F3">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="font-size:11px;color:rgba(0,0,0,0.3);font-family:'DM Sans',sans-serif">${d.ref}</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="font-size:10px;color:rgba(0,0,0,0.3);font-family:'DM Sans',sans-serif">${d.ref}</div>
                 <div style="font-size:13px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif">${d.nom}</div>
                 <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">· ${d.bien}</div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-size:10px;font-weight:700;color:${d.tc};background:${d.bg};padding:3px 8px;border-radius:6px">${d.etat} ${d.statut}</div>
-                <button type="button" onclick="go('notaire')" style="background:#F9F7F3;color:#0d1117;border:1px solid rgba(0,0,0,0.07);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Ouvrir →</button>
+                <div style="font-size:10px;font-weight:700;color:${d.tc};background:${d.bg};padding:3px 8px;border-radius:6px">${d.statut}</div>
+                <button type="button" onclick="go('notaire')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);border-radius:7px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Ouvrir →</button>
               </div>
             </div>
-            <div style="height:4px;background:#F3F4F6;border-radius:2px;overflow:hidden">
-              <div style="width:${d.prog}%;height:100%;background:${d.prog>=80?'#22C55E':d.prog>=50?'#B8922A':'#3B82F6'};border-radius:2px;transition:.5s"></div>
+            <div style="height:3px;background:#F3F4F6;border-radius:2px;overflow:hidden">
+              <div style="width:${d.prog}%;height:100%;background:${d.prog>=80?'#22C55E':d.prog>=50?'#B8922A':'#3B82F6'};border-radius:2px"></div>
             </div>
           </div>`).join('')}
       </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Actions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Actions</div>
           ${BTN('📁 Tous les dossiers','notaire',true)}
-          ${BTN('📄 Documents en attente','notaire')}
           ${BTN('📅 Planning signatures','rdv')}
+          ${BTN('💬 Messagerie','messagerie')}
         </div>
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Cette semaine</div>
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Cette semaine</div>
           ${[
             {j:'Lundi',a:'Signature compromis — Dupont'},
             {j:'Mercredi',a:'Réception actes — Martin'},
-            {j:'Jeudi',a:'Signature acte authentique — Leclerc'},
-            {j:'Vendredi',a:'Réunion partenaires — Étude'},
+            {j:'Jeudi',a:'Signature acte — Leclerc'},
           ].map(e=>`
-            <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #F1F5F9">
+            <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #F9F7F3">
               <div style="font-size:11px;font-weight:700;color:#B8922A;min-width:70px;font-family:'DM Sans',sans-serif">${e.j}</div>
               <div style="font-size:12px;color:#0d1117;font-family:'DM Sans',sans-serif">${e.a}</div>
             </div>`).join('')}
@@ -8975,57 +9022,53 @@ function buildSmartDashboard(){
     </div>`;
 
   // ════════════════════════════════
-  // DASHBOARD ARTISAN
+  // ARTISAN
   // ════════════════════════════════
   } else if(profil==='art'){
     dash.innerHTML=`<div style="max-width:860px;margin:0 auto;padding:4px 0">
-
-      ${HERO('🔨','Vos opportunités du jour','Demandes proches · Devis à envoyer · Missions en cours','#0d1117')}
-
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-        ${W('7','Demandes proches','#22C55E','< 15 km')}
-        ${W('2,3M','F potentiel ce mois','#B8922A')}
-        ${W('68%','Taux de conversion','#2563EB')}
-        ${W('3','Messages en attente','#EF4444')}
+      <div style="margin-bottom:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#0d1117;margin-bottom:4px">Bonjour ${nom} 👋</div>
+        <div style="font-size:14px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">7 nouvelles demandes proches de vous · 2 devis urgents</div>
       </div>
-
-      ${IA_BLOC('2 opportunités prioritaires : Villa Koutio — travaux cuisine estimés 450k F, client très motivé (score 94), devis attendu sous 48h. Appartement Magenta — rénovation complète 1,2M F, budget confirmé. Recommandation : prioriser ces 2 devis.')}
-
-      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Demandes proches de vous</div>
+      ${IA('2 opportunités prioritaires : Villa Koutio — cuisine 450k F, client motivé, devis attendu sous 48h. Appartement Magenta — rénovation complète 1,2M F, budget confirmé. Ces 2 missions représentent 1,65M F.')}
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        ${W('7','Demandes proches','#22C55E','< 15 km')}
+        ${W('2,3M','F potentiel','#B8922A','Ce mois')}
+        ${W('68%','Taux conversion','#2563EB')}
+        ${W('4,2','Note clients','#9333EA','/ 5 ⭐')}
+      </div>
+      <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Demandes prioritaires</div>
         ${[
           {icon:'🍳',type:'Rénovation cuisine',lieu:'Villa · Koutio · 3,2 km',budget:'350–500k F',urgence:'48h',tc:'#DC2626',bg:'#FEF2F2'},
-          {icon:'🎨',type:'Peinture intérieure',lieu:'Appartement · Magenta · 8 km',budget:'80–120k F',urgence:'Cette semaine',tc:'#D97706',bg:'#FEF3C7'},
+          {icon:'🎨',type:'Peinture intérieure',lieu:'Appartement · Magenta · 8 km',budget:'80–120k F',urgence:'Semaine',tc:'#D97706',bg:'#FEF3C7'},
           {icon:'🔌',type:'Mise aux normes élec.',lieu:'Maison · Rivière Salée · 12 km',budget:'200–280k F',urgence:'Ce mois',tc:'#166534',bg:'#F0FDF4'},
-          {icon:'🪟',type:'Remplacement menuiseries',lieu:'Villa · Dumbéa · 15 km',budget:'180–250k F',urgence:'Flexible',tc:'#2563EB',bg:'#EFF6FF'},
         ].map(d=>`
-          <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F1F5F9">
-            <div style="width:38px;height:38px;border-radius:10px;background:${d.bg};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${d.icon}</div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F9F7F3">
+            <div style="width:36px;height:36px;border-radius:9px;background:${d.bg};display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">${d.icon}</div>
             <div style="flex:1">
               <div style="font-size:13px;font-weight:700;color:#0d1117;font-family:'DM Sans',sans-serif;margin-bottom:2px">${d.type}</div>
-              <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">${d.lieu} · Budget estimé : ${d.budget}</div>
+              <div style="font-size:11px;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">${d.lieu} · Budget : ${d.budget}</div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
               <div style="font-size:10px;font-weight:700;color:${d.tc};background:${d.bg};padding:3px 8px;border-radius:6px">${d.urgence}</div>
-              <button type="button" onclick="go('artisans')" style="background:#0d1117;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Envoyer devis →</button>
+              <button type="button" onclick="go('artisans')" style="background:#0d1117;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Devis →</button>
             </div>
           </div>`).join('')}
       </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Mes missions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Mes missions</div>
           ${BTN('📋 Toutes les demandes','artisans',true)}
           ${BTN('💬 Messages clients','messagerie')}
-          ${BTN('📊 Mes statistiques','artisans')}
         </div>
-        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:20px">
-          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'DM Sans',sans-serif">Ce mois — Performance</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Sans',sans-serif">Performance</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
             ${W('12','Devis envoyés','#B8922A')}
-            ${W('8','Devis acceptés','#22C55E')}
-            ${W('1,4M','F signés','#2563EB','F XPF')}
-            ${W('4,2','Note clients','#9333EA','/ 5 ⭐')}
+            ${W('8','Acceptés','#22C55E')}
+            ${W('1,4M','F signés','#2563EB','XPF')}
+            ${W('3','En cours','#9333EA')}
           </div>
         </div>
       </div>
