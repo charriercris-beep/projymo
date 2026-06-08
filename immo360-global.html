@@ -4962,10 +4962,17 @@ function loginAs(profil){
     APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
-    document.getElementById('landing-page').style.display='none';
-    document.getElementById('app-wrapper').style.display='flex';
-    buildSB();
-    go('dashboard');
+    // Cacher landing
+    const lp = document.getElementById('landing-page');
+    if(lp) lp.style.cssText = 'display:none!important';
+    // Afficher TOUS les éléments de l'app
+    const aw = document.getElementById('app-wrapper');
+    if(aw) aw.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row';
+    const shell = document.querySelector('.shell');
+    if(shell) shell.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row;background:var(--cream)';
+    // Construire
+    try{ buildSB(); }catch(e){ console.error(e); }
+    try{ go('dashboard'); }catch(e){ console.error(e); }
     setTimeout(buildSmartDashboard, 100);
   } else {
     showLoginModal(profil);
@@ -5318,10 +5325,12 @@ function contactFromLanding(bienId){
 }
 
 function hideLanding(){
-  const lp=document.getElementById('landing-page');
-  const app=document.getElementById('app-wrapper');
-  if(lp) lp.style.display='none';
-  if(app) app.style.display='flex';
+  const lp = document.getElementById('landing-page');
+  if(lp) lp.style.cssText = 'display:none!important';
+  const aw = document.getElementById('app-wrapper');
+  if(aw) aw.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row';
+  const shell = document.querySelector('.shell');
+  if(shell) shell.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row;background:var(--cream)';
 }
 
 // loginAs défini plus haut
