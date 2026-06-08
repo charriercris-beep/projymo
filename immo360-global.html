@@ -4534,6 +4534,13 @@ function doLoginDemo(){
   closeLoginModal();
   document.getElementById('main-shell').style.display='flex';
   buildSB();
+  const _sb2 = document.getElementById('sidebar');
+  if(_sb2 && window.innerWidth > 768){
+    _sb2.style.position = 'relative';
+    _sb2.style.left = '0';
+    _sb2.style.top = '0';
+    _sb2.style.zIndex = '1';
+  }
   go('dashboard');
   setTimeout(buildSmartDashboard, 100);
 }
@@ -4557,6 +4564,14 @@ function loginAs(profil){
     S.profile=profil;
     document.getElementById('main-shell').style.display='flex';
     buildSB();
+    // Fix sidebar position
+    const _sb = document.getElementById('sidebar');
+    if(_sb && window.innerWidth > 768){
+      _sb.style.position = 'relative';
+      _sb.style.left = '0';
+      _sb.style.top = '0';
+      _sb.style.zIndex = '1';
+    }
     go('dashboard');
     setTimeout(buildSmartDashboard, 100);
   } else {
@@ -9899,6 +9914,27 @@ calcFin();
 initSupabase();
 // Afficher la page d'accueil au démarrage
 showLanding();
+// Forcer la sidebar visible sur desktop
+(function fixSidebar(){
+  const sb = document.getElementById('sidebar');
+  if(!sb) return;
+  if(window.innerWidth > 768){
+    sb.style.position = 'relative';
+    sb.style.left = '0';
+    sb.style.top = '0';
+    sb.style.zIndex = '1';
+    sb.style.transition = 'none';
+  }
+  window.addEventListener('resize', function(){
+    if(window.innerWidth > 768){
+      sb.style.position = 'relative';
+      sb.style.left = '0';
+    } else {
+      sb.style.position = 'fixed';
+      sb.style.left = sb.classList.contains('open') ? '0' : '-260px';
+    }
+  });
+})();
 // L'app s'initialise mais reste cachée derrière la landing
 go('dashboard');
 </script>
