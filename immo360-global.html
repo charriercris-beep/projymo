@@ -36,7 +36,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   *{box-sizing:border-box}
   .shell{flex-direction:column;height:100vh;min-height:100vh;width:100%;overflow-x:hidden}
   @media(max-width:768px){@media(min-width:769px){.sidebar{position:relative;left:0;top:0;z-index:1;transition:none}}
-@media(max-width:768px){.sidebar{position:fixed;top:0;left:-260px;width:240px;min-width:unset;height:100vh;z-index:100;transition:left .25s ease;overflow-y:auto}}}
+@media(max-width:768px){.sidebar.mobile-hidden{left:-260px;transition:left .25s ease}}}
   .sidebar.open{left:0}
   .sidebar-overlay.show{display:block}
   .hamburger{display:flex}
@@ -975,7 +975,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <div class="shell" id="main-shell" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:500;background:var(--cream)">
 
 <!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
+<div class="sidebar" id="sidebar" style="position:relative!important;left:0!important;top:0!important;z-index:1!important">
   <div class="logo-area">
     <div class="logo-title" onclick="showLanding()" style="cursor:pointer">Immo<span>360</span></div>
     <div class="logo-sub" onclick="showLanding()" style="cursor:pointer;transition:.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color=''">← Retour à l'accueil</div>
