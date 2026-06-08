@@ -34,7 +34,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   body{overflow-x:hidden;overflow-y:auto}
   html,body{max-width:100vw;width:100%}
   *{box-sizing:border-box}
-  .shell{flex-direction:column;height:auto;min-height:100vh;width:100%;overflow-x:hidden}
+  .shell{flex-direction:column;height:100vh;min-height:100vh;width:100%;overflow-x:hidden}
   .sidebar{position:fixed;top:0;left:-260px;width:240px;min-width:unset;height:100vh;z-index:100;transition:left .25s ease;overflow-y:auto}
   .sidebar.open{left:0}
   .sidebar-overlay.show{display:block}
@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.shell{display:none;height:100vh;overflow:hidden;flex-direction:row}
+.shell{display:none;height:100vh;width:100vw;overflow:hidden;flex-direction:row;background:var(--cream);color:var(--dark)}
 
 /* SIDEBAR */
 .sidebar{width:230px;min-width:230px;background:var(--dark);display:flex;flex-direction:column}
@@ -4980,9 +4980,15 @@ function loginAs(profil){
     const shell=document.getElementById('main-shell')||document.querySelector('.shell');
     if(shell){
       shell.style.setProperty('display','flex','important');
+      shell.style.width='100vw';
+      shell.style.height='100vh';
+      shell.style.position='fixed';
+      shell.style.top='0';
+      shell.style.left='0';
       shell.style.visibility='visible';
       shell.style.opacity='1';
-      shell.style.zIndex='1';
+      shell.style.zIndex='999';
+      shell.style.background='var(--cream)';
     }
     console.log('[Immo360] Landing cachée, shell affiché');
     // 3. Construire UI
