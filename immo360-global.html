@@ -459,9 +459,9 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
   <div style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.06);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px">
     <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark)">Immo<span style="color:var(--gold)">360</span><span style="font-size:10px;font-family:'DM Sans',sans-serif;font-weight:400;color:var(--soft);margin-left:8px">Nouvelle-Calédonie</span></div>
     <div style="display:flex;align-items:center;gap:8px">
-      <button onclick="voirAnnonesSansConnexion()" style="background:none;border:none;color:var(--mid);font-size:13px;cursor:pointer;padding:6px 14px;font-family:'DM Sans',sans-serif;transition:.15s" onmouseover="this.style.color='var(--dark)'" onmouseout="this.style.color='var(--mid)'">Explorer les biens</button>
-      <button onclick="showLoginModal('buy')" style="background:none;border:1px solid var(--warm);color:var(--dark);font-size:13px;cursor:pointer;padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;transition:.15s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">Se connecter</button>
-      <button onclick="showLoginModal('buy')" style="background:var(--dark);color:#fff;border:none;font-size:13px;cursor:pointer;padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;transition:.15s" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">S'inscrire gratuitement</button>
+      <button type="button" onclick="voirAnnonesSansConnexion()" style="background:none;border:none;color:var(--mid);font-size:13px;cursor:pointer;padding:6px 14px;font-family:'DM Sans',sans-serif;transition:.15s" onmouseover="this.style.color='var(--dark)'" onmouseout="this.style.color='var(--mid)'">Explorer les biens</button>
+      <button type="button" onclick="showLoginModal('buy')" style="background:none;border:1px solid var(--warm);color:var(--dark);font-size:13px;cursor:pointer;padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;transition:.15s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">Se connecter</button>
+      <button type="button" onclick="showLoginModal('buy')" style="background:var(--dark);color:#fff;border:none;font-size:13px;cursor:pointer;padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;transition:.15s" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">S'inscrire gratuitement</button>
     </div>
   </div>
 
@@ -502,10 +502,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
       <!-- 2 CTAs PRINCIPAUX -->
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
-        <button onclick="loginAs('buy')" style="background:#22C55E;color:#fff;border:none;padding:17px 40px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(34,197,94,0.35);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='#16A34A';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#22C55E';this.style.transform=''">
+        <button type="button" onclick="loginAs('buy')" style="background:#22C55E;color:#fff;border:none;padding:17px 40px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(34,197,94,0.35);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='#16A34A';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#22C55E';this.style.transform=''">
           <span style="font-size:20px">🔍</span> Je veux acheter
         </button>
-        <button onclick="loginAs('sell')" style="background:var(--gold);color:#fff;border:none;padding:17px 40px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(184,146,42,0.35);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='#c9a030';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--gold)';this.style.transform=''">
+        <button type="button" onclick="loginAs('sell')" style="background:var(--gold);color:#fff;border:none;padding:17px 40px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(184,146,42,0.35);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='#c9a030';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--gold)';this.style.transform=''">
           <span style="font-size:20px">🏠</span> Je veux vendre
         </button>
       </div>
@@ -637,7 +637,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </div>
 
           <!-- CTA -->
-          <button onclick="loginAs('sell')" style="background:var(--gold);color:#fff;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px" onmouseover="this.style.background='#c9a030'" onmouseout="this.style.background='var(--gold)'">
+          <button type="button" onclick="loginAs('sell')" style="background:var(--gold);color:#fff;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px" onmouseover="this.style.background='#c9a030'" onmouseout="this.style.background='var(--gold)'">
             ✨ Estimer mon bien gratuitement
           </button>
         </div>
@@ -682,7 +682,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <option>Appartement</option><option>Maison</option><option>Villa</option>
           <option>Studio</option><option>Terrain</option>
         </select>
-        <button onclick="buildLandingBiensSimple()" style="background:var(--dark);color:#fff;border:none;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:.2s;box-shadow:0 2px 12px rgba(0,0,0,0.15)" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">
+        <button type="button" onclick="buildLandingBiensSimple()" style="background:var(--dark);color:#fff;border:none;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:.2s;box-shadow:0 2px 12px rgba(0,0,0,0.15)" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">
           🔍 Rechercher
         </button>
       </div>
@@ -690,11 +690,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <!-- SECTION 4 — ANNONCES -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
         <div style="font-size:14px;color:var(--mid)" id="ld-simple-count">Chargement des biens...</div>
-        <button onclick="loginAs('buy')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Voir tous les biens + filtres avancés →</button>
+        <button type="button" onclick="loginAs('buy')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Voir tous les biens + filtres avancés →</button>
       </div>
       <div id="landing-biens-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:36px"></div>
       <div style="text-align:center">
-        <button onclick="loginAs('buy')" style="background:var(--dark);color:#fff;border:none;padding:15px 40px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">
+        <button type="button" onclick="loginAs('buy')" style="background:var(--dark);color:#fff;border:none;padding:15px 40px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">
           Voir tous les biens disponibles →
         </button>
       </div>
@@ -856,7 +856,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff" id="auth-modal-title">Bienvenue sur Immo360</div>
             <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:3px" id="auth-modal-sub">Rejoignez la plateforme immobilière NC</div>
           </div>
-          <button onclick="closeLoginModal()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
+          <button type="button" onclick="closeLoginModal()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
         </div>
         <!-- PROFIL SÉLECTIONNÉ -->
         <div id="auth-profil-badge" style="margin-top:14px;background:rgba(184,146,42,0.2);border:1px solid rgba(184,146,42,0.4);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px">
@@ -870,10 +870,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
       <!-- ONGLETS CONNEXION / INSCRIPTION -->
       <div style="display:flex;border-bottom:2px solid var(--warm)">
-        <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:14px;border:none;background:#fff;font-size:14px;font-weight:600;color:var(--gold);border-bottom:2px solid var(--gold);margin-bottom:-2px;cursor:pointer">
+        <button type="button" id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:14px;border:none;background:#fff;font-size:14px;font-weight:600;color:var(--gold);border-bottom:2px solid var(--gold);margin-bottom:-2px;cursor:pointer">
           Se connecter
         </button>
-        <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:14px;border:none;background:#fff;font-size:14px;font-weight:500;color:var(--mid);cursor:pointer">
+        <button type="button" id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:14px;border:none;background:#fff;font-size:14px;font-weight:500;color:var(--mid);cursor:pointer">
           Créer un compte
         </button>
       </div>
@@ -886,7 +886,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <input type="password" id="login-password" placeholder="••••••••">
           <div style="text-align:right;margin-top:4px"><span style="font-size:11px;color:var(--gold);cursor:pointer">Mot de passe oublié ?</span></div>
         </div>
-        <button class="btn btn-gold btn-full" style="margin-top:4px" onclick="doLoginExisting()">
+        <button type="button" class="btn btn-gold btn-full" style="margin-top:4px" onclick="doLoginExisting()">
           → Se connecter
         </button>
         <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--mid)">
@@ -895,7 +895,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <!-- DÉMO RAPIDE -->
         <div style="margin-top:16px;padding:12px;background:var(--warm);border-radius:8px;text-align:center">
           <div style="font-size:11px;color:var(--mid);margin-bottom:6px">Mode démonstration (sans inscription)</div>
-          <button class="btn btn-outline btn-sm" onclick="doLoginDemo()" style="font-size:11px">Accéder en démo →</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="doLoginDemo()" style="font-size:11px">Accéder en démo →</button>
         </div>
       </div>
 
@@ -947,7 +947,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div class="field"><label>Nom de l'agence</label><input type="text" id="reg-agence" placeholder="Agence Soleil NC"></div>
           <div class="field"><label>N° carte professionnelle (optionnel)</label><input type="text" id="reg-cartepro" placeholder="FNAIM / CCI NC"></div>
         </div>
-        <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="doRegister()">✅ Créer mon compte gratuit</button>
+        <button type="button" class="btn btn-gold btn-full" style="margin-top:8px" onclick="doRegister()">✅ Créer mon compte gratuit</button>
         <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--mid)">
           En vous inscrivant, vous acceptez nos <span style="color:var(--gold);cursor:pointer;font-weight:600" onclick="openLegalPage('cgu')">conditions d'utilisation</span>
         </div>
@@ -959,7 +959,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <div style="font-size:56px;margin-bottom:16px">🎉</div>
       <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--dark);margin-bottom:8px" id="auth-confirm-title">Bienvenue !</div>
       <div style="font-size:13px;color:var(--mid);margin-bottom:24px" id="auth-confirm-sub">Votre compte a été créé avec succès.</div>
-      <button class="btn btn-gold btn-full" onclick="doLoginConfirm()">
+      <button type="button" class="btn btn-gold btn-full" onclick="doLoginConfirm()">
         Accéder à mon espace →
       </button>
     </div>
@@ -1000,7 +1000,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
   <div class="topbar" style="display:flex;align-items:center;gap:0;padding:0;height:56px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0">
 
     <!-- HAMBURGER -->
-    <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu" style="flex-shrink:0">
+    <button type="button" class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu" style="flex-shrink:0">
       <span></span><span></span><span></span>
     </button>
 
@@ -1027,8 +1027,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <!-- BADGE PROFIL + DÉCONNEXION -->
     <div style="display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid rgba(255,255,255,0.08);height:100%;flex-shrink:0">
       <div class="topbar-badge badge-sell" id="profile-badge" style="cursor:default">Vendeur</div>
-      <button onclick="showLanding()" title="Retour à l'accueil" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.6);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">🏠 Accueil</button>
-      <button onclick="logout()" title="Déconnexion" style="background:rgba(220,38,38,0.12);border:none;color:rgba(220,100,100,0.8);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s" onmouseover="this.style.background='rgba(220,38,38,0.25)'" onmouseout="this.style.background='rgba(220,38,38,0.12)'">Déco.</button>
+      <button type="button" onclick="showLanding()" title="Retour à l'accueil" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.6);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">🏠 Accueil</button>
+      <button type="button" onclick="logout()" title="Déconnexion" style="background:rgba(220,38,38,0.12);border:none;color:rgba(220,100,100,0.8);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s" onmouseover="this.style.background='rgba(220,38,38,0.25)'" onmouseout="this.style.background='rgba(220,38,38,0.12)'">Déco.</button>
     </div>
   </div>
 
@@ -1071,8 +1071,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
       <!-- TABS -->
       <div style="display:flex;gap:0;border-bottom:2px solid var(--warm);margin-bottom:20px">
-        <button class="artisan-tab active" id="estim-tab-photos" onclick="switchEstimTab('photos')">📸 Analyse par photos</button>
-        <button class="artisan-tab" id="estim-tab-manuel" onclick="switchEstimTab('manuel')">✏️ Estimation manuelle</button>
+        <button type="button" class="artisan-tab active" id="estim-tab-photos" onclick="switchEstimTab('photos')">📸 Analyse par photos</button>
+        <button type="button" class="artisan-tab" id="estim-tab-manuel" onclick="switchEstimTab('manuel')">✏️ Estimation manuelle</button>
       </div>
 
       <!-- TAB PHOTOS -->
@@ -1292,7 +1292,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
                   </div>
                 </div>
 
-                <button class="btn btn-gold btn-full" onclick="lancerEpAnalyse()" id="ep-btn-analyser">✨ Lancer l'analyse IA</button>
+                <button type="button" class="btn btn-gold btn-full" onclick="lancerEpAnalyse()" id="ep-btn-analyser">✨ Lancer l'analyse IA</button>
               </div>
             </div>
           </div>
@@ -1361,9 +1361,9 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               <div class="card">
                 <div class="card-title">🚀 Prochaines étapes</div>
                 <div style="display:flex;flex-direction:column;gap:8px">
-                  <button onclick="go('depot')" class="btn btn-gold btn-full">📣 Publier mon annonce</button>
-                  <button onclick="go('artisans')" class="btn btn-outline btn-full">🏗️ Demander des devis artisans</button>
-                  <button onclick="resetEpAnalyse()" class="btn btn-outline btn-full">🔄 Nouvelle analyse</button>
+                  <button type="button" onclick="go('depot')" class="btn btn-gold btn-full">📣 Publier mon annonce</button>
+                  <button type="button" onclick="go('artisans')" class="btn btn-outline btn-full">🏗️ Demander des devis artisans</button>
+                  <button type="button" onclick="resetEpAnalyse()" class="btn btn-outline btn-full">🔄 Nouvelle analyse</button>
                 </div>
               </div>
             </div>
@@ -1439,14 +1439,14 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               <div style="font-size:13px;color:var(--mid)">Glissez vos photos ici ou cliquez<br><small>JPG, PNG, WEBP — Plusieurs photos acceptées</small></div>
             </div>
             <div class="photo-grid" id="photo-grid"></div>
-            <button class="btn btn-gold btn-full" style="margin-top:12px" onclick="analyzePhotos()" id="btn-analyse">🔍 Analyser les photos avec l'IA</button>
+            <button type="button" class="btn btn-gold btn-full" style="margin-top:12px" onclick="analyzePhotos()" id="btn-analyse">🔍 Analyser les photos avec l'IA</button>
             <div class="notif notif-ok" id="notif-analyse" style="margin-top:8px"></div>
           </div>
 
           <!-- DOCUMENTS JOINTS -->
           <div class="card">
             <div class="card-title"><span class="icon">📁</span> Dossier documentaire
-              <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="document.getElementById('doc-input').click()">+ Ajouter</button>
+              <button type="button" class="btn btn-outline btn-sm" style="margin-left:auto" onclick="document.getElementById('doc-input').click()">+ Ajouter</button>
               <input type="file" id="doc-input" accept=".pdf,.doc,.docx,.jpg,.png" multiple onchange="handleDocUpload(event)" style="display:none">
             </div>
             <p style="font-size:12px;color:var(--mid);margin-bottom:12px">Ajoutez vos documents pour rassurer les acheteurs. Un dossier complet augmente la confiance et accélère la vente.</p>
@@ -1644,7 +1644,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
                 <select id="ann-plateforme"><option>Multi-plateformes</option><option>Immonc.com</option><option>Properstar</option><option>SeLoger</option><option>LeBonCoin</option></select>
               </div>
             </div>
-            <button class="btn btn-gold btn-full" onclick="generateAnnonce()">✨ Générer l'annonce</button>
+            <button type="button" class="btn btn-gold btn-full" onclick="generateAnnonce()">✨ Générer l'annonce</button>
           </div>
         </div>
         <div>
@@ -1659,8 +1659,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="annonce-body" id="prev-body">Saisissez vos informations et cliquez sur Générer.</div>
             <div class="annonce-price" id="prev-prix">42 500 000 F</div>
             <div style="margin-top:14px;display:flex;gap:8px">
-              <button class="btn btn-gold btn-sm" onclick="copyAnnonce()">📋 Copier</button>
-              <button class="btn btn-outline btn-sm">🔗 Partager</button>
+              <button type="button" class="btn btn-gold btn-sm" onclick="copyAnnonce()">📋 Copier</button>
+              <button type="button" class="btn btn-outline btn-sm">🔗 Partager</button>
             </div>
           </div>
         </div>
@@ -1710,7 +1710,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </div>
           <div id="conv-list"></div>
           <div style="padding:12px 16px">
-            <button class="btn btn-gold btn-full btn-sm" onclick="newConversation()">+ Nouvelle conversation</button>
+            <button type="button" class="btn btn-gold btn-full btn-sm" onclick="newConversation()">+ Nouvelle conversation</button>
           </div>
         </div>
         <!-- CONVERSATION ACTIVE -->
@@ -1727,12 +1727,12 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
                 <div class="msg-header-name" id="msg-contact-name">—</div>
                 <div class="msg-header-sub" id="msg-contact-sub">—</div>
               </div>
-              <button class="btn btn-outline btn-sm" onclick="go('rdv')">📅 RDV</button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="go('rdv')">📅 RDV</button>
             </div>
             <div class="msg-body" id="msg-body"></div>
             <div class="msg-input-bar">
               <textarea class="msg-input" id="msg-input" placeholder="Votre message..." rows="1" onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
-              <button class="msg-send" onclick="sendMessage()">Envoyer</button>
+              <button type="button" class="msg-send" onclick="sendMessage()">Envoyer</button>
             </div>
           </div>
         </div>
@@ -1751,15 +1751,15 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <select id="rdv-type"><option>Visite du bien</option><option>Estimation gratuite</option><option>Conseil financement</option><option>Signature compromis</option><option>Remise des clés</option></select>
           </div>
           <div class="field"><label>Notes</label><textarea id="rdv-notes" placeholder="Informations complémentaires..."></textarea></div>
-          <button class="btn btn-gold btn-full" onclick="confirmRdv()">✅ Confirmer le RDV</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="confirmRdv()">✅ Confirmer le RDV</button>
           <div class="notif notif-ok" id="notif-rdv" style="margin-top:10px"></div>
         </div>
         <div class="card">
           <div class="card-title">🗓️ Calendrier des disponibilités</div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <button class="btn btn-outline btn-sm" onclick="changeMonth(-1)">‹</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="changeMonth(-1)">‹</button>
             <div style="font-family:'Playfair Display',serif;font-size:15px" id="cal-month"></div>
-            <button class="btn btn-outline btn-sm" onclick="changeMonth(1)">›</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="changeMonth(1)">›</button>
           </div>
           <div class="cal-grid" id="cal-headers"></div>
           <div class="cal-grid" id="cal-grid" style="margin-top:6px"></div>
@@ -1812,8 +1812,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
         <h2 style="font-size:18px;font-family:'Playfair Display',serif" id="lbl-marketplace">Annonces en ligne</h2>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-sm" id="btn-view-grid" onclick="setMktView('grid')" style="background:var(--gold);color:#fff">⊞ Grille</button>
-          <button class="btn btn-outline btn-sm" id="btn-view-map" onclick="setMktView('map')">🗺️ Carte</button>
+          <button type="button" class="btn btn-sm" id="btn-view-grid" onclick="setMktView('grid')" style="background:var(--gold);color:#fff">⊞ Grille</button>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-view-map" onclick="setMktView('map')">🗺️ Carte</button>
         </div>
       </div>
 
@@ -1987,11 +1987,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               <label>Description du bien *</label>
               <textarea id="d-desc" rows="5" placeholder="Décrivez votre bien : ses points forts, son environnement, son état, ses atouts..."></textarea>
             </div>
-            <button class="btn btn-gold btn-sm" onclick="genDescriptionIA()" style="margin-top:-6px">✨ Générer avec l'IA</button>
+            <button type="button" class="btn btn-gold btn-sm" onclick="genDescriptionIA()" style="margin-top:-6px">✨ Générer avec l'IA</button>
           </div>
 
           <div style="display:flex;justify-content:flex-end">
-            <button class="btn btn-gold" onclick="validateStep1()">Suivant — Photos →</button>
+            <button type="button" class="btn btn-gold" onclick="validateStep1()">Suivant — Photos →</button>
           </div>
         </div>
 
@@ -2013,13 +2013,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div class="card">
             <div class="card-title">🤖 Analyse IA des photos</div>
   if(result) result.innerHTML="<div style='text-align:center;padding:14px;color:var(--mid)'>L'IA analyse vos photos...</div>";
-            <button class="btn btn-dark btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">🔍 Analyser mes photos avec l'IA</button>
+            <button type="button" class="btn btn-dark btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">🔍 Analyser mes photos avec l'IA</button>
             <div id="depot-ia-result" style="margin-top:12px"></div>
           </div>
 
           <div style="display:flex;justify-content:space-between;margin-top:8px">
-            <button class="btn btn-outline" onclick="goDepotStep(1)">← Retour</button>
-            <button class="btn btn-gold" onclick="goDepotStep(3)">Suivant — Prix & détails →</button>
+            <button type="button" class="btn btn-outline" onclick="goDepotStep(1)">← Retour</button>
+            <button type="button" class="btn btn-gold" onclick="goDepotStep(3)">Suivant — Prix & détails →</button>
           </div>
         </div>
 
@@ -2111,8 +2111,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </div>
 
           <div style="display:flex;justify-content:space-between;margin-top:8px">
-            <button class="btn btn-outline" onclick="goDepotStep(2)">← Retour</button>
-            <button class="btn btn-gold" onclick="validateStep3()">Suivant — Publication →</button>
+            <button type="button" class="btn btn-outline" onclick="goDepotStep(2)">← Retour</button>
+            <button type="button" class="btn btn-gold" onclick="validateStep3()">Suivant — Publication →</button>
           </div>
         </div>
 
@@ -2162,13 +2162,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               En publiant cette annonce, vous certifiez que les informations sont exactes et conformes à la réglementation NC. Vous acceptez les <span style="color:var(--gold);cursor:pointer" onclick="openLegalPage('cgu')">conditions d'utilisation</span> d'Immo360.
             </div>
             <div id="depot-notif" style="display:none;padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px"></div>
-            <button class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">
+            <button type="button" class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">
               🚀 Publier mon annonce
             </button>
-            <button class="btn btn-gold btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px;background:var(--green)" onclick="ouvrirMonAnnonce()">
+            <button type="button" class="btn btn-gold btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px;background:var(--green)" onclick="ouvrirMonAnnonce()">
               👁️ Voir mon annonce →
             </button>
-            <button class="btn btn-outline btn-full" style="margin-top:8px" onclick="goDepotStep(3)">← Modifier</button>
+            <button type="button" class="btn btn-outline btn-full" style="margin-top:8px" onclick="goDepotStep(3)">← Modifier</button>
           </div>
         </div>
 
@@ -2180,7 +2180,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <div class="panel" id="panel-biens">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h2 style="font-size:20px">Mes biens</h2>
-        <button class="btn btn-gold" onclick="addBien()">+ Ajouter un bien</button>
+        <button type="button" class="btn btn-gold" onclick="addBien()">+ Ajouter un bien</button>
       </div>
       <div id="biens-grid"></div>
     </div>
@@ -2201,7 +2201,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div class="chat-log" id="chat-log"></div>
           <div style="display:flex;gap:8px">
             <input type="text" id="chat-input" placeholder="Répondre..." onkeypress="if(event.key==='Enter')sendChat()">
-            <button class="btn btn-gold btn-sm" onclick="sendChat()">Envoyer</button>
+            <button type="button" class="btn btn-gold btn-sm" onclick="sendChat()">Envoyer</button>
           </div>
         </div>
       </div>
@@ -2216,7 +2216,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🤖 Matching IA</h2>
           <p style="font-size:13px;color:var(--mid)">L'IA analyse automatiquement la compatibilité entre vos biens et vos acheteurs</p>
         </div>
-        <button class="btn btn-gold" onclick="runGlobalMatching()">⚡ Lancer le matching global</button>
+        <button type="button" class="btn btn-gold" onclick="runGlobalMatching()">⚡ Lancer le matching global</button>
       </div>
 
       <!-- STATS GLOBALES -->
@@ -2260,7 +2260,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div>
           <div class="card">
             <div class="card-title">🔍 Acheteurs — Biens compatibles
-              <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showAddAcheteurModal()">+ Ajouter</button>
+              <button type="button" class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showAddAcheteurModal()">+ Ajouter</button>
             </div>
             <div id="matching-acheteurs-list"></div>
           </div>
@@ -2268,7 +2268,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <!-- DÉTAIL MATCH SÉLECTIONNÉ -->
           <div class="card" id="match-detail-card" style="display:none">
             <div class="card-title">⚡ Analyse du match
-              <button onclick="document.getElementById('match-detail-card').style.display='none'" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--mid)">✕</button>
+              <button type="button" onclick="document.getElementById('match-detail-card').style.display='none'" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--mid)">✕</button>
             </div>
             <div id="match-detail-content"></div>
           </div>
@@ -2280,7 +2280,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">Ajouter un acheteur</h3>
-            <button onclick="document.getElementById('acheteur-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+            <button type="button" onclick="document.getElementById('acheteur-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
           </div>
           <div class="field-row">
             <div class="field"><label>Prénom & Nom *</label><input type="text" id="ach-nom" placeholder="Jean Martin"></div>
@@ -2336,7 +2336,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div class="field"><label>Notes</label>
             <textarea id="ach-notes" rows="2" placeholder="Contraintes particulières, préférences..."></textarea>
           </div>
-          <button class="btn btn-gold btn-full" onclick="saveAcheteur()">✅ Enregistrer l'acheteur</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="saveAcheteur()">✅ Enregistrer l'acheteur</button>
         </div>
       </div>
 
@@ -2351,14 +2351,14 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🏗️ Module Artisans</h2>
           <p style="font-size:13px;color:var(--mid)">Demandez des devis, comparez les artisans, suivez vos travaux</p>
         </div>
-        <button class="btn btn-gold" onclick="showDevisModal()">+ Demander un devis</button>
+        <button type="button" class="btn btn-gold" onclick="showDevisModal()">+ Demander un devis</button>
       </div>
 
       <!-- ONGLETS -->
       <div style="display:flex;gap:0;border-bottom:2px solid var(--warm);margin-bottom:20px">
-        <button class="artisan-tab active" id="tab-artisans-trouver" onclick="switchArtisanTab('trouver')">🔍 Trouver un artisan</button>
-        <button class="artisan-tab" id="tab-artisans-devis" onclick="switchArtisanTab('devis')">📋 Mes demandes de devis</button>
-        <button class="artisan-tab" id="tab-artisans-suivi" onclick="switchArtisanTab('suivi')">🔨 Suivi travaux</button>
+        <button type="button" class="artisan-tab active" id="tab-artisans-trouver" onclick="switchArtisanTab('trouver')">🔍 Trouver un artisan</button>
+        <button type="button" class="artisan-tab" id="tab-artisans-devis" onclick="switchArtisanTab('devis')">📋 Mes demandes de devis</button>
+        <button type="button" class="artisan-tab" id="tab-artisans-suivi" onclick="switchArtisanTab('suivi')">🔨 Suivi travaux</button>
       </div>
 
       <!-- ONGLET 1 : TROUVER UN ARTISAN -->
@@ -2408,7 +2408,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div style="text-align:center;padding:40px;color:var(--mid)">
             <div style="font-size:40px;margin-bottom:10px">📋</div>
             <div style="font-size:14px;margin-bottom:12px">Aucune demande de devis en cours</div>
-            <button class="btn btn-gold" onclick="showDevisModal()">+ Faire une demande</button>
+            <button type="button" class="btn btn-gold" onclick="showDevisModal()">+ Faire une demande</button>
           </div>
         </div>
       </div>
@@ -2438,7 +2438,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="ai-line"><span>Début</span><span>02/06/2026</span></div>
             <div class="ai-line"><span>Fin prévue</span><span>12/06/2026</span></div>
             <div class="ai-line"><span>Montant</span><span style="color:var(--gold);font-weight:600">280 000 F</span></div>
-            <button class="btn btn-outline btn-full btn-sm" style="margin-top:10px" onclick="alert('Messagerie avec Eric Peintures NC ouverte')">💬 Contacter l'artisan</button>
+            <button type="button" class="btn btn-outline btn-full btn-sm" style="margin-top:10px" onclick="alert('Messagerie avec Eric Peintures NC ouverte')">💬 Contacter l'artisan</button>
           </div>
           <div class="card" style="border:1.5px dashed var(--soft);background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;cursor:pointer" onclick="showDevisModal()">
             <div style="font-size:32px;margin-bottom:8px">+</div>
@@ -2452,7 +2452,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">📋 Demande de devis</h3>
-            <button onclick="document.getElementById('devis-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
+            <button type="button" onclick="document.getElementById('devis-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
           </div>
           <div class="field"><label>Type de travaux *</label>
             <select id="devis-type">
@@ -2507,7 +2507,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div style="background:var(--warm);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--mid);margin-bottom:14px">
             💡 Votre demande sera envoyée aux artisans partenaires correspondants. Vous recevrez les devis sous 48h. L'agent immobilier peut percevoir une commission de 3-5% sur les travaux réalisés.
           </div>
-          <button class="btn btn-gold btn-full" onclick="envoyerDevis()">🚀 Envoyer la demande de devis</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="envoyerDevis()">🚀 Envoyer la demande de devis</button>
         </div>
       </div>
 
@@ -2525,7 +2525,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">👥 CRM Clients</h2>
           <p style="font-size:13px;color:var(--mid)">Gérez vos acheteurs, vendeurs et investisseurs en un seul endroit</p>
         </div>
-        <button class="btn btn-gold" onclick="showAddClientModal()">+ Ajouter un client</button>
+        <button type="button" class="btn btn-gold" onclick="showAddClientModal()">+ Ajouter un client</button>
       </div>
 
       <!-- STATS CRM -->
@@ -2575,7 +2575,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">Nouveau client</h3>
-            <button onclick="document.getElementById('client-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+            <button type="button" onclick="document.getElementById('client-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
           </div>
           <div class="field"><label>Profil *</label>
             <select id="cl-type">
@@ -2601,7 +2601,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </div>
           <div class="field"><label>Prochaine relance</label><input type="date" id="cl-relance"></div>
           <div class="field"><label>Notes</label><textarea id="cl-notes" rows="3" placeholder="Notes privées..."></textarea></div>
-          <button class="btn btn-gold btn-full" onclick="saveClient()">✅ Enregistrer</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="saveClient()">✅ Enregistrer</button>
         </div>
       </div>
 
@@ -2620,7 +2620,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">⚖️ Espace Notaire</h2>
           <p style="font-size:13px;color:var(--mid)">Dossiers centralisés, documents structurés, signatures — tout est déjà prêt pour le notaire</p>
         </div>
-        <button class="btn btn-gold" onclick="showAddDossierModal()">+ Nouveau dossier</button>
+        <button type="button" class="btn btn-gold" onclick="showAddDossierModal()">+ Nouveau dossier</button>
       </div>
 
       <!-- PIPELINE GLOBAL -->
@@ -2645,10 +2645,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
       <!-- ONGLETS -->
       <div style="display:flex;gap:0;border-bottom:2px solid var(--warm);margin-bottom:20px">
-        <button class="artisan-tab active" id="not-tab-dossiers" onclick="switchNotTab('dossiers')">📁 Dossiers</button>
-        <button class="artisan-tab" id="not-tab-documents" onclick="switchNotTab('documents')">📄 Documents</button>
-        <button class="artisan-tab" id="not-tab-planning" onclick="switchNotTab('planning')">📅 Planning signatures</button>
-        <button class="artisan-tab" id="not-tab-conformite" onclick="switchNotTab('conformite')">✅ Conformité</button>
+        <button type="button" class="artisan-tab active" id="not-tab-dossiers" onclick="switchNotTab('dossiers')">📁 Dossiers</button>
+        <button type="button" class="artisan-tab" id="not-tab-documents" onclick="switchNotTab('documents')">📄 Documents</button>
+        <button type="button" class="artisan-tab" id="not-tab-planning" onclick="switchNotTab('planning')">📅 Planning signatures</button>
+        <button type="button" class="artisan-tab" id="not-tab-conformite" onclick="switchNotTab('conformite')">✅ Conformité</button>
       </div>
 
       <!-- DOSSIERS -->
@@ -2692,7 +2692,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">⚖️ Nouveau dossier notaire</h3>
-            <button onclick="document.getElementById('dossier-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+            <button type="button" onclick="document.getElementById('dossier-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
           </div>
           <div class="field"><label>Référence dossier</label><input type="text" id="dos-ref" placeholder="Ex: NOT-2026-001"></div>
           <div class="field"><label>Bien immobilier *</label><input type="text" id="dos-bien" placeholder="Ex: Appartement F4 Anse Vata — 92m²"></div>
@@ -2717,7 +2717,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="field"><label>Date acte prévue</label><input type="date" id="dos-date-acte"></div>
           </div>
           <div class="field"><label>Notes</label><textarea id="dos-notes" rows="2" placeholder="Observations, conditions particulières..."></textarea></div>
-          <button class="btn btn-gold btn-full" onclick="saveDossier()">✅ Créer le dossier</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="saveDossier()">✅ Créer le dossier</button>
         </div>
       </div>
     </div>
@@ -2849,7 +2849,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
                 <label class="eq-check"><input type="checkbox" id="loisir-resto"> 🍽️ Restos / vie nocturne</label>
               </div>
             </div>
-            <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="lancerProjetDeVie()">🌟 Analyser mon projet de vie</button>
+            <button type="button" class="btn btn-gold btn-full" style="margin-top:8px" onclick="lancerProjetDeVie()">🌟 Analyser mon projet de vie</button>
           </div>
         </div>
 
@@ -2893,7 +2893,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">📋 Gestion des Mandats</h2>
           <p style="font-size:13px;color:var(--mid)">Mandats de vente, exclusivités, signatures et renouvellements</p>
         </div>
-        <button class="btn btn-gold" onclick="showAddMandatModal()">+ Créer un mandat</button>
+        <button type="button" class="btn btn-gold" onclick="showAddMandatModal()">+ Créer un mandat</button>
       </div>
 
       <!-- STATS -->
@@ -2927,7 +2927,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">📋 Nouveau mandat</h3>
-            <button onclick="document.getElementById('mandat-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+            <button type="button" onclick="document.getElementById('mandat-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
           </div>
           <div class="field-row">
             <div class="field"><label>Type de mandat *</label>
@@ -2961,7 +2961,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div style="font-size:11px;color:var(--mid);margin-bottom:8px">Le mandat sera envoyé par email au vendeur pour signature électronique sécurisée.</div>
             <label class="eq-check"><input type="checkbox" id="mand-esign" checked> Activer la signature électronique</label>
           </div>
-          <button class="btn btn-gold btn-full" onclick="saveMandat()">✅ Créer et envoyer pour signature</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="saveMandat()">✅ Créer et envoyer pour signature</button>
         </div>
       </div>
     </div>
@@ -2973,7 +2973,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">🗓️ Gestion des Visites</h2>
           <p style="font-size:13px;color:var(--mid)">Agenda, confirmations SMS, comptes-rendus et bons de visite</p>
         </div>
-        <button class="btn btn-gold" onclick="showAddVisiteModal()">+ Planifier une visite</button>
+        <button type="button" class="btn btn-gold" onclick="showAddVisiteModal()">+ Planifier une visite</button>
       </div>
 
       <div class="grid2">
@@ -2993,7 +2993,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div>
           <div class="card">
             <div class="card-title">📝 Comptes-rendus de visite
-              <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showCRVisiteModal()">+ Nouveau CR</button>
+              <button type="button" class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showCRVisiteModal()">+ Nouveau CR</button>
             </div>
             <div id="cr-visites-list"></div>
           </div>
@@ -3005,7 +3005,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">📅 Planifier une visite</h3>
-            <button onclick="document.getElementById('visite-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+            <button type="button" onclick="document.getElementById('visite-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
           </div>
           <div class="field"><label>Bien *</label><input type="text" id="vis-bien" placeholder="Appartement Anse Vata..."></div>
           <div class="field-row">
@@ -3029,7 +3029,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <label class="eq-check"><input type="checkbox" id="vis-sms" checked> 📱 Envoyer confirmation SMS à l'acheteur</label>
             <label class="eq-check" style="margin-top:6px"><input type="checkbox" id="vis-bon" checked> 📋 Générer bon de visite automatiquement</label>
           </div>
-          <button class="btn btn-gold btn-full" onclick="saveVisite()">✅ Confirmer la visite</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="saveVisite()">✅ Confirmer la visite</button>
         </div>
       </div>
 
@@ -3038,7 +3038,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">📝 Compte-rendu de visite</h3>
-            <button onclick="document.getElementById('cr-visite-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+            <button type="button" onclick="document.getElementById('cr-visite-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
           </div>
           <div class="field"><label>Bien visité</label><input type="text" id="cr-bien" placeholder="Appartement Anse Vata..."></div>
           <div class="field-row">
@@ -3065,7 +3065,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div style="background:var(--warm);border-radius:8px;padding:10px;margin-bottom:14px">
             <label class="eq-check"><input type="checkbox" id="cr-signature"> ✍️ Demander signature du bon de visite</label>
           </div>
-          <button class="btn btn-gold btn-full" onclick="saveCRVisite()">✅ Enregistrer le compte-rendu</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="saveCRVisite()">✅ Enregistrer le compte-rendu</button>
         </div>
       </div>
     </div>
@@ -3150,7 +3150,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:3px">⚖️ Comparateur de biens</h2>
           <p style="font-size:13px;color:var(--mid)">Comparez jusqu'à 3 biens côte à côte — plus d'onglets ouverts</p>
         </div>
-        <button class="btn btn-gold" onclick="showAddCompareModal()">+ Ajouter un bien</button>
+        <button type="button" class="btn btn-gold" onclick="showAddCompareModal()">+ Ajouter un bien</button>
       </div>
 
       <div id="comparateur-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
@@ -3168,7 +3168,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
             <h3 style="font-family:'Playfair Display',serif;font-size:18px">Ajouter un bien à comparer</h3>
-            <button onclick="document.getElementById('compare-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
+            <button type="button" onclick="document.getElementById('compare-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button>
           </div>
           <p style="font-size:13px;color:var(--mid);margin-bottom:14px">Choisissez parmi les biens disponibles :</p>
           <div id="compare-biens-list" style="display:flex;flex-direction:column;gap:8px"></div>
@@ -3217,13 +3217,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             </div>
             <div class="field"><label>Mon impression générale</label>
               <div style="display:flex;gap:8px;margin-top:4px">
-                <button class="av-note-btn" onclick="setAvNote(this,1)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Pas pour moi">😐</button>
-                <button class="av-note-btn" onclick="setAvNote(this,2)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Peut-être">🤔</button>
-                <button class="av-note-btn" onclick="setAvNote(this,3)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Intéressant">😊</button>
-                <button class="av-note-btn" onclick="setAvNote(this,4)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Coup de cœur">❤️</button>
+                <button type="button" class="av-note-btn" onclick="setAvNote(this,1)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Pas pour moi">😐</button>
+                <button type="button" class="av-note-btn" onclick="setAvNote(this,2)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Peut-être">🤔</button>
+                <button type="button" class="av-note-btn" onclick="setAvNote(this,3)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Intéressant">😊</button>
+                <button type="button" class="av-note-btn" onclick="setAvNote(this,4)" style="flex:1;padding:8px;border:1px solid var(--warm);border-radius:8px;background:#fff;cursor:pointer;font-size:18px" title="Coup de cœur">❤️</button>
               </div>
             </div>
-            <button class="btn btn-gold btn-full" onclick="saveAssistantVisite()">💾 Sauvegarder mes notes</button>
+            <button type="button" class="btn btn-gold btn-full" onclick="saveAssistantVisite()">💾 Sauvegarder mes notes</button>
           </div>
 
           <!-- BIENS VISITÉS -->
@@ -3234,7 +3234,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div id="ctx-compare-banner" style="display:none;margin-top:10px;background:rgba(147,51,234,0.05);border:1px solid rgba(147,51,234,0.15);border-radius:10px;padding:12px">
               <div style="font-size:12px;font-weight:600;color:#9333EA;margin-bottom:3px">⚖️ Vous avez visité plusieurs biens</div>
               <div style="font-size:11px;color:var(--mid);margin-bottom:6px">Utilisez le comparateur pour choisir sans stress — côte à côte, avec recommandation IA.</div>
-              <button onclick="go('comparateur')" class="btn btn-sm" style="background:#9333EA;color:#fff;border:none;font-size:11px">Comparer mes biens →</button>
+              <button type="button" onclick="go('comparateur')" class="btn btn-sm" style="background:#9333EA;color:#fff;border:none;font-size:11px">Comparer mes biens →</button>
             </div>
           </div>
         </div>
@@ -3312,11 +3312,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div style="display:flex;flex-direction:column;gap:8px">
               <div style="border:1px solid var(--warm);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showPreApproContact('BNC')">
                 <div style="font-size:24px">🏦</div><div><div style="font-size:13px;font-weight:600">BNC — Banque de NC</div><div style="font-size:11px;color:var(--mid)">Spécialiste marché NC · Taux dès 3.2%</div></div>
-                <button class="btn btn-gold btn-sm" style="margin-left:auto">Contactez →</button>
+                <button type="button" class="btn btn-gold btn-sm" style="margin-left:auto">Contactez →</button>
               </div>
               <div style="border:1px solid var(--warm);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showPreApproContact('Courtier')">
                 <div style="font-size:24px">🤝</div><div><div style="font-size:13px;font-weight:600">Courtier partenaire</div><div style="font-size:11px;color:var(--mid)">Compare toutes les banques NC</div></div>
-                <button class="btn btn-outline btn-sm" style="margin-left:auto">En savoir +</button>
+                <button type="button" class="btn btn-outline btn-sm" style="margin-left:auto">En savoir +</button>
               </div>
               <!-- SATELLITE CONTEXTUEL : notaire si financement avancé -->
               <div style="margin-top:10px;background:rgba(29,78,216,0.05);border:1px solid rgba(29,78,216,0.15);border-radius:10px;padding:12px;cursor:pointer" onclick="go('notaire')">
@@ -3446,8 +3446,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             ⚠️ <strong style="color:var(--dark)">Important :</strong> Une offre d'achat est un engagement juridique. Elle lie l'acheteur si elle est acceptée. Nous recommandons de la faire relire par un notaire avant envoi.
           </div>
           <div id="offre-notif" style="display:none;margin-bottom:12px;padding:12px;border-radius:8px;font-size:13px"></div>
-          <button class="btn btn-gold btn-full" onclick="envoyerOffre()" id="btn-envoyer-offre">✉️ Envoyer mon offre d'achat</button>
-          <button class="btn btn-outline btn-full" style="margin-top:8px" onclick="go('parcours')">← Retour au parcours</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="envoyerOffre()" id="btn-envoyer-offre">✉️ Envoyer mon offre d'achat</button>
+          <button type="button" class="btn btn-outline btn-full" style="margin-top:8px" onclick="go('parcours')">← Retour au parcours</button>
         </div>
       </div>
     </div>
@@ -4641,8 +4641,8 @@ function renderMktGrid(){
       <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
       <div style="font-size:10px;color:var(--mid);margin-top:1px">${conv(Math.round(b.prix/b.surface))}/m²</div>
       <div style="display:flex;gap:5px;margin-top:10px">
-        <button class="btn btn-gold btn-sm" onclick="event.stopPropagation();go('rdv')">📅 Visiter</button>
-        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openBien(${b.id})">Détail</button>
+        <button type="button" class="btn btn-gold btn-sm" onclick="event.stopPropagation();go('rdv')">📅 Visiter</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="event.stopPropagation();openBien(${b.id})">Détail</button>
       </div>
     </div>`).join('');
 }
@@ -4675,7 +4675,7 @@ function openBien(id){
   ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
       <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);flex:1">${b.titre}</h3>
-      <button onclick="closeLandingPopup()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);margin-left:8px">✕</button>
+      <button type="button" onclick="closeLandingPopup()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);margin-left:8px">✕</button>
     </div>
     <div style="background:var(--warm);border-radius:10px;height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:12px">${b.photos[0]}</div>
     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
@@ -4690,8 +4690,8 @@ function openBien(id){
     <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
     <div style="font-size:11px;color:var(--mid);margin-bottom:14px">${conv(Math.round(b.prix/b.surface))}/m² · Via ${b.agent}</div>
     <div style="display:flex;gap:7px;flex-wrap:wrap">
-      <button class="btn btn-gold" onclick="go('rdv');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">📅 RDV visite</button>
-      <button class="btn btn-outline" onclick="go('financement');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">💰 Financement</button>
+      <button type="button" class="btn btn-gold" onclick="go('rdv');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">📅 RDV visite</button>
+      <button type="button" class="btn btn-outline" onclick="go('financement');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">💰 Financement</button>
     </div>
   </div>`;
   document.body.appendChild(ov);
@@ -4736,8 +4736,8 @@ function buildBiens(){
       <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
       <div style="font-size:11px;color:var(--mid);margin-top:2px">${b.ville}</div>
       <div style="display:flex;gap:6px;margin-top:12px">
-        <button class="btn btn-gold btn-sm" onclick="go('estimation')">Estimer</button>
-        <button class="btn btn-outline btn-sm" onclick="go('annonces')">Annonce</button>
+        <button type="button" class="btn btn-gold btn-sm" onclick="go('estimation')">Estimer</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="go('annonces')">Annonce</button>
       </div>
     </div>`).join('')+'</div>';
 }
@@ -5161,8 +5161,8 @@ function renderLandingBiens(){
           <div style="margin-top:8px;font-size:11px;color:var(--soft)">${(b.desc||b.description||"").substring(0,80)}...</div>
         </div>
         <div style="padding:12px;display:flex;flex-direction:column;gap:6px;justify-content:center">
-          <button class="btn btn-gold btn-sm" onclick="event.stopPropagation();openLandingBien(${b.id})">Voir</button>
-          <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();contactFromLanding(${b.id})">Contact</button>
+          <button type="button" class="btn btn-gold btn-sm" onclick="event.stopPropagation();openLandingBien(${b.id})">Voir</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="event.stopPropagation();contactFromLanding(${b.id})">Contact</button>
         </div>
       </div>`).join('');
   }
@@ -5187,25 +5187,25 @@ function openLandingBien(id){
   };
   const ctaBtns = APP_STATE.loggedIn ? `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button class="btn btn-gold btn-full" onclick="contactVendeur(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Envoyer un message</button>
-      <button class="btn btn-outline btn-full" onclick="planifierVisite(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">📅 Demander une visite</button>
+      <button type="button" class="btn btn-gold btn-full" onclick="contactVendeur(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Envoyer un message</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="planifierVisite(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">📅 Demander une visite</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-      <button class="btn btn-dark btn-full btn-sm" onclick="simulerFinancement(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">💰 Simuler financement</button>
-      <button class="btn btn-outline btn-full btn-sm" onclick="ajouterFavori(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">❤️ Favoris</button>
+      <button type="button" class="btn btn-dark btn-full btn-sm" onclick="simulerFinancement(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">💰 Simuler financement</button>
+      <button type="button" class="btn btn-outline btn-full btn-sm" onclick="ajouterFavori(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">❤️ Favoris</button>
     </div>` : `
     <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:12px;padding:16px;text-align:center;margin-bottom:10px">
       <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:10px">🔒 Créez un compte gratuit pour contacter ce vendeur</div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-gold" onclick="contactFromLanding(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Contacter le vendeur</button>
-        <button style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer" onclick="closeAnnonce(this)">Plus tard</button>
+        <button type="button" class="btn btn-gold" onclick="contactFromLanding(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">💬 Contacter le vendeur</button>
+        <button type="button" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer" onclick="closeAnnonce(this)">Plus tard</button>
       </div>
     </div>
-    <button class="btn btn-outline btn-full btn-sm" onclick="simulerFinancementPublic(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">💰 Simuler le financement</button>`;
+    <button type="button" class="btn btn-outline btn-full btn-sm" onclick="simulerFinancementPublic(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">💰 Simuler le financement</button>`;
   ov.innerHTML=`<div style="background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">
     <div style="background:linear-gradient(135deg,#1C1A16,#2a2520);height:180px;display:flex;align-items:center;justify-content:center;font-size:68px;border-radius:20px 20px 0 0;position:relative;overflow:hidden">
       ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">`:b.photos[0]}
-      <button onclick="closeAnnonce(this)" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10">✕</button>
+      <button type="button" onclick="closeAnnonce(this)" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10">✕</button>
       <div style="position:absolute;bottom:10px;left:12px;display:flex;gap:6px">
         <span style="background:${b.statut==='En vente'?'var(--gold)':'var(--blue)'};color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${b.statut}</span>
         ${b.dpe&&b.dpe!=='—'?`<span style="background:#2d7f2d;color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">DPE ${b.dpe}</span>`:''}
@@ -5299,8 +5299,8 @@ function simulerFinancementPublic(prix){
     </div>
     <div style="font-size:11px;color:var(--mid);margin-bottom:14px;text-align:center">Sur 20 ans à 3.5% · Pour une simulation complète, créez un compte gratuit.</div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-gold btn-full" onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))">Créer un compte</button>
-      <button class="btn btn-outline" onclick="closeAnnonce(this)">Fermer</button>
+      <button type="button" class="btn btn-gold btn-full" onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))">Créer un compte</button>
+      <button type="button" class="btn btn-outline" onclick="closeAnnonce(this)">Fermer</button>
     </div>
   </div>`;
   document.body.appendChild(ov);
@@ -5710,7 +5710,7 @@ async function analyzeDepotPhotos(){
               <div style="font-size:12px;font-weight:600;color:#fff">${t.titre} ${t.urgent?'<span style="background:rgba(184,58,42,0.3);color:#e07070;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700">PRIORITÉ</span>':''}</div>
               <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px">${t.cout} · ${t.gain} · ROI ${t.roi}</div>
             </div>
-            <button onclick="go('estimation')" style="background:var(--gold);border:none;color:#fff;padding:4px 10px;border-radius:6px;font-size:10px;cursor:pointer;white-space:nowrap">Voir détail →</button>
+            <button type="button" onclick="go('estimation')" style="background:var(--gold);border:none;color:#fff;padding:4px 10px;border-radius:6px;font-size:10px;cursor:pointer;white-space:nowrap">Voir détail →</button>
           </div>`).join('')}
         </div>`:``}
         <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.4)">
@@ -6283,8 +6283,8 @@ function renderArtisansGrid(){
         </div>
         <!-- Boutons -->
         <div style="display:flex;gap:6px;align-items:center">
-          <button onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" style="flex:1;background:${c.h};color:#fff;border:none;padding:9px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">📋 Devis gratuit</button>
-          <button onclick="event.stopPropagation();openArtisanDetail(${a.id})" style="padding:9px 12px;border:2px solid ${c.h};background:#fff;color:${c.h};border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Voir →</button>
+          <button type="button" onclick="event.stopPropagation();demanderDevisArtisan(${a.id})" style="flex:1;background:${c.h};color:#fff;border:none;padding:9px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">📋 Devis gratuit</button>
+          <button type="button" onclick="event.stopPropagation();openArtisanDetail(${a.id})" style="padding:9px 12px;border:2px solid ${c.h};background:#fff;color:${c.h};border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Voir →</button>
           ${APP_STATE.user?.profil==='agt'?`<div style="text-align:center;background:${c.h}12;border:1px solid ${c.h}30;border-radius:6px;padding:4px 6px"><div style="font-size:9px;color:#6B7280">Comm.</div><div style="font-size:11px;font-weight:800;color:${c.h}">${a.commission_agent}%</div></div>`:''}
         </div>
       </div>
@@ -6310,7 +6310,7 @@ function openArtisanDetail(id){
             ${a.assure?'<span style="background:rgba(42,74,122,0.3);color:#7ab3e0;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:4px">🛡️ Assuré</span>':''}
           </div>
         </div>
-        <button onclick="document.getElementById('artisan-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+        <button type="button" onclick="document.getElementById('artisan-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
       </div>
       <div class="artisan-stars" style="font-size:18px;margin-bottom:4px">${'★'.repeat(Math.round(a.note))}${'☆'.repeat(5-Math.round(a.note))}</div>
       <div style="font-size:13px;color:rgba(255,255,255,0.6)">${a.note}/5 sur ${a.avis} avis</div>
@@ -6348,7 +6348,7 @@ function openArtisanDetail(id){
         </div>`).join('')}
       </div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-gold btn-full" onclick="demanderDevisArtisan(${a.id});document.getElementById('artisan-detail-modal').style.display='none'">📋 Demander un devis</button>
+        <button type="button" class="btn btn-gold btn-full" onclick="demanderDevisArtisan(${a.id});document.getElementById('artisan-detail-modal').style.display='none'">📋 Demander un devis</button>
         <a href="tel:${a.tel}" class="btn btn-outline" style="white-space:nowrap">📞 Appeler</a>
       </div>
       ${APP_STATE.user?.profil==='agt'?`<div style="margin-top:10px;padding:8px 12px;background:rgba(184,146,42,0.08);border-radius:8px;font-size:12px;color:var(--gold-dark);text-align:center">💼 Commission agent : ${a.commission_agent}% sur les travaux réalisés</div>`:''}
@@ -6408,7 +6408,7 @@ function renderDevisList(){
   const el = document.getElementById('devis-list');
   if(!el) return;
   if(!devisEnCours.length){
-    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--mid)"><div style="font-size:40px;margin-bottom:10px">📋</div><div style="font-size:14px;margin-bottom:12px">Aucune demande de devis en cours</div><button class="btn btn-gold" onclick="showDevisModal()">+ Faire une demande</button></div>';
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--mid)"><div style="font-size:40px;margin-bottom:10px">📋</div><div style="font-size:14px;margin-bottom:12px">Aucune demande de devis en cours</div><button type="button" class="btn btn-gold" onclick="showDevisModal()">+ Faire une demande</button></div>';
     return;
   }
   el.innerHTML = devisEnCours.map(d=>`
@@ -6636,7 +6636,7 @@ function renderMatchingAcheteurs(){
   if(!el) return;
 
   if(!ACHETEURS.length){
-    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mid)">Aucun acheteur enregistré.<br><button class="btn btn-gold btn-sm" onclick="showAddAcheteurModal()">+ Ajouter un acheteur</button></div>';
+    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mid)">Aucun acheteur enregistré.<br><button type="button" class="btn btn-gold btn-sm" onclick="showAddAcheteurModal()">+ Ajouter un acheteur</button></div>';
     return;
   }
 
@@ -6660,8 +6660,8 @@ function renderMatchingAcheteurs(){
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="font-size:11px;color:var(--mid)">${matches.length} bien${matches.length>1?'s':''} compatible${matches.length>1?'s':''}</div>
         <div style="display:flex;gap:5px">
-          <button onclick="event.stopPropagation();contactAcheteur(${ach.id})" class="btn btn-outline btn-sm" style="font-size:10px">💬 Contacter</button>
-          <button onclick="event.stopPropagation();selectAcheteurForMatch(${ach.id})" class="btn btn-gold btn-sm" style="font-size:10px">Voir matches →</button>
+          <button type="button" onclick="event.stopPropagation();contactAcheteur(${ach.id})" class="btn btn-outline btn-sm" style="font-size:10px">💬 Contacter</button>
+          <button type="button" onclick="event.stopPropagation();selectAcheteurForMatch(${ach.id})" class="btn btn-gold btn-sm" style="font-size:10px">Voir matches →</button>
         </div>
       </div>
     </div>`;
@@ -6724,7 +6724,7 @@ function renderMatchRow(entity, score, details, type){
         <div style="font-size:11px;color:var(--mid)">${sub}</div>
       </div>
       <div style="display:flex;gap:4px">
-        ${score>=80?`<button onclick="contactMatch('${name}','${score}')" class="btn btn-gold btn-sm" style="font-size:10px">📨 Contacter</button>`:''}
+        ${score>=80?`<button type="button" onclick="contactMatch('${name}','${score}')" class="btn btn-gold btn-sm" style="font-size:10px">📨 Contacter</button>`:''}
       </div>
     </div>
     <div class="match-bar"><div class="match-bar-fill" style="width:${score}%;background:${getScoreColor(score)}"></div></div>
@@ -6866,7 +6866,7 @@ function renderCRMList(){
   const el=document.getElementById('crm-list');
   if(!el)return;
   if(!crmFiltered.length){
-    el.innerHTML='<div style="text-align:center;padding:40px;color:var(--mid)">Aucun client trouvé.<br><button class="btn btn-gold btn-sm" onclick="showAddClientModal()">+ Ajouter</button></div>';
+    el.innerHTML='<div style="text-align:center;padding:40px;color:var(--mid)">Aucun client trouvé.<br><button type="button" class="btn btn-gold btn-sm" onclick="showAddClientModal()">+ Ajouter</button></div>';
     return;
   }
   const today=new Date().toISOString().split('T')[0];
@@ -6898,8 +6898,8 @@ function renderCRMList(){
           ${c.relance?`<span style="color:${relanceUrgente?'#DC2626':'var(--mid)'}">🔔 Relance : ${c.relance}</span>`:''}
         </div>
         <div style="display:flex;gap:5px">
-          <button onclick="event.stopPropagation();relancerClient(${c.id})" class="btn btn-outline btn-sm" style="font-size:10px">💬 Contacter</button>
-          <button onclick="event.stopPropagation();openClientDetail(${c.id})" class="btn btn-gold btn-sm" style="font-size:10px">Fiche →</button>
+          <button type="button" onclick="event.stopPropagation();relancerClient(${c.id})" class="btn btn-outline btn-sm" style="font-size:10px">💬 Contacter</button>
+          <button type="button" onclick="event.stopPropagation();openClientDetail(${c.id})" class="btn btn-gold btn-sm" style="font-size:10px">Fiche →</button>
         </div>
       </div>
       ${c.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic">📝 ${c.notes}</div>`:''}
@@ -6931,7 +6931,7 @@ function openClientDetail(id){
             <div style="font-size:11px;color:rgba(255,255,255,0.6)">${c.tel} · ${c.email}</div>
           </div>
         </div>
-        <button onclick="document.getElementById('client-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+        <button type="button" onclick="document.getElementById('client-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
       </div>
     </div>
     <div style="padding:20px">
@@ -6951,11 +6951,11 @@ function openClientDetail(id){
       <div style="border:1px solid var(--warm);border-radius:8px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px">
         <div style="width:38px;height:38px;border-radius:50%;background:${getScoreColor(m.score)};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">${m.score}%</div>
         <div style="flex:1"><div style="font-size:12px;font-weight:600">${m.bien.titre||m.bien.type+' '+m.bien.quartier}</div><div style="font-size:11px;color:var(--mid)">${conv(m.bien.prix)} · ${m.bien.quartier}</div></div>
-        <button onclick="go('matching')" class="btn btn-gold btn-sm" style="font-size:10px">Voir</button>
+        <button type="button" onclick="go('matching')" class="btn btn-gold btn-sm" style="font-size:10px">Voir</button>
       </div>`).join('')}`:''}
       <div style="display:flex;gap:8px;margin-top:14px">
-        <button class="btn btn-gold btn-full" onclick="relancerClient(${c.id});document.getElementById('client-detail-modal').style.display='none'">💬 Contacter</button>
-        <button class="btn btn-outline" onclick="document.getElementById('client-detail-modal').style.display='none'">Fermer</button>
+        <button type="button" class="btn btn-gold btn-full" onclick="relancerClient(${c.id});document.getElementById('client-detail-modal').style.display='none'">💬 Contacter</button>
+        <button type="button" class="btn btn-outline" onclick="document.getElementById('client-detail-modal').style.display='none'">Fermer</button>
       </div>
     </div>`;
   modal.style.display='flex';
@@ -7065,8 +7065,8 @@ function renderDossiers(){
           ${d.dateActe?` · 🏠 Acte: ${d.dateActe} ${joursRestants?'('+joursRestants+')':''}` :''}
         </div>
         <div style="display:flex;gap:5px">
-          <button onclick="updateDossierStatut(${d.id})" class="btn btn-outline btn-sm" style="font-size:10px">✏️ Mettre à jour</button>
-          ${d.statut!=='acte'?`<button onclick="avancerDossier(${d.id})" class="btn btn-gold btn-sm" style="font-size:10px">→ Étape suivante</button>`:''}
+          <button type="button" onclick="updateDossierStatut(${d.id})" class="btn btn-outline btn-sm" style="font-size:10px">✏️ Mettre à jour</button>
+          ${d.statut!=='acte'?`<button type="button" onclick="avancerDossier(${d.id})" class="btn btn-gold btn-sm" style="font-size:10px">→ Étape suivante</button>`:''}
         </div>
       </div>
       ${d.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic;padding:6px 10px;background:var(--warm);border-radius:6px">📝 ${d.notes}</div>`:''}
@@ -7307,7 +7307,7 @@ function renderMandatAlertes(){
     <div style="font-size:13px;font-weight:700;color:#DC2626;margin-bottom:8px">🔔 ${alertes.length} mandat${alertes.length>1?'s':''} à renouveler dans les 30 jours</div>
     ${alertes.map(m=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid #FECACA">
       <div><div style="font-size:12px;font-weight:600;color:var(--dark)">${m.bien}</div><div style="font-size:11px;color:var(--mid)">Expire le ${m.fin} · ${m.vendeur}</div></div>
-      <button onclick="renouvelerMandat(${m.id})" class="btn btn-sm" style="background:#DC2626;color:#fff;border:none;font-size:11px">Renouveler</button>
+      <button type="button" onclick="renouvelerMandat(${m.id})" class="btn btn-sm" style="background:#DC2626;color:#fff;border:none;font-size:11px">Renouveler</button>
     </div>`).join('')}
   </div>`;
 }
@@ -7342,9 +7342,9 @@ function renderMandats(){
       <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--mid);flex-wrap:wrap;gap:8px">
         <span>📅 Du ${m.debut} au ${m.fin}</span>
         <div style="display:flex;gap:5px">
-          ${!m.signe?`<button onclick="signerMandat(${m.id})" class="btn btn-gold btn-sm" style="font-size:10px">✍️ Signer électroniquement</button>`:''}
-          <button onclick="renouvelerMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">🔄 Renouveler</button>
-          <button onclick="archiverMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">📁 Archiver</button>
+          ${!m.signe?`<button type="button" onclick="signerMandat(${m.id})" class="btn btn-gold btn-sm" style="font-size:10px">✍️ Signer électroniquement</button>`:''}
+          <button type="button" onclick="renouvelerMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">🔄 Renouveler</button>
+          <button type="button" onclick="archiverMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">📁 Archiver</button>
         </div>
       </div>
     </div>`;
@@ -7460,10 +7460,10 @@ function renderVisitesAgenda(){
       </div>
       ${v.notes?`<div style="font-size:11px;color:var(--soft);font-style:italic;margin-bottom:6px">📝 ${v.notes}</div>`:''}
       <div style="display:flex;gap:5px;flex-wrap:wrap">
-        ${!v.smsSent?`<button onclick="envoyerSMS(${v.id})" class="btn btn-gold btn-sm" style="font-size:10px">📱 Envoyer SMS</button>`:''}
-        ${!v.bonVisite?`<button onclick="genererBonVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">📋 Bon de visite</button>`:''}
-        <button onclick="showCRVisiteModalFor(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">📝 Compte-rendu</button>
-        <button onclick="annulerVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px;color:var(--red)">✕ Annuler</button>
+        ${!v.smsSent?`<button type="button" onclick="envoyerSMS(${v.id})" class="btn btn-gold btn-sm" style="font-size:10px">📱 Envoyer SMS</button>`:''}
+        ${!v.bonVisite?`<button type="button" onclick="genererBonVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">📋 Bon de visite</button>`:''}
+        <button type="button" onclick="showCRVisiteModalFor(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">📝 Compte-rendu</button>
+        <button type="button" onclick="annulerVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px;color:var(--red)">✕ Annuler</button>
       </div>
     </div>`;
   }).join('');
@@ -7711,7 +7711,7 @@ function renderParcoursSteps(){
         <div style="font-size:14px;font-weight:700;color:${done?'#16A34A':isNext?'var(--gold)':'var(--dark)'}">${i+1}. ${step.label}</div>
         <div style="font-size:11px;color:var(--mid);margin-top:2px">${step.desc}</div>
       </div>
-      ${done?'<span style="color:#16A34A;font-size:20px">✓</span>':isNext?'<button class="btn btn-gold btn-sm" style="white-space:nowrap">Faire →</button>':'<span style="color:#D1D5DB;font-size:16px">›</span>'}
+      ${done?'<span style="color:#16A34A;font-size:20px">✓</span>':isNext?'<button type="button" class="btn btn-gold btn-sm" style="white-space:nowrap">Faire →</button>':'<span style="color:#D1D5DB;font-size:16px">›</span>'}
     </div>`;
   }).join('');
 }
@@ -7781,7 +7781,7 @@ function renderComparateur(){
   if(!el)return;
 
   if(!BIENS_COMPARES.length){
-    el.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--mid)"><div style="font-size:48px;margin-bottom:12px">⚖️</div><div style="font-size:15px;font-weight:500;margin-bottom:8px">Aucun bien sélectionné</div><div style="font-size:13px;margin-bottom:16px">Ajoutez jusqu'à 3 biens pour les comparer</div><button class="btn btn-gold" onclick="showAddCompareModal()">+ Ajouter un bien</button></div>`;
+    el.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--mid)"><div style="font-size:48px;margin-bottom:12px">⚖️</div><div style="font-size:15px;font-weight:500;margin-bottom:8px">Aucun bien sélectionné</div><div style="font-size:13px;margin-bottom:16px">Ajoutez jusqu'à 3 biens pour les comparer</div><button type="button" class="btn btn-gold" onclick="showAddCompareModal()">+ Ajouter un bien</button></div>`;
     if(resume) resume.style.display='none';
     return;
   }
@@ -7808,7 +7808,7 @@ function renderComparateur(){
       <div></div>
       ${BIENS_COMPARES.map(b=>`
       <div style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;text-align:center;position:relative">
-        <button onclick="removeFromCompare(${b.id})" style="position:absolute;top:6px;right:6px;background:none;border:none;color:var(--mid);cursor:pointer;font-size:14px">✕</button>
+        <button type="button" onclick="removeFromCompare(${b.id})" style="position:absolute;top:6px;right:6px;background:none;border:none;color:var(--mid);cursor:pointer;font-size:14px">✕</button>
         <div style="font-size:28px;margin-bottom:6px">${b.photos?b.photos[0]:'🏠'}</div>
         <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:4px">${(b.titre||b.type+' '+b.quartier).substring(0,30)}</div>
         ${b.prix===minPrix?'<span style="background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700">💚 Meilleur prix</span>':''}
@@ -7825,7 +7825,7 @@ function renderComparateur(){
     <!-- BOUTONS -->
     <div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${BIENS_COMPARES.length+1},1fr);gap:10px">
       <div></div>
-      ${BIENS_COMPARES.map(b=>`<button class="btn btn-gold btn-full btn-sm" onclick="openLandingBien(${b.id})">Voir l'annonce →</button>`).join('')}
+      ${BIENS_COMPARES.map(b=>`<button type="button" class="btn btn-gold btn-full btn-sm" onclick="openLandingBien(${b.id})">Voir l'annonce →</button>`).join('')}
     </div>`;
 
   // Recommandation IA
@@ -7839,7 +7839,7 @@ function renderComparateur(){
         <div style="font-size:32px">${best.photos?best.photos[0]:'🏠'}</div>
         <div><div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px">${best.titre||best.type+' '+best.quartier}</div>
         <div style="font-size:12px;color:var(--mid);line-height:1.6">Ce bien offre le meilleur rapport surface/prix avec <strong>${best.surface}m² à ${conv(Math.round(best.prix/best.surface))}/m²</strong>. ${best.prix===minPrix?'C\'est également le moins cher de votre sélection.':''}</div>
-        <button class="btn btn-gold btn-sm" style="margin-top:8px" onclick="openLandingBien(${best.id})">Voir ce bien →</button></div>
+        <button type="button" class="btn btn-gold btn-sm" style="margin-top:8px" onclick="openLandingBien(${best.id})">Voir ce bien →</button></div>
       </div>`;
   }
 }
@@ -7929,7 +7929,7 @@ function renderBiensVisites(){
     <div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--warm);border-radius:8px;margin-bottom:6px">
       <div style="font-size:22px">${EMOJIS[b.note]||'🏠'}</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">${b.bien}</div><div style="font-size:11px;color:var(--mid)">${b.date} · ${b.photos} photo(s)</div></div>
-      <button onclick="addToCompare(0)" class="btn btn-outline btn-sm" style="font-size:10px">⚖️ Comparer</button>
+      <button type="button" onclick="addToCompare(0)" class="btn btn-outline btn-sm" style="font-size:10px">⚖️ Comparer</button>
     </div>`).join('');
 }
 
@@ -8064,7 +8064,7 @@ function renderSuiviPipeline(){
   <div style="margin-top:14px;padding:12px;background:rgba(184,146,42,0.06);border:1px solid rgba(184,146,42,0.2);border-radius:10px">
     <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">🎯 Prochaine action recommandée</div>
     <div style="font-size:12px;color:var(--mid)">Planifiez une visite sur un bien compatible à plus de 80% avec votre projet.</div>
-    <button class="btn btn-gold btn-sm" style="margin-top:8px" onclick="go('marketplace')">Voir mes biens compatibles →</button>
+    <button type="button" class="btn btn-gold btn-sm" style="margin-top:8px" onclick="go('marketplace')">Voir mes biens compatibles →</button>
   </div>`;
 }
 
@@ -8235,8 +8235,8 @@ function renderNotaireDossiers(){
         </div>
         ${docsManquants>0?`<span style="background:#FEF2F2;color:#DC2626;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">⚠️ ${docsManquants} manquant${docsManquants>1?'s':''}</span>`:''}
         <div style="display:flex;gap:6px">
-          <button onclick="ouvrirDossierDetail(${d.id})" class="btn btn-gold btn-sm" style="font-size:11px">📁 Ouvrir le dossier</button>
-          ${d.statut!=='acte'?`<button onclick="avancerDossier(${d.id})" class="btn btn-outline btn-sm" style="font-size:11px">→ Avancer</button>`:''}
+          <button type="button" onclick="ouvrirDossierDetail(${d.id})" class="btn btn-gold btn-sm" style="font-size:11px">📁 Ouvrir le dossier</button>
+          ${d.statut!=='acte'?`<button type="button" onclick="avancerDossier(${d.id})" class="btn btn-outline btn-sm" style="font-size:11px">→ Avancer</button>`:''}
         </div>
       </div>
 
@@ -8285,7 +8285,7 @@ function ouvrirDossierDetail(id){
           <div style="font-size:12px;color:rgba(255,255,255,0.7)">${d.vendeur} → ${d.acheteur}</div>
           <div style="margin-top:6px"><span style="background:rgba(255,255,255,0.2);color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${s.label}</span></div>
         </div>
-        <button onclick="document.getElementById('dossier-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+        <button type="button" onclick="document.getElementById('dossier-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
       </div>
     </div>
 
@@ -8318,8 +8318,8 @@ function ouvrirDossierDetail(id){
             </div>
             <div style="display:flex;align-items:center;gap:6px">
               <span style="font-size:10px;font-weight:700;color:${ds.color}">${ds.label}</span>
-              ${doc.statut!=='valide'?`<button onclick="validerDoc(${d.id},'${key}')" style="background:${s.color};color:#fff;border:none;padding:2px 8px;border-radius:5px;font-size:10px;cursor:pointer">Valider</button>`:''}
-              ${doc.statut==='manquant'?`<button onclick="relancerDoc(${d.id},'${doc.label}')" style="background:#fff;color:${s.color};border:1px solid ${s.color};padding:2px 8px;border-radius:5px;font-size:10px;cursor:pointer">Relancer</button>`:''}
+              ${doc.statut!=='valide'?`<button type="button" onclick="validerDoc(${d.id},'${key}')" style="background:${s.color};color:#fff;border:none;padding:2px 8px;border-radius:5px;font-size:10px;cursor:pointer">Valider</button>`:''}
+              ${doc.statut==='manquant'?`<button type="button" onclick="relancerDoc(${d.id},'${doc.label}')" style="background:#fff;color:${s.color};border:1px solid ${s.color};padding:2px 8px;border-radius:5px;font-size:10px;cursor:pointer">Relancer</button>`:''}
             </div>
           </div>`;
         }).join('')}
@@ -8350,16 +8350,16 @@ function ouvrirDossierDetail(id){
           </div>
           <div style="padding:10px 12px;border-top:1px solid #E5E7EB;display:flex;gap:8px">
             <input type="text" id="msg-input-${d.id}" placeholder="Envoyer un message..." style="flex:1;border:1px solid #E5E7EB;border-radius:6px;padding:6px 10px;font-size:12px">
-            <button onclick="envoyerMessageDossier(${d.id})" class="btn btn-gold btn-sm">Envoyer</button>
+            <button type="button" onclick="envoyerMessageDossier(${d.id})" class="btn btn-gold btn-sm">Envoyer</button>
           </div>
         </div>
       </div>
 
       <!-- ACTIONS -->
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        ${d.statut!=='acte'?`<button onclick="avancerDossier(${d.id});document.getElementById('dossier-detail-modal').style.display='none'" class="btn btn-gold" style="flex:1">→ Étape suivante</button>`:''}
-        <button onclick="genererCompromis(${d.id})" class="btn btn-outline" style="flex:1">📝 Générer compromis</button>
-        <button onclick="exporterDossier(${d.id})" class="btn btn-outline">📥 Exporter</button>
+        ${d.statut!=='acte'?`<button type="button" onclick="avancerDossier(${d.id});document.getElementById('dossier-detail-modal').style.display='none'" class="btn btn-gold" style="flex:1">→ Étape suivante</button>`:''}
+        <button type="button" onclick="genererCompromis(${d.id})" class="btn btn-outline" style="flex:1">📝 Générer compromis</button>
+        <button type="button" onclick="exporterDossier(${d.id})" class="btn btn-outline">📥 Exporter</button>
       </div>
       ${d.notes?`<div style="margin-top:10px;padding:8px 12px;background:var(--warm);border-radius:8px;font-size:12px;color:var(--mid);font-style:italic">📝 ${d.notes}</div>`:''}
     </div>`;
@@ -8475,7 +8475,7 @@ function renderNotDocs(){
           return `<span style="background:${ds.bg};color:${ds.color};border:1px solid ${ds.color}30;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500" title="${v.label}">${v.statut==='valide'?'✅':v.statut==='en-attente'?'⏳':'❌'} ${v.label.split(' ').slice(0,2).join(' ')}</span>`;
         }).join('')}
       </div>
-      ${manquants.length>0?`<button onclick="relancerTousManquants(${d.id})" class="btn btn-gold btn-sm" style="margin-top:10px;font-size:11px">📨 Relancer pour les ${manquants.length} manquants</button>`:''}
+      ${manquants.length>0?`<button type="button" onclick="relancerTousManquants(${d.id})" class="btn btn-gold btn-sm" style="margin-top:10px;font-size:11px">📨 Relancer pour les ${manquants.length} manquants</button>`:''}
     </div>`;
   }).join('');
 }
@@ -8553,8 +8553,8 @@ function renderNotConformite(){
         ${alertes.map(a=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#DC2626;margin-bottom:3px">⚠️ ${a}</div>`).join('')}
       </div>`:`<div style="font-size:12px;color:#16A34A;margin-bottom:8px">✅ Dossier conforme — aucune alerte</div>`}
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button onclick="ouvrirDossierDetail(${d.id})" class="btn btn-gold btn-sm" style="font-size:11px">📁 Voir le dossier</button>
-        ${alertes.length>0?`<button onclick="relancerTousManquants(${d.id})" class="btn btn-outline btn-sm" style="font-size:11px">📨 Relancer les parties</button>`:''}
+        <button type="button" onclick="ouvrirDossierDetail(${d.id})" class="btn btn-gold btn-sm" style="font-size:11px">📁 Voir le dossier</button>
+        ${alertes.length>0?`<button type="button" onclick="relancerTousManquants(${d.id})" class="btn btn-outline btn-sm" style="font-size:11px">📨 Relancer les parties</button>`:''}
       </div>
     </div>`).join('')}`;
 }
@@ -8752,12 +8752,12 @@ function launchAIProject(){
         <div style="background:linear-gradient(135deg,rgba(184,146,42,0.08),rgba(184,146,42,0.04));border:1px solid rgba(184,146,42,0.2);border-radius:10px;padding:14px">
           <div style="font-size:11px;font-weight:600;color:var(--gold);margin-bottom:4px">💎 ESTIMATION IA</div>
           <div style="font-size:13px;color:var(--dark);line-height:1.5">L'IA peut estimer votre bien en moins de 2 minutes basé sur le marché NC réel.</div>
-          <button onclick="loginAs('sell')" class="btn btn-gold btn-sm" style="margin-top:10px;font-size:11px">Estimer mon bien →</button>
+          <button type="button" onclick="loginAs('sell')" class="btn btn-gold btn-sm" style="margin-top:10px;font-size:11px">Estimer mon bien →</button>
         </div>
         <div style="background:rgba(42,122,75,0.05);border:1px solid rgba(42,122,75,0.15);border-radius:10px;padding:14px">
           <div style="font-size:11px;font-weight:600;color:var(--green);margin-bottom:4px">🏗️ PLAN DE TRAVAUX</div>
           <div style="font-size:13px;color:var(--dark);line-height:1.5">Travaux recommandés pour maximiser votre prix de vente avec ROI calculé.</div>
-          <button onclick="loginAs('sell')" class="btn btn-sm" style="margin-top:10px;font-size:11px;background:var(--green);color:#fff;border:none">Voir le plan →</button>
+          <button type="button" onclick="loginAs('sell')" class="btn btn-sm" style="margin-top:10px;font-size:11px;background:var(--green);color:#fff;border:none">Voir le plan →</button>
         </div>
       </div>`;
     } else {
@@ -8782,7 +8782,7 @@ function launchAIProject(){
           <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type+' '+b.quartier}</div><div style="font-size:11px;color:var(--mid)">${conv(b.prix)} · ${b.surface}m²</div></div>
           <div style="font-size:14px;font-weight:700;color:var(--green);flex-shrink:0">92%</div>
         </div>`).join(''):''}
-        <button onclick="loginAs('buy')" class="btn btn-gold btn-full" style="margin-top:10px;font-size:12px">Créer mon projet complet →</button>
+        <button type="button" onclick="loginAs('buy')" class="btn btn-gold btn-full" style="margin-top:10px;font-size:12px">Créer mon projet complet →</button>
       </div>`;
     }
     if(result) result.innerHTML=html;
@@ -8920,7 +8920,7 @@ function buildLandingBiensPublic(){
     grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)">
       <div style="font-size:36px;margin-bottom:10px">🔍</div>
       <div style="font-size:14px;margin-bottom:8px">Aucun bien trouvé</div>
-      <button onclick="resetFiltresPublic()" class="btn btn-outline btn-sm">Voir tous les biens</button>
+      <button type="button" onclick="resetFiltresPublic()" class="btn btn-outline btn-sm">Voir tous les biens</button>
     </div>`;
     if(voirPlus) voirPlus.style.display='none';
     return;
@@ -8966,7 +8966,7 @@ function buildLandingBiensPublic(){
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
             <div style="font-size:11px;color:var(--mid)">${pm2}/m²</div>
-            <button style="background:var(--warm);color:var(--dark);border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Voir le bien →</button>
+            <button type="button" style="background:var(--warm);color:var(--dark);border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Voir le bien →</button>
           </div>
         </div>
         <!-- Prix -->
@@ -9053,7 +9053,7 @@ function simulerFinancementPublic(prix){
   ov.innerHTML = `<div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:420px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark)">💰 Simulation rapide</div>
-      <button onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
+      <button type="button" onclick="document.body.removeChild(this.closest('[style*=fixed]'))" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
     </div>
     <div style="background:var(--warm);border-radius:10px;padding:14px;margin-bottom:14px">
       <div style="font-size:11px;color:var(--mid);margin-bottom:4px">Prix du bien</div>
@@ -9080,7 +9080,7 @@ function simulerFinancementPublic(prix){
     </div>
     <div style="text-align:center;padding:12px;background:var(--warm);border-radius:10px">
       <div style="font-size:12px;color:var(--mid);margin-bottom:8px">Simulation complète + pré-approbation bancaire</div>
-      <button onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))" class="btn btn-gold btn-full">Créer mon compte gratuit →</button>
+      <button type="button" onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))" class="btn btn-gold btn-full">Créer mon compte gratuit →</button>
     </div>
   </div>`;
   document.body.appendChild(ov);
