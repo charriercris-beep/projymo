@@ -968,7 +968,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div>
 
 <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
-<div id="app-wrapper" style="display:none;width:100%;height:100vh;flex-direction:row"><div class="shell" id="main-shell" style="display:flex;width:100%;height:100vh;flex-direction:row">
+<div class="shell" id="main-shell" style="display:none">
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
@@ -4939,7 +4939,7 @@ function doLoginDemo(){
   S.profile=profil;
   closeLoginModal();
   document.getElementById('landing-page').style.display='none';
-  document.getElementById('app-wrapper').style.display='flex';
+  document.getElementById('main-shell').style.display='flex';
   buildSB();
   go('dashboard');
   setTimeout(buildSmartDashboard, 100);
@@ -4962,17 +4962,10 @@ function loginAs(profil){
     APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
-    // Cacher landing
-    const lp = document.getElementById('landing-page');
-    if(lp) lp.style.cssText = 'display:none!important';
-    // Afficher TOUS les éléments de l'app
-    const aw = document.getElementById('app-wrapper');
-    if(aw) aw.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row';
-    const shell = document.querySelector('.shell');
-    if(shell) shell.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row;background:var(--cream)';
-    // Construire
-    try{ buildSB(); }catch(e){ console.error(e); }
-    try{ go('dashboard'); }catch(e){ console.error(e); }
+    document.getElementById('landing-page').style.display='none';
+    document.getElementById('main-shell').style.display='flex';
+    buildSB();
+    go('dashboard');
     setTimeout(buildSmartDashboard, 100);
   } else {
     showLoginModal(profil);
@@ -4981,10 +4974,8 @@ function loginAs(profil){
 
 
 function showLanding(){
-  const lp=document.getElementById('landing-page');
-  const app=document.getElementById('app-wrapper');
-  if(lp) lp.style.display='block';
-  if(app) app.style.display='none';
+  document.getElementById('landing-page').style.display='block';
+  document.getElementById('main-shell').style.display='none';
 }
 
 // ── BUDGET DISPLAY ──
@@ -5325,12 +5316,8 @@ function contactFromLanding(bienId){
 }
 
 function hideLanding(){
-  const lp = document.getElementById('landing-page');
-  if(lp) lp.style.cssText = 'display:none!important';
-  const aw = document.getElementById('app-wrapper');
-  if(aw) aw.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row';
-  const shell = document.querySelector('.shell');
-  if(shell) shell.style.cssText = 'display:flex!important;width:100%;height:100vh;flex-direction:row;background:var(--cream)';
+  document.getElementById('landing-page').style.display='none';
+  document.getElementById('main-shell').style.display='flex';
 }
 
 // loginAs défini plus haut
