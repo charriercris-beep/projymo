@@ -3277,17 +3277,18 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 // =============================================
 const MENUS = {
   sell:[
-    {s:'Mon bien',items:[{ico:'🏠',k:'dashboard',l:'Tableau de bord'},{ico:'💎',k:'analyse',l:'Estimation IA'},{ico:'📝',k:'depot',l:'Déposer annonce'},{ico:'📣',k:'annonces',l:'Mes annonces'}]},
-    {s:'Suivi vente',items:[{ico:'📅',k:'rdv',l:'Mes visites'},{ico:'🔄',k:'suivi',l:'Suivi vente'},{ico:'💬',k:'messagerie',l:'Messages'},{ico:'🏗️',k:'artisans',l:'Artisans'}]},
+    {s:'Mon bien',items:[{ico:'💎',k:'analyse',l:'Estimation IA'},{ico:'📝',k:'depot',l:'Déposer annonce'},{ico:'📣',k:'annonces',l:'Mes annonces'}]},
+    {s:'Suivi',items:[{ico:'📅',k:'rdv',l:'Visites'},{ico:'🔄',k:'suivi',l:'Suivi vente'},{ico:'💬',k:'messagerie',l:'Messages'},{ico:'🏗️',k:'artisans',l:'Artisans'}]},
   ],
   buy:[
-    {s:'Mon projet',items:[{ico:'🌟',k:'projetdevie'},{ico:'🔭',k:'marketplace'},{ico:'🤖',k:'matching'},{ico:'🗺️',k:'parcours'}]},
-    {s:'Ma décision',items:[{ico:'💰',k:'financementplus'},{ico:'⚖️',k:'comparateur'},{ico:'✍️',k:'assistantvisite'},{ico:'📍',k:'suiviachat'}]},
-    {s:'Services',items:[{ico:'🏗️',k:'artisans'},{ico:'💬',k:'messagerie'},{ico:'📅',k:'rdv'}]},
+    {s:'Rechercher',items:[{ico:'🔭',k:'marketplace',l:'Tous les biens'},{ico:'🤖',k:'matching',l:'Matching IA'},{ico:'🌟',k:'projetdevie',l:'Mon projet'}]},
+    {s:'Décision',items:[{ico:'💰',k:'financementplus',l:'Financement'},{ico:'⚖️',k:'comparateur',l:'Comparateur'},{ico:'✍️',k:'assistantvisite',l:'Visite'},{ico:'📍',k:'suiviachat',l:'Suivi achat'}]},
+    {s:'Services',items:[{ico:'🏗️',k:'artisans',l:'Artisans'},{ico:'💬',k:'messagerie',l:'Messages'}]},
   ],
   agt:[
-    {s:'Gestion',items:[{ico:'📊',k:'dashboard'},{ico:'📝',k:'depot'},{ico:'📋',k:'mandats'},{ico:'🤖',k:'matching'},{ico:'👥',k:'crm'}]},
-    {s:'Business',items:[{ico:'🗓️',k:'visites'},{ico:'⚖️',k:'notaire'},{ico:'📊',k:'statsannonces'},{ico:'🏗️',k:'artisans'},{ico:'📈',k:'stats'}]},
+    {s:'Mandats',items:[{ico:'📝',k:'depot',l:'Ajouter annonce'},{ico:'📋',k:'mandats',l:'Mandats'},{ico:'📊',k:'statsannonces',l:'Stats'}]},
+    {s:'Clients',items:[{ico:'👥',k:'crm',l:'CRM'},{ico:'🤖',k:'matching',l:'Matching IA'},{ico:'🗓️',k:'visites',l:'Visites'}]},
+    {s:'Outils',items:[{ico:'⚖️',k:'notaire',l:'Notaire'},{ico:'🏗️',k:'artisans',l:'Artisans'},{ico:'💬',k:'messagerie',l:'Messages'}]},
   ],
 };
 const LABELS = {
