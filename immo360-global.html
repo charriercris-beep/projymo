@@ -4574,8 +4574,19 @@ function loginAs(profil){
       _sb.style.top = '0';
       _sb.style.zIndex = '1';
     }
-    // Forcer panel-dashboard visible
-    document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
+    // Déplacer TOUS les panels dans .content
+    const cnt=document.querySelector('.content');
+    if(cnt){
+      // Chercher tous les panels dans tout le document
+      document.querySelectorAll('.panel').forEach(p=>{
+        if(p.parentElement!==cnt){
+          cnt.appendChild(p);
+        }
+        p.style.display='none';
+        p.classList.remove('active');
+      });
+    }
+    // Afficher dashboard
     const pd=document.getElementById('panel-dashboard');
     if(pd){pd.style.display='block';pd.classList.add('active');}
     buildSmartDashboard();
