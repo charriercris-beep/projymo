@@ -453,963 +453,393 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <!-- ═══════════════════════════════════
      PAGE D'ACCUEIL — STYLE LEBONCOIN
 ═══════════════════════════════════ -->
-  <div id="landing-page" style="background:#F8F6F1;color:var(--dark);overflow-y:auto;flex:1;display:flex;flex-direction:column">
+  <div id="landing-page" style="background:#fff;color:var(--dark);overflow-y:auto;flex:1;display:flex;flex-direction:column">
 
-  <!-- ═══ HEADER STICKY ═══ -->
-  <div style="background:rgba(248,246,241,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--warm);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0">
-    <div onclick="window.scrollTo({top:0,behavior:'smooth'})" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);cursor:pointer">Immo<span style="color:var(--gold)">360</span><span style="font-size:10px;color:var(--mid);font-family:'DM Sans',sans-serif;font-weight:400;margin-left:6px">Nouvelle-Calédonie</span></div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <button onclick="showLoginModal('buy')" class="btn btn-outline btn-sm" style="font-size:12px">Se connecter</button>
-      <button onclick="showLoginModal('buy')" class="btn btn-gold btn-sm" style="font-size:12px">S'inscrire gratuitement</button>
-      <button id="hamburger-btn" onclick="toggleMenu('hamburger')" style="display:none;background:none;border:none;font-size:22px;cursor:pointer;padding:4px">☰</button>
+  <!-- ══ HEADER FIXE ══ -->
+  <div style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.06);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark)">Immo<span style="color:var(--gold)">360</span><span style="font-size:10px;font-family:'DM Sans',sans-serif;font-weight:400;color:var(--soft);margin-left:8px">Nouvelle-Calédonie</span></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onclick="voirAnnonesSansConnexion()" style="background:none;border:none;color:var(--mid);font-size:13px;cursor:pointer;padding:6px 14px;font-family:'DM Sans',sans-serif;transition:.15s" onmouseover="this.style.color='var(--dark)'" onmouseout="this.style.color='var(--mid)'">Explorer les biens</button>
+      <button onclick="showLoginModal('buy')" style="background:none;border:1px solid var(--warm);color:var(--dark);font-size:13px;cursor:pointer;padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;transition:.15s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">Se connecter</button>
+      <button onclick="showLoginModal('buy')" style="background:var(--dark);color:#fff;border:none;font-size:13px;cursor:pointer;padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;transition:.15s" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">S'inscrire gratuitement</button>
     </div>
   </div>
 
-  <!-- ═══ HERO — LA PROMESSE ═══ -->
-  <div style="background:var(--dark);padding:64px 24px 56px;text-align:center;position:relative;overflow:hidden;flex-shrink:0">
-    <!-- Texture subtile -->
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(184,146,42,0.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(42,122,75,0.06) 0%,transparent 50%);pointer-events:none"></div>
-    <div style="position:relative;max-width:780px;margin:0 auto">
-      <!-- Badge différenciateur -->
-      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(184,146,42,0.15);border:1px solid rgba(184,146,42,0.3);border-radius:20px;padding:5px 14px;margin-bottom:24px">
-        <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite"></div>
-        <span style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase">Première plateforme IA immobilière de NC</span>
+  <!-- ══════════════════════════════════
+       SECTION 1 — HERO 80% écran
+  ══════════════════════════════════ -->
+  <div style="min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;padding:60px 24px 40px;overflow:hidden">
+
+    <!-- FOND IMMERSIF NC -->
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0a1628 0%,#0f2240 30%,#0d3326 60%,#071520 100%)"></div>
+    <!-- Lagon -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:38%;background:linear-gradient(to top,rgba(14,118,168,0.22),transparent)"></div>
+    <!-- Végétation -->
+    <div style="position:absolute;top:0;right:0;width:55%;height:100%;background:radial-gradient(ellipse at 80% 35%,rgba(30,100,50,0.15),transparent 65%)"></div>
+    <!-- Lumière dorée -->
+    <div style="position:absolute;top:20%;left:10%;width:40%;height:60%;background:radial-gradient(ellipse,rgba(184,146,42,0.06),transparent 70%)"></div>
+    <!-- Overlay -->
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.05) 50%,rgba(0,0,0,0.45) 100%)"></div>
+
+    <!-- CONTENU CENTRÉ -->
+    <div style="position:relative;text-align:center;max-width:780px;width:100%">
+
+      <!-- BADGE -->
+      <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(184,146,42,0.18);border:1px solid rgba(184,146,42,0.4);border-radius:30px;padding:6px 18px;margin-bottom:32px">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(184,146,42,0.6)"></div>
+        <span style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase">Première plateforme IA immobilière NC</span>
       </div>
-      <!-- Titre principal -->
-      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(32px,5.5vw,58px);font-weight:700;color:#fff;line-height:1.1;margin-bottom:20px">
-        Achetez ou vendez<br><span style="color:var(--gold)">plus intelligemment</span>
+
+      <!-- TITRE H1 -->
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(34px,6vw,64px);font-weight:700;color:#fff;line-height:1.08;margin-bottom:22px;letter-spacing:-0.5px">
+        Achetez ou vendez votre bien<br><em style="color:var(--gold);font-style:normal">plus intelligemment</em>
       </h1>
-      <!-- Sous-titre -->
-      <p style="font-size:clamp(15px,2vw,19px);color:rgba(255,255,255,0.6);max-width:560px;margin:0 auto 40px;line-height:1.65">
-        L'IA analyse votre projet, recommande les meilleurs biens, optimise votre prix de vente et centralise toute la transaction — de l'intention à l'acte.
+
+      <!-- SOUS-TITRE -->
+      <p style="font-size:clamp(15px,2vw,20px);color:rgba(255,255,255,0.58);max-width:600px;margin:0 auto 44px;line-height:1.7;font-weight:300">
+        L'IA analyse votre projet, estime votre bien et vous accompagne jusqu'à la transaction.
       </p>
 
-      <!-- ── CHOIX PRINCIPAL ── -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:500px;margin:0 auto 28px">
-        <div onclick="loginAs('buy')" style="background:var(--gold);border-radius:14px;padding:22px 18px;cursor:pointer;text-align:left;transition:.2s;border:2px solid transparent" onmouseover="this.style.background='#c9a030'" onmouseout="this.style.background='var(--gold)'">
-          <div style="font-size:26px;margin-bottom:8px">🔍</div>
-          <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px">J'achète</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.5">Projet de vie → Matching IA → Transaction guidée</div>
-        </div>
-        <div onclick="loginAs('sell')" style="background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:22px 18px;cursor:pointer;text-align:left;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
-          <div style="font-size:26px;margin-bottom:8px">🏠</div>
-          <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px">Je vends</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.55);line-height:1.5">Estimation IA → Publication → Suivi complet</div>
-        </div>
-      </div>
-
-      <!-- Voir annonces sans connexion -->
-      <div style="margin-bottom:14px">
-        <button onclick="voirAnnonesSansConnexion()" style="background:none;border:1.5px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.8);padding:10px 28px;border-radius:20px;font-size:14px;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='rgba(255,255,255,0.5)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='rgba(255,255,255,0.8)'">
-          <span style="font-size:16px">🔍</span> Rechercher un bien sans s'inscrire
+      <!-- 2 CTAs PRINCIPAUX -->
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
+        <button onclick="loginAs('buy')" style="background:#22C55E;color:#fff;border:none;padding:17px 40px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(34,197,94,0.35);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='#16A34A';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#22C55E';this.style.transform=''">
+          <span style="font-size:20px">🔍</span> Je veux acheter
+        </button>
+        <button onclick="loginAs('sell')" style="background:var(--gold);color:#fff;border:none;padding:17px 40px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(184,146,42,0.35);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='#c9a030';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--gold)';this.style.transform=''">
+          <span style="font-size:20px">🏠</span> Je veux vendre
         </button>
       </div>
-      <!-- Accès pro discret -->
-      <div style="font-size:12px;color:rgba(255,255,255,0.3)">
-        Professionnel ?
-        <span onclick="showLoginModal('agt')" style="color:rgba(255,255,255,0.45);cursor:pointer;text-decoration:underline">Espace professionnel (Agent · Notaire · Artisan · Courtier)</span>
+
+      <!-- SOCIAL PROOF -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap">
+        <div style="font-size:14px;color:rgba(255,255,255,0.55)">
+          <span style="font-weight:700;color:#fff;font-size:16px">1 250+</span> biens disponibles
+        </div>
+        <div style="width:1px;height:18px;background:rgba(255,255,255,0.15)"></div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="color:#FBBF24;font-size:16px;letter-spacing:1px">★★★★★</span>
+          <span style="color:#fff;font-size:15px;font-weight:700">4.8</span>
+          <span style="color:rgba(255,255,255,0.4);font-size:13px">/5</span>
+        </div>
+        <div style="width:1px;height:18px;background:rgba(255,255,255,0.15)"></div>
+        <div onclick="showLoginModal('agt')" style="font-size:13px;color:rgba(255,255,255,0.45);cursor:pointer">
+          Professionnel ? <span style="color:rgba(255,255,255,0.7);text-decoration:underline">Espace pro →</span>
+        </div>
       </div>
+    </div>
+
+    <!-- SCROLL DOWN -->
+    <div onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})" style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;opacity:0.45;transition:.2s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.45'">
+      <span style="font-size:10px;color:#fff;letter-spacing:2px;text-transform:uppercase">Découvrir</span>
+      <div style="width:24px;height:24px;border:1.5px solid rgba(255,255,255,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px">↓</div>
     </div>
   </div>
 
-
-  <!-- ═══ ESTIMATION IA — PORTE D'ENTRÉE PRINCIPALE ═══ -->
-  <div style="background:var(--dark);padding:60px 24px;flex-shrink:0" id="section-estimation-ia">
-    <div style="max-width:860px;margin:0 auto">
+  <!-- ══════════════════════════════════
+       SECTION 2 — MOMENT WAOUH
+  ══════════════════════════════════ -->
+  <div id="s2" style="background:#F8F6F1;padding:90px 24px;flex-shrink:0">
+    <div style="max-width:1000px;margin:0 auto">
 
       <!-- TITRE -->
-      <div style="text-align:center;margin-bottom:40px">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(184,146,42,0.15);border:1px solid rgba(184,146,42,0.3);border-radius:20px;padding:5px 14px;margin-bottom:16px">
-          <span style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase">Nouveau · Score Immo360™</span>
-        </div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;line-height:1.1;margin-bottom:14px">
-          Combien vaut vraiment<br>votre bien ?
-        </h2>
-        <p style="font-size:15px;color:rgba(255,255,255,0.55);max-width:520px;margin:0 auto">
-          Uploadez vos photos. Notre IA analyse l'état, les finitions, le potentiel — et vous donne une estimation en moins de 60 secondes.
-        </p>
+      <div style="text-align:center;margin-bottom:56px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px">Score Immo360™</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,44px);font-weight:700;color:var(--dark);line-height:1.1;margin-bottom:16px">Découvrez le potentiel réel<br>de votre bien</h2>
+        <p style="font-size:16px;color:var(--mid);max-width:480px;margin:0 auto">Quelques photos. L'IA fait le reste.</p>
       </div>
 
-      <!-- MODULE PRINCIPAL -->
-      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden">
+      <!-- FLOW + EXEMPLE CÔTE À CÔTE -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch">
 
-        <!-- ÉTAPE 1 : UPLOAD -->
-        <div id="estim-step-upload" style="padding:32px">
-          <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px">Étape 1 — Vos photos</div>
+        <!-- COLONNE GAUCHE : FLOW -->
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="font-size:12px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px">Comment ça marche</div>
 
-          <!-- ZONES D'UPLOAD PAR CATÉGORIE -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px">
+          <!-- STEPS -->
+          <div style="position:relative">
+            <!-- LIGNE VERTICALE -->
+            <div style="position:absolute;left:19px;top:20px;bottom:20px;width:2px;background:linear-gradient(to bottom,var(--gold),var(--warm))"></div>
 
-            <!-- Extérieur -->
-            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-ext').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
-              <input type="file" id="upload-ext" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'ext')">
-              <div style="font-size:24px;margin-bottom:8px">🏠</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Extérieur</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Façade · Jardin · Terrasse · Vue</div>
-              <div id="count-ext" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:0;background:#fff;border-radius:14px 14px 0 0;padding:16px 18px;border:1px solid var(--warm);border-bottom:none;position:relative">
+              <div style="width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1">📸</div>
+              <div><div style="font-size:14px;font-weight:700;color:var(--dark)">Déposez vos photos</div><div style="font-size:12px;color:var(--mid);margin-top:2px">Extérieur · Intérieur · Technique</div></div>
             </div>
-
-            <!-- Séjour / Salon -->
-            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-salon').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
-              <input type="file" id="upload-salon" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'salon')">
-              <div style="font-size:24px;margin-bottom:8px">🛋️</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Séjour / Salon</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Salon · Séjour · Salle à manger</div>
-              <div id="count-salon" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            <div style="background:#fff;border-left:1px solid var(--warm);border-right:1px solid var(--warm);padding:10px 18px;display:flex;align-items:center;gap:14px">
+              <div style="width:40px;display:flex;justify-content:center;z-index:1">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--warm);border:2px solid var(--gold)"></div>
+              </div>
+              <div style="font-size:11px;color:var(--soft);font-style:italic">Analyse IA en cours...</div>
             </div>
-
-            <!-- Cuisine -->
-            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-cuisine').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
-              <input type="file" id="upload-cuisine" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'cuisine')">
-              <div style="font-size:24px;margin-bottom:8px">🍳</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Cuisine</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Cuisine · Équipements · Rangements</div>
-              <div id="count-cuisine" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            <div style="display:flex;align-items:center;gap:14px;background:#fff;padding:16px 18px;border:1px solid var(--warm);border-top:none;border-bottom:none;position:relative">
+              <div style="width:40px;height:40px;border-radius:50%;background:rgba(42,74,122,0.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1;border:2px solid rgba(42,74,122,0.15)">🤖</div>
+              <div><div style="font-size:14px;font-weight:700;color:var(--dark)">Analyse IA</div><div style="font-size:12px;color:var(--mid);margin-top:2px">État · Finitions · Matériaux · Points forts</div></div>
             </div>
-
-            <!-- Chambres / SDB -->
-            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-chambre').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
-              <input type="file" id="upload-chambre" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'chambre')">
-              <div style="font-size:24px;margin-bottom:8px">🛏️</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Chambres / SDB</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Chambres · Salle de bain · WC</div>
-              <div id="count-chambre" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
-            </div>
-
-            <!-- Technique -->
-            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-tech').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
-              <input type="file" id="upload-tech" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'tech')">
-              <div style="font-size:24px;margin-bottom:8px">⚡</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Technique</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Tableau élec · Toiture · Menuiseries</div>
-              <div id="count-tech" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
-            </div>
-
-            <!-- Autres -->
-            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-autres').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
-              <input type="file" id="upload-autres" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'autres')">
-              <div style="font-size:24px;margin-bottom:8px">📸</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Autres</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Piscine · Cave · Dépendances</div>
-              <div id="count-autres" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
-            </div>
-          </div>
-
-          <!-- INFOS COMPLÉMENTAIRES -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:24px">
-            <div>
-              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Type de bien</label>
-              <select id="estim-type-bien" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px">
-                <option value="appartement">Appartement</option>
-                <option value="maison">Maison</option>
-                <option value="villa">Villa</option>
-                <option value="studio">Studio</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Surface (m²)</label>
-              <input type="number" id="estim-surface" placeholder="85" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
-            </div>
-            <div>
-              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Quartier / Ville</label>
-              <select id="estim-quartier" onchange="updatePrixMarche()" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
-                <option value="">-- Choisir un quartier --</option>
-                <option value="Anse Vata" data-pm2="596000">Anse Vata</option>
-                <option value="Baie des Citrons" data-pm2="580000">Baie des Citrons</option>
-                <option value="Val Plaisance" data-pm2="570000">Val Plaisance</option>
-                <option value="Tina" data-pm2="540000">Tina</option>
-                <option value="Faubourg Blanchot" data-pm2="540000">Faubourg Blanchot</option>
-                <option value="Centre Ville Nouméa" data-pm2="480000">Centre Ville Nouméa</option>
-                <option value="Motor Pool" data-pm2="460000">Motor Pool</option>
-                <option value="Magenta" data-pm2="420000">Magenta</option>
-                <option value="Trianon" data-pm2="410000">Trianon</option>
-                <option value="Robinson" data-pm2="390000">Robinson</option>
-                <option value="Montravel" data-pm2="380000">Montravel</option>
-                <option value="Tuband" data-pm2="370000">Tuband</option>
-                <option value="Receiving" data-pm2="360000">Receiving</option>
-                <option value="Rivière Salée" data-pm2="340000">Rivière Salée</option>
-                <option value="Vallée du Tir" data-pm2="330000">Vallée du Tir</option>
-                <option value="Normandie" data-pm2="320000">Normandie</option>
-                <option value="7ème km" data-pm2="310000">7ème km</option>
-                <option value="Portes de Fer" data-pm2="300000">Portes de Fer</option>
-                <option value="Ducos" data-pm2="290000">Ducos</option>
-                <option value="Kaméré" data-pm2="270000">Kaméré</option>
-                <option value="Dumbéa sur Mer" data-pm2="320000">Dumbéa sur Mer</option>
-                <option value="Koutio" data-pm2="300000">Koutio</option>
-                <option value="Katiramona" data-pm2="285000">Katiramona</option>
-                <option value="Savannah" data-pm2="275000">Savannah</option>
-                <option value="Tonghoué" data-pm2="265000">Tonghoué</option>
-                <option value="Dumbéa Centre" data-pm2="260000">Dumbéa Centre</option>
-                <option value="Dumbéa Nord" data-pm2="250000">Dumbéa Nord</option>
-                <option value="Pahéa" data-pm2="240000">Pahéa</option>
-                <option value="Mont-Dore Centre" data-pm2="260000">Mont-Dore Centre</option>
-                <option value="Boulari" data-pm2="240000">Boulari</option>
-                <option value="Plum" data-pm2="220000">Plum</option>
-                <option value="Yaté" data-pm2="180000">Yaté</option>
-                <option value="Thio" data-pm2="130000">Thio</option>
-                <option value="Païta Centre" data-pm2="230000">Païta Centre</option>
-                <option value="Boulouparis" data-pm2="190000">Boulouparis</option>
-                <option value="La Foa" data-pm2="160000">La Foa</option>
-                <option value="Bourail" data-pm2="155000">Bourail</option>
-                <option value="Sarraméa" data-pm2="120000">Sarraméa</option>
-                <option value="Farino" data-pm2="120000">Farino</option>
-                <option value="Moindou" data-pm2="115000">Moindou</option>
-                <option value="Canala" data-pm2="110000">Canala</option>
-                <option value="Kouaoua" data-pm2="105000">Kouaoua</option>
-                <option value="Koné" data-pm2="150000">Koné</option>
-                <option value="Voh" data-pm2="130000">Voh</option>
-                <option value="Koumac" data-pm2="120000">Koumac</option>
-                <option value="Poum" data-pm2="100000">Poum</option>
-                <option value="Kaala-Gomen" data-pm2="100000">Kaala-Gomen</option>
-                <option value="Poindimié" data-pm2="140000">Poindimié</option>
-                <option value="Touho" data-pm2="120000">Touho</option>
-                <option value="Ponérihouen" data-pm2="110000">Ponérihouen</option>
-                <option value="Houaïlou" data-pm2="100000">Houaïlou</option>
-                <option value="Poya" data-pm2="110000">Poya</option>
-                <option value="Pambrun" data-pm2="105000">Pambrun</option>
-                <option value="Ouégoa" data-pm2="95000">Ouégoa</option>
-                <option value="Lifou" data-pm2="90000">Lifou</option>
-                <option value="Maré" data-pm2="85000">Maré</option>
-                <option value="Ouvéa" data-pm2="80000">Ouvéa</option>
-              </select>
-              <!-- PRIX MARCHÉ EN TEMPS RÉEL -->
-              <div id="estim-pm2-display" style="margin-top:6px;font-size:11px;color:rgba(255,255,255,0.4);display:flex;align-items:center;gap:6px">
-                <span>Prix marché :</span>
-                <span id="estim-pm2-val" style="color:var(--gold);font-weight:600">596 000 F/m²</span>
-                <span id="estim-pm2-valeur" style="color:rgba(255,255,255,0.3)"></span>
+            <div style="background:#fff;border-left:1px solid var(--warm);border-right:1px solid var(--warm);padding:10px 18px;display:flex;align-items:center;gap:14px">
+              <div style="width:40px;display:flex;justify-content:center;z-index:1">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--warm);border:2px solid var(--gold)"></div>
               </div>
             </div>
-            <div>
-              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Année de construction</label>
-              <input type="number" id="estim-annee" placeholder="1990" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
+            <div style="display:flex;align-items:center;gap:14px;background:#fff;padding:16px 18px;border:1px solid var(--warm);border-top:none;border-bottom:none;position:relative">
+              <div style="width:40px;height:40px;border-radius:50%;background:rgba(184,146,42,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1;border:2px solid rgba(184,146,42,0.2)">📊</div>
+              <div><div style="font-size:14px;font-weight:700;color:var(--dark)">Score Immo360™</div><div style="font-size:12px;color:var(--mid);margin-top:2px">Note sur 100 · Comparaison marché NC</div></div>
             </div>
-          </div>
-
-          <!-- ÉQUIPEMENTS DÉTAILLÉS -->
-          <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
-            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Équipements & caractéristiques</div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" id="equip-grid">
-
-              <!-- JARDIN -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
-                  <input type="checkbox" id="eq-jardin" onchange="toggleEquip('jardin')" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🌳 Jardin</span>
-                </label>
-                <div id="detail-jardin" style="display:none;margin-top:8px">
-                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin-bottom:3px">Surface jardin (m²)</label>
-                  <input type="number" id="eq-jardin-surface" placeholder="200" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
-                  <select id="eq-jardin-type" style="width:100%;margin-top:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
-                    <option value="entretenu">Jardin entretenu</option>
-                    <option value="tropical">Jardin tropical</option>
-                    <option value="brut">Terrain brut</option>
-                    <option value="potager">Potager / verger</option>
-                  </select>
-                </div>
+            <div style="background:#fff;border-left:1px solid var(--warm);border-right:1px solid var(--warm);padding:10px 18px;display:flex;align-items:center;gap:14px">
+              <div style="width:40px;display:flex;justify-content:center;z-index:1">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--warm);border:2px solid var(--gold)"></div>
               </div>
-
-              <!-- PISCINE -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
-                  <input type="checkbox" id="eq-piscine" onchange="toggleEquip('piscine')" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🏊 Piscine</span>
-                </label>
-                <div id="detail-piscine" style="display:none;margin-top:8px">
-                  <select id="eq-piscine-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
-                    <option value="enterree">Enterrée</option>
-                    <option value="semi">Semi-enterrée</option>
-                    <option value="hors-sol">Hors-sol</option>
-                  </select>
-                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin:4px 0 3px">Surface piscine (m²)</label>
-                  <input type="number" id="eq-piscine-surface" placeholder="30" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
-                </div>
-              </div>
-
-              <!-- GARAGE -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
-                  <input type="checkbox" id="eq-garage" onchange="toggleEquip('garage')" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🚗 Garage</span>
-                </label>
-                <div id="detail-garage" style="display:none;margin-top:8px">
-                  <select id="eq-garage-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
-                    <option value="ferme">Garage fermé</option>
-                    <option value="ouvert">Carport / Ouvert</option>
-                    <option value="double">Double garage</option>
-                    <option value="sous-sol">Sous-sol</option>
-                  </select>
-                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin:4px 0 3px">Nb de places</label>
-                  <input type="number" id="eq-garage-places" placeholder="1" min="1" max="5" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
-                </div>
-              </div>
-
-              <!-- TERRASSE -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
-                  <input type="checkbox" id="eq-terrasse" onchange="toggleEquip('terrasse')" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🌿 Terrasse</span>
-                </label>
-                <div id="detail-terrasse" style="display:none;margin-top:8px">
-                  <label style="font-size:10px;color:rgba(255,255,255,0.4);display:block;margin-bottom:3px">Surface terrasse (m²)</label>
-                  <input type="number" id="eq-terrasse-surface" placeholder="20" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px;box-sizing:border-box">
-                  <select id="eq-terrasse-type" style="width:100%;margin-top:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
-                    <option value="couverte">Couverte</option>
-                    <option value="ouverte">Ouverte</option>
-                    <option value="rooftop">Rooftop</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- CLIMATISATION -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
-                  <input type="checkbox" id="eq-clim" onchange="toggleEquip('clim')" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">❄️ Climatisation</span>
-                </label>
-                <div id="detail-clim" style="display:none;margin-top:8px">
-                  <select id="eq-clim-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
-                    <option value="centrale">Centrale (toutes pièces)</option>
-                    <option value="partielle">Partielle (chambres)</option>
-                    <option value="salon">Salon uniquement</option>
-                    <option value="reversible">Réversible (chauffage)</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- VIDÉOSURVEILLANCE -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
-                  <input type="checkbox" id="eq-video" onchange="toggleEquip('video')" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">📹 Vidéosurveillance</span>
-                </label>
-                <div id="detail-video" style="display:none;margin-top:8px">
-                  <select id="eq-video-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
-                    <option value="cameras">Caméras extérieures</option>
-                    <option value="complet">Système complet int+ext</option>
-                    <option value="alarme">Alarme + détecteurs</option>
-                    <option value="gardien">Gardien / Interphone</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- VUE -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
-                  <input type="checkbox" id="eq-vue" onchange="toggleEquip('vue')" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🌊 Vue exceptionnelle</span>
-                </label>
-                <div id="detail-vue" style="display:none;margin-top:8px">
-                  <select id="eq-vue-type" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:5px 8px;border-radius:6px;font-size:12px">
-                    <option value="mer">Vue mer</option>
-                    <option value="lagon">Vue lagon</option>
-                    <option value="montagne">Vue montagne</option>
-                    <option value="panoramique">Vue panoramique 180°</option>
-                    <option value="ville">Vue ville</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- CASES SIMPLES -->
-              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                  <input type="checkbox" id="eq-ascenseur" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🛗 Ascenseur</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                  <input type="checkbox" id="eq-parking" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🅿️ Parking extérieur</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                  <input type="checkbox" id="eq-dressing" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🚪 Dressing</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                  <input type="checkbox" id="eq-cuisine-eq" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🍳 Cuisine équipée</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                  <input type="checkbox" id="eq-cave" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">🗄️ Cave / Cellier</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                  <input type="checkbox" id="eq-solaire" style="accent-color:var(--gold);width:15px;height:15px">
-                  <span style="font-size:13px;color:#fff">☀️ Panneaux solaires</span>
-                </label>
-              </div>
-
             </div>
-          </div>
-
-          <!-- COMPTEUR PHOTOS + CTA -->
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-            <div style="font-size:13px;color:rgba(255,255,255,0.5)" id="estim-photo-count">0 photo uploadée · Minimum 3 recommandées</div>
-            <button onclick="lancerAnalyseIA()" id="btn-analyser" style="background:var(--gold);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif" onmouseover="this.style.background='#c9a030'" onmouseout="this.style.background='var(--gold)'">
-              ✨ Analyser mes photos
-            </button>
+            <div style="display:flex;align-items:center;gap:14px;background:#fff;padding:16px 18px;border:1px solid var(--warm);border-top:none;border-bottom:none;position:relative">
+              <div style="width:40px;height:40px;border-radius:50%;background:rgba(42,122,75,0.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1;border:2px solid rgba(42,122,75,0.15)">💰</div>
+              <div><div style="font-size:14px;font-weight:700;color:var(--dark)">Estimation de valeur</div><div style="font-size:12px;color:var(--mid);margin-top:2px">Fourchette basse · centrale · haute</div></div>
+            </div>
+            <div style="background:#fff;border-left:1px solid var(--warm);border-right:1px solid var(--warm);padding:10px 18px;display:flex;align-items:center;gap:14px">
+              <div style="width:40px;display:flex;justify-content:center;z-index:1">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--warm);border:2px solid var(--gold)"></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;background:var(--dark);padding:16px 18px;border-radius:0 0 14px 14px;position:relative">
+              <div style="width:40px;height:40px;border-radius:50%;background:rgba(184,146,42,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1">📈</div>
+              <div><div style="font-size:14px;font-weight:700;color:#fff">Potentiel d'amélioration</div><div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px">Plan travaux · ROI calculé · Gains estimés</div></div>
+            </div>
           </div>
         </div>
 
-        <!-- ÉTAPE 2 : ANALYSE EN COURS -->
-        <div id="estim-step-loading" style="display:none;padding:60px 32px;text-align:center">
-          <div style="font-size:48px;margin-bottom:20px;animation:spin 2s linear infinite;display:inline-block">🔍</div>
-          <div style="font-size:18px;font-weight:600;color:#fff;margin-bottom:8px" id="loading-msg">Analyse des photos en cours...</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.4)" id="loading-sub">L'IA examine chaque pièce, les finitions et l'état général</div>
-          <div style="margin-top:24px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;max-width:300px;margin-left:auto;margin-right:auto">
-            <div id="loading-bar" style="height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .5s"></div>
-          </div>
-        </div>
+        <!-- COLONNE DROITE : EXEMPLE DE RÉSULTAT -->
+        <div style="background:var(--dark);border-radius:20px;padding:30px;color:#fff;display:flex;flex-direction:column;gap:20px">
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1.5px">Exemple de résultat</div>
 
-        <!-- ÉTAPE 3 : RÉSULTATS -->
-        <div id="estim-step-results" style="display:none;padding:32px">
-          <!-- SCORE GLOBAL -->
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,0.08)">
-            <div style="text-align:center">
-              <div style="width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--gold) 0deg,var(--gold) calc(var(--score,84)*3.6deg),rgba(255,255,255,0.08) calc(var(--score,84)*3.6deg));display:flex;align-items:center;justify-content:center;position:relative" id="score-circle">
-                <div style="width:86px;height:86px;border-radius:50%;background:#1c1a16;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                  <div style="font-size:28px;font-weight:800;color:var(--gold)" id="score-val">84</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.4)">/100</div>
-                </div>
+          <!-- SCORE -->
+          <div style="display:flex;align-items:center;gap:20px">
+            <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(var(--gold) 0deg 302deg,rgba(255,255,255,0.07) 302deg);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <div style="width:70px;height:70px;border-radius:50%;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <div style="font-size:24px;font-weight:800;color:var(--gold);line-height:1">84</div>
+                <div style="font-size:9px;color:rgba(255,255,255,0.35)">/100</div>
               </div>
-              <div style="font-size:11px;font-weight:700;color:var(--gold);margin-top:8px;text-transform:uppercase;letter-spacing:1px">Score Immo360™</div>
             </div>
             <div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Estimation de valeur</div>
-              <div style="font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,36px);font-weight:700;color:#fff;margin-bottom:6px" id="estim-val-centrale">44,5 M F</div>
-              <div style="font-size:13px;color:rgba(255,255,255,0.5)" id="estim-fourchette">Fourchette : 42 M — 47 M F</div>
-              <div style="margin-top:10px;display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600" id="estim-position-badge">⚡ Légèrement sous le marché local</div>
+              <div style="font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">Score Immo360™</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.4)">Très bon état · Bien entretenu</div>
             </div>
           </div>
 
-          <!-- SCORES PAR CATÉGORIE (visibles) -->
-          <div style="margin-bottom:24px">
-            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:14px">Analyse par critère</div>
-            <div id="scores-categories" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px"></div>
+          <!-- VALEUR -->
+          <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:18px">
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px">Valeur estimée</div>
+            <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:4px">44,5 M XPF</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.3)">Fourchette : 42M — 47M XPF</div>
           </div>
 
-          <!-- POSITIONNEMENT MARCHÉ (visible) -->
-          <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:16px;margin-bottom:24px" id="estim-marche-bloc">
-            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:10px">📊 Positionnement marché</div>
-            <div style="font-size:14px;color:#fff" id="estim-marche-txt"></div>
+          <!-- POTENTIEL -->
+          <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:12px;padding:16px">
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px">Potentiel après améliorations</div>
+            <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#4ade80;margin-bottom:4px">48,2 M XPF</div>
+            <div style="display:inline-block;background:rgba(34,197,94,0.15);border-radius:20px;padding:4px 12px;font-size:13px;font-weight:700;color:#4ade80">+ 3,7 M XPF</div>
           </div>
 
-          <!-- RECOMMANDATIONS — FLOUTÉES -->
-          <div style="position:relative;margin-bottom:24px">
-            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:14px">💡 Plan d'amélioration & potentiel</div>
-
-            <!-- Contenu flouté -->
-            <div style="filter:blur(5px);pointer-events:none;user-select:none" id="estim-reco-blurred">
-              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
-                <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:14px">
-                  <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px">🍳 Cuisine</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:8px">Score actuel : 58/100</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6">· Remplacer les poignées<br>· Repeindre les façades<br>· Changer la crédence</div>
-                  <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
-                    <div style="background:rgba(220,38,38,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Coût</div><div style="font-size:12px;font-weight:700;color:#ef4444">150k F</div></div>
-                    <div style="background:rgba(42,122,75,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Gain</div><div style="font-size:12px;font-weight:700;color:#4ade80">+800k F</div></div>
-                  </div>
-                  <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--gold);font-weight:700">ROI × 5,3</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:14px">
-                  <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px">🎨 Peinture & finitions</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:8px">Score actuel : 71/100</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6">· Rafraîchir les murs<br>· Poncer le parquet<br>· Joints salle de bain</div>
-                  <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
-                    <div style="background:rgba(220,38,38,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Coût</div><div style="font-size:12px;font-weight:700;color:#ef4444">80k F</div></div>
-                    <div style="background:rgba(42,122,75,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Gain</div><div style="font-size:12px;font-weight:700;color:#4ade80">+500k F</div></div>
-                  </div>
-                  <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--gold);font-weight:700">ROI × 6,2</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:14px">
-                  <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px">🌿 Extérieur</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:8px">Score actuel : 79/100</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6">· Taille haies et jardinage<br>· Nettoyage façade<br>· Éclairage entrée</div>
-                  <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
-                    <div style="background:rgba(220,38,38,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Coût</div><div style="font-size:12px;font-weight:700;color:#ef4444">45k F</div></div>
-                    <div style="background:rgba(42,122,75,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Gain</div><div style="font-size:12px;font-weight:700;color:#4ade80">+300k F</div></div>
-                  </div>
-                  <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--gold);font-weight:700">ROI × 6,7</div>
-                </div>
-              </div>
-              <div style="margin-top:14px;background:rgba(42,122,75,0.08);border:1px solid rgba(42,122,75,0.2);border-radius:10px;padding:14px;text-align:center">
-                <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:4px">Potentiel de valorisation total estimé</div>
-                <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#4ade80">+ 3,2 M F</div>
-              </div>
-            </div>
-
-            <!-- OVERLAY INSCRIPTION -->
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(to bottom,transparent 0%,rgba(28,26,22,0.95) 30%);border-radius:12px;padding:20px;text-align:center">
-              <div style="font-size:28px;margin-bottom:12px">🔒</div>
-              <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:6px">Plan d'amélioration complet</div>
-              <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:20px;max-width:360px">
-                Débloquez le détail des travaux recommandés, les coûts estimés, les gains potentiels et le ROI par pièce.
-              </div>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-                <button onclick="showLoginModal('sell')" style="background:var(--gold);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
-                  Créer mon compte gratuit →
-                </button>
-                <button onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 20px;border-radius:10px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif">
-                  Se connecter
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ACTIONS APRÈS RÉSULTAT -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
-            <div onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
-              <div style="font-size:24px;margin-bottom:8px">🏗️</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Devis artisans</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Peintres · Cuisinistes · Paysagistes</div>
-            </div>
-            <div onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
-              <div style="font-size:24px;margin-bottom:8px">📣</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Publier mon annonce</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Multi-portails NC en 5 minutes</div>
-            </div>
-            <div onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
-              <div style="font-size:24px;margin-bottom:8px">🤝</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Agent partenaire</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Confier la vente à un pro NC</div>
-            </div>
-            <div onclick="lancerNouvelleAnalyse()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
-              <div style="font-size:24px;margin-bottom:8px">🔄</div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Nouvelle analyse</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Analyser un autre bien</div>
-            </div>
-          </div>
+          <!-- CTA -->
+          <button onclick="loginAs('sell')" style="background:var(--gold);color:#fff;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px" onmouseover="this.style.background='#c9a030'" onmouseout="this.style.background='var(--gold)'">
+            ✨ Estimer mon bien gratuitement
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-
-  <!-- ═══ MOMENT WAOUH — IA CONVERSATIONNELLE ═══ -->
-  <div style="background:#fff;padding:60px 24px;flex-shrink:0">
-    <div style="max-width:780px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:36px">
-        <div style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Intelligence artificielle</div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,36px);font-weight:700;color:var(--dark);margin-bottom:12px">Décrivez votre projet.<br>L'IA fait le reste.</h2>
-        <p style="font-size:14px;color:var(--mid);max-width:480px;margin:0 auto">Pas de filtres. Pas de scroll infini. Dites simplement ce que vous cherchez ou ce que vous voulez vendre.</p>
-      </div>
-
-      <!-- INTERFACE IA CONVERSATIONNELLE -->
-      <div style="background:var(--cream);border:1.5px solid var(--warm);border-radius:20px;padding:28px;max-width:640px;margin:0 auto;box-shadow:0 4px 32px rgba(0,0,0,0.06)">
-        <!-- Exemples de projets -->
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-          <span onclick="setAIPrompt(this.textContent)" style="background:#fff;border:1px solid var(--warm);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--mid);cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)';this.style.color='var(--mid)'">🔍 F3 à Anse Vata, vue mer, 50M F</span>
-          <span onclick="setAIPrompt(this.textContent)" style="background:#fff;border:1px solid var(--warm);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--mid);cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)';this.style.color='var(--mid)'">🏠 Vendre maison Dumbéa 4 pièces</span>
-          <span onclick="setAIPrompt(this.textContent)" style="background:#fff;border:1px solid var(--warm);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--mid);cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)';this.style.color='var(--mid)'">📈 Studio investissement rendement 8%</span>
-          <span onclick="setAIPrompt(this.textContent)" style="background:#fff;border:1px solid var(--warm);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--mid);cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)';this.style.color='var(--mid)'">🌿 Villa avec jardin, école proche</span>
-        </div>
-        <!-- Champ de saisie -->
-        <div style="display:flex;gap:10px;align-items:flex-end">
-          <div style="flex:1">
-            <textarea id="ai-project-input" rows="2" placeholder="Décrivez votre projet immobilier en quelques mots..." style="width:100%;border:1px solid var(--warm);border-radius:10px;padding:12px 14px;font-size:14px;font-family:'DM Sans',sans-serif;resize:none;background:#fff;color:var(--dark);outline:none;transition:.2s;box-sizing:border-box" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--warm)'"></textarea>
-          </div>
-          <button onclick="launchAIProject()" style="background:var(--dark);color:#fff;border:none;border-radius:10px;padding:14px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap;font-family:'DM Sans',sans-serif" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">Analyser →</button>
-        </div>
-        <!-- Résultat IA -->
-        <div id="ai-project-result" style="display:none;margin-top:16px;border-top:1px solid var(--warm);padding-top:16px"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ 4 BLOCS IA — VALEUR DIFFÉRENCIANTE ═══ -->
-  <div style="background:var(--cream);padding:60px 24px;flex-shrink:0">
+  <!-- ══════════════════════════════════
+       SECTION 3 — RECHERCHE SIMPLIFIÉE
+  ══════════════════════════════════ -->
+  <div style="background:#fff;padding:90px 24px;flex-shrink:0" id="section-annonces">
     <div style="max-width:1000px;margin:0 auto">
       <div style="text-align:center;margin-bottom:40px">
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,32px);font-weight:700;color:var(--dark);margin-bottom:10px">Ce qu'Immo360 fait<br>qu'aucun portail ne fait</h2>
-        <p style="font-size:14px;color:var(--mid)">Chaque fonctionnalité est conçue pour accélérer votre décision et sécuriser votre transaction.</p>
+        <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px">Marketplace</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,40px);font-weight:700;color:var(--dark);margin-bottom:12px">Trouvez le bien qui correspond<br>réellement à votre projet</h2>
+        <p style="font-size:14px;color:var(--mid)">Simple. Pas 25 filtres. Juste l'essentiel.</p>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
 
-        <!-- Bloc 1 : Estimation IA -->
-        <div onclick="loginAs('sell')" style="background:#fff;border-radius:16px;padding:24px;cursor:pointer;border:1px solid var(--warm);transition:.2s;overflow:hidden;position:relative" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(184,146,42,0.12)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
-          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(184,146,42,0.12),rgba(184,146,42,0.06));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px">💎</div>
-          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px">Estimation IA</div>
-          <div style="font-size:12px;color:var(--mid);line-height:1.6">Prix au m² basé sur le marché NC réel. Plan de travaux avec ROI. Valorisation projetée.</div>
-          <div style="margin-top:14px;font-size:11px;font-weight:600;color:var(--gold)">Estimer mon bien →</div>
+      <!-- BARRE RECHERCHE ÉPURÉE -->
+      <div style="background:#F8F6F1;border-radius:18px;padding:20px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 2px 24px rgba(0,0,0,0.07);margin-bottom:40px;border:1px solid var(--warm)">
+        <select id="ld-zone-simple" onchange="buildLandingBiensSimple()" style="flex:1.2;min-width:160px;border:none;padding:12px 14px;font-size:14px;border-radius:10px;background:#fff;color:var(--dark);font-family:'DM Sans',sans-serif;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <option value="">📍 Ville / Quartier</option>
+          <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option>
+          <option>Faubourg Blanchot</option><option>Magenta</option><option>Motor Pool</option>
+          <option>Rivière Salée</option><option>Normandie</option><option>Ducos</option>
+          <option>Dumbéa sur Mer</option><option>Koutio</option><option>Savannah</option>
+          <option>Mont-Dore Centre</option><option>Plum</option><option>Boulari</option>
+          <option>Païta Centre</option><option>La Foa</option><option>Bourail</option>
+          <option>Koné</option><option>Koumac</option><option>Lifou</option><option>Maré</option><option>Ouvéa</option>
+        </select>
+        <div style="flex:1.5;min-width:200px;background:#fff;border-radius:10px;padding:10px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <span style="font-size:12px;color:var(--mid)">💰 Budget max</span>
+            <span id="ld-budget-simple-label" style="font-size:13px;font-weight:700;color:var(--gold)">Tous budgets</span>
+          </div>
+          <input type="range" id="ld-budget-simple" min="0" max="200000000" step="5000000" value="0"
+            oninput="updateSimpleBudget(this.value);buildLandingBiensSimple()"
+            style="width:100%;height:5px;accent-color:var(--gold);cursor:pointer;display:block">
         </div>
+        <select id="ld-type-simple" onchange="buildLandingBiensSimple()" style="flex:1;min-width:140px;border:none;padding:12px 14px;font-size:14px;border-radius:10px;background:#fff;color:var(--dark);font-family:'DM Sans',sans-serif;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <option value="">🏠 Type de bien</option>
+          <option>Appartement</option><option>Maison</option><option>Villa</option>
+          <option>Studio</option><option>Terrain</option>
+        </select>
+        <button onclick="buildLandingBiensSimple()" style="background:var(--dark);color:#fff;border:none;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:.2s;box-shadow:0 2px 12px rgba(0,0,0,0.15)" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">
+          🔍 Rechercher
+        </button>
+      </div>
 
-        <!-- Bloc 2 : Matching IA -->
-        <div onclick="loginAs('buy')" style="background:#fff;border-radius:16px;padding:24px;cursor:pointer;border:1px solid var(--warm);transition:.2s;overflow:hidden;position:relative" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(184,146,42,0.12)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
-          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(42,74,122,0.1),rgba(42,74,122,0.05));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px">🤖</div>
-          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px">Matching IA</div>
-          <div style="font-size:12px;color:var(--mid);line-height:1.6">Score de compatibilité bien ↔ acheteur sur 7 critères. Alertes ciblées. Fini le scroll infini.</div>
-          <div style="margin-top:14px;font-size:11px;font-weight:600;color:var(--gold)">Créer mon projet →</div>
+      <!-- SECTION 4 — ANNONCES -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div style="font-size:14px;color:var(--mid)" id="ld-simple-count">Chargement des biens...</div>
+        <button onclick="loginAs('buy')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Voir tous les biens + filtres avancés →</button>
+      </div>
+      <div id="landing-biens-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:36px"></div>
+      <div style="text-align:center">
+        <button onclick="loginAs('buy')" style="background:var(--dark);color:#fff;border:none;padding:15px 40px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--dark)'">
+          Voir tous les biens disponibles →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       SECTION 5 — POURQUOI IMMO360 (3 cartes)
+  ══════════════════════════════════ -->
+  <div style="background:#F8F6F1;padding:90px 24px;flex-shrink:0">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px">La différence</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,40px);font-weight:700;color:var(--dark);margin-bottom:48px">Pourquoi Immo360 ?</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+        <div style="background:#fff;border-radius:18px;padding:36px 24px;border:1px solid var(--warm);transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(184,146,42,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:44px;margin-bottom:18px">🤖</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:10px">IA Immobilière</div>
+          <div style="font-size:14px;color:var(--mid);line-height:1.7">Estimation et recommandations intelligentes basées sur les données réelles du marché NC.</div>
         </div>
-
-        <!-- Bloc 3 : Financement réel -->
-        <div onclick="loginAs('buy')" style="background:#fff;border-radius:16px;padding:24px;cursor:pointer;border:1px solid var(--warm);transition:.2s;overflow:hidden;position:relative" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(184,146,42,0.12)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
-          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(42,122,75,0.1),rgba(42,122,75,0.05));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px">💰</div>
-          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px">Coût réel total</div>
-          <div style="font-size:12px;color:var(--mid);line-height:1.6">Prix + notaire + travaux + assurance + mensualité. Pré-approbation bancaire intégrée.</div>
-          <div style="margin-top:14px;font-size:11px;font-weight:600;color:var(--gold)">Simuler →</div>
+        <div style="background:#fff;border-radius:18px;padding:36px 24px;border:1px solid var(--warm);transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(184,146,42,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:44px;margin-bottom:18px">🏠</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:10px">Achat simplifié</div>
+          <div style="font-size:14px;color:var(--mid);line-height:1.7">Du projet jusqu'à la signature, guidé étape par étape sans se perdre dans la complexité.</div>
         </div>
-
-        <!-- Bloc 4 : Suivi transaction -->
-        <div onclick="loginAs('buy')" style="background:#fff;border-radius:16px;padding:24px;cursor:pointer;border:1px solid var(--warm);transition:.2s;overflow:hidden;position:relative" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(184,146,42,0.12)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
-          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(147,51,234,0.1),rgba(147,51,234,0.05));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px">📍</div>
-          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px">Transaction centralisée</div>
-          <div style="font-size:12px;color:var(--mid);line-height:1.6">Offre → Compromis → Notaire → Acte. Tout le monde voit le même statut en temps réel.</div>
-          <div style="margin-top:14px;font-size:11px;font-weight:600;color:var(--gold)">Voir le suivi →</div>
+        <div style="background:#fff;border-radius:18px;padding:36px 24px;border:1px solid var(--warm);transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(184,146,42,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:44px;margin-bottom:18px">📈</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:10px">Vente optimisée</div>
+          <div style="font-size:14px;color:var(--mid);line-height:1.7">Maximisez la valeur de votre bien grâce au plan d'amélioration IA avant la mise en vente.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ CHIFFRES MARCHÉ NC ═══ -->
-  <div style="background:var(--dark);padding:48px 24px;flex-shrink:0">
-    <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:24px;text-align:center">
-      <div><div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--gold)">340 054</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">F/m² médian NC</div></div>
-      <div><div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--gold)">311</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">biens en ligne</div></div>
-      <div><div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--gold)">7</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">sources de données NC</div></div>
-      <div><div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--gold)">100%</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">gratuit pour les particuliers</div></div>
-    </div>
-  </div>
-
-  <!-- ═══ ACTEURS — HIÉRARCHIE SIMPLE ═══ -->
-  <div style="background:#fff;padding:60px 24px;flex-shrink:0">
-    <div style="max-width:900px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:40px">
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,32px);font-weight:700;color:var(--dark);margin-bottom:10px">Une plateforme.<br>Tous les acteurs de votre projet.</h2>
-        <p style="font-size:14px;color:var(--mid)">Le particulier est au centre. Les professionnels s'activent quand vous en avez besoin.</p>
-      </div>
-
-      <!-- Particuliers au centre -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-        <div onclick="loginAs('buy')" style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:16px;padding:28px;cursor:pointer;border:2px solid var(--gold)">
-          <div style="font-size:32px;margin-bottom:12px">🔍</div>
-          <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:6px">Acheteur</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:14px">Projet de vie · Matching IA · Visite guidée · Financement réel · Suivi dossier</div>
-          <div style="background:var(--gold);color:#fff;display:inline-block;padding:7px 18px;border-radius:20px;font-size:12px;font-weight:600">Créer mon projet →</div>
+  <!-- ══════════════════════════════════
+       SECTION 6 — COMMENT ÇA MARCHE
+  ══════════════════════════════════ -->
+  <div style="background:#fff;padding:90px 24px;flex-shrink:0">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px">Simple comme Uber</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,40px);font-weight:700;color:var(--dark);margin-bottom:56px">Comment ça fonctionne</h2>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative">
+        <div style="position:absolute;top:27px;left:calc(12.5%);right:calc(12.5%);height:2px;background:linear-gradient(to right,var(--gold),rgba(184,146,42,0.2),rgba(184,146,42,0.2),var(--gold));z-index:0"></div>
+        <div style="position:relative;z-index:1">
+          <div style="width:54px;height:54px;border-radius:50%;background:var(--gold);color:#fff;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 4px 18px rgba(184,146,42,0.4)">1</div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:7px">Décrivez votre projet</div>
+          <div style="font-size:13px;color:var(--mid);line-height:1.6">Achat ou vente, budget, quartier souhaité</div>
         </div>
-        <div onclick="loginAs('sell')" style="background:#fff;border:1.5px solid var(--warm);border-radius:16px;padding:28px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:32px;margin-bottom:12px">🏠</div>
-          <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:6px">Vendeur</div>
-          <div style="font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:14px">Estimation IA · Dossier bien · Publication · Visites · Suivi de vente</div>
-          <div style="background:var(--warm);color:var(--dark);display:inline-block;padding:7px 18px;border-radius:20px;font-size:12px;font-weight:600">Estimer mon bien →</div>
+        <div style="position:relative;z-index:1">
+          <div style="width:54px;height:54px;border-radius:50%;background:var(--dark);color:#fff;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 18px">2</div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:7px">L'IA analyse</div>
+          <div style="font-size:13px;color:var(--mid);line-height:1.6">Votre situation et le marché NC en temps réel</div>
         </div>
-      </div>
-
-      <!-- Professionnels en satellite -->
-      <div style="background:var(--cream);border-radius:14px;padding:20px 24px;border:1px solid var(--warm)">
-        <div style="font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">Professionnels — s'activent selon votre avancement</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
-          <div onclick="loginAs('agt')" style="background:#fff;border-radius:10px;padding:14px;cursor:pointer;border:1px solid var(--warm);transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-            <div style="font-size:20px;margin-bottom:6px">🤝</div>
-            <div style="font-size:13px;font-weight:600;color:var(--dark)">Agent immobilier</div>
-            <div style="font-size:11px;color:var(--mid);margin-top:2px">Mandats · CRM · Matching</div>
-          </div>
-          <div onclick="loginAs('agt')" style="background:#fff;border-radius:10px;padding:14px;cursor:pointer;border:1px solid var(--warm);transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-            <div style="font-size:20px;margin-bottom:6px">⚖️</div>
-            <div style="font-size:13px;font-weight:600;color:var(--dark)">Notaire</div>
-            <div style="font-size:11px;color:var(--mid);margin-top:2px">Dossier · Timeline · Signatures</div>
-          </div>
-          <div onclick="go('artisans')" style="background:#fff;border-radius:10px;padding:14px;cursor:pointer;border:1px solid var(--warm);transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-            <div style="font-size:20px;margin-bottom:6px">🏗️</div>
-            <div style="font-size:13px;font-weight:600;color:var(--dark)">Artisans</div>
-            <div style="font-size:11px;color:var(--mid);margin-top:2px">Devis · Travaux · Valorisation</div>
-          </div>
-          <div onclick="loginAs('buy')" style="background:#fff;border-radius:10px;padding:14px;cursor:pointer;border:1px solid var(--warm);transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-            <div style="font-size:20px;margin-bottom:6px">🏦</div>
-            <div style="font-size:13px;font-weight:600;color:var(--dark)">Banque / Courtier</div>
-            <div style="font-size:11px;color:var(--mid);margin-top:2px">Pré-approbation · Financement</div>
-          </div>
+        <div style="position:relative;z-index:1">
+          <div style="width:54px;height:54px;border-radius:50%;background:var(--dark);color:#fff;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 18px">3</div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:7px">Meilleures opportunités</div>
+          <div style="font-size:13px;color:var(--mid);line-height:1.6">Biens matchés · Estimation · Plan d'action</div>
+        </div>
+        <div style="position:relative;z-index:1">
+          <div style="width:54px;height:54px;border-radius:50%;background:var(--gold);color:#fff;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 4px 18px rgba(184,146,42,0.4)">4</div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:7px">Concluez la transaction</div>
+          <div style="font-size:13px;color:var(--mid);line-height:1.6">Notaire · Signature · Vous êtes propriétaire</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ ANNONCES — VISIBLE SANS CONNEXION ═══ -->
-  <div style="background:var(--cream);padding:40px 24px 60px;flex-shrink:0" id="section-annonces">
-    <div style="max-width:1100px;margin:0 auto">
-
-      <!-- TITRE + SOUS-TITRE -->
-      <div style="text-align:center;margin-bottom:28px">
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,34px);font-weight:700;color:var(--dark);margin-bottom:8px">Biens disponibles en Nouvelle-Calédonie</h2>
-        <p style="font-size:14px;color:var(--mid)">Consultez librement · Inscription uniquement pour contacter ou publier</p>
-      </div>
-
-      <!-- BARRE RECHERCHE PRINCIPALE -->
-      <div style="background:#fff;border-radius:16px;padding:18px 20px;border:1px solid var(--warm);margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
-        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-
-          <!-- TYPE — MULTI-CHECK -->
-          <div class="ld-filter-group" style="flex:1;min-width:140px">
-            <button type="button" class="ld-dropdown-btn" id="btn-type" onclick="toggleDropdown('dd-type-top')" style="width:100%;justify-content:space-between">
-              🏠 Type &nbsp;<span id="lbl-type-top">Tous</span> ▾
-            </button>
-            <div class="ld-dropdown" id="dd-type-top">
-              <div class="ld-dd-title">Type de bien</div>
-              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Appartement" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏢 Appartement</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Maison" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏠 Maison</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Villa" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏡 Villa</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Studio" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏙️ Studio</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Terrain" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🌿 Terrain</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-type" value="Local commercial" onchange="updateMultiFilterTop('type');landingSearchPublic()"> 🏪 Local commercial</label>
-              <button class="ld-dd-clear" onclick="clearMultiFilterTop('type');landingSearchPublic()">✕ Effacer</button>
-            </div>
-          </div>
-
-          <!-- ZONE — MULTI-CHECK -->
-          <div class="ld-filter-group" style="flex:1;min-width:160px">
-            <button type="button" class="ld-dropdown-btn" id="btn-zone" onclick="toggleDropdown('dd-zone-top')" style="width:100%;justify-content:space-between">
-              📍 Zone &nbsp;<span id="lbl-zone-top">Toute la NC</span> ▾
-            </button>
-            <div class="ld-dropdown" id="dd-zone-top" style="min-width:220px;max-height:360px">
-              <div class="ld-dd-title">Secteur / Quartier</div>
-              <div style="padding:4px 14px 6px;font-size:10px;font-weight:700;color:var(--gold)">NOUMÉA</div>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Anse Vata" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Anse Vata</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Baie des Citrons" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Baie des Citrons</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Val Plaisance" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Val Plaisance</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Tina" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Tina</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Motor Pool" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Motor Pool</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Magenta" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Magenta</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Faubourg Blanchot" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Faubourg Blanchot</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Centre Ville" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Centre Ville</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Trianon" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Trianon</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Robinson" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Robinson</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Rivière Salée" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Rivière Salée</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Vallée du Tir" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Vallée du Tir</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Ducos" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Ducos</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Normandie" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Normandie</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="7ème km" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> 7ème km</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Montravel" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Montravel</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Tuband" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Tuband</label>
-              <div style="padding:6px 14px 4px;font-size:10px;font-weight:700;color:var(--gold);border-top:1px solid var(--warm);margin-top:4px">GRAND NOUMÉA</div>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Dumbéa sur Mer" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Dumbéa sur Mer</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Koutio" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Koutio</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Katiramona" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Katiramona</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Savannah" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Savannah</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Tonghoué" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Tonghoué</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Mont-Dore" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Mont-Dore</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Boulari" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Boulari</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Plum" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Plum</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Païta" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Païta</label>
-              <div style="padding:6px 14px 4px;font-size:10px;font-weight:700;color:var(--gold);border-top:1px solid var(--warm);margin-top:4px">AUTRES COMMUNES</div>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Bourail" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Bourail</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Koné" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Koné</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Koumac" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Koumac</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Maré" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Maré</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Lifou" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Lifou</label>
-              <label class="ld-check-item"><input type="checkbox" name="ld-zone" value="Ouvéa" onchange="updateMultiFilterTop('zone');landingSearchPublic()"> Ouvéa</label>
-              <button class="ld-dd-clear" onclick="clearMultiFilterTop('zone');landingSearchPublic()">✕ Effacer</button>
-            </div>
-          </div>
-
-          <!-- (suite : jauge budget + bouton) - ne pas modifier ces éléments -->
-          
-          <div style="flex:1;min-width:180px;background:#fff;border:1px solid var(--warm);border-radius:8px;padding:8px 14px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-              <span style="font-size:12px;color:var(--mid)">💰 Budget max</span>
-              <span id="ld-budget-label" style="font-size:13px;font-weight:700;color:var(--gold)">Tous budgets</span>
-            </div>
-            <input type="range" id="ld-budget" min="0" max="200000000" step="5000000" value="0"
-              oninput="updateLdBudgetJauge(this.value);landingSearchPublic()"
-              style="width:100%;height:6px;accent-color:var(--gold);cursor:pointer;display:block;margin:0">
-            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--soft);margin-top:3px">
-              <span>Sans limite</span><span>50M</span><span>100M</span><span>150M</span><span>200M+</span>
-            </div>
-          </div>
-          <button onclick="landingSearchPublic()" class="btn btn-gold" style="white-space:nowrap;padding:10px 24px;font-size:14px">🔍 Rechercher</button>
+  <!-- ══════════════════════════════════
+       SECTION 7 — PROFESSIONNELS
+  ══════════════════════════════════ -->
+  <div style="background:var(--dark);padding:80px 24px;flex-shrink:0">
+    <div style="max-width:800px;margin:0 auto;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px">Réseau partenaire</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,36px);font-weight:700;color:#fff;margin-bottom:10px">Un réseau complet à votre service</h2>
+      <p style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:44px">S'activent uniquement quand vous en avez besoin — sans pollution de l'expérience</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+        <div onclick="showLoginModal('agt')" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px 16px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+          <div style="font-size:36px;margin-bottom:12px">🏠</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:5px">Agents</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Mandats · Visites · Négociation</div>
         </div>
-
-        <!-- FILTRES AVANCÉS -->
-        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--warm)">
-          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-
-            <!-- PIÈCES — MULTI-CHECK -->
-            <div class="ld-filter-group">
-              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-pieces')">
-                🛏️ Pièces <span id="lbl-pieces">Toutes</span> ▾
-              </button>
-              <div class="ld-dropdown" id="dd-pieces">
-                <div class="ld-dd-title">Nombre de pièces</div>
-                <label class="ld-check-item"><input type="checkbox" value="1" onchange="updateMultiFilter('pieces');landingSearchPublic()"> Studio / T1</label>
-                <label class="ld-check-item"><input type="checkbox" value="2" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 2 pièces</label>
-                <label class="ld-check-item"><input type="checkbox" value="3" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 3 pièces</label>
-                <label class="ld-check-item"><input type="checkbox" value="4" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 4 pièces</label>
-                <label class="ld-check-item"><input type="checkbox" value="5" onchange="updateMultiFilter('pieces');landingSearchPublic()"> 5 pièces +</label>
-                <button class="ld-dd-clear" onclick="clearMultiFilter('pieces');landingSearchPublic()">✕ Effacer</button>
-              </div>
-            </div>
-
-            <!-- SURFACE — MULTI-CHECK -->
-            <div class="ld-filter-group">
-              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-surface')">
-                📐 Surface <span id="lbl-surface">Toutes</span> ▾
-              </button>
-              <div class="ld-dropdown" id="dd-surface">
-                <div class="ld-dd-title">Surface minimum</div>
-                <label class="ld-check-item"><input type="checkbox" value="20" onchange="updateMultiFilter('surface');landingSearchPublic()"> 20m² et +</label>
-                <label class="ld-check-item"><input type="checkbox" value="40" onchange="updateMultiFilter('surface');landingSearchPublic()"> 40m² et +</label>
-                <label class="ld-check-item"><input type="checkbox" value="60" onchange="updateMultiFilter('surface');landingSearchPublic()"> 60m² et +</label>
-                <label class="ld-check-item"><input type="checkbox" value="80" onchange="updateMultiFilter('surface');landingSearchPublic()"> 80m² et +</label>
-                <label class="ld-check-item"><input type="checkbox" value="100" onchange="updateMultiFilter('surface');landingSearchPublic()"> 100m² et +</label>
-                <label class="ld-check-item"><input type="checkbox" value="150" onchange="updateMultiFilter('surface');landingSearchPublic()"> 150m² et +</label>
-                <label class="ld-check-item"><input type="checkbox" value="200" onchange="updateMultiFilter('surface');landingSearchPublic()"> 200m² et +</label>
-                <button class="ld-dd-clear" onclick="clearMultiFilter('surface');landingSearchPublic()">✕ Effacer</button>
-              </div>
-            </div>
-
-            <!-- ÉTAT — MULTI-CHECK -->
-            <div class="ld-filter-group">
-              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-etat')">
-                🏗️ État <span id="lbl-etat">Tous</span> ▾
-              </button>
-              <div class="ld-dropdown" id="dd-etat">
-                <div class="ld-dd-title">État du bien</div>
-                <label class="ld-check-item"><input type="checkbox" value="neuf" onchange="updateMultiFilter('etat');landingSearchPublic()"> 🆕 Neuf / VEFA</label>
-                <label class="ld-check-item"><input type="checkbox" value="excellent" onchange="updateMultiFilter('etat');landingSearchPublic()"> ⭐ Excellent état</label>
-                <label class="ld-check-item"><input type="checkbox" value="bon" onchange="updateMultiFilter('etat');landingSearchPublic()"> ✅ Bon état</label>
-                <label class="ld-check-item"><input type="checkbox" value="moyen" onchange="updateMultiFilter('etat');landingSearchPublic()"> 🔧 À rafraîchir</label>
-                <label class="ld-check-item"><input type="checkbox" value="travaux" onchange="updateMultiFilter('etat');landingSearchPublic()"> 🔨 Travaux à prévoir</label>
-                <button class="ld-dd-clear" onclick="clearMultiFilter('etat');landingSearchPublic()">✕ Effacer</button>
-              </div>
-            </div>
-
-            <!-- ÉQUIPEMENTS — MULTI-CHECK -->
-            <div class="ld-filter-group">
-              <button type="button" class="ld-dropdown-btn" onclick="toggleDropdown('dd-equip')">
-                ✨ Équipements <span id="lbl-equip">Tous</span> ▾
-              </button>
-              <div class="ld-dropdown" id="dd-equip" style="min-width:200px">
-                <div class="ld-dd-title">Équipements souhaités</div>
-                <label class="ld-check-item"><input type="checkbox" value="Vue mer" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🌊 Vue mer</label>
-                <label class="ld-check-item"><input type="checkbox" value="Piscine" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🏊 Piscine</label>
-                <label class="ld-check-item"><input type="checkbox" value="Terrasse" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🌿 Terrasse</label>
-                <label class="ld-check-item"><input type="checkbox" value="Balcon" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🏡 Balcon</label>
-                <label class="ld-check-item"><input type="checkbox" value="Jardin" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🌳 Jardin</label>
-                <label class="ld-check-item"><input type="checkbox" value="Garage" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🚗 Garage</label>
-                <label class="ld-check-item"><input type="checkbox" value="Parking" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🅿️ Parking</label>
-                <label class="ld-check-item"><input type="checkbox" value="Climatisation" onchange="updateMultiFilter('equip');landingSearchPublic()"> ❄️ Climatisation</label>
-                <label class="ld-check-item"><input type="checkbox" value="Sécurité" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🔒 Sécurité / Gardien</label>
-                <label class="ld-check-item"><input type="checkbox" value="Ascenseur" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🛗 Ascenseur</label>
-                <label class="ld-check-item"><input type="checkbox" value="Cuisine équipée" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🍳 Cuisine équipée</label>
-                <label class="ld-check-item"><input type="checkbox" value="Dressing" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🚪 Dressing</label>
-                <label class="ld-check-item"><input type="checkbox" value="Cave" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🗄️ Cave / Cellier</label>
-                <label class="ld-check-item"><input type="checkbox" value="Digicode" onchange="updateMultiFilter('equip');landingSearchPublic()"> 🔑 Digicode / Interphone</label>
-                <button class="ld-dd-clear" onclick="clearMultiFilter('equip');landingSearchPublic()">✕ Effacer</button>
-              </div>
-            </div>
-
-            <!-- DPE -->
-            <div class="ld-filter-group">
-              <select id="ld-dpe" onchange="landingSearchPublic()" class="ld-filter-select">
-                <option value="">⚡ DPE — Tous</option>
-                <option value="A">A — Excellent</option>
-                <option value="B">B — Très bon</option>
-                <option value="C">C — Bon</option>
-                <option value="D">D — Moyen</option>
-              </select>
-            </div>
-
-            <!-- TRI -->
-            <div class="ld-filter-group">
-              <select id="ld-tri" onchange="landingSearchPublic()" class="ld-filter-select">
-                <option value="recent">🕐 Plus récent</option>
-                <option value="prix-asc">📈 Prix croissant</option>
-                <option value="prix-desc">📉 Prix décroissant</option>
-                <option value="surface-desc">📐 Surface décroissante</option>
-                <option value="pm2-asc">💰 Prix/m² croissant</option>
-              </select>
-            </div>
-
-            <button onclick="resetFiltresPublic()" class="ld-reset-btn">✕ Effacer tout</button>
-          </div>
+        <div onclick="showLoginModal('agt')" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px 16px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+          <div style="font-size:36px;margin-bottom:12px">⚖️</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:5px">Notaires</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Dossier · Compromis · Acte</div>
         </div>
-      </div>
-
-      <!-- RÉSULTATS -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-        <div style="font-size:13px;color:var(--mid)" id="ld-results-count"></div>
-        <div style="display:flex;gap:6px">
-          <button onclick="setViewPublic('grid')" id="view-grid-btn" style="background:var(--dark);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer">⊞ Grille</button>
-          <button onclick="setViewPublic('list')" id="view-list-btn" style="background:#fff;color:var(--mid);border:1px solid var(--warm);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer">☰ Liste</button>
+        <div onclick="showLoginModal('agt')" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px 16px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+          <div style="font-size:36px;margin-bottom:12px">🔨</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:5px">Artisans</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Devis · Travaux · Valorisation</div>
         </div>
-      </div>
-
-      <!-- GRILLE ANNONCES -->
-      <div id="landing-biens-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px"></div>
-
-      <!-- VOIR PLUS -->
-      <div id="voir-plus-wrapper" style="text-align:center;margin-top:32px;display:none">
-        <div style="background:#fff;border:1px solid var(--warm);border-radius:14px;padding:24px;max-width:480px;margin:0 auto">
-          <div style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:6px">Et <span id="ld-count-more"></span> autres biens disponibles</div>
-          <div style="font-size:12px;color:var(--mid);margin-bottom:14px">Créez un compte gratuit pour accéder à tous les biens, au matching IA et aux alertes personnalisées</div>
-          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-            <button onclick="showLoginModal('buy')" class="btn btn-gold">Voir tous les biens →</button>
-            <button onclick="showLoginModal('buy')" class="btn btn-outline">Se connecter</button>
-          </div>
+        <div onclick="loginAs('buy')" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px 16px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+          <div style="font-size:36px;margin-bottom:12px">🏦</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:5px">Financement</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Pré-approbation · BNC · Courtier</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ FOOTER ═══ -->
-
-  <!-- FOOTER COMPLET -->
-  <div style="background:var(--dark);padding:32px 24px 0;flex-shrink:0">
-    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:32px;flex-wrap:wrap">
-      <!-- LOGO + DESCRIPTION -->
-      <div>
-        <div onclick="showLanding()" style="font-family:'Playfair Display',serif;font-size:22px;color:#fff;margin-bottom:8px;cursor:pointer">Immo<span style="color:var(--gold)">360</span></div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:12px">La plateforme immobilière intelligente de Nouvelle-Calédonie. Gratuit pour les vendeurs particuliers.</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.2)">📍 Nouméa, Nouvelle-Calédonie</div>
+  <!-- ══════════════════════════════════
+       SECTION 8 — FOOTER
+  ══════════════════════════════════ -->
+  <div style="background:#0a0d12;padding:48px 32px 32px;flex-shrink:0">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:10px">Immo<span style="color:var(--gold)">360</span></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7;max-width:260px">Première plateforme IA immobilière de Nouvelle-Calédonie. Achetez et vendez plus intelligemment.</div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">Particuliers</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span onclick="loginAs('buy')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Acheter un bien</span>
+            <span onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Vendre un bien</span>
+            <span onclick="loginAs('sell')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Estimer mon bien</span>
+            <span onclick="loginAs('buy')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Simuler mon financement</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">Professionnels</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span onclick="showLoginModal('agt')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Espace agent</span>
+            <span onclick="showLoginModal('agt')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Espace notaire</span>
+            <span onclick="showLoginModal('agt')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Espace artisan</span>
+            <span onclick="loginAs('agt')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Démo gratuite</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">Légal</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span onclick="showPage('cgv')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">CGU / CGV</span>
+            <span onclick="showPage('confidentialite')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Confidentialité</span>
+            <span onclick="showPage('mentions')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Mentions légales</span>
+            <span onclick="showPage('contact')" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:.15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Contact</span>
+          </div>
+        </div>
       </div>
-      <!-- VENDRE -->
-      <div>
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Vendre</div>
-        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Estimer mon bien</div>
-        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Déposer une annonce</div>
-        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Analyse photos IA</div>
-        <div onclick="loginAs('sell')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Génération d'annonce</div>
+      <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div style="font-size:12px;color:rgba(255,255,255,0.2)">© 2026 Immo360 NC — Tous droits réservés · 360immo.nc</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.15)">Données marché : Properstar · ImmoNC · Immobilier.nc · K&P Finance</div>
       </div>
-      <!-- ACHETER -->
-      <div>
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Acheter</div>
-        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Rechercher un bien</div>
-        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Simuler un financement</div>
-        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Contacter un agent</div>
-        <div onclick="showLoginModal('buy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Alertes nouvelles annonces</div>
-      </div>
-      <!-- PRO -->
-      <div>
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Espace Pro</div>
-        <div onclick="loginAs('agt')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Espace agent</div>
-        <div onclick="loginAs('agt')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">CRM & mandats</div>
-        <div onclick="loginAs('agt')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Multi-diffusion annonces</div>
-        <div onclick="openLegalPage('about')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Qui sommes-nous ?</div>
-      </div>
-      <!-- INFOS LÉGALES -->
-      <div>
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Informations légales</div>
-        <div onclick="openLegalPage('cgu')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Conditions d'utilisation</div>
-        <div onclick="openLegalPage('cgv')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Conditions de vente</div>
-        <div onclick="openLegalPage('privacy')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Politique de confidentialité</div>
-        <div onclick="openLegalPage('droits')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;margin-bottom:8px;display:block">Vos droits &amp; obligations</div>
-        <div onclick="openLegalPage('plan')" style="font-size:12px;color:rgba(255,255,255,0.65);cursor:pointer;display:block">Plan du site</div>
-      </div>
-    </div>
-    <!-- BAS DE FOOTER -->
-    <div style="max-width:1100px;margin:24px auto 0;padding:16px 0;border-top:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div style="font-size:10px;color:rgba(255,255,255,0.2)">© 2026 Immo360 NC · Tous droits réservés · <span onclick="openLegalPage('plan')" style="cursor:pointer;text-decoration:underline">Plan du site</span></div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.2)">Sources : Properstar · Immobilier.nc · ImmoNC · K&P Finance · Nestenn</div>
     </div>
   </div>
 
-  <!-- PAGES LÉGALES (modal) -->
-  <div class="modal-overlay" id="legal-modal" style="display:none">
-    <div style="background:#fff;border-radius:16px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto">
-      <div style="padding:20px 24px;border-bottom:1px solid var(--warm);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1">
-        <h2 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--dark)" id="legal-title">—</h2>
-        <button onclick="document.getElementById('legal-modal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid)">✕</button>
-      </div>
-      <div style="padding:24px" id="legal-content"></div>
-    </div>
-  </div>
-</div>
+
 
 <!-- ═══════════════════════════════════
      MODAL AUTH — S'IDENTIFIER / S'ENREGISTRER
@@ -10475,6 +9905,80 @@ function resetEpAnalyse(){
   document.getElementById('ep-step-loading').style.display='none';
   document.getElementById('ep-step-results').style.display='none';
   document.getElementById('ep-total-count').textContent='0 photo uploadee';
+}
+
+// =============================================
+// RECHERCHE SIMPLE LANDING
+// =============================================
+function updateSimpleBudget(val){
+  val = parseInt(val);
+  const lbl = document.getElementById('ld-budget-simple-label');
+  if(!lbl) return;
+  if(!val) lbl.textContent = 'Tous budgets';
+  else lbl.textContent = val>=200000000 ? '200M F +' : '≤ '+conv(val);
+}
+
+function lancerRechercheSimple(){
+  const zone = document.getElementById('ld-zone-simple')?.value||'';
+  const budget = parseInt(document.getElementById('ld-budget-simple')?.value||0);
+  const type = document.getElementById('ld-type-simple')?.value||'';
+  buildLandingBiensSimple(zone, budget, type);
+  document.getElementById('section-annonces')?.scrollIntoView({behavior:'smooth'});
+}
+
+function buildLandingBiensSimple(zone='', budget=0, type=''){
+  const grid = document.getElementById('landing-biens-grid');
+  const countEl = document.getElementById('ld-simple-count');
+  if(!grid) return;
+
+  let biens = BIENS_DATA.filter(b=>{
+    if(b.statut!=='En vente') return false;
+    if(type && b.type!==type) return false;
+    if(zone && !(b.quartier||'').includes(zone) && !(b.ville||'').includes(zone)) return false;
+    if(budget>0 && b.prix>budget) return false;
+    return true;
+  }).slice(0,8);
+
+  if(countEl) countEl.textContent = biens.length+' bien'+(biens.length>1?'s':'')+' trouvé'+(biens.length>1?'s':'');
+
+  if(!biens.length){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)"><div style="font-size:36px;margin-bottom:10px">🔍</div><div>Aucun résultat pour ces critères</div></div>';
+    return;
+  }
+
+  grid.innerHTML = biens.map(b=>{
+    const pm2 = conv(Math.round(b.prix/(b.surface||1)));
+    const score = 72 + Math.round((b.id||1)*7.3) % 20;
+    const scoreColor = score>=85?'#16A34A':score>=75?'#D97706':'#DC2626';
+    return `<div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:16px;overflow:hidden;cursor:pointer;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,0.05)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 28px rgba(0,0,0,0.1)';this.style.borderColor='var(--gold)'" onmouseout="this.style.transform='';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.borderColor='var(--warm)'">
+      <!-- PHOTO -->
+      <div style="height:200px;position:relative;background:linear-gradient(135deg,${
+        b.type==='Villa'?'#1a3d0f,#2d6b1a':
+        b.type==='Appartement'?'#0f1f3d,#1a3566':
+        b.type==='Maison'?'#3d1a0f,#66341a':
+        '#1c1a16,#3d3830'
+      });display:flex;align-items:center;justify-content:center;font-size:52px;overflow:hidden">
+        ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`:''}
+        ${b.photos?`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:52px">${b.photos[0]}</div>`:''}
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5) 0%,transparent 50%)"></div>
+        <!-- SCORE BADGE -->
+        <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.95);border-radius:10px;padding:5px 10px;display:flex;align-items:center;gap:5px">
+          <div style="width:6px;height:6px;border-radius:50%;background:${scoreColor}"></div>
+          <span style="font-size:11px;font-weight:700;color:${scoreColor}">⭐ ${score}/100</span>
+        </div>
+        <!-- PRIX EN BAS -->
+        <div style="position:absolute;bottom:10px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-end">
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.5)">${conv(b.prix)}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.3);padding:2px 7px;border-radius:6px">${pm2}/m²</div>
+        </div>
+      </div>
+      <!-- INFOS -->
+      <div style="padding:14px 16px">
+        <div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type+' '+b.quartier}</div>
+        <div style="font-size:12px;color:var(--mid)">📍 ${b.quartier||b.ville} &nbsp;·&nbsp; ${b.surface}m² &nbsp;·&nbsp; ${b.pieces||'—'} pièces</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // =============================================
