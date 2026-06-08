@@ -8607,102 +8607,225 @@ function checkContextualTriggers(panel){
 // DASHBOARD INTELLIGENT — page d'accueil selon profil
 // =============================================
 function buildSmartDashboard(){
-  // Mettre à jour le breadcrumb profil
+  // Breadcrumb
   const bcProfil=document.getElementById('breadcrumb-profil');
   if(bcProfil){
     const p=APP_STATE.user?.profil||S.profile||'';
     bcProfil.textContent=p==='sell'?'Vendeur':p==='agt'?'Professionnel':p==='buy'?'Acheteur':'';
   }
-  const profil=S.country==='NC'?APP_STATE.user?.profil||'buy':'buy';
-  const dash=document.getElementById('panel-dashboard');
+
+  const profil = APP_STATE.user?.profil || S.profile || 'buy';
+  const dash = document.getElementById('panel-dashboard');
   if(!dash) return;
 
-  // Calculer les stats selon le profil
-  if(APP_STATE.user?.profil==='buy'||APP_STATE.user?.profil==='demo-buy'){
-    // Dashboard acheteur — état du projet
-    const matchCount=ACHETEURS.length>0?getMatchesForAcheteur(ACHETEURS[0]).filter(m=>m.score>=80).length:0;
-    dash.innerHTML=`
-      <div style="margin-bottom:20px">
-        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:4px">Bonjour 👋</h2>
-        <p style="font-size:13px;color:var(--mid)">Voici l'état de votre projet immobilier</p>
-      </div>
-      <!-- NEXT ACTION -->
-      <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:14px;padding:20px;margin-bottom:20px;cursor:pointer" onclick="go('projetdevie')">
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Prochaine action recommandée</div>
-        <div style="font-size:17px;font-weight:600;color:#fff;margin-bottom:4px">🌟 Définissez votre projet de vie</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.55)">L'IA analyse vos besoins et trouve les biens compatibles automatiquement</div>
-        <div style="margin-top:12px;display:inline-block;background:var(--gold);color:#fff;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Commencer →</div>
-      </div>
-      <!-- RACCOURCIS -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px">
-        <div onclick="go('marketplace')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">🔭</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">${BIENS_DATA.filter(b=>b.statut==='En vente').length} biens</div>
-          <div style="font-size:10px;color:var(--mid)">en ligne NC</div>
-        </div>
-        <div onclick="go('financementplus')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">💰</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">Financement</div>
-          <div style="font-size:10px;color:var(--mid)">Simulez le coût réel</div>
-        </div>
-        <div onclick="go('matching')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">🤖</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">Matching IA</div>
-          <div style="font-size:10px;color:var(--mid)">Biens compatibles</div>
-        </div>
-        <div onclick="go('artisans')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">🏗️</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">Artisans NC</div>
-          <div style="font-size:10px;color:var(--mid)">Devis travaux</div>
-        </div>
-      </div>
-      <!-- MARCHÉ NC -->
-      <div class="card">
-        <div class="card-title">📊 Marché immobilier NC aujourd'hui</div>
-        <div class="ai-line"><span>Prix médian appartement</span><span style="color:var(--gold);font-weight:700">${conv(NC_MARKET.global.mediane_apt)}/m²</span></div>
-        <div class="ai-line"><span>Prix médian maison</span><span style="color:var(--gold);font-weight:700">${conv(NC_MARKET.global.mediane_maison)}/m²</span></div>
-        <div class="ai-line"><span>Biens disponibles NC</span><span>${NC_MARKET.global.nb_annonces} annonces</span></div>
-        <div class="ai-line"><span>Délai de vente moyen</span><span>${NC_MARKET.global.delai_moyen}</span></div>
-      </div>`;
-  } else if(APP_STATE.user?.profil==='sell'){
-    dash.innerHTML=`
-      <div style="margin-bottom:20px">
-        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:4px">Mon espace vendeur</h2>
-        <p style="font-size:13px;color:var(--mid)">Gérez votre vente de A à Z</p>
-      </div>
-      <!-- NEXT ACTION -->
-      <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:14px;padding:20px;margin-bottom:20px;cursor:pointer" onclick="go('estimation')">
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Étape recommandée</div>
-        <div style="font-size:17px;font-weight:600;color:#fff;margin-bottom:4px">💎 Estimez votre bien avec l'IA</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.55)">Prix au m², comparaison marché NC, plan de travaux pour maximiser votre prix de vente</div>
-        <div style="margin-top:12px;display:inline-block;background:var(--gold);color:#fff;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600">Estimer mon bien →</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
-        <div onclick="go('depot')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">📝</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">Déposer</div>
-          <div style="font-size:10px;color:var(--mid)">Mon annonce</div>
-        </div>
-        <div onclick="go('analyse')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">📷</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">Analyser</div>
-          <div style="font-size:10px;color:var(--mid)">Photos + IA</div>
-        </div>
-        <div onclick="go('rdv')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">📅</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">Visites</div>
-          <div style="font-size:10px;color:var(--mid)">Gérer le calendrier</div>
-        </div>
-        <div onclick="go('suivi')" style="background:#fff;border:1px solid var(--warm);border-radius:12px;padding:14px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--warm)'">
-          <div style="font-size:24px;margin-bottom:6px">🔄</div>
-          <div style="font-size:12px;font-weight:600;color:var(--dark)">Suivi</div>
-          <div style="font-size:10px;color:var(--mid)">État de la vente</div>
-        </div>
-      </div>`;
-  }
-  setTimeout(applyMobileLayout,50);
-}
+  // ── STYLES COMMUNS ──
+  const card = (content, extra='') => `<div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:24px;${extra}">${content}</div>`;
+  const actionBtn = (label, panel, primary=false) => `<button type="button" onclick="go('${panel}')" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:${primary?'#0d1117':'#F9F7F3'};color:${primary?'#fff':'#0d1117'};border:${primary?'none':'1px solid rgba(0,0,0,0.07)'};border-radius:12px;padding:14px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;margin-bottom:8px" onmouseover="this.style.background='${primary?'#B8922A':'rgba(184,146,42,0.08)'}';this.style.borderColor='${primary?'#B8922A':'rgba(184,146,42,0.3)'}'" onmouseout="this.style.background='${primary?'#0d1117':'#F9F7F3'}';this.style.borderColor='${primary?'none':'rgba(0,0,0,0.07)'}'">${label}<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>`;
+  const statCard = (val, label, color='#B8922A') => `<div style="background:#F9F7F3;border-radius:12px;padding:16px;text-align:center"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:${color};margin-bottom:4px">${val}</div><div style="font-size:11px;color:rgba(0,0,0,0.4);text-transform:uppercase;letter-spacing:1px;font-family:'DM Sans',sans-serif">${label}</div></div>`;
 
+  // ════ DASHBOARD ACHETEUR ════
+  if(profil==='buy'){
+    dash.innerHTML = `
+    <div style="max-width:900px;margin:0 auto;padding:8px 0">
+
+      <!-- HEADER BIENVENUE -->
+      <div style="background:linear-gradient(135deg,#0d1117,#1a2d1a);border-radius:20px;padding:32px 36px;margin-bottom:24px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(184,146,42,0.06)"></div>
+        <div style="position:absolute;bottom:-40px;left:20%;width:120px;height:120px;border-radius:50%;background:rgba(34,197,94,0.05)"></div>
+        <div style="position:relative">
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:2px;font-family:'DM Sans',sans-serif;margin-bottom:8px">Espace acheteur</div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:8px">Bonjour 👋</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif">Définissez votre projet — l'IA trouve les biens compatibles</div>
+        </div>
+      </div>
+
+      <!-- ACTION PRINCIPALE -->
+      <div style="background:#0d1117;border-radius:16px;padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid rgba(184,146,42,0.2);transition:.2s" onclick="go('projetdevie')" onmouseover="this.style.borderColor='#B8922A';this.style.background='#111827'" onmouseout="this.style.borderColor='rgba(184,146,42,0.2)';this.style.background='#0d1117'">
+        <div>
+          <div style="font-size:10px;color:#B8922A;text-transform:uppercase;letter-spacing:2px;font-family:'DM Sans',sans-serif;margin-bottom:6px">Prochaine étape recommandée</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px">🌟 Définir mon projet de vie</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif">Budget · localisation · critères · style de vie</div>
+        </div>
+        <div style="background:#B8922A;border-radius:12px;padding:12px 20px;color:#fff;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;margin-left:20px">
+          Commencer →
+        </div>
+      </div>
+
+      <!-- GRILLE 2 COLONNES -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+
+        <!-- Actions rapides -->
+        <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:22px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:16px">Actions rapides</div>
+          ${actionBtn('🔭 Explorer les biens', 'marketplace', true)}
+          ${actionBtn('🤖 Matching IA', 'matching')}
+          ${actionBtn('💰 Simuler mon financement', 'financementplus')}
+          ${actionBtn('📍 Suivi de mon achat', 'suiviachat')}
+        </div>
+
+        <!-- Marché NC -->
+        <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:22px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:16px">Marché NC aujourd'hui</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            ${statCard('340k', 'F/m² médian')}
+            ${statCard('311', 'Biens disponibles', '#2563EB')}
+            ${statCard('52j', 'Délai moyen', '#16A34A')}
+            ${statCard('3.5%', 'Taux crédit', '#9333EA')}
+          </div>
+        </div>
+      </div>
+
+      <!-- PARCOURS VISUEL -->
+      <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:22px">
+        <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:18px">Mon parcours d'achat</div>
+        <div style="display:flex;align-items:center;gap:0">
+          ${['Projet','Matching','Visite','Financement','Offre','Acte'].map((s,i)=>`
+            <div style="flex:1;text-align:center">
+              <div style="width:36px;height:36px;border-radius:50%;background:${i===0?'#B8922A':i===1?'rgba(184,146,42,0.15)':'#F3F4F6'};border:${i===0?'none':i===1?'1.5px solid #B8922A':'1px solid #E5E7EB'};display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:11px;font-weight:700;color:${i===0?'#fff':i===1?'#B8922A':'#9CA3AF'}">${i===0?'✓':i+1}</div>
+              <div style="font-size:10px;font-weight:600;color:${i<=1?'#0d1117':'#9CA3AF'};font-family:'DM Sans',sans-serif">${s}</div>
+            </div>
+            ${i<5?`<div style="flex:0.3;height:1px;background:${i===0?'#B8922A':'#E5E7EB'};margin-bottom:18px"></div>`:''}
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  // ════ DASHBOARD VENDEUR ════
+  } else if(profil==='sell'){
+    dash.innerHTML = `
+    <div style="max-width:900px;margin:0 auto;padding:8px 0">
+
+      <!-- HEADER -->
+      <div style="background:linear-gradient(135deg,#0d1117,#1a1209);border-radius:20px;padding:32px 36px;margin-bottom:24px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(184,146,42,0.08)"></div>
+        <div style="position:relative">
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:2px;font-family:'DM Sans',sans-serif;margin-bottom:8px">Espace vendeur</div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:8px">Mon espace de vente</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif">Gérez votre vente de A à Z avec l'IA</div>
+        </div>
+      </div>
+
+      <!-- ACTION PRINCIPALE -->
+      <div style="background:#0d1117;border-radius:16px;padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid rgba(184,146,42,0.2);transition:.2s" onclick="go('estimation')" onmouseover="this.style.borderColor='#B8922A'" onmouseout="this.style.borderColor='rgba(184,146,42,0.2)'">
+        <div>
+          <div style="font-size:10px;color:#B8922A;text-transform:uppercase;letter-spacing:2px;font-family:'DM Sans',sans-serif;margin-bottom:6px">Étape recommandée</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px">💎 Estimer mon bien avec l'IA</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif">Score · Prix marché · Plan de travaux · ROI</div>
+        </div>
+        <div style="background:#B8922A;border-radius:12px;padding:12px 20px;color:#fff;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;margin-left:20px">
+          Estimer →
+        </div>
+      </div>
+
+      <!-- GRILLE -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+        <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:22px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:16px">Gérer ma vente</div>
+          ${actionBtn('💎 Estimation IA', 'estimation', true)}
+          ${actionBtn('📝 Déposer mon annonce', 'depot')}
+          ${actionBtn('📅 Mes visites', 'rdv')}
+          ${actionBtn('🏗️ Artisans NC', 'artisans')}
+        </div>
+        <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:22px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:16px">Statistiques</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            ${statCard('0', 'Vues')}
+            ${statCard('0', 'Contacts', '#2563EB')}
+            ${statCard('0', 'Visites', '#16A34A')}
+            ${statCard('—', 'Offres', '#9333EA')}
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPES VENTE -->
+      <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:22px">
+        <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:18px">Parcours de vente</div>
+        <div style="display:flex;align-items:center;gap:0">
+          ${['Estimation','Annonce','Visites','Offre','Compromis','Acte'].map((s,i)=>`
+            <div style="flex:1;text-align:center">
+              <div style="width:36px;height:36px;border-radius:50%;background:${i===0?'#B8922A':'#F3F4F6'};border:${i===0?'none':'1px solid #E5E7EB'};display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:11px;font-weight:700;color:${i===0?'#fff':'#9CA3AF'}">${i===0?'✓':i+1}</div>
+              <div style="font-size:10px;font-weight:600;color:${i===0?'#0d1117':'#9CA3AF'};font-family:'DM Sans',sans-serif">${s}</div>
+            </div>
+            ${i<5?`<div style="flex:0.3;height:1px;background:${i===0?'#B8922A':'#E5E7EB'};margin-bottom:18px"></div>`:''}
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  // ════ DASHBOARD AGENT ════
+  } else if(profil==='agt'){
+    dash.innerHTML = `
+    <div style="max-width:960px;margin:0 auto;padding:8px 0">
+
+      <!-- HEADER -->
+      <div style="background:linear-gradient(135deg,#0d1117,#0d1a2d);border-radius:20px;padding:32px 36px;margin-bottom:24px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-40px;right:-20px;width:200px;height:200px;border-radius:50%;background:rgba(37,99,235,0.07)"></div>
+        <div style="position:absolute;bottom:-30px;left:10%;width:140px;height:140px;border-radius:50%;background:rgba(184,146,42,0.06)"></div>
+        <div style="position:relative;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:2px;font-family:'DM Sans',sans-serif;margin-bottom:8px">Espace professionnel</div>
+            <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:4px">Tableau de bord agent</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif">Mandats · Clients · Transactions</div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:12px 18px;text-align:center">
+              <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#B8922A">${S.biens?.length||0}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.35);font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:1px">Mandats</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:12px 18px;text-align:center">
+              <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#22C55E">3</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.35);font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:1px">Actifs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#B8922A;margin-bottom:4px">${conv(42500000)}</div>
+          <div style="font-size:10px;color:rgba(0,0,0,0.35);text-transform:uppercase;letter-spacing:1px;font-family:'DM Sans',sans-serif">Prix moyen</div>
+        </div>
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#22C55E;margin-bottom:4px">52j</div>
+          <div style="font-size:10px;color:rgba(0,0,0,0.35);text-transform:uppercase;letter-spacing:1px;font-family:'DM Sans',sans-serif">Délai marché</div>
+        </div>
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#2563EB;margin-bottom:4px">94%</div>
+          <div style="font-size:10px;color:rgba(0,0,0,0.35);text-transform:uppercase;letter-spacing:1px;font-family:'DM Sans',sans-serif">Taux succès</div>
+        </div>
+        <div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:18px;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#9333EA;margin-bottom:4px">12</div>
+          <div style="font-size:10px;color:rgba(0,0,0,0.35);text-transform:uppercase;letter-spacing:1px;font-family:'DM Sans',sans-serif">Clients actifs</div>
+        </div>
+      </div>
+
+      <!-- GRILLE 3 COLONNES -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:20px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:14px">Mandats</div>
+          ${actionBtn('📋 Gestion mandats', 'mandats', true)}
+          ${actionBtn('📊 Stats annonces', 'statsannonces')}
+          ${actionBtn('📣 Mes annonces', 'annonces')}
+        </div>
+        <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:20px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:14px">Clients & Matching</div>
+          ${actionBtn('👥 CRM Clients', 'crm', true)}
+          ${actionBtn('🤖 Matching IA', 'matching')}
+          ${actionBtn('🗓️ Visites & CR', 'visites')}
+        </div>
+        <div style="background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.07);padding:20px">
+          <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Sans',sans-serif;margin-bottom:14px">Transaction</div>
+          ${actionBtn('⚖️ Module Notaire', 'notaire', true)}
+          ${actionBtn('🏗️ Artisans NC', 'artisans')}
+          ${actionBtn('💎 Estimation IA', 'estimation')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  setTimeout(applyMobileLayout, 50);
+}
 // =============================================
 // LANDING — FONCTIONS NOUVELLES
 // =============================================
