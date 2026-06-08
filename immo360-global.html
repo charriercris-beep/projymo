@@ -453,7 +453,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <!-- ═══════════════════════════════════
      PAGE D'ACCUEIL — STYLE LEBONCOIN
 ═══════════════════════════════════ -->
-  <div class="landing" id="landing-page" style="display:flex;flex-direction:column">
+  <div id="landing-page" style="display:block;min-height:100vh;background:#fff;color:var(--dark)">
 
   <!-- ══ HEADER FIXE ══ -->
   <div style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.06);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px">
@@ -968,7 +968,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div>
 
 <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
-<div class="shell" id="main-shell">
+<div id="app-wrapper" style="display:none;width:100%;height:100vh;flex-direction:row"><div class="shell" id="main-shell" style="display:flex;width:100%;height:100vh;flex-direction:row">
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
@@ -4934,20 +4934,15 @@ function showAuthStep2(msg){
 
 function doLoginDemo(){
   const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
-  // Mettre à jour les deux états
-  APP_STATE.user={nom:'Démo',email:'demo@immo360.nc',profil};
+  APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
   APP_STATE.loggedIn=true;
   S.profile=profil;
   closeLoginModal();
-  hideLanding();
-  // Construire le menu et naviguer
-  if(typeof buildSB==='function') buildSB();
+  document.getElementById('landing-page').style.display='none';
+  document.getElementById('app-wrapper').style.display='flex';
+  buildSB();
   go('dashboard');
-  setTimeout(()=>{
-    if(typeof buildSmartDashboard==='function') buildSmartDashboard();
-    if(typeof updateUserDisplay==='function') updateUserDisplay();
-    if(typeof initConversations==='function') initConversations();
-  },100);
+  setTimeout(buildSmartDashboard, 100);
 }
 
 function doLoginConfirm(){
@@ -4963,48 +4958,15 @@ function doLoginConfirm(){
 
 function doLogin(){doLoginConfirm();}
 function loginAs(profil){
-  console.log('[Immo360] loginAs appelé:', profil);
   if(profil==='sell'||profil==='buy'||profil==='agt'){
     APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
-    // 1. Cacher landing
-    const lp=document.getElementById('landing-page');
-    if(lp){
-      lp.style.setProperty('display','none','important');
-      lp.style.visibility='hidden';
-      lp.style.pointerEvents='none';
-      lp.style.zIndex='-999';
-    }
-    // 2. Afficher shell
-    const shell=document.getElementById('main-shell')||document.querySelector('.shell');
-    if(shell){
-      shell.style.setProperty('display','flex','important');
-      shell.style.width='100vw';
-      shell.style.height='100vh';
-      shell.style.position='fixed';
-      shell.style.top='0';
-      shell.style.left='0';
-      shell.style.visibility='visible';
-      shell.style.opacity='1';
-      shell.style.zIndex='999';
-      shell.style.background='var(--cream)';
-    }
-    console.log('[Immo360] Landing cachée, shell affiché');
-    // 3. Construire UI
-    try { buildSB(); console.log('[Immo360] buildSB OK'); } catch(e){ console.error('buildSB error:',e); }
-    try { go('dashboard'); console.log('[Immo360] go dashboard OK'); } catch(e){ console.error('go error:',e); }
-    // Forcer l'affichage du panel dashboard
-    setTimeout(()=>{
-      const pd = document.getElementById('panel-dashboard');
-      console.log('[Immo360] panel-dashboard:', pd ? 'trouvé' : 'ABSENT', pd ? pd.classList.toString() : '');
-      const shell = document.querySelector('.shell');
-      console.log('[Immo360] shell display:', shell ? shell.style.display : 'ABSENT');
-    }, 200);
-    setTimeout(()=>{
-      try { buildSmartDashboard(); } catch(e){}
-      try { updateUserDisplay(); } catch(e){}
-    },150);
+    document.getElementById('landing-page').style.display='none';
+    document.getElementById('app-wrapper').style.display='flex';
+    buildSB();
+    go('dashboard');
+    setTimeout(buildSmartDashboard, 100);
   } else {
     showLoginModal(profil);
   }
@@ -5013,25 +4975,9 @@ function loginAs(profil){
 
 function showLanding(){
   const lp=document.getElementById('landing-page');
-  if(lp) lp.style.display='flex';
-  const shell=document.querySelector('.shell');
-  if(shell) shell.style.display='none';
-  activeQuickFilter='';
-  ldFiltered=[...BIENS_DATA];
-  ['ld-type','ld-zone','ld-budget'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.value='';
-  });
-  // Reset apparence filtres rapides
-  document.querySelectorAll('.qf-btn').forEach(b=>{
-    const isAll=b.dataset.type==='';
-    b.style.background=isAll?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)';
-    b.style.color='#fff';
-    b.style.fontWeight=isAll?'600':'normal';
-    b.style.borderColor=isAll?'rgba(255,255,255,0.6)':'rgba(255,255,255,0.3)';
-  });
-  renderLandingBiens();
-  const nbEl=document.getElementById('ld-nb-annonces');
-  if(nbEl) nbEl.textContent=BIENS_DATA.length;
+  const app=document.getElementById('app-wrapper');
+  if(lp) lp.style.display='block';
+  if(app) app.style.display='none';
 }
 
 // ── BUDGET DISPLAY ──
@@ -5373,9 +5319,9 @@ function contactFromLanding(bienId){
 
 function hideLanding(){
   const lp=document.getElementById('landing-page');
+  const app=document.getElementById('app-wrapper');
   if(lp) lp.style.display='none';
-  const shell=document.querySelector('.shell');
-  if(shell) shell.style.display='flex';
+  if(app) app.style.display='flex';
 }
 
 // loginAs défini plus haut
