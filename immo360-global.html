@@ -3280,7 +3280,7 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 // =============================================
 const MENUS = {
   sell:[
-    {s:'Mon bien',items:[{ico:'🏠',k:'dashboard',l:'Tableau de bord'},{ico:'💎',k:'estimation',l:'Estimation IA'},{ico:'📝',k:'depot',l:'Déposer annonce'},{ico:'📣',k:'annonces',l:'Mes annonces'}]},
+    {s:'Mon bien',items:[{ico:'🏠',k:'dashboard',l:'Tableau de bord'},{ico:'💎',k:'analyse',l:'Estimation IA'},{ico:'📝',k:'depot',l:'Déposer annonce'},{ico:'📣',k:'annonces',l:'Mes annonces'}]},
     {s:'Suivi vente',items:[{ico:'📅',k:'rdv',l:'Mes visites'},{ico:'🔄',k:'suivi',l:'Suivi vente'},{ico:'💬',k:'messagerie',l:'Messages'},{ico:'🏗️',k:'artisans',l:'Artisans'}]},
   ],
   buy:[
@@ -3331,6 +3331,9 @@ function closeSidebar(){
 
 // Close sidebar when a nav item is clicked on mobile
 function go(panel){
+  // Alias pour panels renommés
+  const aliases={estimation:'analyse',stats:'statsannonces'};
+  if(aliases[panel]) panel=aliases[panel];
   S.panel=panel;
   closeSidebar();
   setTimeout(applyMobileLayout, 50);
@@ -8221,18 +8224,20 @@ function buildSmartDashboard(){
   if(!dash) return;
 
   // ── COMPOSANTS COMMUNS ──
-  const BTN=(label,panel,primary=false)=>`
-    <button type="button" onclick="go('${panel}')"
-      style="display:flex;align-items:center;justify-content:space-between;width:100%;
-      background:${primary?'#0d1117':'#F9F7F3'};color:${primary?'#fff':'#0d1117'};
-      border:${primary?'none':'1px solid rgba(0,0,0,0.07)'};border-radius:11px;
-      padding:12px 15px;font-size:13px;font-weight:600;cursor:pointer;
-      font-family:'DM Sans',sans-serif;margin-bottom:8px;transition:.2s"
-      onmouseover="this.style.background='${primary?'#B8922A':'rgba(184,146,42,0.08)'}'"
-      onmouseout="this.style.background='${primary?'#0d1117':'#F9F7F3'}'">
-      ${label}
-      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>`;
+  const BTN=(label,panel,primary=false)=>{
+    const bg=primary?'#0d1117':'#F9F7F3';
+    const fg=primary?'#fff':'#0d1117';
+    const bd=primary?'none':'1px solid rgba(0,0,0,0.07)';
+    const hov=primary?'#B8922A':'rgba(184,146,42,0.08)';
+    const b=document.createElement('button');
+    b.type='button';
+    b.onclick=()=>go(panel);
+    b.style.cssText='display:flex;align-items:center;justify-content:space-between;width:100%;background:'+bg+';color:'+fg+';border:'+bd+';border-radius:11px;padding:12px 15px;font-size:13px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:8px;transition:.2s';
+    b.onmouseover=()=>b.style.background=hov;
+    b.onmouseout=()=>b.style.background=bg;
+    b.innerHTML=label+'<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+    return b.outerHTML;
+  };
 
   const W=(v,l,c='#B8922A',sub='')=>`
     <div style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.07);padding:14px 16px;text-align:center">
