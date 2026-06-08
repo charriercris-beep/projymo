@@ -35,8 +35,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   html,body{max-width:100vw;width:100%}
   *{box-sizing:border-box}
   .shell{flex-direction:column;height:100vh;min-height:100vh;width:100%;overflow-x:hidden}
-  @media(max-width:768px){@media(min-width:769px){.sidebar{position:relative;left:0;top:0;z-index:1;transition:none}}
-@media(max-width:768px){.sidebar.mobile-hidden{left:-260px;transition:left .25s ease}}}
+  .sidebar{position:relative!important;left:0!important;top:auto!important}}
   .sidebar.open{left:0}
   .sidebar-overlay.show{display:block}
   .hamburger{display:flex}
@@ -975,7 +974,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <div class="shell" id="main-shell" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:500;background:var(--cream)">
 
 <!-- SIDEBAR -->
-<div class="sidebar" id="sidebar" style="position:relative!important;left:0!important;top:0!important;z-index:1!important">
+<div class="sidebar" id="sidebar">
   <div class="logo-area">
     <div class="logo-title" onclick="showLanding()" style="cursor:pointer">Immo<span>360</span></div>
     <div class="logo-sub" onclick="showLanding()" style="cursor:pointer;transition:.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color=''">← Retour à l'accueil</div>
@@ -4127,6 +4126,7 @@ function calcFin(){
 // =============================================
 const BUSY=[3,7,8,14,19,20,25,28];
 function buildCal(){
+  if(!document.getElementById("cal-grid")) return;
   const days=['Lu','Ma','Me','Je','Ve','Sa','Di'];
   document.getElementById('cal-headers').innerHTML=days.map(d=>`<div class="cal-hdr">${d}</div>`).join('');
   const d=new Date(S.calYear,S.calMonth,1);
@@ -4337,6 +4337,7 @@ function addBien(){S.biens.push({id:Date.now(),titre:'Nouveau bien',type:'Appart
 // SUIVI
 // =============================================
 function buildSuivi(){
+  if(!document.getElementById("suivi-list")) return;
   const steps=[{l:'Estimation réalisée',done:true},{l:'Annonce publiée',done:true},{l:'Premières visites',done:true},{l:'Offre acceptée',done:false},{l:'Compromis signé',done:false},{l:'Acte authentique',done:false}];
   document.getElementById('suivi-steps').innerHTML=steps.map((s,i)=>`<div class="progress-step"><div class="step-dot ${s.done?'step-done':i===steps.findIndex(x=>!x.done)?'step-active':'step-todo'}">${s.done?'✓':i+1}</div><div style="font-size:13.5px;${s.done?'color:var(--mid);text-decoration:line-through':''}">${s.l}</div></div>`).join('');
   document.getElementById('contacts-table').innerHTML='<thead><tr><th>Nom</th><th>Téléphone</th><th>Intérêt</th><th>Statut</th></tr></thead><tbody>'+S.contacts.map(c=>`<tr><td>${c.nom}</td><td>${c.tel}</td><td>${c.interet}</td><td><span class="tag ${c.statut==='Chaud'?'tag-red':c.statut==='Tiède'?'tag-gold':'tag-blue'}">${c.statut}</span></td></tr>`).join('')+'</tbody>';
