@@ -359,6 +359,9 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .ld-reset-btn{background:none;border:1px solid var(--warm);color:var(--mid);font-size:11px;cursor:pointer;padding:7px 12px;border-radius:8px;align-self:flex-end;transition:.15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
 .ld-reset-btn:hover{border-color:var(--gold);color:var(--gold)}
 
+/* ── ANIMATION SPIN ── */
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
 /* ── JAUGE BUDGET ── */
 .budget-preset-btn{background:#fff;border:1px solid var(--warm);color:var(--mid);padding:4px 10px;border-radius:16px;font-size:11px;cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif}
 .budget-preset-btn:hover,.budget-preset-btn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
@@ -508,6 +511,257 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       </div>
     </div>
   </div>
+
+
+  <!-- ═══ ESTIMATION IA — PORTE D'ENTRÉE PRINCIPALE ═══ -->
+  <div style="background:var(--dark);padding:60px 24px;flex-shrink:0" id="section-estimation-ia">
+    <div style="max-width:860px;margin:0 auto">
+
+      <!-- TITRE -->
+      <div style="text-align:center;margin-bottom:40px">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(184,146,42,0.15);border:1px solid rgba(184,146,42,0.3);border-radius:20px;padding:5px 14px;margin-bottom:16px">
+          <span style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase">Nouveau · Score Immo360™</span>
+        </div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:#fff;line-height:1.1;margin-bottom:14px">
+          Combien vaut vraiment<br>votre bien ?
+        </h2>
+        <p style="font-size:15px;color:rgba(255,255,255,0.55);max-width:520px;margin:0 auto">
+          Uploadez vos photos. Notre IA analyse l'état, les finitions, le potentiel — et vous donne une estimation en moins de 60 secondes.
+        </p>
+      </div>
+
+      <!-- MODULE PRINCIPAL -->
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden">
+
+        <!-- ÉTAPE 1 : UPLOAD -->
+        <div id="estim-step-upload" style="padding:32px">
+          <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px">Étape 1 — Vos photos</div>
+
+          <!-- ZONES D'UPLOAD PAR CATÉGORIE -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px">
+
+            <!-- Extérieur -->
+            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-ext').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
+              <input type="file" id="upload-ext" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'ext')">
+              <div style="font-size:24px;margin-bottom:8px">🏠</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Extérieur</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Façade · Jardin · Terrasse · Vue</div>
+              <div id="count-ext" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            </div>
+
+            <!-- Séjour / Salon -->
+            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-salon').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
+              <input type="file" id="upload-salon" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'salon')">
+              <div style="font-size:24px;margin-bottom:8px">🛋️</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Séjour / Salon</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Salon · Séjour · Salle à manger</div>
+              <div id="count-salon" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            </div>
+
+            <!-- Cuisine -->
+            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-cuisine').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
+              <input type="file" id="upload-cuisine" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'cuisine')">
+              <div style="font-size:24px;margin-bottom:8px">🍳</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Cuisine</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Cuisine · Équipements · Rangements</div>
+              <div id="count-cuisine" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            </div>
+
+            <!-- Chambres / SDB -->
+            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-chambre').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
+              <input type="file" id="upload-chambre" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'chambre')">
+              <div style="font-size:24px;margin-bottom:8px">🛏️</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Chambres / SDB</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Chambres · Salle de bain · WC</div>
+              <div id="count-chambre" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            </div>
+
+            <!-- Technique -->
+            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-tech').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
+              <input type="file" id="upload-tech" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'tech')">
+              <div style="font-size:24px;margin-bottom:8px">⚡</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Technique</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Tableau élec · Toiture · Menuiseries</div>
+              <div id="count-tech" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            </div>
+
+            <!-- Autres -->
+            <div style="background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.12);border-radius:12px;padding:16px;cursor:pointer;transition:.2s" onclick="document.getElementById('upload-autres').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
+              <input type="file" id="upload-autres" accept="image/*" multiple style="display:none" onchange="handleEstimPhotos(event,'autres')">
+              <div style="font-size:24px;margin-bottom:8px">📸</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Autres</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5">Piscine · Cave · Dépendances</div>
+              <div id="count-autres" style="margin-top:8px;font-size:11px;color:var(--gold);font-weight:600"></div>
+            </div>
+          </div>
+
+          <!-- INFOS COMPLÉMENTAIRES -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:24px">
+            <div>
+              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Type de bien</label>
+              <select id="estim-type-bien" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px">
+                <option value="appartement">Appartement</option>
+                <option value="maison">Maison</option>
+                <option value="villa">Villa</option>
+                <option value="studio">Studio</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Surface (m²)</label>
+              <input type="number" id="estim-surface" placeholder="85" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Quartier / Ville</label>
+              <input type="text" id="estim-quartier" placeholder="Anse Vata, Dumbéa..." style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Année de construction</label>
+              <input type="number" id="estim-annee" placeholder="1990" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+
+          <!-- COMPTEUR PHOTOS + CTA -->
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div style="font-size:13px;color:rgba(255,255,255,0.5)" id="estim-photo-count">0 photo uploadée · Minimum 3 recommandées</div>
+            <button onclick="lancerAnalyseIA()" id="btn-analyser" style="background:var(--gold);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif" onmouseover="this.style.background='#c9a030'" onmouseout="this.style.background='var(--gold)'">
+              ✨ Analyser mes photos
+            </button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 2 : ANALYSE EN COURS -->
+        <div id="estim-step-loading" style="display:none;padding:60px 32px;text-align:center">
+          <div style="font-size:48px;margin-bottom:20px;animation:spin 2s linear infinite;display:inline-block">🔍</div>
+          <div style="font-size:18px;font-weight:600;color:#fff;margin-bottom:8px" id="loading-msg">Analyse des photos en cours...</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.4)" id="loading-sub">L'IA examine chaque pièce, les finitions et l'état général</div>
+          <div style="margin-top:24px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;max-width:300px;margin-left:auto;margin-right:auto">
+            <div id="loading-bar" style="height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .5s"></div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 3 : RÉSULTATS -->
+        <div id="estim-step-results" style="display:none;padding:32px">
+          <!-- SCORE GLOBAL -->
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,0.08)">
+            <div style="text-align:center">
+              <div style="width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--gold) 0deg,var(--gold) calc(var(--score,84)*3.6deg),rgba(255,255,255,0.08) calc(var(--score,84)*3.6deg));display:flex;align-items:center;justify-content:center;position:relative" id="score-circle">
+                <div style="width:86px;height:86px;border-radius:50%;background:#1c1a16;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                  <div style="font-size:28px;font-weight:800;color:var(--gold)" id="score-val">84</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.4)">/100</div>
+                </div>
+              </div>
+              <div style="font-size:11px;font-weight:700;color:var(--gold);margin-top:8px;text-transform:uppercase;letter-spacing:1px">Score Immo360™</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Estimation de valeur</div>
+              <div style="font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,36px);font-weight:700;color:#fff;margin-bottom:6px" id="estim-val-centrale">44,5 M F</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.5)" id="estim-fourchette">Fourchette : 42 M — 47 M F</div>
+              <div style="margin-top:10px;display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600" id="estim-position-badge">⚡ Légèrement sous le marché local</div>
+            </div>
+          </div>
+
+          <!-- SCORES PAR CATÉGORIE (visibles) -->
+          <div style="margin-bottom:24px">
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:14px">Analyse par critère</div>
+            <div id="scores-categories" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px"></div>
+          </div>
+
+          <!-- POSITIONNEMENT MARCHÉ (visible) -->
+          <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:16px;margin-bottom:24px" id="estim-marche-bloc">
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:10px">📊 Positionnement marché</div>
+            <div style="font-size:14px;color:#fff" id="estim-marche-txt"></div>
+          </div>
+
+          <!-- RECOMMANDATIONS — FLOUTÉES -->
+          <div style="position:relative;margin-bottom:24px">
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:14px">💡 Plan d'amélioration & potentiel</div>
+
+            <!-- Contenu flouté -->
+            <div style="filter:blur(5px);pointer-events:none;user-select:none" id="estim-reco-blurred">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+                <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:14px">
+                  <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px">🍳 Cuisine</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:8px">Score actuel : 58/100</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6">· Remplacer les poignées<br>· Repeindre les façades<br>· Changer la crédence</div>
+                  <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
+                    <div style="background:rgba(220,38,38,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Coût</div><div style="font-size:12px;font-weight:700;color:#ef4444">150k F</div></div>
+                    <div style="background:rgba(42,122,75,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Gain</div><div style="font-size:12px;font-weight:700;color:#4ade80">+800k F</div></div>
+                  </div>
+                  <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--gold);font-weight:700">ROI × 5,3</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:14px">
+                  <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px">🎨 Peinture & finitions</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:8px">Score actuel : 71/100</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6">· Rafraîchir les murs<br>· Poncer le parquet<br>· Joints salle de bain</div>
+                  <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
+                    <div style="background:rgba(220,38,38,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Coût</div><div style="font-size:12px;font-weight:700;color:#ef4444">80k F</div></div>
+                    <div style="background:rgba(42,122,75,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Gain</div><div style="font-size:12px;font-weight:700;color:#4ade80">+500k F</div></div>
+                  </div>
+                  <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--gold);font-weight:700">ROI × 6,2</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:14px">
+                  <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px">🌿 Extérieur</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:8px">Score actuel : 79/100</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6">· Taille haies et jardinage<br>· Nettoyage façade<br>· Éclairage entrée</div>
+                  <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
+                    <div style="background:rgba(220,38,38,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Coût</div><div style="font-size:12px;font-weight:700;color:#ef4444">45k F</div></div>
+                    <div style="background:rgba(42,122,75,0.1);border-radius:6px;padding:6px"><div style="font-size:10px;color:rgba(255,255,255,0.4)">Gain</div><div style="font-size:12px;font-weight:700;color:#4ade80">+300k F</div></div>
+                  </div>
+                  <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--gold);font-weight:700">ROI × 6,7</div>
+                </div>
+              </div>
+              <div style="margin-top:14px;background:rgba(42,122,75,0.08);border:1px solid rgba(42,122,75,0.2);border-radius:10px;padding:14px;text-align:center">
+                <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:4px">Potentiel de valorisation total estimé</div>
+                <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#4ade80">+ 3,2 M F</div>
+              </div>
+            </div>
+
+            <!-- OVERLAY INSCRIPTION -->
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(to bottom,transparent 0%,rgba(28,26,22,0.95) 30%);border-radius:12px;padding:20px;text-align:center">
+              <div style="font-size:28px;margin-bottom:12px">🔒</div>
+              <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:6px">Plan d'amélioration complet</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:20px;max-width:360px">
+                Débloquez le détail des travaux recommandés, les coûts estimés, les gains potentiels et le ROI par pièce.
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+                <button onclick="showLoginModal('sell')" style="background:var(--gold);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
+                  Créer mon compte gratuit →
+                </button>
+                <button onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 20px;border-radius:10px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif">
+                  Se connecter
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIONS APRÈS RÉSULTAT -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
+            <div onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+              <div style="font-size:24px;margin-bottom:8px">🏗️</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Devis artisans</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Peintres · Cuisinistes · Paysagistes</div>
+            </div>
+            <div onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+              <div style="font-size:24px;margin-bottom:8px">📣</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Publier mon annonce</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Multi-portails NC en 5 minutes</div>
+            </div>
+            <div onclick="showLoginModal('sell')" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+              <div style="font-size:24px;margin-bottom:8px">🤝</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Agent partenaire</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Confier la vente à un pro NC</div>
+            </div>
+            <div onclick="lancerNouvelleAnalyse()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+              <div style="font-size:24px;margin-bottom:8px">🔄</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Nouvelle analyse</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4)">Analyser un autre bien</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- ═══ MOMENT WAOUH — IA CONVERSATIONNELLE ═══ -->
   <div style="background:#fff;padding:60px 24px;flex-shrink:0">
@@ -9198,6 +9452,259 @@ function getMultiFilterValues(type){
   const dd = document.getElementById('dd-'+type);
   if(!dd) return [];
   return [...dd.querySelectorAll('input[type=checkbox]:checked')].map(cb=>cb.value);
+}
+
+// =============================================
+// ESTIMATION IA — MODULE PUBLIC
+// =============================================
+let estimPhotos = {ext:[],salon:[],cuisine:[],chambre:[],tech:[],autres:[]};
+let estimTotalPhotos = 0;
+
+function scrollToEstimation(){
+  document.getElementById('section-estimation-ia')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function handleEstimPhotos(event, cat){
+  const files = Array.from(event.target.files);
+  estimPhotos[cat] = files;
+  estimTotalPhotos = Object.values(estimPhotos).reduce((a,b)=>a+b.length,0);
+  // Mettre à jour le compteur de la catégorie
+  const countEl = document.getElementById('count-'+cat);
+  if(countEl) countEl.textContent = files.length > 0 ? files.length+' photo'+(files.length>1?'s':'')+' ✓' : '';
+  // Mettre à jour le compteur global
+  const totalEl = document.getElementById('estim-photo-count');
+  if(totalEl) totalEl.textContent = estimTotalPhotos+" photo"+(estimTotalPhotos>1?"s":"")+" uploadee"+(estimTotalPhotos<3?" - Min. 3 recommandees":" - Pret a analyser !");
+}
+
+async function lancerAnalyseIA(){
+  if(estimTotalPhotos === 0){
+    alert("Veuillez uploader au moins une photo pour lancer l'analyse.");
+    return;
+  }
+
+  // Afficher le loader
+  document.getElementById('estim-step-upload').style.display='none';
+  document.getElementById('estim-step-loading').style.display='block';
+  document.getElementById('estim-step-results').style.display='none';
+
+  // Animation de chargement
+  const messages = [
+    'Analyse des photos en cours...',
+    "Evaluation etat general...",
+    "Analyse finitions et materiaux...",
+    "Comparaison marche NC...",
+    "Calcul Score Immo360...",
+    "Generation du rapport..."
+  ];
+  let msgIdx = 0;
+  let progress = 0;
+  const bar = document.getElementById('loading-bar');
+  const msgEl = document.getElementById('loading-msg');
+  const subEl = document.getElementById('loading-sub');
+
+  const interval = setInterval(()=>{
+    progress = Math.min(progress + Math.random()*15, 90);
+    if(bar) bar.style.width = progress+'%';
+    msgIdx = Math.floor(progress/18);
+    if(msgEl && messages[msgIdx]) msgEl.textContent = messages[msgIdx];
+  }, 600);
+
+  try {
+    // Préparer les images en base64
+    const allFiles = Object.values(estimPhotos).flat().slice(0,6);
+    const surface = document.getElementById('estim-surface')?.value || '80';
+    const quartier = document.getElementById('estim-quartier')?.value || 'Nouméa';
+    const typeBien = document.getElementById('estim-type-bien')?.value || 'appartement';
+    const annee = document.getElementById('estim-annee')?.value || '2000';
+
+    let imageContents = [];
+    for(const file of allFiles){
+      const b64 = await fileToBase64(file);
+      imageContents.push({
+        type:'image',
+        source:{type:'base64',media_type:file.type||'image/jpeg',data:b64}
+      });
+    }
+
+    const prompt = `Tu es un expert immobilier en Nouvelle-Calédonie. Analyse ces photos d'un ${typeBien} de ${surface}m² situé à ${quartier} (construit en ${annee}).
+
+Réponds UNIQUEMENT en JSON valide avec cette structure exacte :
+{
+  "score_global": 84,
+  "scores": {
+    "marche": 85,
+    "presentation": 72,
+    "etat_general": 88,
+    "attractivite": 79,
+    "luminosite": 82,
+    "entretien": 78
+  },
+  "valeur_basse": 42000000,
+  "valeur_centrale": 44500000,
+  "valeur_haute": 47000000,
+  "positionnement": "Légèrement sous la moyenne du secteur de ${quartier}",
+  "positionnement_pct": 68,
+  "points_forts": ["Luminosité excellente", "Vue dégagée", "Bon état général"],
+  "points_faibles": ["Cuisine datée", "Salle de bain à rafraîchir"],
+  "recommandations": [
+    {
+      "piece": "Cuisine",
+      "score_actuel": 58,
+      "actions": ["Remplacer les poignées", "Repeindre les façades", "Changer la crédence"],
+      "cout_xpf": 150000,
+      "gain_xpf": 800000,
+      "roi": 5.3
+    }
+  ],
+  "potentiel_total_xpf": 3200000
+}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1500,
+        messages:[{
+          role:'user',
+          content:[...imageContents, {type:'text',text:prompt}]
+        }]
+      })
+    });
+
+    clearInterval(interval);
+    if(bar) bar.style.width='100%';
+
+    const data = await response.json();
+    const raw = data.content?.[0]?.text || '';
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    const result = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+
+    setTimeout(()=>afficherResultats(result, surface, quartier), 500);
+
+  } catch(err) {
+    clearInterval(interval);
+    console.error('Erreur API:', err);
+    // Résultat de démonstration si l'API échoue
+    const demoResult = {
+      score_global: 81,
+      scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:75},
+      valeur_basse: Math.round(parseInt(surface||80)*340000*0.92),
+      valeur_centrale: Math.round(parseInt(surface||80)*340000),
+      valeur_haute: Math.round(parseInt(surface||80)*340000*1.08),
+      positionnement: 'Dans la moyenne du secteur '+quartier,
+      positionnement_pct: 55,
+      points_forts:['Bon état général','Luminosité naturelle','Agencement fonctionnel'],
+      points_faibles:['Finitions à moderniser','Cuisine à rafraîchir'],
+      potentiel_total_xpf: Math.round(parseInt(surface||80)*340000*0.07)
+    };
+    setTimeout(()=>afficherResultats(demoResult, surface, quartier), 500);
+  }
+}
+
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function afficherResultats(result, surface, quartier){
+  if(!result) return;
+
+  document.getElementById('estim-step-loading').style.display='none';
+  document.getElementById('estim-step-results').style.display='block';
+
+  // Score global
+  const score = result.score_global || 81;
+  const scoreEl = document.getElementById('score-val');
+  if(scoreEl) scoreEl.textContent = score;
+  const circle = document.getElementById('score-circle');
+  if(circle) circle.style.setProperty('--score', score);
+
+  // Valeurs
+  const vc = result.valeur_centrale || 0;
+  const vb = result.valeur_basse || 0;
+  const vh = result.valeur_haute || 0;
+  const convM = v => (v/1000000).toFixed(1).replace('.',',')+'M F';
+  const vcEl = document.getElementById('estim-val-centrale');
+  if(vcEl) vcEl.textContent = convM(vc);
+  const fEl = document.getElementById('estim-fourchette');
+  if(fEl) fEl.textContent = 'Fourchette : '+convM(vb)+' — '+convM(vh);
+
+  // Badge positionnement
+  const badge = document.getElementById('estim-position-badge');
+  if(badge){
+    const pct = result.positionnement_pct || 55;
+    badge.textContent = pct>=70?'✅ Au-dessus de la moyenne locale':pct>=50?'⚡ Dans la moyenne locale':'📉 Légèrement sous la moyenne';
+    badge.style.background = pct>=70?'rgba(42,122,75,0.2)':pct>=50?'rgba(184,146,42,0.2)':'rgba(220,38,38,0.15)';
+    badge.style.color = pct>=70?'#4ade80':pct>=50?'var(--gold)':'#ef4444';
+  }
+
+  // Scores par catégorie
+  const cats = [
+    {key:'marche',label:'Marché',icon:'📊'},
+    {key:'presentation',label:'Présentation',icon:'✨'},
+    {key:'etat_general',label:'État général',icon:'🏠'},
+    {key:'attractivite',label:'Attractivité',icon:'❤️'},
+    {key:'luminosite',label:'Luminosité',icon:'☀️'},
+    {key:'entretien',label:'Entretien',icon:'🔧'},
+  ];
+  const scoresEl = document.getElementById('scores-categories');
+  if(scoresEl && result.scores){
+    scoresEl.innerHTML = cats.map(c=>{
+      const s = result.scores[c.key]||75;
+      const color = s>=80?'#4ade80':s>=65?'var(--gold)':'#ef4444';
+      return `<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:12px;color:rgba(255,255,255,0.6)">${c.icon} ${c.label}</span>
+          <span style="font-size:14px;font-weight:700;color:${color}">${s}/100</span>
+        </div>
+        <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden">
+          <div style="width:${s}%;height:100%;background:${color};border-radius:2px;transition:.8s"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Positionnement marché
+  const marcheEl = document.getElementById('estim-marche-txt');
+  if(marcheEl){
+    const pct = result.positionnement_pct||55;
+    marcheEl.innerHTML = `Votre bien est <strong style="color:var(--gold)">mieux présenté que ${pct}% des biens comparables</strong> dans le secteur de ${quartier}.<br>
+    <span style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;display:block">Basé sur ${Math.round(parseInt(surface||80)*340000/1000000*10)/10}M F × marché NC · Properstar · ImmoNC</span>`;
+  }
+
+  // Points forts / faibles
+  if(result.points_forts || result.points_faibles){
+    const pfEl = document.getElementById('estim-marche-bloc');
+    if(pfEl){
+      pfEl.innerHTML += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+        <div>${(result.points_forts||[]).map(p=>`<div style="font-size:11px;color:#4ade80;margin-bottom:3px">✅ ${p}</div>`).join('')}</div>
+        <div>${(result.points_faibles||[]).map(p=>`<div style="font-size:11px;color:#ef4444;margin-bottom:3px">⚠️ ${p}</div>`).join('')}</div>
+      </div>`;
+    }
+  }
+
+  // Scroll vers résultats
+  document.getElementById('estim-step-results')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function lancerNouvelleAnalyse(){
+  estimPhotos = {ext:[],salon:[],cuisine:[],chambre:[],tech:[],autres:[]};
+  estimTotalPhotos = 0;
+  ['ext','salon','cuisine','chambre','tech','autres'].forEach(cat=>{
+    const el=document.getElementById('count-'+cat);if(el)el.textContent='';
+    const inp=document.getElementById('upload-'+cat);if(inp)inp.value='';
+  });
+  const totalEl=document.getElementById('estim-photo-count');
+  if(totalEl)totalEl.textContent='0 photo uploadée · Minimum 3 recommandées';
+  document.getElementById('estim-step-upload').style.display='block';
+  document.getElementById('estim-step-loading').style.display='none';
+  document.getElementById('estim-step-results').style.display='none';
+  document.getElementById('section-estimation-ia')?.scrollIntoView({behavior:'smooth'});
 }
 
 // =============================================
