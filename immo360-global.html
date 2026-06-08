@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   .chat-log{max-height:110px}
 }
 h1,h2,h3,h4{font-family:'Playfair Display',serif}
-.shell{display:none;height:100vh;width:100vw;overflow:hidden;flex-direction:row;background:var(--cream);color:var(--dark)}
+.shell{display:none;height:100vh;width:100vw;overflow:hidden;flex-direction:column;background:var(--cream);color:var(--dark)}
 
 /* SIDEBAR */
 .sidebar{width:230px;min-width:230px;background:var(--dark);display:flex;flex-direction:column}
@@ -156,7 +156,7 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif}
 .badge-sell{background:rgba(184,146,42,0.1);color:var(--gold-dark)}
 .badge-buy{background:rgba(42,74,122,0.1);color:var(--blue)}
 .badge-agt{background:rgba(42,122,75,0.1);color:var(--green)}
-.content{flex:1;overflow-y:auto;padding:24px 28px}
+.content{flex:1;overflow-y:auto;padding:24px 28px;width:100%}
 
 /* CARDS */
 .card{background:#fff;border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
@@ -1000,38 +1000,34 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 <!-- MAIN -->
 <div class="main">
-  <div class="topbar" style="display:flex;align-items:center;gap:0;padding:0;height:56px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0">
+  <div id="app-topnav" style="display:flex;align-items:center;height:56px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;padding:0 16px;gap:0">
 
-    <!-- HAMBURGER -->
-    <button type="button" class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu" style="flex-shrink:0">
-      <span></span><span></span><span></span>
-    </button>
-
-    <!-- LOGO + RETOUR ACCUEIL -->
-    <div onclick="showLanding()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:0 12px;border-right:1px solid rgba(255,255,255,0.08);height:100%;flex-shrink:0;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background=''">
-      <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff">Immo<span style="color:var(--gold)">360</span></div>
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);line-height:1.2;max-width:50px">← Accueil</div>
+    <!-- LOGO -->
+    <div onclick="showLanding()" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding-right:16px;border-right:1px solid rgba(255,255,255,0.08);height:100%;flex-shrink:0;transition:.2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff">Immo<span style="color:var(--gold)">360</span></div>
+      <div style="font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:.5px">NC</div>
     </div>
 
-    <!-- FIL D'ARIANE -->
-    <div style="flex:1;display:flex;align-items:center;gap:6px;padding:0 14px;min-width:0;overflow:hidden">
-      <span id="breadcrumb-profil" style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);white-space:nowrap"></span>
-      <span style="color:rgba(255,255,255,0.2);font-size:11px">›</span>
-      <span class="topbar-title" id="topbar-title" style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Tableau de bord</span>
+    <!-- NAV ITEMS DYNAMIQUES -->
+    <div id="nav-container" style="display:flex;align-items:center;gap:2px;padding:0 10px;flex:1;overflow:hidden;height:100%"></div>
+
+    <!-- SWITCH PROFIL -->
+    <div class="profile-switch" style="display:flex;align-items:center;gap:3px;padding:0 12px;border-left:1px solid rgba(255,255,255,0.08);border-right:1px solid rgba(255,255,255,0.08);height:100%;flex-shrink:0">
+      <div class="prof-btn on" onclick="setProfile('sell',this)">Vendeur</div>
+      <div class="prof-btn" onclick="setProfile('buy',this)">Acheteur</div>
+      <div class="prof-btn" onclick="setProfile('agt',this)">Agent</div>
     </div>
 
-    <!-- DEVISE -->
-    <select class="dev-sel" id="devsel" onchange="setCurr()" style="flex-shrink:0">
-      <option value="XPF" data-s="F" selected>F CFP</option>
-      <option value="EUR" data-s="€">EUR</option>
-      <option value="USD" data-s="$">USD</option>
-    </select>
-
-    <!-- BADGE PROFIL + DÉCONNEXION -->
-    <div style="display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid rgba(255,255,255,0.08);height:100%;flex-shrink:0">
-      <div class="topbar-badge badge-sell" id="profile-badge" style="cursor:default">Vendeur</div>
-      <button type="button" onclick="showLanding()" title="Retour à l'accueil" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.6);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">🏠 Accueil</button>
-      <button type="button" onclick="logout()" title="Déconnexion" style="background:rgba(220,38,38,0.12);border:none;color:rgba(220,100,100,0.8);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s" onmouseover="this.style.background='rgba(220,38,38,0.25)'" onmouseout="this.style.background='rgba(220,38,38,0.12)'">Déco.</button>
+    <!-- DROITE : devise + badge + actions -->
+    <div style="display:flex;align-items:center;gap:6px;padding-left:12px;flex-shrink:0">
+      <select class="dev-sel" id="devsel" onchange="setCurr()">
+        <option value="XPF" data-s="F" selected>F CFP</option>
+        <option value="EUR" data-s="€">EUR</option>
+        <option value="USD" data-s="$">USD</option>
+      </select>
+      <div class="topbar-badge badge-sell" id="profile-badge">Vendeur</div>
+      <button type="button" onclick="showLanding()" title="Accueil" style="background:rgba(255,255,255,0.06);border:none;color:rgba(255,255,255,0.6);padding:5px 9px;border-radius:6px;font-size:12px;cursor:pointer;transition:.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">🏠</button>
+      <button type="button" onclick="logout()" style="background:rgba(220,38,38,0.1);border:none;color:rgba(220,100,100,0.8);padding:5px 9px;border-radius:6px;font-size:11px;cursor:pointer">Déco.</button>
     </div>
   </div>
 
@@ -4567,13 +4563,7 @@ function loginAs(profil){
     document.getElementById('main-shell').style.display='flex';
     buildSB();
     // Fix sidebar position
-    const _sb = document.getElementById('sidebar');
-    if(_sb && window.innerWidth > 768){
-      _sb.style.position = 'relative';
-      _sb.style.left = '0';
-      _sb.style.top = '0';
-      _sb.style.zIndex = '1';
-    }
+
     // Déplacer TOUS les panels dans .content
     const cnt=document.querySelector('.content');
     if(cnt){
