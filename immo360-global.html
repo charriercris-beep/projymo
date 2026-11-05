@@ -3147,6 +3147,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 
 <script>
+// Échappe une valeur avant insertion dans du HTML (anti-XSS)
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function applyMobileLayout(){
   const isMobile = window.innerWidth <= 768;
   document.querySelectorAll('.grid2, .grid3').forEach(el=>{
@@ -3432,53 +3434,6 @@ function buildDashboard(){
   buildSmartDashboard();
 }
 
-function calcEstim(){
-  const surf=parseInt(document.getElementById('est-surface')?.value)||85;
-  const annee=parseInt(document.getElementById('est-annee')?.value)||2005;
-  const etat=document.getElementById('est-etat')?.value||'bon';
-  const type=document.getElementById('est-type')?.value||'apt';
-  const quartierKey=document.getElementById('est-quartier')?.value||'centre';
-  const q=NC_MARKET.quartiers[quartierKey]||NC_MARKET.quartiers.centre;
-
-  let pm2=type==='villa'?q.maison*1.2:type==='house'?q.maison:type==='studio'?q.apt*1.05:type==='terrain'?q.apt*0.3:q.apt;
-  if(S.country==='NC') pm2*=0.96;
-  const age=2026-annee;
-  if(age<3)pm2*=1.10;else if(age<10)pm2*=1.02;else if(age<20)pm2*=0.97;else if(age<30)pm2*=0.90;else pm2*=0.80;
-  if(etat==='excellent')pm2*=1.15;else if(etat==='bon')pm2*=1.0;else if(etat==='moyen')pm2*=0.87;else pm2*=0.70;
-  // Déclencher le module artisans si état = moyen ou travaux
-  const banner=document.getElementById('ctx-artisans-banner');
-  if(banner) banner.style.display=(etat==='moyen'||etat==='travaux')?'block':'none';
-  if(document.getElementById('opt-piscine')?.checked)pm2*=1.13;
-  if(document.getElementById('opt-vue')?.checked)pm2*=1.20;
-  if(document.getElementById('opt-garage')?.checked)pm2*=1.04;
-  if(document.getElementById('opt-terr')?.checked)pm2*=1.05;
-  if(document.getElementById('opt-garden')?.checked)pm2*=1.06;
-
-  prixBase=Math.round(pm2*surf);
-  const lo=Math.round(prixBase*0.92),hi=Math.round(prixBase*1.08);
-  const confidence=Math.min(92,55+(surf>40?10:0)+(age<15?10:0)+(etat!=='moyen'?8:0)+(S.country==='NC'?9:0));
-
-  document.getElementById('est-price-display').textContent=conv(prixBase);
-  document.getElementById('est-range-display').textContent=conv(lo)+' – '+conv(hi);
-  document.getElementById('est-pm2').textContent=conv(Math.round(pm2))+'/m²';
-  const medRef=type==='house'||type==='villa'?NC_MARKET.global.mediane_maison:NC_MARKET.global.mediane_apt;
-  document.getElementById('est-mkt').textContent=conv(medRef)+'/m² (médiane NC)';
-  document.getElementById('est-gauge').style.width=confidence+'%';
-  document.getElementById('est-confidence').textContent='Confiance : '+confidence+'%';
-  const diff=Math.round((pm2/medRef-1)*100);
-  const posEl=document.getElementById('est-pos');
-  if(posEl){posEl.textContent=(diff>=0?'+':'')+diff+'% vs médiane';posEl.className='ai-chip '+(diff>10?'ai-ok':diff<-10?'ai-bad':'ai-warn');}
-  document.getElementById('est-duree').textContent=etat==='excellent'?'25–40 jours':etat==='bon'?'45–65 jours':'70–100 jours';
-  const dpe=age<5?'A':age<12?'B':age<22?'C':age<32?'D':'E';
-  document.getElementById('est-dpe-chip').textContent=dpe;
-  buildDPE(dpe);
-
-  // Mettre à jour la valeur après travaux
-  updatePrixApres();
-
-  // Afficher les travaux recommandés selon l'état
-  buildTravauxList(etat, type, surf);
-}
 
 function updatePrixApres(){
   if(!prixBase) return;
@@ -3530,10 +3485,10 @@ function buildTravauxList(etat, type, surf){
     return `<div class="travail-item ${sel?'selected':''}" id="trv-${t.id}" onclick="toggleTravail('${t.id}')">
       <div class="travail-header">
         <div class="travail-emoji">${t.emoji}</div>
-        <div class="travail-title">${t.titre}</div>
+        <div class="travail-title">${esc(t.titre)}</div>
         <span class="travail-priority prio-${t.prio}">${t.prio}</span>
       </div>
-      <div class="travail-desc">${t.desc}</div>
+      <div class="travail-desc">${esc(t.desc)}</div>
       <div class="travail-metrics">
         <div class="travail-metric">💰 <strong>${conv(t.cout)}</strong></div>
         <div class="travail-metric" style="color:var(--green)">📈 <strong>+${t.gainPct}%</strong></div>
@@ -3863,9 +3818,9 @@ function displayAnalysisResults(data, btn){
       const pct=item.chip==='ai-ok'?85:item.chip==='ai-warn'?55:30;
       const color=item.chip==='ai-ok'?'var(--green)':item.chip==='ai-warn'?'var(--gold)':'var(--red)';
       return `<div class="score-room">
-        <span style="min-width:110px;font-size:12px">${item.label}</span>
+        <span style="min-width:110px;font-size:12px">${esc(item.label)}</span>
         <div class="score-room-bar"><div class="score-room-fill" style="width:${pct}%;background:${color}"></div></div>
-        <span class="ai-chip ${item.chip}" style="font-size:9px;padding:1px 6px">${item.val}</span>
+        <span class="ai-chip ${item.chip}" style="font-size:9px;padding:1px 6px">${esc(item.val)}</span>
       </div>`;
     }).join('');
   }
@@ -3874,10 +3829,10 @@ function displayAnalysisResults(data, btn){
 
   document.getElementById('ai-results').innerHTML=`
     <div class="ai-box" style="margin:-4px">
-      <h4>🤖 Résultats — Analyse IA réelle</h4>
+      <h4>${data._demo?'🧪 Exemple (mode démonstration)':'🤖 Résultats — Analyse IA réelle'}</h4>
       <div class="ai-line"><span>Score général</span><span class="ai-chip ${score>75?'ai-ok':score>60?'ai-warn':'ai-bad'}">${score}/100</span></div>
-      ${items.map(i=>`<div class="ai-line"><span>${i.label}</span><span class="ai-chip ${i.chip}">${i.val}</span></div>`).join('')}
-      ${data.summary ? `<div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5">${data.summary}</div>` : ''}
+      ${items.map(i=>`<div class="ai-line"><span>${esc(i.label)}</span><span class="ai-chip ${esc(i.chip)}">${esc(i.val)}</span></div>`).join('')}
+      ${data.summary ? `<div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5">${esc(data.summary)}</div>` : ''}
     </div>`;
 
   const notif=document.getElementById('notif-analyse');
@@ -3899,7 +3854,7 @@ function runDemoAnalysis(btn){
     {label:'Salle de bain',chip:'ai-ok',val:'Acceptable'},
     {label:'Potentiel photographique',chip:'ai-warn',val:'Photos pros recommandées'},
   ];
-  displayAnalysisResults({score, items:demoItems, summary:'Mode démonstration — uploadez des photos pour une analyse réelle par Claude IA.'}, btn);
+  displayAnalysisResults({score, items:demoItems, summary:'Mode démonstration — exemple fictif, non basé sur vos photos. Ajoutez des photos pour une analyse réelle par Claude IA.', _demo:true}, btn);
 }
 
 // =============================================
@@ -4008,7 +3963,7 @@ function generateImprovements(score, needsWork){
           <span class="tag tag-blue" style="font-size:10px">${imp.tag}</span>
         </div>
       </div>
-      <div class="improve-desc">${imp.desc}</div>
+      <div class="improve-desc">${esc(imp.desc)}</div>
       <div class="improve-impact">
         <div class="impact-item">💰 <strong>${conv(imp.cout)}</strong></div>
         <div class="impact-item">📈 <strong style="color:var(--green)">+${imp.gainPct}% prix</strong></div>
@@ -4272,7 +4227,7 @@ function renderMktGrid(){
         <div style="position:absolute;top:6px;right:6px"><span class="tag ${STATUT_BADGE2[b.statut]||'tag-gold'}">${b.statut}</span></div>
         <div style="position:absolute;top:6px;left:6px;background:${DPE_COLOR2[b.dpe]||'#9ecf2d'};color:#fff;padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700">DPE ${b.dpe}</div>
       </div>
-      <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:500;margin-bottom:3px">${b.titre}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:500;margin-bottom:3px">${esc(b.titre)}</div>
       <div style="font-size:10px;color:var(--mid);margin-bottom:6px">📍 ${b.quartier} · ${b.ville}</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">
         <span class="tag tag-gold">${b.surface} m²</span>
@@ -4292,14 +4247,14 @@ function renderMktMap(){
   p.innerHTML=mktFiltered.map(b=>{
     const pos=MAP_POSITIONS[b.quartier]||{x:50+Math.random()*15,y:50+Math.random()*15};
     const c=PIN_COLOR[b.statut]||'#B83A2A';
-    return `<div onclick="openBien(${b.id})" title="${b.titre}" style="position:absolute;left:${pos.x}%;top:${pos.y}%;transform:translate(-50%,-100%);cursor:pointer;text-align:center;z-index:10">
+    return `<div onclick="openBien(${b.id})" title="${esc(b.titre)}" style="position:absolute;left:${pos.x}%;top:${pos.y}%;transform:translate(-50%,-100%);cursor:pointer;text-align:center;z-index:10">
       <div style="background:${c};color:#fff;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3)">${conv(b.prix)}</div>
       <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid ${c};margin:0 auto"></div>
     </div>`;
   }).join('');
   if(l)l.innerHTML=mktFiltered.map(b=>`
     <div class="card" style="margin-bottom:0;padding:10px;cursor:pointer" onclick="openBien(${b.id})">
-      <div style="font-size:12px;font-weight:500;margin-bottom:1px">${b.titre}</div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:1px">${esc(b.titre)}</div>
       <div style="font-size:10px;color:var(--mid)">📍 ${b.quartier}</div>
       <div style="font-size:14px;font-weight:700;color:var(--gold);margin-top:3px">${conv(b.prix)}</div>
     </div>`).join('');
@@ -4314,7 +4269,7 @@ function openBien(id){
   ov.onclick=e=>{if(e.target===ov)ov.remove();};
   ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-      <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);flex:1">${b.titre}</h3>
+      <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);flex:1">${esc(b.titre)}</h3>
       <button type="button" onclick="closeLandingPopup()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);margin-left:8px">✕</button>
     </div>
     <div style="background:var(--warm);border-radius:10px;height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:12px">${b.photos[0]}</div>
@@ -4367,7 +4322,7 @@ function buildBiens(){
   document.getElementById('biens-grid').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">`+
     S.biens.map(b=>`<div class="card" style="margin-bottom:0">
       <div style="background:linear-gradient(135deg,var(--warm),var(--cream));border-radius:10px;height:90px;display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:12px">${b.type==='Villa'?'🏡':b.type==='Studio'?'🏢':'🏠'}</div>
-      <h3 style="font-size:15px;margin-bottom:6px">${b.titre}</h3>
+      <h3 style="font-size:15px;margin-bottom:6px">${esc(b.titre)}</h3>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
         <span class="tag tag-gold">${b.surface} m²</span>
         <span class="tag ${SCOLORS[b.statut]||'tag-gold'}">${b.statut}</span>
@@ -4390,7 +4345,7 @@ function buildSuivi(){
   if(!document.getElementById("suivi-list")) return;
   const steps=[{l:'Estimation réalisée',done:true},{l:'Annonce publiée',done:true},{l:'Premières visites',done:true},{l:'Offre acceptée',done:false},{l:'Compromis signé',done:false},{l:'Acte authentique',done:false}];
   document.getElementById('suivi-steps').innerHTML=steps.map((s,i)=>`<div class="progress-step"><div class="step-dot ${s.done?'step-done':i===steps.findIndex(x=>!x.done)?'step-active':'step-todo'}">${s.done?'✓':i+1}</div><div style="font-size:13.5px;${s.done?'color:var(--mid);text-decoration:line-through':''}">${s.l}</div></div>`).join('');
-  document.getElementById('contacts-table').innerHTML='<thead><tr><th>Nom</th><th>Téléphone</th><th>Intérêt</th><th>Statut</th></tr></thead><tbody>'+S.contacts.map(c=>`<tr><td>${c.nom}</td><td>${c.tel}</td><td>${c.interet}</td><td><span class="tag ${c.statut==='Chaud'?'tag-red':c.statut==='Tiède'?'tag-gold':'tag-blue'}">${c.statut}</span></td></tr>`).join('')+'</tbody>';
+  document.getElementById('contacts-table').innerHTML='<thead><tr><th>Nom</th><th>Téléphone</th><th>Intérêt</th><th>Statut</th></tr></thead><tbody>'+S.contacts.map(c=>`<tr><td>${esc(c.nom)}</td><td>${esc(c.tel)}</td><td>${c.interet}</td><td><span class="tag ${c.statut==='Chaud'?'tag-red':c.statut==='Tiède'?'tag-gold':'tag-blue'}">${c.statut}</span></td></tr>`).join('')+'</tbody>';
   renderChat();
 }
 function renderChat(){document.getElementById('chat-log').innerHTML=S.msgs.map(m=>`<div class="msg ${m.who==='ai'?'msg-ai':'msg-user'}">${m.txt}</div>`).join('');}
@@ -4469,22 +4424,6 @@ const PROFIL_CONFIG = {
   buy:{icon:'🔍',name:'Espace Acheteur',desc:'Recherche · Messagerie · Financement'},
 };
 
-function showLoginModal(profil){
-  document.getElementById('login-modal').style.display='flex';
-  document.body.style.overflow='hidden';
-  document.getElementById('login-modal').dataset.profil=profil||'buy';
-  updateAuthModalProfil(profil||'buy');
-  // Toujours reset sur "Se connecter"
-  document.getElementById('auth-step-1').style.display='block';
-  document.getElementById('auth-step-2').style.display='none';
-  switchAuthTab('login');
-  // Reset formulaires
-  ['login-email-existing','login-password','reg-prenom','reg-nom','reg-email','reg-tel','reg-password'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.value='';
-  });
-  const extra=document.getElementById('reg-extra-agt');
-  if(extra) extra.style.display=(profil==='agt')?'block':'none';
-}
 
 function updateAuthModalProfil(profil){
   const cfg=PROFIL_CONFIG[profil]||PROFIL_CONFIG.buy;
@@ -4495,19 +4434,7 @@ function updateAuthModalProfil(profil){
   Object.keys(els).forEach(k=>{const e=document.getElementById(els[k]);if(e)e.textContent=vals[k];});
 }
 
-function closeLoginModal(){
-  document.getElementById('login-modal').style.display='none';
-  document.body.style.overflow='';
-}
 
-function selectProfile(p){
-  document.getElementById('login-modal').dataset.profil=p;
-  updateAuthModalProfil(p);
-  ['sell','agt','buy'].forEach(x=>{document.getElementById('opt-'+x)?.classList.remove('sel');});
-  document.getElementById('opt-'+p)?.classList.add('sel');
-  const extra=document.getElementById('reg-extra-agt');
-  if(extra) extra.style.display=(p==='agt')?'block':'none';
-}
 
 function selectRegProfil(p){
   ['buy','sell','agt'].forEach(x=>{
@@ -4544,25 +4471,57 @@ function switchAuthTab(tab){
   }
 }
 
-function doLoginExisting(){
+// Authentification réelle via Supabase Auth (le mode démo reste disponible séparément)
+function authUnavailable(){
+  alert("Le service de connexion est momentanément indisponible. Vous pouvez essayer le mode démonstration.");
+}
+function authErrorMsg(err){
+  const m=(err&&err.message)||'';
+  if(/invalid login credentials/i.test(m)) return 'Email ou mot de passe incorrect.';
+  if(/email not confirmed/i.test(m)) return "Votre email n'est pas encore confirmé. Vérifiez votre boîte de réception.";
+  if(/already registered|already been registered/i.test(m)) return 'Un compte existe déjà avec cet email. Connectez-vous.';
+  if(/password/i.test(m)) return 'Mot de passe trop faible (8 caractères minimum).';
+  if(/rate limit|too many/i.test(m)) return 'Trop de tentatives, réessayez dans quelques minutes.';
+  return 'Erreur : '+m;
+}
+function userFromSupabase(u,profilFallback){
+  const md=(u&&u.user_metadata)||{};
+  return {id:u.id,nom:md.nom||(u.email||'').split('@')[0],email:u.email,tel:md.tel||'',profil:md.profil||profilFallback||'buy'};
+}
+
+async function doLoginExisting(){
   const email=document.getElementById('login-email-existing')?.value?.trim();
   const pwd=document.getElementById('login-password')?.value;
   if(!email){alert('Veuillez entrer votre email');return;}
   if(!pwd){alert('Veuillez entrer votre mot de passe');return;}
+  if(!sb){authUnavailable();return;}
   const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
-  APP_STATE.user={nom:email.split('@')[0],email,profil};
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pwd});
+  if(error||!data?.user){alert(authErrorMsg(error));return;}
+  APP_STATE.user=userFromSupabase(data.user,profil);
   APP_STATE.loggedIn=true;
   showAuthStep2('Connexion réussie !');
 }
 
-function doRegister(){
+async function doRegister(){
   const prenom=document.getElementById('reg-prenom')?.value?.trim();
   const nom=document.getElementById('reg-nom')?.value?.trim();
   const email=document.getElementById('reg-email')?.value?.trim();
+  const tel=document.getElementById('reg-tel')?.value?.trim()||'';
+  const pwd=document.getElementById('reg-password')?.value||'';
   if(!prenom||!nom){alert('Veuillez entrer votre prénom et nom');return;}
-  if(!email){alert('Veuillez entrer votre email');return;}
+  if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){alert('Veuillez entrer un email valide');return;}
+  if(pwd.length<8){alert('Le mot de passe doit contenir au moins 8 caractères');return;}
+  if(!sb){authUnavailable();return;}
   const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
-  APP_STATE.user={nom:prenom+' '+nom,email,tel:document.getElementById('reg-tel')?.value,profil};
+  const {data,error}=await sb.auth.signUp({email,password:pwd,options:{data:{nom:prenom+' '+nom,tel,profil}}});
+  if(error){alert(authErrorMsg(error));return;}
+  if(!data?.session){
+    alert('Compte créé. Un email de confirmation vient de vous être envoyé : cliquez sur le lien puis connectez-vous.');
+    switchAuthTab('login');
+    return;
+  }
+  APP_STATE.user=userFromSupabase(data.user,profil);
   APP_STATE.loggedIn=true;
   showAuthStep2('Compte créé avec succès !');
 }
@@ -4608,7 +4567,6 @@ function doLoginConfirm(){
   if(window._pendingBien){setTimeout(()=>{contactVendeur(window._pendingBien);window._pendingBien=null;},300);}
 }
 
-function doLogin(){doLoginConfirm();}
 function loginAs(profil){
   if(profil==='sell'||profil==='buy'||profil==='agt'||profil==='not'||profil==='art'){
     APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
@@ -4657,12 +4615,6 @@ function updateBudgetDisplay(val){
 
 // ── ÉQUIPEMENTS TOGGLE ──
 let activeEquips=new Set();
-function toggleEquip(el){
-  const eq=el.dataset.eq;
-  if(activeEquips.has(eq)){activeEquips.delete(eq);el.classList.remove('active');}
-  else{activeEquips.add(eq);el.classList.add('active');}
-  landingSearch();
-}
 
 function toggleEquipCheck(input){
   const eq=input.dataset.eq;
@@ -4784,7 +4736,7 @@ function renderLandingBiens(){
         </div>
         <div class="ld-card-body">
           <div class="ld-card-price">${conv(b.prix)}</div>
-          <div class="ld-card-title">${b.titre}</div>
+          <div class="ld-card-title">${esc(b.titre)}</div>
           <div class="ld-card-meta">
             <span>${b.surface} m²</span>
             <span>${b.pieces} pièces</span>
@@ -4808,7 +4760,7 @@ function renderLandingBiens(){
           <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:8px">
             <div>
               <div class="ld-list-price">${conv(b.prix)}</div>
-              <div style="font-size:13px;font-weight:500;color:var(--dark);margin:2px 0">${b.titre}</div>
+              <div style="font-size:13px;font-weight:500;color:var(--dark);margin:2px 0">${esc(b.titre)}</div>
               <div style="font-size:11px;color:var(--mid)">📍 ${b.quartier} · ${b.ville}</div>
             </div>
             <div style="text-align:right">
@@ -4880,7 +4832,7 @@ function openLandingBien(id){
     <div style="padding:20px">
       <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--dark)">${conv(b.prix)}</div>
       <div style="font-size:12px;color:var(--mid);margin-bottom:8px">${pm2}/m² · ${b.type} · ${b.surface} m²</div>
-      <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--dark);margin-bottom:4px">${b.titre}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--dark);margin-bottom:4px">${esc(b.titre)}</div>
       <div style="font-size:12px;color:var(--mid);margin-bottom:14px">📍 ${b.quartier}, ${b.ville}</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
         <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--dark)">${b.surface}</div><div style="font-size:10px;color:var(--mid)">m²</div></div>
@@ -4941,46 +4893,12 @@ function simulerFinancement(prix){
   go('financement');
 }
 
-function simulerFinancementPublic(prix){
-  const capital=Math.round(prix*0.8);
-  const r=3.5/100/12, n=240;
-  const mensuel=Math.round(capital*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1));
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px';
-  ov.onclick=e=>{
-    if(e.target===ov){
-      try{document.body.removeChild(ov);}catch(err){}
-    }
-  };
-  ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:24px;max-width:360px;width:100%">
-    <h3 style="font-family:'Playfair Display',serif;margin-bottom:16px;font-size:18px">💰 Simulation rapide</h3>
-    <div style="background:var(--warm);border-radius:10px;padding:12px;margin-bottom:12px;text-align:center">
-      <div style="font-size:11px;color:var(--mid)">Prix du bien</div>
-      <div style="font-size:22px;font-weight:700;color:var(--dark)">${conv(prix)}</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-      <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:11px;color:var(--mid)">Apport 20%</div><div style="font-size:16px;font-weight:700;color:var(--dark)">${conv(Math.round(prix*0.2))}</div></div>
-      <div style="background:var(--gold);border-radius:8px;padding:10px;text-align:center"><div style="font-size:11px;color:rgba(255,255,255,0.7)">Mensualité</div><div style="font-size:16px;font-weight:700;color:#fff">${conv(mensuel)}</div></div>
-    </div>
-    <div style="font-size:11px;color:var(--mid);margin-bottom:14px;text-align:center">Sur 20 ans à 3.5% · Pour une simulation complète, créez un compte gratuit.</div>
-    <div style="display:flex;gap:8px">
-      <button type="button" class="btn btn-gold btn-full" onclick="showLoginModal('buy');document.body.removeChild(this.closest('[style*=fixed]'))">Créer un compte</button>
-      <button type="button" class="btn btn-outline" onclick="closeAnnonce(this)">Fermer</button>
-    </div>
-  </div>`;
-  document.body.appendChild(ov);
-}
 
 function ajouterFavori(id){
   const b=BIENS_DATA.find(x=>x.id===id);
   if(b) alert('❤️ "'+b.titre+'" ajouté à vos favoris !');
 }
 
-function contactFromLanding(bienId){
-  showLoginModal('buy');
-  // Après login, ouvrir la conversation
-  window._pendingBien=bienId;
-}
 
 function hideLanding(){
   document.getElementById('main-shell').style.display='flex';
@@ -5037,6 +4955,7 @@ function updateUserDisplay(){
 
 // Bouton déconnexion dans la topbar
 function logout(){
+  if(sb){sb.auth.signOut().catch(()=>{});}
   APP_STATE.user=null;
   APP_STATE.loggedIn=false;
   showLanding();
@@ -5088,7 +5007,7 @@ function renderConvList(){
   list.innerHTML=CONVERSATIONS.map(c=>`
     <div class="conv-item${c.id===activeConvId?' active':''}" onclick="openConversation(${c.id})">
       <div style="display:flex;justify-content:space-between;align-items:start">
-        <div class="conv-item-name">${c.contact.avatar} ${c.contact.nom}</div>
+        <div class="conv-item-name">${c.contact.avatar} ${esc(c.contact.nom)}</div>
         ${c.unread>0?`<span class="conv-unread">${c.unread}</span>`:'<span class="conv-item-meta">'+c.messages[c.messages.length-1]?.time+'</span>'}
       </div>
       <div class="conv-item-preview">🏠 ${c.bienTitre}</div>
@@ -5130,7 +5049,7 @@ function renderMessages(conv){
   if(!body) return;
   body.innerHTML=conv.messages.map(m=>`
     <div style="display:flex;flex-direction:column;align-items:${m.from==='me'?'flex-end':'flex-start'}">
-      <div class="msg-bubble ${m.from==='me'?'mine':'other'}">${m.text}
+      <div class="msg-bubble ${m.from==='me'?'mine':'other'}">${esc(m.text)}
         <div class="msg-bubble-time">${m.time}</div>
       </div>
     </div>`).join('');
@@ -5187,7 +5106,7 @@ async function initSupabase(){
     if(r.ok){
       const cfg = await r.json();
       if(cfg.supabaseKey && window.supabase){
-        sb = window.supabase.createClient(SUPABASE_URL, cfg.supabaseKey);
+        sb = window.supabase.createClient(cfg.supabaseUrl || SUPABASE_URL, cfg.supabaseKey);
         console.log('Supabase connecté');
       }
     }
@@ -5369,7 +5288,7 @@ async function analyzeDepotPhotos(){
           <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px">
             <span style="font-size:20px">${t.emoji}</span>
             <div style="flex:1">
-              <div style="font-size:12px;font-weight:600;color:#fff">${t.titre} ${t.urgent?'<span style="background:rgba(184,58,42,0.3);color:#e07070;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700">PRIORITÉ</span>':''}</div>
+              <div style="font-size:12px;font-weight:600;color:#fff">${esc(t.titre)} ${t.urgent?'<span style="background:rgba(184,58,42,0.3);color:#e07070;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700">PRIORITÉ</span>':''}</div>
               <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px">${t.cout} · ${t.gain} · ROI ${t.roi}</div>
             </div>
             <button type="button" onclick="go('estimation')" style="background:var(--gold);border:none;color:#fff;padding:4px 10px;border-radius:6px;font-size:10px;cursor:pointer;white-space:nowrap">Voir détail →</button>
@@ -5911,7 +5830,7 @@ function renderArtisansGrid(){
         <div style="display:flex;align-items:center;gap:11px;position:relative">
           <div style="width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;backdrop-filter:blur(4px)">${a.emoji}</div>
           <div style="flex:1;min-width:0">
-            <div style="font-size:15px;font-weight:800;color:${c.t};margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.nom}</div>
+            <div style="font-size:15px;font-weight:800;color:${c.t};margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.nom)}</div>
             <div style="display:flex;align-items:center;gap:5px">
               <span style="color:#FCD34D;font-size:12px">${'★'.repeat(Math.round(a.note))}</span>
               <span style="font-size:12px;font-weight:700;color:${c.t}">${a.note}</span>
@@ -5966,7 +5885,7 @@ function openArtisanDetail(id){
         <div style="display:flex;gap:14px;align-items:center">
           <div style="width:60px;height:60px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji}</div>
           <div>
-            <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:700">${a.nom}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:700">${esc(a.nom)}</div>
             <div style="color:rgba(255,255,255,0.5);font-size:12px">${a.realisations} réalisations · ${a.avis} avis</div>
             ${a.certifie?'<span style="background:rgba(42,122,75,0.3);color:#6fd98a;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">✓ Certifié</span>':''}
             ${a.assure?'<span style="background:rgba(42,74,122,0.3);color:#7ab3e0;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:4px">🛡️ Assuré</span>':''}
@@ -6006,12 +5925,12 @@ function openArtisanDetail(id){
             <span style="font-size:10px;color:var(--mid)">${av.date}</span>
           </div>
           <div style="color:#FFD700;font-size:11px;margin-bottom:3px">${'★'.repeat(av.note)}</div>
-          <div style="font-size:12px;color:var(--mid);font-style:italic">"${av.texte}"</div>
+          <div style="font-size:12px;color:var(--mid);font-style:italic">"${esc(av.texte)}"</div>
         </div>`).join('')}
       </div>
       <div style="display:flex;gap:8px">
         <button type="button" class="btn btn-gold btn-full" onclick="demanderDevisArtisan(${a.id});document.getElementById('artisan-detail-modal').style.display='none'">📋 Demander un devis</button>
-        <a href="tel:${a.tel}" class="btn btn-outline" style="white-space:nowrap">📞 Appeler</a>
+        <a href="tel:${esc(a.tel)}" class="btn btn-outline" style="white-space:nowrap">📞 Appeler</a>
       </div>
       ${APP_STATE.user?.profil==='agt'?`<div style="margin-top:10px;padding:8px 12px;background:rgba(184,146,42,0.08);border-radius:8px;font-size:12px;color:var(--gold-dark);text-align:center">💼 Commission agent : ${a.commission_agent}% sur les travaux réalisés</div>`:''}
     </div>`;
@@ -6083,7 +6002,7 @@ function renderDevisList(){
         <span class="devis-status devis-pending">En attente</span>
       </div>
       <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.5">${d.desc.substring(0,120)}${d.desc.length>120?'...':''}</div>
-      <div class="ai-line"><span>Demandé par</span><span>${d.nom} · ${d.tel}</span></div>
+      <div class="ai-line"><span>Demandé par</span><span>${esc(d.nom)} · ${esc(d.tel)}</span></div>
       ${d.budget?`<div class="ai-line"><span>Budget estimé</span><span style="color:var(--gold);font-weight:600">${conv(d.budget)}</span></div>`:''}
       <div class="ai-line"><span>Artisans contactés</span><span>${d.artisansContactes} artisans partenaires</span></div>
       <div style="margin-top:10px;padding:8px 12px;background:var(--warm);border-radius:6px;font-size:11px;color:var(--mid)">
@@ -6311,7 +6230,7 @@ function renderMatchingAcheteurs(){
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <div class="acheteur-avatar">${ach.avatar}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:13px;font-weight:600;color:var(--dark)">${ach.nom}</div>
+          <div style="font-size:13px;font-weight:600;color:var(--dark)">${esc(ach.nom)}</div>
           <div style="font-size:11px;color:var(--mid)">${ach.type||'Tous types'} · ${conv(ach.budgetMin)}–${conv(ach.budgetMax)}</div>
           <div style="font-size:11px;color:var(--mid)">${ach.surfaceMin}m² min · ${ach.piecesMin}+ pièces · ${urgenceLabel}</div>
         </div>
@@ -6365,7 +6284,7 @@ function showMatchDetail(mode, entity, matches){
   } else {
     content.innerHTML = `
       <div style="padding:10px 0;border-bottom:1px solid var(--warm);margin-bottom:12px">
-        <div style="font-size:14px;font-weight:600;color:var(--dark)">${entity.nom}</div>
+        <div style="font-size:14px;font-weight:600;color:var(--dark)">${esc(entity.nom)}</div>
         <div style="font-size:11px;color:var(--mid)">${entity.type||'Tous types'} · ${conv(entity.budgetMin)}–${conv(entity.budgetMax)}</div>
       </div>
       <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${matches.length} bien${matches.length>1?'s':''} analysé${matches.length>1?'s':''}</div>
@@ -6391,7 +6310,7 @@ function renderMatchRow(entity, score, details, type){
     </div>
     <div class="match-bar"><div class="match-bar-fill" style="width:${score}%;background:${getScoreColor(score)}"></div></div>
     <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:8px">
-      ${details.map(d => `<span class="match-tag match-${d.status}">${d.label}: ${d.text}</span>`).join('')}
+      ${details.map(d => `<span class="match-tag match-${d.status}">${d.label}: ${esc(d.text)}</span>`).join('')}
     </div>
   </div>`;
 }
@@ -6541,8 +6460,8 @@ function renderCRMList(){
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:44px;height:44px;border-radius:50%;background:${t.bg};color:${t.color};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0">${c.nom.charAt(0)}</div>
           <div>
-            <div style="font-size:15px;font-weight:700;color:var(--dark)">${c.nom}</div>
-            <div style="font-size:11px;color:var(--mid)">${c.tel} · ${c.email}</div>
+            <div style="font-size:15px;font-weight:700;color:var(--dark)">${esc(c.nom)}</div>
+            <div style="font-size:11px;color:var(--mid)">${esc(c.tel)} · ${esc(c.email)}</div>
           </div>
         </div>
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
@@ -6564,7 +6483,7 @@ function renderCRMList(){
           <button type="button" onclick="event.stopPropagation();openClientDetail(${c.id})" class="btn btn-gold btn-sm" style="font-size:10px">Fiche →</button>
         </div>
       </div>
-      ${c.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic">📝 ${c.notes}</div>`:''}
+      ${c.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic">📝 ${esc(c.notes)}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -6588,9 +6507,9 @@ function openClientDetail(id){
         <div style="display:flex;align-items:center;gap:14px">
           <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800">${c.nom.charAt(0)}</div>
           <div>
-            <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:700">${c.nom}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:700">${esc(c.nom)}</div>
             <div style="font-size:12px;color:rgba(255,255,255,0.7)">${t.label} · ${s.label}</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.6)">${c.tel} · ${c.email}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6)">${esc(c.tel)} · ${esc(c.email)}</div>
           </div>
         </div>
         <button type="button" onclick="document.getElementById('client-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
@@ -6606,7 +6525,7 @@ function openClientDetail(id){
         <div style="background:#EFF6FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:15px;font-weight:700;color:#2563EB">${c.nbContacts}</div><div style="font-size:10px;color:var(--mid)">Contacts</div></div>
         <div style="background:#FFF7ED;border-radius:8px;padding:10px;text-align:center"><div style="font-size:15px;font-weight:700;color:#EA580C">${c.relance||'—'}</div><div style="font-size:10px;color:var(--mid)">Relance</div></div>
       </div>
-      ${c.notes?`<div style="font-size:13px;color:var(--mid);font-style:italic;margin-bottom:14px;padding:10px;border-left:3px solid var(--gold);background:var(--warm);border-radius:0 8px 8px 0">"${c.notes}"</div>`:''}
+      ${c.notes?`<div style="font-size:13px;color:var(--mid);font-style:italic;margin-bottom:14px;padding:10px;border-left:3px solid var(--gold);background:var(--warm);border-radius:0 8px 8px 0">"${esc(c.notes)}"</div>`:''}
       ${matches.length>0?`
       <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">🤖 ${matches.filter(m=>m.score>=70).length} biens compatibles (Matching IA)</div>
       ${matches.filter(m=>m.score>=70).slice(0,3).map(m=>`
@@ -6674,9 +6593,6 @@ const STATUT_NOTAIRE = {
   acte:{label:'Acte signé ✓',color:'#166534',bg:'#DCFCE7',border:'#86EFAC',step:4},
 };
 
-function buildNotaire(){
-  renderDossiers();
-}
 
 function renderDossiers(){
   const el=document.getElementById('notaire-dossiers');
@@ -6731,60 +6647,15 @@ function renderDossiers(){
           ${d.statut!=='acte'?`<button type="button" onclick="avancerDossier(${d.id})" class="btn btn-gold btn-sm" style="font-size:10px">→ Étape suivante</button>`:''}
         </div>
       </div>
-      ${d.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic;padding:6px 10px;background:var(--warm);border-radius:6px">📝 ${d.notes}</div>`:''}
+      ${d.notes?`<div style="margin-top:8px;font-size:11px;color:var(--soft);font-style:italic;padding:6px 10px;background:var(--warm);border-radius:6px">📝 ${esc(d.notes)}</div>`:''}
     </div>`;
   }).join('');
 }
 
-function avancerDossier(id){
-  const d=DOSSIERS_NOTAIRE.find(x=>x.id===id);
-  if(!d)return;
-  const ordre=['offre','compromis','instruction','acte'];
-  const idx=ordre.indexOf(d.statut);
-  if(idx<ordre.length-1){
-    d.statut=ordre[idx+1];
-    renderDossiers();
-    const s=STATUT_NOTAIRE[d.statut];
-    const notif=document.createElement('div');
-    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:'+s.color+';color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2)';
-    notif.textContent='✓ Dossier avancé : '+s.label;
-    document.body.appendChild(notif);
-    setTimeout(()=>document.body.removeChild(notif),3000);
-  }
-}
 
 function updateDossierStatut(id){alert('Mise à jour dossier — fonctionnalité complète bientôt disponible.');}
 
-function showAddDossierModal(){
-  const m=document.getElementById('dossier-modal');
-  if(m) m.style.display='flex';
-}
 
-function saveDossier(){
-  const bien=document.getElementById('dos-bien')?.value?.trim();
-  if(!bien){alert('Veuillez renseigner le bien');return;}
-  DOSSIERS_NOTAIRE.unshift({
-    id:Date.now(),
-    bien,
-    vendeur:document.getElementById('dos-vendeur')?.value||'',
-    acheteur:document.getElementById('dos-acheteur')?.value||'',
-    prix:parseInt(document.getElementById('dos-prix')?.value||0),
-    notaire:document.getElementById('dos-notaire')?.value||'',
-    statut:document.getElementById('dos-statut')?.value||'offre',
-    dateCompromis:document.getElementById('dos-date-compromis')?.value||'',
-    dateActe:document.getElementById('dos-date-acte')?.value||'',
-    docs:{
-      offre:document.getElementById('doc-offre')?.checked||false,
-      compromis:document.getElementById('doc-compromis')?.checked||false,
-      financement:document.getElementById('doc-financement')?.checked||false,
-      diagnostics:document.getElementById('doc-diagnostics')?.checked||false,
-      titre:document.getElementById('doc-titre')?.checked||false,
-    },
-    notes:document.getElementById('dos-notes')?.value||''
-  });
-  document.getElementById('dossier-modal').style.display='none';
-  renderDossiers();
-}
 
 // =============================================
 // PROJET DE VIE IA
@@ -6871,7 +6742,7 @@ function lancerProjetDeVie(){
         <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--warm);border-radius:10px;margin-bottom:8px">
           <div style="font-size:22px">${q.icons}</div>
           <div style="flex:1">
-            <div style="font-size:14px;font-weight:600;color:var(--dark)">${q.nom}</div>
+            <div style="font-size:14px;font-weight:600;color:var(--dark)">${esc(q.nom)}</div>
             <div style="font-size:11px;color:var(--mid);margin-top:2px;line-height:1.5">${q.raison}</div>
           </div>
           <div style="text-align:right;flex-shrink:0">
@@ -6920,7 +6791,7 @@ function lancerProjetDeVie(){
       sList.innerHTML=services.map(s=>`
         <div style="display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--warm);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:.15s" onclick="${s.action}" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background=''">
           <div style="font-size:24px">${s.ico}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">${s.titre}</div><div style="font-size:11px;color:var(--mid)">${s.desc}</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--dark)">${esc(s.titre)}</div><div style="font-size:11px;color:var(--mid)">${esc(s.desc)}</div></div>
           <span style="color:var(--gold);font-size:16px">→</span>
         </div>`).join('');
     }
@@ -6987,7 +6858,7 @@ function renderMandats(){
       <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div>
           <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:3px">${m.bien}</div>
-          <div style="font-size:12px;color:var(--mid)">👤 ${m.vendeur} · ${m.tel}</div>
+          <div style="font-size:12px;color:var(--mid)">👤 ${m.vendeur} · ${esc(m.tel)}</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
           <span style="background:${tc.bg};color:${tc.color};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700">${tc.label}</span>
@@ -7111,7 +6982,7 @@ function renderVisitesAgenda(){
       <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px">
         <div>
           <div style="font-size:13px;font-weight:700;color:var(--dark)">${v.bien}</div>
-          <div style="font-size:11px;color:var(--mid)">👤 ${v.acheteur} · ${v.tel}</div>
+          <div style="font-size:11px;color:var(--mid)">👤 ${v.acheteur} · ${esc(v.tel)}</div>
         </div>
         <span style="background:${s.bg};color:${s.color};padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700">${s.label}</span>
       </div>
@@ -7120,7 +6991,7 @@ function renderVisitesAgenda(){
         ${v.smsSent?'<span style="color:#16A34A">📱 SMS envoyé</span>':'<span style="color:#EA580C">📱 SMS non envoyé</span>'}
         ${v.bonVisite?'<span style="color:#9333EA">📋 Bon visite généré</span>':''}
       </div>
-      ${v.notes?`<div style="font-size:11px;color:var(--soft);font-style:italic;margin-bottom:6px">📝 ${v.notes}</div>`:''}
+      ${v.notes?`<div style="font-size:11px;color:var(--soft);font-style:italic;margin-bottom:6px">📝 ${esc(v.notes)}</div>`:''}
       <div style="display:flex;gap:5px;flex-wrap:wrap">
         ${!v.smsSent?`<button type="button" onclick="envoyerSMS(${v.id})" class="btn btn-gold btn-sm" style="font-size:10px">📱 Envoyer SMS</button>`:''}
         ${!v.bonVisite?`<button type="button" onclick="genererBonVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">📋 Bon de visite</button>`:''}
@@ -7291,7 +7162,7 @@ function renderStatsTable(){
       <th style="padding:8px 10px;text-align:right;color:var(--mid);font-weight:600;border-radius:0 6px 6px 0">Conversion</th>
     </tr></thead>
     <tbody>${annonceStats.map((a,i)=>`<tr style="border-bottom:1px solid #F3F4F6;${i%2===0?'background:#FAFAFA':''}">
-      <td style="padding:10px;font-weight:500;color:var(--dark);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.titre}</td>
+      <td style="padding:10px;font-weight:500;color:var(--dark);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.titre)}</td>
       <td style="padding:10px;text-align:right;font-weight:700;color:var(--dark)">${a.vues}</td>
       <td style="padding:10px;text-align:right;color:#2563EB;font-weight:600">${a.contacts}</td>
       <td style="padding:10px;text-align:right;color:#16A34A;font-weight:600">${a.visites}</td>
@@ -7313,7 +7184,7 @@ function renderStatsPortails(){
   ];
   el.innerHTML=portails.map(p=>`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-      <div style="font-size:12px;font-weight:600;color:var(--dark);min-width:100px">${p.nom}</div>
+      <div style="font-size:12px;font-weight:600;color:var(--dark);min-width:100px">${esc(p.nom)}</div>
       <div style="flex:1;height:8px;background:#F3F4F6;border-radius:4px;overflow:hidden">
         <div style="width:${p.pct}%;height:100%;background:${p.color};border-radius:4px;transition:.6s"></div>
       </div>
@@ -7371,7 +7242,7 @@ function renderParcoursSteps(){
       <div style="width:44px;height:44px;border-radius:50%;background:${done?'#DCFCE7':isNext?'rgba(184,146,42,0.12)':'#F9FAFB'};border:2px solid ${done?'#16A34A':isNext?'var(--gold)':'#E5E7EB'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${done?'✅':step.icon}</div>
       <div style="flex:1">
         <div style="font-size:14px;font-weight:700;color:${done?'#16A34A':isNext?'var(--gold)':'var(--dark)'}">${i+1}. ${step.label}</div>
-        <div style="font-size:11px;color:var(--mid);margin-top:2px">${step.desc}</div>
+        <div style="font-size:11px;color:var(--mid);margin-top:2px">${esc(step.desc)}</div>
       </div>
       ${done?'<span style="color:#16A34A;font-size:20px">✓</span>':isNext?'<button type="button" class="btn btn-gold btn-sm" style="white-space:nowrap">Faire →</button>':'<span style="color:#D1D5DB;font-size:16px">›</span>'}
     </div>`;
@@ -7742,7 +7613,7 @@ function renderSuiviNotifs(){
   el.innerHTML=notifs.map(n=>`
     <div style="display:flex;align-items:start;gap:10px;padding:10px 0;border-bottom:1px solid #F3F4F6">
       <div style="width:32px;height:32px;border-radius:50%;background:${n.color}15;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${n.ico}</div>
-      <div style="flex:1"><div style="font-size:12px;color:var(--dark)">${n.text}</div><div style="font-size:10px;color:var(--mid);margin-top:2px">${n.time}</div></div>
+      <div style="flex:1"><div style="font-size:12px;color:var(--dark)">${esc(n.text)}</div><div style="font-size:10px;color:var(--mid);margin-top:2px">${n.time}</div></div>
     </div>`).join('');
 }
 
@@ -7918,7 +7789,7 @@ function renderNotaireDossiers(){
         ${d.messages.slice(-2).map(m=>`
         <div style="display:flex;gap:8px;margin-bottom:4px">
           <span style="font-size:10px;font-weight:700;color:${m.from==='notaire'?'#9333EA':m.from==='banque'?'#2563EB':'var(--gold)'};min-width:60px">${m.from==='notaire'?'Notaire':m.from==='banque'?'Banque':m.from==='agent'?'Agent':'Acheteur'}</span>
-          <span style="font-size:11px;color:var(--mid);flex:1">${m.text}</span>
+          <span style="font-size:11px;color:var(--mid);flex:1">${esc(m.text)}</span>
           <span style="font-size:10px;color:#D1D5DB">${m.date}</span>
         </div>`).join('')}
       </div>`:``}
@@ -8006,7 +7877,7 @@ function ouvrirDossierDetail(id){
               <div style="width:28px;height:28px;border-radius:50%;background:${m.from==='notaire'?'#9333EA':m.from==='banque'?'#2563EB':m.from==='acheteur'?'#16A34A':'var(--gold)'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${m.from==='notaire'?'N':m.from==='banque'?'B':m.from==='acheteur'?'A':'Ag'}</div>
               <div style="flex:1;background:#fff;border-radius:0 8px 8px 8px;padding:8px 10px;border:1px solid #E5E7EB">
                 <div style="font-size:10px;font-weight:700;color:${m.from==='notaire'?'#9333EA':m.from==='banque'?'#2563EB':m.from==='acheteur'?'#16A34A':'var(--gold)'};margin-bottom:2px">${m.from==='notaire'?'Notaire':m.from==='banque'?'Banque':m.from==='acheteur'?'Acheteur':'Agent'} · ${m.date}</div>
-                <div style="font-size:12px;color:var(--dark)">${m.text}</div>
+                <div style="font-size:12px;color:var(--dark)">${esc(m.text)}</div>
               </div>
             </div>`).join('')}
           </div>
@@ -8023,7 +7894,7 @@ function ouvrirDossierDetail(id){
         <button type="button" onclick="genererCompromis(${d.id})" class="btn btn-outline" style="flex:1">📝 Générer compromis</button>
         <button type="button" onclick="exporterDossier(${d.id})" class="btn btn-outline">📥 Exporter</button>
       </div>
-      ${d.notes?`<div style="margin-top:10px;padding:8px 12px;background:var(--warm);border-radius:8px;font-size:12px;color:var(--mid);font-style:italic">📝 ${d.notes}</div>`:''}
+      ${d.notes?`<div style="margin-top:10px;padding:8px 12px;background:var(--warm);border-radius:8px;font-size:12px;color:var(--mid);font-style:italic">📝 ${esc(d.notes)}</div>`:''}
     </div>`;
 
   modal.style.display='flex';
@@ -9197,42 +9068,21 @@ async function lancerAnalyseIA(){
     const equipements = getEquipementsSummary();
     const pm2Local = NC_PM2[quartier] || 340000;
 
-    let imageContents = [];
+    const images = [];
     for(const file of allFiles){
-      const b64 = await fileToBase64(file);
-      imageContents.push({
-        type:'image',
-        source:{type:'base64',media_type:file.type||'image/jpeg',data:b64}
-      });
+      images.push({data: await fileToBase64(file), mediaType: file.type||'image/jpeg'});
     }
 
-    const pm2Str = (NC_PM2[quartier]||340000).toLocaleString();
-    const equipStr = getEquipementsSummary().join(", ")||"Aucun equipement declare";
-    const vb = Math.round((NC_PM2[quartier]||340000)*parseInt(surface||80)*0.88);
-    const vc = Math.round((NC_PM2[quartier]||340000)*parseInt(surface||80));
-    const vh = Math.round((NC_PM2[quartier]||340000)*parseInt(surface||80)*1.12);
-    const prompt = "Tu es expert immobilier NC. Analyse ces photos d'un "+typeBien+" "+surface+"m2 a "+quartier+" ("+annee+"). Prix marche: "+pm2Str+" F/m2. Equipements: "+equipStr+". Reponds UNIQUEMENT en JSON: {score_global:84,scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:78},valeur_basse:"+vb+",valeur_centrale:"+vc+",valeur_haute:"+vh+",positionnement:'texte',positionnement_pct:68,points_forts:['f1','f2'],points_faibles:['w1'],recommandations:[{piece:'Cuisine',score_actuel:58,actions:['action1'],cout_xpf:150000,gain_xpf:800000,roi:5.3}],potentiel_total_xpf:3200000}";
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/api/estimate', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1500,
-        messages:[{
-          role:'user',
-          content:[...imageContents, {type:'text',text:prompt}]
-        }]
-      })
+      body: JSON.stringify({typeBien, surface, quartier, annee, pm2: pm2Local, equipements, images})
     });
+    const result = await response.json();
+    if(!response.ok || result.error) throw new Error(result.error || 'Erreur '+response.status);
 
     clearInterval(interval);
     if(bar) bar.style.width='100%';
-
-    const data = await response.json();
-    const raw = data.content?.[0]?.text || '';
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    const result = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
 
     setTimeout(()=>afficherResultats(result, surface, quartier), 500);
 
@@ -9243,6 +9093,7 @@ async function lancerAnalyseIA(){
     const pm2Demo = NC_PM2[quartier] || 340000;
     const surfNum = parseInt(surface||80);
     const demoResult = {
+      _fallback: true,
       score_global: 81,
       scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:75},
       valeur_basse: Math.round(surfNum*pm2Demo*0.92),
@@ -9267,11 +9118,25 @@ function fileToBase64(file){
   });
 }
 
+// Bandeau affiché quand l'analyse IA a échoué et qu'on montre une estimation de repli (jamais présentée comme une analyse réelle)
+function markFallback(containerId, result){
+  const c=document.getElementById(containerId);
+  if(!c) return;
+  c.querySelector('.fallback-notice')?.remove();
+  if(!result||!result._fallback) return;
+  const d=document.createElement('div');
+  d.className='fallback-notice';
+  d.style.cssText='background:#FEF3C7;border:1px solid #F59E0B;color:#92400E;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;line-height:1.5';
+  d.textContent="⚠️ L'analyse IA est momentanément indisponible. Cette estimation est indicative : elle repose uniquement sur le prix moyen au m² du quartier. Les scores et recommandations affichés sont des exemples, pas une analyse de vos photos.";
+  c.prepend(d);
+}
+
 function afficherResultats(result, surface, quartier){
   if(!result) return;
 
   document.getElementById('estim-step-loading').style.display='none';
   document.getElementById('estim-step-results').style.display='block';
+  markFallback('estim-step-results', result);
 
   // Score global
   const score = result.score_global || 81;
@@ -9593,38 +9458,25 @@ async function lancerEpAnalyse(){
     const annee = document.getElementById('ep-annee')?.value||'2000';
     const surf = parseInt(surface||80);
 
-    let imageContents = [];
+    const images = [];
     for(const file of allFiles){
       if(file.size>0){
         const b64 = await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
-        imageContents.push({type:'image',source:{type:'base64',media_type:file.type||'image/jpeg',data:b64}});
+        images.push({data:b64, mediaType:file.type||'image/jpeg'});
       }
     }
 
-    const equipStr = equipements.join(", ")||"aucun declare";
-    const vb = Math.round(pm2Local*surf*0.88);
-    const vc = Math.round(pm2Local*surf);
-    const vh = Math.round(pm2Local*surf*1.12);
-
-    const prompt = "Expert immobilier NC. Analyse photos "+typeBien+" "+surf+"m2 a "+quartier+" ("+annee+"). Prix marche: "+pm2Local+" F/m2. Equipements: "+equipStr+". Reponds JSON: {score_global:84,scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:78},valeur_basse:"+vb+",valeur_centrale:"+vc+",valeur_haute:"+vh+",positionnement:'texte position marche',positionnement_pct:68,points_forts:['f1','f2','f3'],points_faibles:['w1','w2'],recommandations:[{piece:'Nom',score_actuel:65,actions:['action1','action2'],cout_xpf:150000,gain_xpf:800000,roi:5.3}],potentiel_total_xpf:3200000}";
-
-    const msgs_content = imageContents.length>0
-      ? [...imageContents, {type:'text',text:prompt}]
-      : [{type:'text',text:prompt}];
-
-    const response = await fetch('https://api.anthropic.com/v1/messages',{
+    const response = await fetch('/api/estimate',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:msgs_content}]})
+      body:JSON.stringify({typeBien, surface:surf, quartier, annee, pm2:pm2Local, equipements, images})
     });
+    const result = await response.json();
+    if(!response.ok || result.error) throw new Error(result.error || 'Erreur '+response.status);
 
     clearInterval(interval);
     if(bar) bar.style.width='100%';
-    const data = await response.json();
-    const raw = data.content?.[0]?.text||'';
-    const match = raw.match(/\{[\s\S]*\}/);
-    const result = match ? JSON.parse(match[0]) : null;
-    setTimeout(()=>afficherEpResultats(result||getDemoResult(surf,pm2Local,quartier)), 500);
+    setTimeout(()=>afficherEpResultats(result), 500);
   } catch(e){
     clearInterval(interval);
     if(bar) bar.style.width='100%';
@@ -9636,6 +9488,7 @@ async function lancerEpAnalyse(){
 
 function getDemoResult(surf,pm2,quartier){
   return {
+    _fallback:true,
     score_global:81,
     scores:{marche:85,presentation:72,etat_general:88,attractivite:79,luminosite:82,entretien:75},
     valeur_basse:Math.round(surf*pm2*0.88),
@@ -9656,6 +9509,7 @@ function getDemoResult(surf,pm2,quartier){
 function afficherEpResultats(result){
   document.getElementById('ep-step-loading').style.display='none';
   document.getElementById('ep-step-results').style.display='block';
+  markFallback('ep-step-results', result);
 
   const score = result.score_global||81;
   const scoreEl = document.getElementById('ep-score-val');
