@@ -3312,6 +3312,7 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 const MENUS = {
   sell:[
     {ico:'💎',k:'analyse',l:'Estimation'},
+    {ico:'',k:'valorisation',l:'Valorisation'},
     {ico:'📝',k:'depot',l:'Déposer'},
     {ico:'📣',k:'annonces',l:'Annonces'},
     {ico:'📅',k:'rdv',l:'Visites'},
@@ -3330,6 +3331,7 @@ const MENUS = {
   ],
   agt:[
     {ico:'📝',k:'depot',l:'+ Annonce'},
+    {ico:'',k:'valorisation',l:'Valorisation'},
     {ico:'📋',k:'mandats',l:'Mandats'},
     {ico:'👥',k:'crm',l:'Clients'},
     {ico:'🤖',k:'matching',l:'Matching'},
@@ -8229,6 +8231,7 @@ function buildPanelContent(panel, el){
   if(panel==='visites'){ buildVisites(); return; }
   if(panel==='statsannonces'){ buildStatsAnnonces(); return; }
   if(panel==='suiviachat'){ buildSuiviAchat(); return; }
+  if(panel==='valorisation'){ if(window.buildValorisation) window.buildValorisation(); return; }
   // Pour les autres panels, afficher un message
   if(el) el.innerHTML='<div style="padding:40px;text-align:center;color:var(--mid)"><div style="font-size:40px;margin-bottom:12px">🚧</div><div style="font-size:16px;font-weight:600">Module en chargement...</div></div>';
 }
@@ -9702,5 +9705,6 @@ setTimeout(()=>{
 go('dashboard');
 </script>
 
+<script src="js/valorisation.js"></script>
 </body>
 </html>

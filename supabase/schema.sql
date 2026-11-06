@@ -87,3 +87,23 @@ create policy rdv_all on public.rdv for all to authenticated using (owner_id = a
 
 create index if not exists biens_created_idx on public.biens (created_at desc);
 create index if not exists messages_users_idx on public.messages (from_user, to_user);
+
+-- Demandes de devis aux artisans (assistant de valorisation)
+create table if not exists public.devis_requests (
+  id           bigint generated always as identity primary key,
+  owner_id     uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  bien         jsonb,
+  postes       jsonb,
+  budget       bigint,
+  artisan_ids  jsonb default '[]'::jsonb,
+  message      text,
+  contact_nom  text,
+  contact_tel  text,
+  delai        text,
+  statut       text not null default 'En attente',
+  created_at   timestamptz not null default now()
+);
+alter table public.devis_requests enable row level security;
+drop policy if exists devis_owner on public.devis_requests;
+create policy devis_owner on public.devis_requests for all to authenticated using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+-- Lecture par les artisans destinataires : ajoutée avec l'espace Artisan (table des professionnels).

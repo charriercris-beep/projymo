@@ -13,6 +13,8 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 | `api/analyze.js` | Analyse d'une photo via Claude |
 | `api/generate-annonce.js` | Génération d'annonce via Claude |
 | `api/config.js` | Configuration publique (URL + clé *anon* Supabase) |
+| `api/valorisation.js` | Diagnostic IA du bien, état détecté sur photos, priorisation des travaux |
+| `js/valorisation.js` | Assistant de valorisation (prix, paliers de travaux, simulation, annonce, devis) |
 | `api/_lib.js` | Utilitaires : CORS, limitation de débit, validation, appel Anthropic |
 | `supabase/schema.sql` | Tables + règles de sécurité (RLS) à exécuter dans Supabase |
 
