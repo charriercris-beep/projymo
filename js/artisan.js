@@ -33,25 +33,20 @@
   /* ---------- Stockage (navigateur ; synchronisé avec Supabase quand l'utilisateur est connecté) ---------- */
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
   let S0 = load();
+  window.addEventListener('immo360:purge', () => { S0 = { profil: { nom: '', forme: '', ridet: '', tel: '', email: '', bio: '', metiers: [], zones: [], effectif: '' }, justifs: {}, statuts: {} }; })
   S0.profil = S0.profil || { nom: '', forme: '', ridet: '', tel: '', email: '', bio: '', metiers: [], zones: [], effectif: '' };
   S0.justifs = S0.justifs || {};
   S0.statuts = S0.statuts || {};
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S0)); } catch (_) { /* stockage indisponible */ } };
-  function saveDevis() { try { if (typeof devisEnCours !== 'undefined') localStorage.setItem(DKEY, JSON.stringify(devisEnCours)); } catch (_) { /* ignoré */ } }
+  function saveDevis() {
+    try { if (typeof devisEnCours !== 'undefined') localStorage.setItem(DKEY, JSON.stringify(devisEnCours)); } catch (_) { /* ignoré */ }
+    if (window.IMMO_SYNC && typeof devisEnCours !== 'undefined') IMMO_SYNC.saved(DKEY, devisEnCours);
+  }
   function restoreDevis() {
     try { const d = JSON.parse(localStorage.getItem(DKEY)); if (Array.isArray(d) && typeof devisEnCours !== 'undefined' && !devisEnCours.length) d.forEach(x => devisEnCours.push(x)); } catch (_) { /* ignoré */ }
   }
   restoreDevis();
   window.addEventListener('pagehide', saveDevis);
-
-  async function remote(fn) { // best effort : n'échoue jamais bruyamment
-    try {
-      if (typeof sb === 'undefined' || !sb) return null;
-      const { data } = await sb.auth.getSession();
-      if (!data?.session) return null;
-      return await fn(data.session);
-    } catch (_) { return null; }
-  }
 
   /* ---------- Justificatifs ---------- */
   function jStatus(def) {
@@ -83,7 +78,8 @@
   function allRequests() {
     const real = (typeof devisEnCours !== 'undefined' ? devisEnCours : []).map(d => {
       const lignes = Array.isArray(d.lignes) && d.lignes.length ? d.lignes : (d.postes || []).map(id => ({ label: labelOfPoste(id), metier: metierOfPoste(id), cout: 0 }));
-      return { id: d.id, ref: d, nom: d.nom, tel: d.tel, date: d.date, delai: d.delai, adresse: d.adresse, bien: d.bien || { quartier: d.adresse }, budget: d.budget || 0, message: d.message != null ? d.message : (Array.isArray(d.lignes) ? '' : d.desc || ''), lignes, metiers: [...new Set(lignes.map(l => l.metier).filter(Boolean))], real: true };
+      const ct = d.contactAccepte || {};
+      return { id: d.id, ref: d, nom: d.nom || ct.nom || '', tel: d.tel || ct.tel || '', date: d.date, delai: d.delai, adresse: d.adresse, bien: d.bien || { quartier: d.adresse }, budget: d.budget || 0, message: d.message != null ? d.message : (Array.isArray(d.lignes) ? '' : d.desc || ''), lignes, metiers: [...new Set(lignes.map(l => l.metier).filter(Boolean))], real: true };
     });
     return real.length ? real : SEEDS;
   }
@@ -253,7 +249,7 @@
     if (r.ref) { r.ref.reponses = (r.ref.reponses || []).filter(x => x.proKey !== rep.proKey); r.ref.reponses.push(rep); r.ref.statut = 'Devis reçu'; saveDevis(); }
     else { S0.statuts['rep-' + r.id] = rep; }
     S0.statuts[r.id] = 'envoye'; save();
-    remote(async sess => { await sb.from('devis_reponses').insert([{ devis_id: typeof r.id === 'number' ? r.id : null, lignes: rep.lignes, total_ht: rep.totalHT, total_ttc: rep.totalTTC, validite_jours: rep.validite, delai: rep.delaiExec, note: rep.note }]); });
+    if (r.ref && window.IMMO_SYNC) IMMO_SYNC.pushReponse(r.ref.id, rep);
     toast('Devis envoyé au client.'); buildDemandes(el);
   }
 
@@ -292,21 +288,14 @@
         metiers: [...$('ap-metiers').querySelectorAll('input:checked')].map(i => i.value), zones: [...$('ap-zones').querySelectorAll('input:checked')].map(i => i.value) };
       el.querySelectorAll('[data-j]').forEach(row => { const id = row.dataset.j; S0.justifs[id] = { ref: row.querySelector('.j-ref').value.trim(), exp: row.querySelector('.j-exp')?.value || '', emetteur: row.querySelector('.j-emet')?.value.trim() || '' }; });
       save(); toast('Profil enregistré.');
-      remote(async sess => { await sb.from('professionnels').upsert({ owner_id: sess.user.id, role: 'artisan', nom: S0.profil.nom, ridet: S0.profil.ridet, tel: S0.profil.tel, email: S0.profil.email, bio: S0.profil.bio, metiers: S0.profil.metiers, zones: S0.profil.zones }, { onConflict: 'owner_id,role' }); });
+      if (window.IMMO_SYNC) IMMO_SYNC.ensurePro('art', { nom: S0.profil.nom, ridet: S0.profil.ridet, tel: S0.profil.tel, email: S0.profil.email, bio: S0.profil.bio, metiers: S0.profil.metiers, zones: S0.profil.zones });
       buildProfil(el);
     };
     wire(el);
   }
 
-  /* ---------- Synchronisation Supabase (best effort) ---------- */
-  let synced = false;
-  function remoteSync() {
-    if (synced) return; synced = true;
-    remote(async () => { /* lecture des demandes ciblées : activée avec les politiques RLS du schéma ; absence de données = comportement local */
-      const { data } = await sb.from('devis_requests').select('*').order('created_at', { ascending: false }).limit(50);
-      if (Array.isArray(data) && typeof devisEnCours !== 'undefined') data.forEach(x => { if (!devisEnCours.some(d => d.dbId === x.id)) devisEnCours.push({ id: 'db-' + x.id, dbId: x.id, type: 'Demande', desc: x.message || '', nom: x.contact_nom || '', tel: x.contact_tel || '', budget: x.budget || 0, delai: x.delai || '', adresse: x.bien?.quartier || '', bien: x.bien, postes: x.postes || [], statut: x.statut, date: new Date(x.created_at).toLocaleDateString('fr-FR') }); });
-    });
-  }
+  // Récupère les demandes à jour (si connecté) ; la vue est redessinée par IMMO_SYNC si elle a changé
+  function remoteSync() { if (window.IMMO_SYNC && IMMO_SYNC.uid) IMMO_SYNC.pullAll(); }
 
   /* ---------- Côté client (vendeur) : devis reçus ---------- */
   function reponsesHTML(d) {
@@ -321,7 +310,9 @@
   function accept(devisId, idx) {
     const d = (typeof devisEnCours !== 'undefined' ? devisEnCours : []).find(x => String(x.id) === String(devisId)); if (!d || !d.reponses?.[idx]) return;
     d.reponses.forEach((x, i) => { x.statut = i === idx ? 'accepte' : (x.statut === 'accepte' ? 'envoye' : x.statut); });
-    d.statut = 'Accepté'; saveDevis();
+    d.statut = 'Accepté'; d.acceptedKey = d.reponses[idx].proKey; saveDevis();
+    // Coordonnées du client transmises au seul artisan retenu
+    if (window.IMMO_SYNC && d.reponses[idx]._o) IMMO_SYNC.shareContact(d.id, d.reponses[idx]._o, { nom: d.nom || '', tel: d.tel || '' });
     if (typeof renderDevisList === 'function') renderDevisList();
     toast('Devis accepté. L\'artisan est notifié.');
   }
@@ -347,7 +338,7 @@
     if (b) accept(b.dataset.acceptDevis, parseInt(b.dataset.acceptIdx, 10));
   });
 
-  window.IMMO_ART = { build, renderDashboard, reponsesHTML, accept };
+  window.IMMO_ART = { build, renderDashboard, reponsesHTML, accept, saveDevis };
   window.IMMO_PANELS = Object.assign(window.IMMO_PANELS || {}, build);
   window.IMMO_DASH = Object.assign(window.IMMO_DASH || {}, { art: renderDashboard });
 })();

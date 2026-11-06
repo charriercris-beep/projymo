@@ -15,7 +15,7 @@
   const KEY = 'immo360.notaire.v1', FINKEY = 'immo360.fin.v1';
   const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (_) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) { /* stockage indisponible */ } } };
   let dossiers = store.get(KEY, []);
-  const save = () => store.set(KEY, dossiers);
+  const save = () => { store.set(KEY, dossiers); if (window.IMMO_SYNC) IMMO_SYNC.saved(KEY, dossiers); };
   const today = () => new Date().toISOString().slice(0, 10);
   const jours = iso => iso ? Math.ceil((new Date(iso + 'T23:59:59') - new Date()) / 86400000) : null;
   const fmtD = iso => iso ? new Date(iso + 'T12:00:00').toLocaleDateString('fr-FR') : '—';
@@ -92,6 +92,7 @@
 
   /* ---------- Liste ---------- */
   function newDossier() {
+    dossiers = store.get(KEY, []);
     const n = dossiers.length + 1, y = new Date().getFullYear();
     const d = { id: 'n' + Date.now(), ref: `${y}-${String(n).padStart(3, '0')}`, created: today(), vendeur: { nom: '', tel: '' }, acquereur: { nom: '', tel: '', personnePhysique: true },
       bien: { adresse: '', commune: 'Nouméa', nature: 'bati', regime: 'droit_commun', lotissement: false }, prix: 0, usage: 'rp',
@@ -265,6 +266,7 @@
 
   function toast(t) { const n = document.createElement('div'); n.setAttribute('role', 'status'); n.className = 'immo-toast'; document.querySelectorAll('.immo-toast').forEach(x => x.remove()); n.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;z-index:3000'; n.textContent = t; document.body.appendChild(n); setTimeout(() => n.remove(), 3500); }
 
+  window.addEventListener('immo360:purge', () => { dossiers = []; });
   window.IMMO_PANELS = Object.assign(window.IMMO_PANELS || {}, { 'not-dossiers': buildListe, 'not-echeancier': buildEcheancier, 'not-frais': buildFrais });
   window.IMMO_DASH = Object.assign(window.IMMO_DASH || {}, { not: renderDashboard });
   window.IMMO_NOT = { piecesFor, defaultConditions, echeances, bloquant }; // exposé pour les tests

@@ -46,6 +46,7 @@
   const OPEN = ['demande', 'devis', 'planifiee', 'realisee', 'convocation', 'terrain', 'plan', 'dittt', 'acceptee'];
   const DONE = ['livree', 'attestation'];
   const keyM = r => 'immo360.missions.' + r + '.v1', keyP = r => 'immo360.pro.' + r + '.v1';
+  const setM = (r, list) => { store.set(keyM(r), list); if (window.IMMO_SYNC) IMMO_SYNC.saved(keyM(r), list); };
 
   /* ---------- Demandes venant des autres espaces ---------- */
   function request(role, o) {
@@ -54,7 +55,7 @@
     const m = { id: role + Date.now(), created: new Date().toISOString().slice(0, 10), source: o.source || 'manuel', sourceRef: o.ref || '', type: o.type || ROLES[role].types[0],
       client: o.client || '', tel: o.tel || '', adresse: o.adresse || '', commune: o.commune || '', nature: o.nature || '', annee: o.annee || '', montant: o.montant || 0,
       etape: 'demande', devis: 0, intervention: '', liv: {}, garanties: {}, notes: o.notes || '' };
-    list.unshift(m); store.set(keyM(role), list); return m.id;
+    list.unshift(m); setM(role, list); return m.id;
   }
 
   /* ---------- Styles ---------- */
@@ -101,7 +102,7 @@
         <div class="ms-2"><div class="ms-f"><label>${E(R.agrement)}</label><input id="mp-agr" value="${E(p.agrement)}"></div><div class="ms-f"><label>Zones d'intervention</label><input id="mp-zones" value="${E(p.zones)}" placeholder="Grand Nouméa, Brousse…"></div></div>
         <div class="ms-2"><div class="ms-f"><label>Assurance RC professionnelle (n°)</label><input id="mp-rc" value="${E(p.rcRef)}"></div><div class="ms-f"><label>Échéance RC pro</label><input id="mp-rcexp" type="date" value="${E(p.rcExp)}"></div></div>
         <button type="button" class="btn btn-gold" id="mp-save">Enregistrer</button></div></div>`;
-    $('mp-save').onclick = () => { store.set(keyP(r), { nom: $('mp-nom').value.trim(), ridet: $('mp-ridet').value.trim(), agrement: $('mp-agr').value.trim(), zones: $('mp-zones').value.trim(), rcRef: $('mp-rc').value.trim(), rcExp: $('mp-rcexp').value }); toast('Profil enregistré.'); buildProfil(r, el); };
+    $('mp-save').onclick = () => { const v = { nom: $('mp-nom').value.trim(), ridet: $('mp-ridet').value.trim(), agrement: $('mp-agr').value.trim(), zones: $('mp-zones').value.trim(), rcRef: $('mp-rc').value.trim(), rcExp: $('mp-rcexp').value }; store.set(keyP(r), v); if (window.IMMO_SYNC) IMMO_SYNC.ensurePro(r, { nom: v.nom || 'Professionnel', ridet: v.ridet }); toast('Profil enregistré.'); buildProfil(r, el); };
   }
 
   /* ---------- Missions ---------- */
@@ -148,7 +149,7 @@
       el.querySelectorAll('[data-lv]').forEach(i => { m.liv[i.dataset.lv] = i.value; });
       el.querySelectorAll('[data-gar]').forEach(i => { m.garanties[i.dataset.gar] = i.checked; });
     };
-    const persist = () => { list = store.get(keyM(r), []).map(x => x.id === m.id ? m : x); store.set(keyM(r), list); };
+    const persist = () => { list = store.get(keyM(r), []).map(x => x.id === m.id ? m : x); setM(r, list); };
     el.querySelectorAll('[data-et]').forEach(b => b.onclick = () => {
       collect();
       if (DONE.includes(b.dataset.et) && !m.liv.ref) { alert(`Renseignez la référence (${R.livrable[0][1].toLowerCase()}) avant de marquer la mission comme livrée.`); return; }
@@ -158,7 +159,7 @@
     $('mm-type').addEventListener('change', () => { collect(); persist(); openMission(r, el, id); }); // les garanties dépendent du type
     $('ms-back').onclick = () => { collect(); persist(); buildListe(r, el); };
     $('mm-save').onclick = () => { collect(); persist(); toast('Mission enregistrée.'); openMission(r, el, id); };
-    $('mm-del').onclick = () => { if (confirm('Supprimer cette mission ?')) { store.set(keyM(r), store.get(keyM(r), []).filter(x => x.id !== id)); buildListe(r, el); } };
+    $('mm-del').onclick = () => { if (confirm('Supprimer cette mission ?')) { setM(r, store.get(keyM(r), []).filter(x => x.id !== id)); buildListe(r, el); } };
     $('mm-print').onclick = () => {
       collect(); persist();
       const w = window.open('', '_blank'); if (!w) { alert('Autorisez les fenêtres pop-up.'); return; }

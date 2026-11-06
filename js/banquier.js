@@ -148,7 +148,8 @@
 
   /* ---------- Simulateur (banquier et acheteur) ---------- */
   const COMMUNES = ['Nouméa', 'Dumbéa', 'Mont-Dore', 'Païta', 'Boulouparis', 'La Foa', 'Bourail', 'Koné', 'Voh', 'Poindimié', 'Lifou', 'Maré', 'Autre'];
-  let sim = store.get('immo360.sim.v1', null) || { revenus: 650000, charges: 0, adultes: 2, charges_pers: 1, apport: 3000000, taux: B('tauxNominal'), duree: 25, assurance: B('assurance'), endettement: Math.min(0.33, B('endettementMax')), type: 'ancien', usage: 'rp', prixTerrain: 0, personnePhysique: true, primo: true, residenceSud: true, commune: 'Nouméa' };
+  const SIM0 = () => ({ revenus: 650000, charges: 0, adultes: 2, charges_pers: 1, apport: 3000000, taux: B('tauxNominal'), duree: 25, assurance: B('assurance'), endettement: Math.min(0.33, B('endettementMax')), type: 'ancien', usage: 'rp', prixTerrain: 0, personnePhysique: true, primo: true, residenceSud: true, commune: 'Nouméa' });
+  let sim = store.get('immo360.sim.v1', null) || SIM0();
 
   function buildSimu(el, mode) {
     injectStyle();
@@ -217,8 +218,9 @@
   const ETAPES = [['contact', 'Premier contact'], ['pieces', 'Pièces à réunir'], ['etude', 'Étude'], ['accord', 'Accord de principe'], ['offre', 'Offre émise'], ['signe', 'Signée / débloquée'], ['refus', 'Refusé']];
   const PIECES = ['Pièce d\'identité', 'Justificatif de domicile', '3 derniers bulletins de salaire', 'Dernier avis d\'imposition', 'Relevés de compte (3 mois)', 'Justificatif d\'apport', 'Compromis de vente / contrat de construction', 'Tableaux d\'amortissement des crédits en cours'];
   let dossiers = store.get(DKEY, []);
-  const saveD = () => store.set(DKEY, dossiers);
+  const saveD = () => { store.set(DKEY, dossiers); if (window.IMMO_SYNC) IMMO_SYNC.saved(DKEY, dossiers); };
   function newDossier(o) {
+    dossiers = store.get(DKEY, []); // toujours repartir du stockage (jamais d'une copie en mémoire périmée)
     const d = { id: 'f' + Date.now(), date: new Date().toISOString().slice(0, 10), client: o.client || '', email: o.email || '', tel: o.tel || '', source: o.source || 'manuel', etape: o.etape || 'contact', pieces: {}, sim: { ...sim }, offreFin: '', notes: '' };
     dossiers.unshift(d); saveD(); return d.id;
   }
@@ -311,6 +313,7 @@
   function toast(t) { const n = document.createElement('div'); n.setAttribute('role', 'status'); n.className = 'immo-toast'; document.querySelectorAll('.immo-toast').forEach(x => x.remove()); n.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;z-index:3000'; n.textContent = t; document.body.appendChild(n); setTimeout(() => n.remove(), 3500); }
 
   // Enregistrement dans les registres communs des espaces métiers
+  window.addEventListener('immo360:purge', () => { dossiers = []; sim = null; sim = store.get('immo360.sim.v1', null) || SIM0(); });
   window.IMMO_PANELS = Object.assign(window.IMMO_PANELS || {}, {
     'bnk-simu': el => { dossiers = store.get(DKEY, []); buildSimu(el, 'pro'); },
     'bnk-dossiers': el => { dossiers = store.get(DKEY, []); buildDossiers(el); },

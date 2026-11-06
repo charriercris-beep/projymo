@@ -47,6 +47,7 @@
     ai: null, aiLoading: false, photos: [], annonce: ''
   };
 
+  window.addEventListener('immo360:purge', () => { st.bien = { type: 'appartement', surface: 80, quartier: 'Magenta', annee: 2005, etat: 'correct', prixSouhaite: 0, description: '' }; st.selected = new Set(); st.ai = null; st.photos = []; st.annonce = ''; });
   const pm2Of = q => (typeof NC_PM2 !== 'undefined' && NC_PM2[q]) || 340000;
   const money = v => (typeof conv === 'function' ? conv(v) : Math.round(v).toLocaleString('fr-FR') + ' F');
   const E = v => (typeof esc === 'function' ? esc(v) : String(v));
@@ -387,13 +388,8 @@
       bien: { type: st.bien.type, surface: st.bien.surface, quartier: st.bien.quartier }, metiers: [...new Set(cur.list.map(p => p.metier))], reponses: []
     };
     if (typeof devisEnCours !== 'undefined') devisEnCours.push(devis);
-    // Persistance Supabase si connecté (la table est protégée par RLS)
-    if (typeof sb !== 'undefined' && sb) {
-      try {
-        const { data: s } = await sb.auth.getSession();
-        if (s?.session) await sb.from('devis_requests').insert([{ bien: st.bien, postes: devis.postes, metiers: devis.metiers, budget: devis.budget, artisan_ids: artIds, message: desc, contact_nom: nom, contact_tel: tel, delai: devis.delai }]);
-      } catch (_) { /* la demande reste visible localement */ }
-    }
+    // Enregistrement local + synchronisation (si connecté) via js/sync.js
+    if (window.IMMO_ART) IMMO_ART.saveDevis();
     m.remove();
     const t = document.createElement('div');
     t.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;z-index:3000';

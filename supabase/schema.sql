@@ -88,7 +88,8 @@ create policy rdv_all on public.rdv for all to authenticated using (owner_id = a
 create index if not exists biens_created_idx on public.biens (created_at desc);
 create index if not exists messages_users_idx on public.messages (from_user, to_user);
 
--- Demandes de devis aux artisans (assistant de valorisation)
+-- Demandes de devis aux artisans — PREMIÈRE VERSION, remplacée par public.records (collections devis,
+-- devis_reponse, devis_contact). Conservée pour ne pas casser une base déjà initialisée ; inutilisée par l'application.
 create table if not exists public.devis_requests (
   id           bigint generated always as identity primary key,
   owner_id     uuid not null default auth.uid() references auth.users(id) on delete cascade,
@@ -165,11 +166,12 @@ create policy pro_read   on public.professionnels for select using (true);
 create policy pro_insert on public.professionnels for insert to authenticated with check (owner_id = auth.uid());
 create policy pro_update on public.professionnels for update to authenticated using (owner_id = auth.uid()) with check (owner_id = auth.uid());
 
--- Le champ « verifie » ne peut être modifié que côté serveur (service_role), jamais par le professionnel
+-- Le champ « verifie » ne peut être modifié que par l'administration (éditeur SQL ou clé service_role),
+-- jamais par un utilisateur connecté via l'API (rôles authenticated / anon).
 create or replace function public.protect_pro_verifie() returns trigger
-language plpgsql security definer set search_path = public as $$
+language plpgsql set search_path = public as $$
 begin
-  if coalesce(auth.role(), '') <> 'service_role' then
+  if current_user in ('authenticated', 'anon') then
     if tg_op = 'INSERT' then new.verifie := false; else new.verifie := old.verifie; end if;
   end if;
   return new;
@@ -197,3 +199,79 @@ drop policy if exists rep_client_read on public.devis_reponses;
 create policy rep_owner on public.devis_reponses for all to authenticated using (owner_id = auth.uid()) with check (owner_id = auth.uid());
 create policy rep_client_read on public.devis_reponses for select to authenticated
   using (exists (select 1 from public.devis_requests d where d.id = devis_id and d.owner_id = auth.uid()));
+
+-- ============================================================
+-- Synchronisation des espaces (js/sync.js) : enregistrements partagés
+-- ============================================================
+-- Un enregistrement appartient à son créateur (owner_id). Il peut viser un public professionnel
+-- (audience_role, et éventuellement des métiers) : seuls les professionnels VÉRIFIÉS de ce rôle
+-- le voient. Un professionnel qui le prend en charge en devient l'« assignee » et peut le modifier.
+create table if not exists public.records (
+  collection        text not null,             -- fin, notaire, devis, devis_reponse, mission_diag, mission_geo, mission_ass
+  id                text not null,
+  owner_id          uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  audience_role     text,
+  audience_metiers  text[],
+  parent_id         text,                      -- ex. réponse d'artisan → demande de devis
+  assignee          uuid references auth.users(id) on delete set null,
+  data              jsonb not null default '{}'::jsonb,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now(),
+  primary key (collection, id)
+);
+create index if not exists records_audience_idx on public.records (collection, audience_role);
+create index if not exists records_parent_idx on public.records (parent_id);
+alter table public.records enable row level security;
+
+-- Professionnel vérifié du rôle demandé (et d'au moins un des métiers, si précisés)
+create or replace function public.is_verified_pro(p_role text, p_metiers text[])
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.professionnels p
+                 where p.owner_id = auth.uid() and p.role = p_role and p.verifie
+                   and (p_metiers is null or cardinality(p_metiers) = 0 or p.metiers && p_metiers));
+$$;
+-- Propriétaire d'un enregistrement parent (lu sans RLS pour éviter la récursion des politiques)
+create or replace function public.record_owner(p_collection text, p_id text)
+returns uuid language sql stable security definer set search_path = public as $$
+  select owner_id from public.records where collection = p_collection and id = p_id;
+$$;
+
+drop policy if exists rec_select on public.records;
+drop policy if exists rec_insert on public.records;
+drop policy if exists rec_update on public.records;
+drop policy if exists rec_delete on public.records;
+create policy rec_select on public.records for select to authenticated using (
+  owner_id = auth.uid()
+  or assignee = auth.uid()
+  -- demande encore ouverte : visible des professionnels vérifiés visés ; une fois prise en charge, elle ne l'est plus
+  or (audience_role is not null and assignee is null and public.is_verified_pro(audience_role, audience_metiers))
+  or (collection = 'devis_reponse' and public.record_owner('devis', parent_id) = auth.uid())
+);
+create policy rec_insert on public.records for insert to authenticated with check (owner_id = auth.uid() and assignee is null);
+create policy rec_update on public.records for update to authenticated
+  using (owner_id = auth.uid() or assignee = auth.uid()
+         or (assignee is null and audience_role is not null and public.is_verified_pro(audience_role, audience_metiers)))
+  with check (owner_id = auth.uid() or assignee = auth.uid());
+create policy rec_delete on public.records for delete to authenticated using (owner_id = auth.uid());
+
+-- Un non-propriétaire ne peut ni changer le propriétaire ni le public visé ; en modifiant, il prend en charge
+create or replace function public.records_guard() returns trigger
+language plpgsql set search_path = public as $$
+begin
+  new.updated_at := now();
+  if tg_op = 'UPDATE' and old.owner_id is distinct from auth.uid() and current_user in ('authenticated', 'anon') then
+    new.owner_id := old.owner_id; new.collection := old.collection; new.id := old.id;
+    new.audience_role := old.audience_role; new.audience_metiers := old.audience_metiers; new.parent_id := old.parent_id;
+    new.assignee := auth.uid();
+  end if;
+  return new;
+end $$;
+drop trigger if exists trg_records_guard on public.records;
+create trigger trg_records_guard before insert or update on public.records
+  for each row execute function public.records_guard();
+
+-- ============================================================
+-- Administration : vérifier un professionnel (à exécuter dans l'éditeur SQL de Supabase)
+-- ============================================================
+-- select id, role, nom, ridet, metiers, verifie, created_at from public.professionnels where not verifie order by created_at;
+-- update public.professionnels set verifie = true where id = <id>;   -- après contrôle des justificatifs

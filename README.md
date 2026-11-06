@@ -19,6 +19,8 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 | `js/banquier.js` | Espace Banquier/courtier : simulateur NC, éligibilité aux dispositifs, dossiers, attestation, barèmes datés ; « Capacité d'achat » côté acheteur |
 | `js/notaire.js` | Espace Notaire : dossiers de vente, pièces selon le contexte NC, conditions suspensives, échéancier, décompte des frais |
 | `js/missions.js` | Espaces Diagnostiqueur, Géomètre-expert, Assureur : modèle commun demande → mission → livrable |
+| `js/sync.js` | Synchronisation avec Supabase (cache navigateur, envoi, récupération, purge à la déconnexion) |
+| `tests/e2e/` | Test de bout en bout multi-utilisateurs sur PostgreSQL avec RLS |
 | `docs/fiches-metiers.md` | Recherche sur les besoins des métiers en Nouvelle-Calédonie (sources, fiabilité) |
 | `api/_lib.js` | Utilitaires : CORS, limitation de débit, validation, appel Anthropic |
 | `supabase/schema.sql` | Tables + règles de sécurité (RLS) à exécuter dans Supabase |
@@ -35,8 +37,28 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 
 ## Mise en route
 
-1. Créer un projet Supabase, exécuter `supabase/schema.sql`, et activer *Authentication > Email*.
-2. Renseigner les variables ci-dessus dans Vercel, puis déployer.
+1. Créer un projet Supabase et activer *Authentication > Email*.
+2. Exécuter `supabase/schema.sql` dans l'éditeur SQL (le script peut être rejoué sans risque).
+3. Renseigner les variables d'environnement ci-dessus dans Vercel, puis déployer.
+4. **Vérifier les professionnels** : un professionnel qui s'inscrit est « en attente de vérification » et
+   ne reçoit aucune demande de client tant que l'équipe ne l'a pas validé. Après contrôle de ses
+   justificatifs, dans l'éditeur SQL :
+   ```sql
+   select id, role, nom, ridet, metiers, created_at from public.professionnels where not verifie order by created_at;
+   update public.professionnels set verifie = true where id = 123;
+   ```
+
+## Données et synchronisation
+
+- **Sans compte (démo)** : tout reste dans le navigateur.
+- **Avec un compte** : `js/sync.js` enregistre dans la table `records` et récupère les données visibles à la
+  connexion, toutes les minutes et au retour sur l'onglet. Le cache d'un autre compte ou de la démo est vidé
+  à la connexion ; tout est purgé à la déconnexion.
+- **Qui voit quoi** (règles RLS) : chacun voit ses enregistrements ; une demande ouverte (financement, devis,
+  diagnostic, bornage, assurance) est visible des seuls professionnels **vérifiés** du métier visé ; une fois
+  prise en charge, seulement du demandeur et du professionnel qui la traite. Les coordonnées d'un client ne
+  sont transmises qu'à l'artisan dont il accepte le devis.
+- Conflits : la dernière écriture l'emporte.
 
 ## Sécurité
 

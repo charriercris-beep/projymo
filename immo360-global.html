@@ -4547,6 +4547,7 @@ async function doLoginExisting(){
   if(error||!data?.user){alert(authErrorMsg(error));return;}
   APP_STATE.user=userFromSupabase(data.user,profil);
   APP_STATE.loggedIn=true;
+  if(window.IMMO_SYNC) IMMO_SYNC.start();
   showAuthStep2('Connexion réussie !');
 }
 
@@ -4570,6 +4571,7 @@ async function doRegister(){
   }
   APP_STATE.user=userFromSupabase(data.user,profil);
   APP_STATE.loggedIn=true;
+  if(window.IMMO_SYNC) IMMO_SYNC.start();
   showAuthStep2('Compte créé avec succès !');
 }
 
@@ -4615,7 +4617,7 @@ function doLoginConfirm(){
 }
 
 function loginAs(profil){
-  if(profil==='sell'||profil==='buy'||profil==='agt'||profil==='not'||profil==='art'){
+  if(['sell','buy','agt','not','art','bnk','diag','geo','ass'].includes(profil)){
     APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
@@ -5002,6 +5004,8 @@ function updateUserDisplay(){
 
 // Bouton déconnexion dans la topbar
 function logout(){
+  // Arrêt de la synchronisation et purge des données personnelles du navigateur
+  if(window.IMMO_SYNC) IMMO_SYNC.stop();
   if(sb){sb.auth.signOut().catch(()=>{});}
   APP_STATE.user=null;
   APP_STATE.loggedIn=false;
@@ -5155,6 +5159,11 @@ async function initSupabase(){
       if(cfg.supabaseKey && window.supabase){
         sb = window.supabase.createClient(cfg.supabaseUrl || SUPABASE_URL, cfg.supabaseKey);
         console.log('Supabase connecté');
+        // Session existante (retour sur le site) : reprise de la synchronisation et accès direct à son espace
+        if(window.IMMO_SYNC) IMMO_SYNC.start().then(restored=>{
+          const shell=document.getElementById('main-shell');
+          if(restored && APP_STATE.loggedIn && shell && shell.style.display!=='flex' && typeof doLoginConfirm==='function') doLoginConfirm();
+        });
       }
     }
   } catch(e){ console.warn('Supabase:', e.message); }
@@ -8294,7 +8303,7 @@ function buildSmartDashboard(){
   const nom=APP_STATE.user?.nom||'vous';
   const dash=document.getElementById('panel-dashboard');
   if(!dash) return;
-  if(window.IMMO_DASH && IMMO_DASH[profil]){ IMMO_DASH[profil](dash); return; }
+  if(window.IMMO_DASH && IMMO_DASH[profil]){ IMMO_DASH[profil](dash); if(window.IMMO_SYNC) IMMO_SYNC.decorate(dash, profil); return; }
 
   // ── COMPOSANTS ──
   const F='font-family:DM Sans,sans-serif';
@@ -8486,6 +8495,7 @@ function buildSmartDashboard(){
     if(window.IMMO_ART) IMMO_ART.renderDashboard(dash);
   }
 
+  if(window.IMMO_SYNC) IMMO_SYNC.decorate(dash, profil);
   setTimeout(applyMobileLayout, 50);
 }
 
@@ -9739,6 +9749,7 @@ setTimeout(()=>{
 go('dashboard');
 </script>
 
+<script src="js/sync.js"></script>
 <script src="js/valorisation.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
