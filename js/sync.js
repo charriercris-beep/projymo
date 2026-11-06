@@ -22,6 +22,8 @@
     'immo360.missions.diag.v1': { c: 'mission_diag', aud: missionAud('diagnostiqueur') },
     'immo360.missions.geo.v1': { c: 'mission_geo', aud: missionAud('geometre') },
     'immo360.missions.ass.v1': { c: 'mission_ass', aud: missionAud('assureur') },
+    // Visites vidéo : lisibles publiquement une fois publiées ; on ne récupère que les siennes (photos volumineuses)
+    'immo360.visites.v1': { c: 'visite', ownOnly: true },
     'immo360.devis.v1': { c: 'devis', aud: r => ({ role: 'artisan', metiers: Array.isArray(r.metiers) ? r.metiers : [] }), strip: ['reponses', 'nom', 'tel', 'contactAccepte'] }  // coordonnées du client : jamais dans la demande partagée
   };
   const META = ['_o', '_u'];
@@ -126,10 +128,19 @@
     return !b?.error;
   }
 
+  // Lecture ponctuelle d'un enregistrement (fonctionne aussi sans compte, dans la limite des règles d'accès)
+  async function fetchOne(collection, id) {
+    const c = client(); if (!c) return null;
+    try { const { data } = await c.from('records').select('*').eq('collection', collection).eq('id', String(id)); return data && data[0] ? data[0].data : null; }
+    catch (_) { return null; }
+  }
+
   /* ---------- Récupération ---------- */
   async function pull(key) {
     const c = client(), cfg = COLLS[key]; if (!c || !uid || !cfg) return false;
-    const { data: rows, error } = await c.from('records').select('*').eq('collection', cfg.c);
+    let q = c.from('records').select('*').eq('collection', cfg.c);
+    if (cfg.ownOnly) q = q.eq('owner_id', uid);
+    const { data: rows, error } = await q;
     if (error || !Array.isArray(rows)) return false;
     const done = sent[key] = sent[key] || {}, own = mine[key] = mine[key] || {};
     const local = key === 'immo360.devis.v1' && typeof devisEnCours !== 'undefined' ? devisEnCours : read(key);
@@ -227,5 +238,5 @@
     if (profil in proCache) show(proCache[profil]); else ensurePro(profil).then(show);
   }
 
-  window.IMMO_SYNC = { start, stop, saved, pull, pullAll, pushReponse, shareContact, ensurePro, decorate, get uid() { return uid; }, COLLS };
+  window.IMMO_SYNC = { start, stop, saved, pull, pullAll, pushReponse, shareContact, fetchOne, ensurePro, decorate, get uid() { return uid; }, COLLS };
 })();

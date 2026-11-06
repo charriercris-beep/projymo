@@ -19,6 +19,7 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 | `js/banquier.js` | Espace Banquier/courtier : simulateur NC, éligibilité aux dispositifs, dossiers, attestation, barèmes datés ; « Capacité d'achat » côté acheteur |
 | `js/notaire.js` | Espace Notaire : dossiers de vente, pièces selon le contexte NC, conditions suspensives, échéancier, décompte des frais |
 | `js/missions.js` | Espaces Diagnostiqueur, Géomètre-expert, Assureur : modèle commun demande → mission → livrable |
+| `js/visite.js` | Visite vidéo : éditeur (photos, ordre, légendes, réglages), publication sur l'annonce, lecteur intégré à la fiche du bien |
 | `js/sync.js` | Synchronisation avec Supabase (cache navigateur, envoi, récupération, purge à la déconnexion) |
 | `tests/e2e/` | Test de bout en bout multi-utilisateurs sur PostgreSQL avec RLS |
 | `docs/fiches-metiers.md` | Recherche sur les besoins des métiers en Nouvelle-Calédonie (sources, fiabilité) |

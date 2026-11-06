@@ -111,7 +111,8 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   ok('contact transmis au seul peintre retenu', sql(`select (assignee='${U['peintre@test.nc'].id}')::text from public.records where collection='devis_contact'`) === 'true');
 
   // 7. Le peintre voit l'acceptation et les coordonnées
-  await C.sync(); await C.evaluate(() => go('art-devis')); await C.waitForTimeout(300);
+  // l'acceptation arrive à la synchronisation suivante : jusqu'à 3 tentatives (pas de délai fixe)
+  for (let k = 0; k < 3; k++) { await C.sync(); await C.evaluate(() => go('art-devis')); await C.waitForTimeout(300); if ((await C.textContent('#panel-art-devis')).includes('Accepté')) break; }
   ok('peintre : devis accepté', (await C.textContent('#panel-art-devis')).includes('Accepté'));
   await C.locator('#panel-art-devis .art-req').first().click(); await C.waitForTimeout(300);
   ok('peintre : coordonnées du client désormais visibles', (await C.textContent('#panel-art-demandes')).includes('+687 11 22 33'));
@@ -130,6 +131,23 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   await D.fill('[data-lv="ref"]', 'RAP-2026-118'); await D.click('[data-et="livree"]'); await D.waitForTimeout(900);
   await N.sync();
   ok('le notaire récupère le rapport livré', await N.evaluate(() => (JSON.parse(localStorage.getItem('immo360.missions.diag.v1')) || [])[0]?.liv?.ref) === 'RAP-2026-118');
+
+  // 9. Visite vidéo : publiée par le vendeur, vue par un visiteur NON connecté sur un autre appareil
+  await A.espace('sell'); await A.evaluate(() => go('visite')); await A.waitForTimeout(300);
+  await A.evaluate(async () => { const mk = (n, c) => new Promise(r => { const cv = document.createElement('canvas'); cv.width = 1600; cv.height = 1000; const x = cv.getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1600, 1000); cv.toBlob(b => r(new File([b], n, { type: 'image/jpeg' })), 'image/jpeg', 0.9); });
+    await IMMO_VISITE.addFiles([await mk('facade.jpg', '#2a7a4b'), await mk('salon.jpg', '#2a4a7a')]); go('visite'); });
+  await A.waitForTimeout(300); await A.selectOption('#vv-bien', '1'); await A.waitForTimeout(300); await A.click('#vv-pub'); await A.waitForTimeout(1200);
+  ok('visite publiée enregistrée en base', sql(`select (data->>'publie') || ' ' || jsonb_array_length(data->'photos') from public.records where collection='visite'`) === 'true 2');
+  const V = await user('visiteur@anonyme.nc');
+  await V.evaluate(() => { showLanding(); openLandingBien(1); }); await V.waitForTimeout(1500);
+  ok('visiteur non connecté : la visite s\'affiche dans la fiche publique', await V.locator('.vv-player canvas').count() === 1);
+  await V.click('.vv-big'); await V.waitForTimeout(1300);
+  ok('visiteur non connecté : la visite se joue', (await V.textContent('.vv-tm')).startsWith('0:01'));
+  await A.evaluate(() => go('visite')); await A.waitForTimeout(300); await A.click('#vv-unpub'); await A.waitForTimeout(1200);
+  const V2 = await user('visiteur@anonyme.nc');
+  await V2.evaluate(() => { showLanding(); openLandingBien(1); }); await V2.waitForTimeout(1500);
+  ok('visite retirée : plus visible du public', await V2.locator('.vv-player').count() === 0);
+  ok('un autre utilisateur ne peut pas modifier la visite', sql(`set role authenticated; select set_config('request.jwt.claim.sub','${U['banque@test.nc'].id}',false); with x as (update public.records set data = jsonb_set(data,'{publie}','true') where collection='visite' returning 1) select count(*) from x;`).split('\n').pop() === '0');
 
   // 9. Déconnexion : purge des données personnelles du navigateur
   await A.evaluate(() => logout()); await A.waitForTimeout(300);

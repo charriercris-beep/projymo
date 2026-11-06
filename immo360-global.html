@@ -36,7 +36,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   html,body{max-width:100vw;width:100%}
   *{box-sizing:border-box}
   .shell{flex-direction:column;height:100vh;min-height:100vh;width:100%;overflow-x:hidden}
-  .sidebar{position:relative!important;left:0!important;top:auto!important}}
+  .sidebar{position:relative!important;left:0!important;top:auto!important}
   .sidebar.open{left:0}
   .sidebar-overlay.show{display:block}
   .hamburger{display:flex}
@@ -464,7 +464,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .tn-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .tn-right .profile-switch{display:flex;gap:2px;padding:3px;background:rgba(255,255,255,.06);border-radius:8px;margin:0;border:0}
 .tn-right .prof-btn{flex:none;padding:5px 12px;font-size:12px}
-.tn-right .dev-sel{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.14);padding:5px 8px}
+.tn-right .dev-sel{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.14);padding:5px 8px;width:auto;max-width:110px;flex:none}
 .tn-right .dev-sel option{color:#111}
 .tn-btn{background:none;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.75);padding:6px 12px;border-radius:8px;font:500 12px 'DM Sans',sans-serif;cursor:pointer;transition:.15s}
 .tn-btn:hover{color:#fff;border-color:rgba(255,255,255,.35)}
@@ -492,7 +492,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .doc-list{display:flex;flex-direction:column;gap:6px}
 
 .tn-prof{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.5);font:500 11px 'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.08em}
-.tn-prof select{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;font:600 13px 'DM Sans',sans-serif;text-transform:none;letter-spacing:0;cursor:pointer}
+.tn-prof{flex:none}
+.tn-prof select{width:auto;min-width:170px;max-width:220px;flex:none;background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;font:600 13px 'DM Sans',sans-serif;text-transform:none;letter-spacing:0;cursor:pointer}
 .tn-prof select option,.tn-prof select optgroup{color:#111;background:#fff}
 @media(max-width:900px){.tn-prof span{display:none}}
 .artisan-tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:500 14px 'DM Sans',sans-serif;color:var(--mid);cursor:pointer}
@@ -3323,6 +3324,7 @@ const MENUS = {
   sell:[
     {ico:'💎',k:'analyse',l:'Estimation'},
     {ico:'',k:'valorisation',l:'Valorisation'},
+    {ico:'',k:'visite',l:'Visite vidéo'},
     {ico:'📝',k:'depot',l:'Déposer'},
     {ico:'📣',k:'annonces',l:'Annonces'},
     {ico:'📅',k:'rdv',l:'Visites'},
@@ -3343,6 +3345,7 @@ const MENUS = {
   agt:[
     {ico:'📝',k:'depot',l:'+ Annonce'},
     {ico:'',k:'valorisation',l:'Valorisation'},
+    {ico:'',k:'visite',l:'Visite vidéo'},
     {ico:'📋',k:'mandats',l:'Mandats'},
     {ico:'👥',k:'crm',l:'Clients'},
     {ico:'🤖',k:'matching',l:'Matching'},
@@ -4337,6 +4340,7 @@ function openBien(id){
     </div>
   </div>`;
   document.body.appendChild(ov);
+  if(window.IMMO_VISITE) IMMO_VISITE.attach(ov, b.id); // visite vidéo publiée, s'il y en a une
 }
 
 function contactVendeur(bienId){
@@ -4898,6 +4902,7 @@ function openLandingBien(id){
     </div>
   </div>`;
   document.body.appendChild(ov);
+  if(window.IMMO_VISITE) IMMO_VISITE.attach(ov, b.id); // visite vidéo publiée, s'il y en a une
 }
 
 function ouvrirMonAnnonce(){
@@ -9751,6 +9756,7 @@ go('dashboard');
 
 <script src="js/sync.js"></script>
 <script src="js/valorisation.js"></script>
+<script src="js/visite.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
