@@ -1061,7 +1061,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <label class="tn-prof"><span>Espace</span>
         <select id="prof-sel" onchange="setProfile(this.value,null)" aria-label="Choisir mon espace">
           <optgroup label="Particuliers"><option value="sell">Vendeur</option><option value="buy">Acheteur</option></optgroup>
-          <optgroup label="Professionnels"><option value="agt">Agent immobilier</option><option value="art">Artisan</option><option value="bnk">Banquier / courtier</option></optgroup>
+          <optgroup label="Professionnels"><option value="agt">Agent immobilier</option><option value="art">Artisan</option><option value="bnk">Banquier / courtier</option><option value="not">Notaire</option></optgroup>
         </select></label>
       <select class="dev-sel" id="devsel" onchange="setCurr()" aria-label="Devise">
         <option value="XPF" data-s="F" selected>F CFP</option>
@@ -3361,6 +3361,12 @@ const MENUS = {
     {ico:'',k:'bnk-dossiers',l:'Dossiers'},
     {ico:'',k:'bnk-simu',l:'Simulateur'},
     {ico:'',k:'bnk-baremes',l:'Barèmes'},
+    {ico:'',k:'messagerie',l:'Messages'},
+  ],
+  not:[
+    {ico:'',k:'not-dossiers',l:'Dossiers'},
+    {ico:'',k:'not-echeancier',l:'Échéancier'},
+    {ico:'',k:'not-frais',l:'Calcul des frais'},
     {ico:'',k:'messagerie',l:'Messages'},
   ],
 };
@@ -9721,5 +9727,6 @@ go('dashboard');
 <script src="js/valorisation.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
+<script src="js/notaire.js"></script>
 </body>
 </html>
