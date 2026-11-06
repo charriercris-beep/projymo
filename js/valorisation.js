@@ -381,14 +381,17 @@
     const devis = {
       id: Date.now(), type: 'Valorisation — ' + [...new Set(cur.list.map(p => METIER_LABEL[p.metier] || p.metier))].join(', '),
       desc, nom, tel, budget: Math.round(cur.cout), delai: $('vd-delai').value, adresse: st.bien.quartier,
-      statut: 'En attente', date: new Date().toLocaleDateString('fr-FR'), artisansContactes: artIds.length, artisanIds: artIds, postes: cur.list.map(p => p.id)
+      statut: 'En attente', date: new Date().toLocaleDateString('fr-FR'), artisansContactes: artIds.length, artisanIds: artIds, postes: cur.list.map(p => p.id),
+      message: ($('vd-msg').value || '').slice(0, 500),
+      lignes: cur.list.map(p => ({ id: p.id, label: p.label, metier: p.metier, cout: p.cout })),
+      bien: { type: st.bien.type, surface: st.bien.surface, quartier: st.bien.quartier }, metiers: [...new Set(cur.list.map(p => p.metier))], reponses: []
     };
     if (typeof devisEnCours !== 'undefined') devisEnCours.push(devis);
     // Persistance Supabase si connecté (la table est protégée par RLS)
     if (typeof sb !== 'undefined' && sb) {
       try {
         const { data: s } = await sb.auth.getSession();
-        if (s?.session) await sb.from('devis_requests').insert([{ bien: st.bien, postes: devis.postes, budget: devis.budget, artisan_ids: artIds, message: desc, contact_nom: nom, contact_tel: tel, delai: devis.delai }]);
+        if (s?.session) await sb.from('devis_requests').insert([{ bien: st.bien, postes: devis.postes, metiers: devis.metiers, budget: devis.budget, artisan_ids: artIds, message: desc, contact_nom: nom, contact_tel: tel, delai: devis.delai }]);
       } catch (_) { /* la demande reste visible localement */ }
     }
     m.remove();
@@ -400,5 +403,5 @@
   }
 
   window.buildValorisation = buildValorisation;
-  window.IMMO_VAL = { compute, POSTES, GRADES, state: st }; // exposé pour les tests
+  window.IMMO_VAL = { compute, POSTES, GRADES, METIER_LABEL, state: st }; // exposé pour les tests
 })();

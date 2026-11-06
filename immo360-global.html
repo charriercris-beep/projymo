@@ -490,6 +490,16 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .doc-drop-zone{border:1.5px dashed var(--soft);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:.15s;margin-bottom:8px}
 .doc-drop-zone:hover{border-color:var(--gold);background:rgba(184,146,42,.04)}
 .doc-list{display:flex;flex-direction:column;gap:6px}
+
+.tn-prof{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.5);font:500 11px 'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+.tn-prof select{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;font:600 13px 'DM Sans',sans-serif;text-transform:none;letter-spacing:0;cursor:pointer}
+.tn-prof select option,.tn-prof select optgroup{color:#111;background:#fff}
+@media(max-width:900px){.tn-prof span{display:none}}
+.artisan-tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:500 14px 'DM Sans',sans-serif;color:var(--mid);cursor:pointer}
+.artisan-tab:hover{color:var(--dark)}.artisan-tab.active{color:var(--dark);border-bottom-color:var(--gold);font-weight:600}
+.devis-card{background:#fff;border:1px solid rgba(28,26,22,.1);border-radius:12px;padding:16px;margin-bottom:12px}
+.devis-card .ai-line{border-bottom:1px solid rgba(28,26,22,.07);color:var(--dark)}
+.devis-card .ai-line span:first-child{color:var(--mid)}
 </style>
 </head>
 <body>
@@ -1048,11 +1058,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <a class="tn-logo" onclick="showLanding()" role="button" tabindex="0">Immo<span>360</span><small>NC</small></a>
     <nav id="nav-container" class="tn-tabs" aria-label="Navigation principale"></nav>
     <div class="tn-right">
-      <div class="profile-switch" role="tablist" aria-label="Profil">
-        <div class="prof-btn on" data-p="sell" onclick="setProfile('sell',this)">Vendeur</div>
-        <div class="prof-btn" data-p="buy" onclick="setProfile('buy',this)">Acheteur</div>
-        <div class="prof-btn" data-p="agt" onclick="setProfile('agt',this)">Agent</div>
-      </div>
+      <label class="tn-prof"><span>Espace</span>
+        <select id="prof-sel" onchange="setProfile(this.value,null)" aria-label="Choisir mon espace">
+          <optgroup label="Particuliers"><option value="sell">Vendeur</option><option value="buy">Acheteur</option></optgroup>
+          <optgroup label="Professionnels"><option value="agt">Agent immobilier</option><option value="art">Artisan</option></optgroup>
+        </select></label>
       <select class="dev-sel" id="devsel" onchange="setCurr()" aria-label="Devise">
         <option value="XPF" data-s="F" selected>F CFP</option>
         <option value="EUR" data-s="€">EUR</option>
@@ -3340,6 +3350,12 @@ const MENUS = {
     {ico:'📊',k:'statsannonces',l:'Stats'},
     {ico:'💬',k:'messagerie',l:'Messages'},
   ],
+  art:[
+    {ico:'',k:'art-demandes',l:'Demandes'},
+    {ico:'',k:'art-devis',l:'Mes devis'},
+    {ico:'',k:'art-profil',l:'Profil & justificatifs'},
+    {ico:'',k:'messagerie',l:'Messages'},
+  ],
 };
 const LABELS = {
   fr:{dashboard:'Tableau de bord',offre:'Faire une offre',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',parcours:'Mon Parcours',comparateur:'Comparateur',assistantvisite:'Assistant Visite',financementplus:'Financement Réel',suiviachat:'Suivi de mon achat',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
@@ -3364,7 +3380,7 @@ function buildSB(){
   nav.appendChild(mk('Accueil','dashboard'));
   items.forEach(it=>nav.appendChild(mk(it.l||lbl(it.k),it.k)));
   // synchroniser le sélecteur de profil et le badge avec le profil courant
-  document.querySelectorAll('.prof-btn[data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===prof));
+  const ps=document.getElementById('prof-sel'); if(ps && ps.value!==prof) ps.value=prof;
   const badge=document.getElementById('profile-badge');
   if(badge){const L={sell:'Vendeur',buy:'Acheteur',agt:'Agent',not:'Notaire',art:'Artisan'};badge.textContent=L[prof]||prof;}
 }
@@ -3411,7 +3427,8 @@ function go(panel){
     el.classList.add('active');
     el.style.display='block';
     // Construire le contenu si vide
-    if(!el.innerHTML.trim()) buildPanelContent(panel, el);
+    if(window.IMMO_ART && IMMO_ART.build[panel]) IMMO_ART.build[panel](el);
+    else if(!el.innerHTML.trim()) buildPanelContent(panel, el);
   }
   const tt=document.getElementById('topbar-title');
   if(tt) tt.textContent=lbl(panel)||panel;
@@ -4403,12 +4420,12 @@ function setProfile(p,btn){
   // Mettre à jour APP_STATE aussi pour que buildSmartDashboard le lise
   if(APP_STATE.user) APP_STATE.user.profil=p;
   document.querySelectorAll('.prof-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
+  if(btn) btn.classList.add('on');
   const badge=document.getElementById('profile-badge');
   const labels={sell:'Vendeur',buy:'Acheteur',agt:'Agent',not:'Notaire',art:'Artisan'};
   if(badge){ badge.textContent=labels[p]||p; badge.className='topbar-badge '+(p==='sell'?'badge-sell':p==='buy'?'badge-buy':'badge-agt'); }
-  buildSB();
-  buildSmartDashboard();
+  S.panel='dashboard';
+  go('dashboard');
 }
 
 // =============================================
@@ -5997,15 +6014,16 @@ function renderDevisList(){
     <div class="devis-card">
       <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:8px">
         <div>
-          <div style="font-size:14px;font-weight:600;color:var(--dark)">${d.type}</div>
+          <div style="font-size:14px;font-weight:600;color:var(--dark)">${esc(d.type)}</div>
           <div style="font-size:11px;color:var(--mid)">${d.adresse||'Adresse non renseignée'} · ${d.date}</div>
         </div>
-        <span class="devis-status devis-pending">En attente</span>
+        <span class="devis-status devis-pending">${esc(d.statut||'En attente')}</span>
       </div>
-      <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.5">${d.desc.substring(0,120)}${d.desc.length>120?'...':''}</div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.5">${esc(d.desc.substring(0,160))}${d.desc.length>160?'…':''}</div>
       <div class="ai-line"><span>Demandé par</span><span>${esc(d.nom)} · ${esc(d.tel)}</span></div>
       ${d.budget?`<div class="ai-line"><span>Budget estimé</span><span style="color:var(--gold);font-weight:600">${conv(d.budget)}</span></div>`:''}
       <div class="ai-line"><span>Artisans contactés</span><span>${d.artisansContactes} artisans partenaires</span></div>
+      ${window.IMMO_ART?IMMO_ART.reponsesHTML(d):''}
       <div style="margin-top:10px;padding:8px 12px;background:var(--warm);border-radius:6px;font-size:11px;color:var(--mid)">
         ⏳ Les devis arrivent sous 48h. Vous serez notifié par email et sur la plateforme.
       </div>
@@ -8231,6 +8249,7 @@ function buildPanelContent(panel, el){
   if(panel==='visites'){ buildVisites(); return; }
   if(panel==='statsannonces'){ buildStatsAnnonces(); return; }
   if(panel==='suiviachat'){ buildSuiviAchat(); return; }
+  if(window.IMMO_ART && IMMO_ART.build[panel]){ IMMO_ART.build[panel](el); return; }
   if(panel==='valorisation'){ if(window.buildValorisation) window.buildValorisation(); return; }
   // Pour les autres panels, afficher un message
   if(el) el.innerHTML='<div style="padding:40px;text-align:center;color:var(--mid)"><div style="font-size:40px;margin-bottom:12px">🚧</div><div style="font-size:16px;font-weight:600">Module en chargement...</div></div>';
@@ -8434,22 +8453,7 @@ function buildSmartDashboard(){
 
   // ════ ARTISAN ════
   } else if(profil==='art'){
-    const left=
-      profilCard('🔨','Artisan','7 demandes proches · 2 devis urgents','#0d1117')+
-      card(lbl('Mon activité')+miniStat('Demandes','7','#22C55E')+miniStat('Potentiel mois','2,3M F','#B8922A')+miniStat('Conversion','68%','#2563EB')+miniStat('Note','4,2/5','#9333EA'))+
-      card(lbl('Raccourcis')+shortcut('','Demandes','artisans')+shortcut('','Messages','messagerie'));
-
-    const demandes=card(`${lbl('Demandes prioritaires')}${[
-      {ico:'🍳',t:'Rénovation cuisine',l:'Villa Koutio · 3,2 km',b:'350–500k F',u:'48h',tc:'#DC2626',bg:'#FEF2F2'},
-      {ico:'🎨',t:'Peinture intérieure',l:'Appt Magenta · 8 km',b:'80–120k F',u:'Semaine',tc:'#D97706',bg:'#FEF3C7'},
-      {ico:'🔌',t:'Mise aux normes',l:'Maison Rivière Salée · 12 km',b:'200–280k F',u:'Mois',tc:'#166534',bg:'#F0FDF4'},
-    ].map(d=>`<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F5F5F5"><div style="width:38px;height:38px;border-radius:10px;background:${d.bg};display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">${d.ico}</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#0d1117;${F}">${d.t}</div><div style="font-size:11px;color:rgba(0,0,0,0.4);${F}">${d.l} · ${d.b}</div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;font-weight:700;color:${d.tc};background:${d.bg};padding:3px 8px;border-radius:6px">${d.u}</span><button onclick="go('artisans')" style="background:#0d1117;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;${F}">Devis →</button></div></div>`).join('')}`);
-
-    const right=
-      iaBox('2 opportunités prioritaires : Villa Koutio cuisine 450k F (client motivé). Appt Magenta rénovation 1,2M F. Total : 1,65M F potentiel.')+
-      card(lbl('Performance mois')+`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${[['12','Devis','#B8922A'],['8','Acceptés','#22C55E'],['1,4M','Signés','#2563EB'],['3','En cours','#9333EA']].map(s=>`<div style="background:#F9F7F3;border-radius:10px;padding:12px;text-align:center"><div style="${PF};font-size:20px;font-weight:700;color:${s[2]}">${s[0]}</div><div style="font-size:10px;color:rgba(0,0,0,0.4);${F};text-transform:uppercase">${s[1]}</div></div>`).join('')}</div>`);
-
-    dash.innerHTML=layout(left, demandes, right);
+    if(window.IMMO_ART) IMMO_ART.renderDashboard(dash);
   }
 
   setTimeout(applyMobileLayout, 50);
@@ -9706,5 +9710,6 @@ go('dashboard');
 </script>
 
 <script src="js/valorisation.js"></script>
+<script src="js/artisan.js"></script>
 </body>
 </html>
