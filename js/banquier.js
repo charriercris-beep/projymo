@@ -250,7 +250,7 @@
         <div><span>Revenus / mois</span><span>${F(d.sim.revenus)}</span></div><div><span>Apport</span><span>${F(d.sim.apport)}</span></div>
         <div><span>Capacité d'emprunt</span><span>${F(c.capital)}</span></div><div><span>Budget d'achat maximal</span><span>${F(c.prixMax)}</span></div>
         <div class="t"><span>Mensualité (assurance incluse)</span><span>${F(c.mensualite + c.assuranceM)}</span></div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button type="button" class="btn btn-gold" id="bd-save">Enregistrer</button><button type="button" class="btn btn-outline" id="bd-resim">Remplacer par la simulation en cours</button><button type="button" class="btn btn-outline" id="bd-print">Attestation de capacité</button><button type="button" class="btn btn-outline" id="bd-del">Supprimer</button></div></div></div>`;
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button type="button" class="btn btn-gold" id="bd-save">Enregistrer</button><button type="button" class="btn btn-outline" id="bd-resim">Remplacer par la simulation en cours</button><button type="button" class="btn btn-outline" id="bd-print">Attestation de capacité</button>${window.IMMO_MIS ? '<button type="button" class="btn btn-outline" id="bd-ass">Demander une assurance emprunteur</button>' : ''}<button type="button" class="btn btn-outline" id="bd-del">Supprimer</button></div></div></div>`;
     // Conserver la saisie en cours (y compris les pièces cochées) avant tout changement d'étape
     const collect = () => { d.client = $('bd-client').value.trim(); d.tel = $('bd-tel').value.trim(); d.offreFin = $('bd-offre').value; d.notes = $('bd-notes').value.slice(0, 2000); el.querySelectorAll('[data-pc]').forEach(i => { d.pieces[i.dataset.pc] = i.checked; }); };
     el.querySelectorAll('[data-et]').forEach(b => b.onclick = () => { collect(); d.etape = b.dataset.et; saveD(); openDossier(el, id); });
@@ -258,6 +258,7 @@
     $('bd-save').onclick = () => { collect(); saveD(); toast('Dossier enregistré.'); openDossier(el, id); };
     $('bd-resim').onclick = () => { collect(); d.sim = { ...sim }; saveD(); openDossier(el, id); };
     $('bd-print').onclick = () => { collect(); saveD(); attestation({ nom: d.client, sim: d.sim, c }); };
+    if ($('bd-ass')) $('bd-ass').onclick = () => { collect(); saveD(); IMMO_MIS.request('ass', { source: 'banquier', ref: d.client || d.id, client: d.client, tel: d.tel, type: 'Assurance emprunteur', montant: c.capital }); toast('Demande d\'assurance emprunteur transmise.'); };
     $('bd-del').onclick = () => { if (confirm('Supprimer ce dossier ?')) { dossiers = dossiers.filter(x => x.id !== id); saveD(); buildDossiers(el); } };
   }
 

@@ -149,7 +149,8 @@
           <input type="date" data-cl="${i}" value="${E(c.limite)}" aria-label="Date limite"><select data-cs="${i}"><option value="en_cours"${c.statut === 'en_cours' ? ' selected' : ''}>En cours</option><option value="levee"${c.statut === 'levee' ? ' selected' : ''}>Levée</option><option value="defaillie"${c.statut === 'defaillie' ? ' selected' : ''}>Défaillie</option></select></div>`; }).join('')}
         <div style="display:flex;gap:8px;margin-top:10px"><input id="nd-newcond" placeholder="Ajouter une condition…" style="flex:1;border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:8px 10px;font:14px 'DM Sans',sans-serif"><button type="button" class="btn btn-sm btn-outline" id="nd-addcond">Ajouter</button></div></div>
       <div class="card"><div class="card-title">Pièces à réunir (${pcs.filter(p => d.pieces[p.id]).length}/${pcs.length})</div>
-        ${pcs.map(p => `<label class="nt-chk"><input type="checkbox" data-pc="${p.id}"${d.pieces[p.id] ? ' checked' : ''}><span>${E(p.label)}${p.hint ? `<small>${E(p.hint)}</small>` : ''}</span></label>`).join('')}
+        ${pcs.map(p => { const cmd = { diagnostics: ['diag', 'Commander à un diagnostiqueur'], bornage: ['geo', 'Commander à un géomètre-expert'] }[p.id];
+          return `<label class="nt-chk"><input type="checkbox" data-pc="${p.id}"${d.pieces[p.id] ? ' checked' : ''}><span>${E(p.label)}${p.hint ? `<small>${E(p.hint)}</small>` : ''}${cmd && window.IMMO_MIS ? `<small><a href="#" data-cmd="${cmd[0]}" style="color:var(--gold-dark);font-weight:600">${E(cmd[1])} →</a></small>` : ''}</span></label>`; }).join('')}
         <div class="nt-note">Liste générée selon la nature du bien, le financement et l'usage. Elle reste à compléter selon votre pratique et les textes en vigueur.</div></div>
       <div class="card"><div class="card-title">Décompte prévisionnel des frais</div>
         ${fr && d.prix ? `<div class="nt-rows">${fr.lignes.map(l => `<div><span>${E(l.l)} (${(l.t * 100).toFixed(l.t < 0.01 ? 3 : 1).replace('.', ',')} %)</span><span>${F(l.m)}</span></div>`).join('')}<div class="t"><span>Total des frais d'acquisition</span><span>${F(fr.total)}</span></div></div>
@@ -195,6 +196,12 @@
       const f = fins.find(x => x.id === $('nd-fin').value);
       if (f && window.IMMO_BNK) { const c = IMMO_BNK.capacite(f.sim); if (!$('nd-mpret').value) $('nd-mpret').value = c.capital; if (!$('nd-anom').value) $('nd-anom').value = f.client || ''; $('nd-pret').checked = true; }
       redraw();
+    });
+    el.querySelectorAll('[data-cmd]').forEach(a => a.onclick = e => {
+      e.preventDefault(); e.stopPropagation(); collect(); save();
+      const role = a.dataset.cmd;
+      IMMO_MIS.request(role, { source: 'notaire', ref: d.ref, client: d.vendeur.nom, tel: d.vendeur.tel, adresse: d.bien.adresse, commune: d.bien.commune, nature: d.bien.nature, type: role === 'geo' ? 'Bornage' : (d.bien.nature === 'terrain' ? 'Amiante environnemental (terrain, carte DIMENC)' : 'Repérage amiante (bâti)') });
+      toast(role === 'geo' ? 'Demande de bornage transmise aux géomètres-experts.' : 'Demande de diagnostic transmise aux diagnostiqueurs.');
     });
     $('nd-addcond').onclick = () => { const v = $('nd-newcond').value.trim(); if (!v) return; collect(); d.conditions.push({ id: 'c' + Date.now(), label: v.slice(0, 200), limite: '', statut: 'en_cours' }); save(); openDossier(el, id); };
     $('nd-back').onclick = () => { collect(); save(); buildListe(el); };

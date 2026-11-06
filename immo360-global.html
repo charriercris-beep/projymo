@@ -1061,7 +1061,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <label class="tn-prof"><span>Espace</span>
         <select id="prof-sel" onchange="setProfile(this.value,null)" aria-label="Choisir mon espace">
           <optgroup label="Particuliers"><option value="sell">Vendeur</option><option value="buy">Acheteur</option></optgroup>
-          <optgroup label="Professionnels"><option value="agt">Agent immobilier</option><option value="art">Artisan</option><option value="bnk">Banquier / courtier</option><option value="not">Notaire</option></optgroup>
+          <optgroup label="Professionnels"><option value="agt">Agent immobilier</option><option value="art">Artisan</option><option value="bnk">Banquier / courtier</option><option value="not">Notaire</option><option value="diag">Diagnostiqueur</option><option value="geo">Géomètre-expert</option><option value="ass">Assureur / courtier</option></optgroup>
         </select></label>
       <select class="dev-sel" id="devsel" onchange="setCurr()" aria-label="Devise">
         <option value="XPF" data-s="F" selected>F CFP</option>
@@ -3367,6 +3367,21 @@ const MENUS = {
     {ico:'',k:'not-dossiers',l:'Dossiers'},
     {ico:'',k:'not-echeancier',l:'Échéancier'},
     {ico:'',k:'not-frais',l:'Calcul des frais'},
+    {ico:'',k:'messagerie',l:'Messages'},
+  ],
+  diag:[
+    {ico:'',k:'diag-missions',l:'Missions'},
+    {ico:'',k:'diag-profil',l:'Profil'},
+    {ico:'',k:'messagerie',l:'Messages'},
+  ],
+  geo:[
+    {ico:'',k:'geo-missions',l:'Missions'},
+    {ico:'',k:'geo-profil',l:'Profil'},
+    {ico:'',k:'messagerie',l:'Messages'},
+  ],
+  ass:[
+    {ico:'',k:'ass-missions',l:'Demandes'},
+    {ico:'',k:'ass-profil',l:'Profil'},
     {ico:'',k:'messagerie',l:'Messages'},
   ],
 };
@@ -9728,5 +9743,6 @@ go('dashboard');
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
+<script src="js/missions.js"></script>
 </body>
 </html>
