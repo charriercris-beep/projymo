@@ -328,7 +328,7 @@
 
   /* ---------- Utilitaires UI ---------- */
   function toast(t) {
-    const n = document.createElement('div'); n.setAttribute('role', 'status');
+    const n = document.createElement('div'); n.setAttribute('role', 'status'); n.className = 'immo-toast'; document.querySelectorAll('.immo-toast').forEach(x => x.remove());
     n.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;z-index:3000';
     n.textContent = t; document.body.appendChild(n); setTimeout(() => n.remove(), 3500);
   }
@@ -348,4 +348,6 @@
   });
 
   window.IMMO_ART = { build, renderDashboard, reponsesHTML, accept };
+  window.IMMO_PANELS = Object.assign(window.IMMO_PANELS || {}, build);
+  window.IMMO_DASH = Object.assign(window.IMMO_DASH || {}, { art: renderDashboard });
 })();

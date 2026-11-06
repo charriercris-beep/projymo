@@ -67,6 +67,7 @@ Les métiers s'enchaînent sur un même bien : **vendeur → diagnostiqueur / g�
 | **Total** | **≈ 10,35 %** | **3 105 102 F** |
 
   Plafonnement forfaitaire (50 000 F par logement) pour les VEFA en résidence principale **du 1ᵉʳ mars 2019 au 31 décembre 2021** : probablement échu. ⚠️ Taux actuels à confirmer.
+- **Mise à jour (vérifiée en novembre 2026)** : la **loi du pays n° 2025-12 du 12 août 2025** (JONC du 21/08/2025) ramène les droits d'enregistrement de **4 % à 0,5 %** pour l'achat d'une **résidence principale par une personne physique** (pas les sociétés), **jusqu'au 31 décembre 2027**. Elle rend aussi **déductibles les intérêts d'emprunt** pour une résidence principale à Nouméa, Dumbéa, Mont-Dore ou Païta (prêts contractés du 21/08/2025 au 31/12/2027). 🟡 Date de départ citée différemment selon les sources (juillet ou août 2025) : vérifier sur JuriDoc.
 - **Terres coutumières** : régime spécifique, vente impossible ; baux et actes coutumiers. 🟡
 - **Droit de préemption** et délais de purge : ⚠️ non documentés pour la NC.
 - Chambre des notaires de Nouvelle-Calédonie (organe professionnel local). 🟡
@@ -93,6 +94,7 @@ Les métiers s'enchaînent sur un même bien : **vendeur → diagnostiqueur / g�
   - non-propriétaire de sa résidence principale sur 2 ans, résidence principale occupée ≥ 8 mois/an ;
   - montant selon revenus, composition du ménage, coût du projet, apport, durée ; majoration si durée ≤ 20 ans ;
   - logiciel partagé banques / DAE ; chaque banque ne voit que ses clients.
+- **Réforme du PTZ (2018)** ✅ : retour à la **primo-accession stricte** (n'avoir jamais été propriétaire de sa résidence principale), **plafond de prix** différent pour le neuf et l'ancien, plafonds de ressources **indexés sur l'inflation** depuis le 1ᵉʳ janvier 2019 (foyer de 4 : 560 000 F/mois en 2018 → 567 728 F en 2019). Les plafonds annuels de 2011 ci-dessus sont donc **obsolètes**. 2 932 ménages en ont bénéficié entre 2011 et 2017.
 - **Aides Province Sud (LAPS)**, brochure **2018** 🟡 : résidence 2 ans en province Sud, primo-accédant, apport ≥ 300 000 F, **taux d'endettement 25–35 %**, durée d'emprunt ≥ 19 ans, subventions ≤ 25 % du projet, aide de 200 000 à 2 000 000 F (jusqu'à 4 M), engagement d'occuper 15 ans sans louer ; plafonds de ressources mensuels de 300 000 F (1 pers.) à 790 000 F (couple + 3 enfants), majorés en ZAC / centralité urbaine.
 - **FSH** : prêts à taux bonifiés à ses ayants droit. 🟡
 - **Aide au logement** (locataires) en réforme : gestion transférée à la CAFAT (projet de loi du pays de novembre 2025). Ne concerne pas l'accession. ✅
@@ -184,6 +186,10 @@ Les métiers s'enchaînent sur un même bien : **vendeur → diagnostiqueur / g�
 6. Garanties d'assurance habitation standard en NC (cyclone, catastrophe naturelle).
 
 ## Sources
+
+- [Annonces légales LNC — Mesures fiscales de la loi du pays du 12 août 2025](https://legales.lnc.nc/articles/18/les-mesures-fiscales-de-la-loi-du-pays-du-12-aout-2025-instaurant-des-dispositifs-fiscaux-de-soutien-economique)
+- [Gouv.nc — Le prêt à taux zéro revisité (03/10/2018)](https://gouv.nc/actualites/03-10-2018/le-pret-taux-zero-revisite)
+- [Agence Générale NC — Frais de notaire en Nouvelle-Calédonie](https://www.agencegenerale.nc/infos-pratiques/40-frais-notaire-nouvelle-caledonie)
 
 - [Gouv.nc — Tarifs des notaires plafonnés et droits d'enregistrement (19/02/2019)](https://gouv.nc/sites/default/files/atoms/files/2019.02.19_cp_tarifs_notaire.pdf)
 - [Gouv.nc — Référentiel de la construction de la NC (dossier de presse, 23/01/2020)](https://gouv.nc/sites/default/files/atoms/files/2020.01.23_dp_reforme_de_la_construction_en_nouvelle-caledonie.pdf)

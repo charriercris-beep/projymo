@@ -1061,7 +1061,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <label class="tn-prof"><span>Espace</span>
         <select id="prof-sel" onchange="setProfile(this.value,null)" aria-label="Choisir mon espace">
           <optgroup label="Particuliers"><option value="sell">Vendeur</option><option value="buy">Acheteur</option></optgroup>
-          <optgroup label="Professionnels"><option value="agt">Agent immobilier</option><option value="art">Artisan</option></optgroup>
+          <optgroup label="Professionnels"><option value="agt">Agent immobilier</option><option value="art">Artisan</option><option value="bnk">Banquier / courtier</option></optgroup>
         </select></label>
       <select class="dev-sel" id="devsel" onchange="setCurr()" aria-label="Devise">
         <option value="XPF" data-s="F" selected>F CFP</option>
@@ -3335,6 +3335,7 @@ const MENUS = {
     {ico:'🤖',k:'matching',l:'Matching IA'},
     {ico:'🌟',k:'projetdevie',l:'Mon projet'},
     {ico:'💰',k:'financementplus',l:'Financement'},
+    {ico:'',k:'capacite',l:'Capacité d\'achat'},
     {ico:'⚖️',k:'comparateur',l:'Comparer'},
     {ico:'📍',k:'suiviachat',l:'Suivi achat'},
     {ico:'💬',k:'messagerie',l:'Messages'},
@@ -3354,6 +3355,12 @@ const MENUS = {
     {ico:'',k:'art-demandes',l:'Demandes'},
     {ico:'',k:'art-devis',l:'Mes devis'},
     {ico:'',k:'art-profil',l:'Profil & justificatifs'},
+    {ico:'',k:'messagerie',l:'Messages'},
+  ],
+  bnk:[
+    {ico:'',k:'bnk-dossiers',l:'Dossiers'},
+    {ico:'',k:'bnk-simu',l:'Simulateur'},
+    {ico:'',k:'bnk-baremes',l:'Barèmes'},
     {ico:'',k:'messagerie',l:'Messages'},
   ],
 };
@@ -3427,7 +3434,8 @@ function go(panel){
     el.classList.add('active');
     el.style.display='block';
     // Construire le contenu si vide
-    if(window.IMMO_ART && IMMO_ART.build[panel]) IMMO_ART.build[panel](el);
+    // Panneaux des espaces métiers (js/*.js) : reconstruits à chaque visite
+    if(window.IMMO_PANELS && IMMO_PANELS[panel]) IMMO_PANELS[panel](el);
     else if(!el.innerHTML.trim()) buildPanelContent(panel, el);
   }
   const tt=document.getElementById('topbar-title');
@@ -8249,7 +8257,7 @@ function buildPanelContent(panel, el){
   if(panel==='visites'){ buildVisites(); return; }
   if(panel==='statsannonces'){ buildStatsAnnonces(); return; }
   if(panel==='suiviachat'){ buildSuiviAchat(); return; }
-  if(window.IMMO_ART && IMMO_ART.build[panel]){ IMMO_ART.build[panel](el); return; }
+  if(window.IMMO_PANELS && IMMO_PANELS[panel]){ IMMO_PANELS[panel](el); return; }
   if(panel==='valorisation'){ if(window.buildValorisation) window.buildValorisation(); return; }
   // Pour les autres panels, afficher un message
   if(el) el.innerHTML='<div style="padding:40px;text-align:center;color:var(--mid)"><div style="font-size:40px;margin-bottom:12px">🚧</div><div style="font-size:16px;font-weight:600">Module en chargement...</div></div>';
@@ -8265,6 +8273,7 @@ function buildSmartDashboard(){
   const nom=APP_STATE.user?.nom||'vous';
   const dash=document.getElementById('panel-dashboard');
   if(!dash) return;
+  if(window.IMMO_DASH && IMMO_DASH[profil]){ IMMO_DASH[profil](dash); return; }
 
   // ── COMPOSANTS ──
   const F='font-family:DM Sans,sans-serif';
@@ -9711,5 +9720,6 @@ go('dashboard');
 
 <script src="js/valorisation.js"></script>
 <script src="js/artisan.js"></script>
+<script src="js/banquier.js"></script>
 </body>
 </html>

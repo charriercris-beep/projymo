@@ -16,6 +16,7 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 | `api/valorisation.js` | Diagnostic IA du bien, état détecté sur photos, priorisation des travaux |
 | `js/valorisation.js` | Assistant de valorisation (prix, paliers de travaux, simulation, annonce, devis) |
 | `js/artisan.js` | Espace Artisan : profil, justificatifs (alertes d'expiration), demandes, devis, suivi |
+| `js/banquier.js` | Espace Banquier/courtier : simulateur NC, éligibilité aux dispositifs, dossiers, attestation, barèmes datés ; « Capacité d'achat » côté acheteur |
 | `docs/fiches-metiers.md` | Recherche sur les besoins des métiers en Nouvelle-Calédonie (sources, fiabilité) |
 | `api/_lib.js` | Utilitaires : CORS, limitation de débit, validation, appel Anthropic |
 | `supabase/schema.sql` | Tables + règles de sécurité (RLS) à exécuter dans Supabase |
