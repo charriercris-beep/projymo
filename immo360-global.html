@@ -19,7 +19,7 @@ html{overflow-x:hidden;max-width:100vw}
      Les noms historiques (--gold…) sont conservés pour ne pas casser les gabarits existants. */
   --gold:#0F6E75;--gold-light:#CDEBE9;--gold-dark:#0A4F54;
   --cream:#F7F5F0;--warm:#EEEAE2;
-  --dark:#1E2329;--mid:#5A6270;--soft:#C9CDD3;
+  --dark:#1E2329;--mid:#5A6270;--soft:#C9CDD3;--line:#E4E1DA;--line-strong:#B9BEC6;
   --green:#2E7D4F;--red:#B4442C;--blue:#2B5C8A;--accent:#D9694A;
 }
 body{font-family:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.5;background:var(--cream);color:var(--dark);-webkit-font-smoothing:antialiased}
@@ -508,157 +508,305 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .devis-card{background:#fff;border:1px solid rgba(28,26,22,.1);border-radius:12px;padding:16px;margin-bottom:12px}
 .devis-card .ai-line{border-bottom:1px solid rgba(28,26,22,.07);color:var(--dark)}
 .devis-card .ai-line span:first-child{color:var(--mid)}
+
+/* ===== Charte v3 : une seule identité pour tout le site ===== */
+/* Carte d'annonce (js/cards.js) */
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:28px 22px}
+.pc-grid.sm{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.pc{position:relative;display:flex;flex-direction:column;background:#fff;color:var(--dark);font-family:'Source Sans 3',sans-serif;min-width:0}
+.pc-ph{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#DCEBEA,#EEEAE2)}
+.pc-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.pc:hover .pc-ph img{transform:scale(1.04)}
+.pc-noimg{display:none;position:absolute;inset:0;margin:auto;width:44px;height:44px;color:#7FA9A6}
+.pc-ph.none .pc-noimg{display:block}
+.pc-badge{position:absolute;top:12px;left:12px;background:#fff;color:var(--dark);font-size:13px;font-weight:700;padding:5px 10px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.pc-badge.alt{background:var(--dark);color:#fff}
+.pc-ill{position:absolute;left:10px;bottom:10px;background:rgba(20,26,32,.62);color:#fff;font-size:12px;padding:3px 8px;border-radius:5px}
+.pc-fav{position:absolute;top:10px;right:10px;z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.94);color:var(--dark);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.15);font-size:20px;transition:transform .15s}
+.pc-fav:hover{transform:scale(1.08)}
+.pc-fav[aria-pressed="true"]{color:var(--accent)}.pc-fav[aria-pressed="true"] .i{fill:currentColor}
+.pc-bd{padding:12px 2px 0}
+.pc-pr{font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.pc-sp{font-size:15px;color:#3B424C;margin-top:3px}.pc-sp b{color:var(--dark)}
+.pc-ti{margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-hit{background:none;border:0;padding:0;font:600 15px 'Source Sans 3',sans-serif;color:var(--dark);cursor:pointer;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-hit::after{content:'';position:absolute;inset:0;z-index:1}
+.pc-hit:focus-visible{outline:none}.pc:focus-within{outline:2px solid var(--gold);outline-offset:6px;border-radius:12px}
+.pc:hover .pc-hit{text-decoration:underline;text-underline-offset:3px}
+.pc-lo{display:flex;gap:5px;align-items:center;font-size:14px;color:var(--mid);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-lo .i{flex:none;color:var(--gold)}
+.pc.sm .pc-pr{font-size:19px}.pc.sm .pc-fav{width:34px;height:34px;font-size:17px}
+.pc-empty{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:48px 16px;color:var(--mid);text-align:center;background:var(--cream);border-radius:12px}
+.pc-empty .i{font-size:34px;color:var(--gold)}.pc-empty b{color:var(--dark);font-size:17px}
+
+
+/* Fiche d'un bien */
+.fi{background:#fff;border-radius:16px;width:100%;max-width:980px;overflow:hidden;font-family:'Source Sans 3',sans-serif;color:var(--dark);margin:auto 0}
+.fi-ph{position:relative;aspect-ratio:16/8;background:linear-gradient(135deg,#DCEBEA,#EEEAE2)}
+.fi-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fi-noimg{display:none;position:absolute;inset:0;margin:auto;width:64px;height:64px;color:#7FA9A6}.fi-ph.none .fi-noimg{display:block}
+.fi-tools{position:absolute;top:14px;right:14px;display:flex;gap:8px;z-index:2}
+.fi-tools .pc-fav{position:static}
+.fi-x{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.94);font-size:18px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.15)}
+.fi .ann-media{padding:16px 28px 0}
+.fi-ph.gal{aspect-ratio:auto;height:0;overflow:visible;z-index:3}.fi-ph.gal img,.fi-ph.gal .pc-ill,.fi-ph.gal .fi-noimg{display:none}.fi-ph.gal .fi-tools{top:26px;right:38px}
+.fi-bd{display:grid;grid-template-columns:1fr 300px;gap:32px;padding:24px 28px 28px}
+.fi-pr{font-size:32px;font-weight:700;letter-spacing:-.02em}
+.fi-ti{font-size:20px;margin:4px 0 6px;font-weight:600}
+.fi-spec{list-style:none;display:flex;flex-wrap:wrap;gap:0;margin:18px 0 6px;padding:0;border:1px solid var(--line);border-radius:12px}
+.fi-spec li{flex:1;min-width:90px;padding:12px 16px;border-right:1px solid var(--line)}.fi-spec li:last-child{border-right:0}
+.fi-spec b{display:block;font-size:20px}.fi-spec span{color:var(--mid);font-size:14px}
+.fi h3{font-size:18px;margin:24px 0 10px}
+.fi-feat{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.fi-feat li{position:relative;padding-left:24px;font-size:16px}.fi-feat li::before{content:'✓';position:absolute;left:0;color:var(--gold);font-weight:700}
+.fi-desc{font-size:16px;line-height:1.65;margin:0;color:#2E343C;white-space:pre-line}
+.fi-rep{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:var(--cream);border-radius:12px;padding:16px}
+.fi-rep b{display:block;font-size:20px}.fi-rep span{color:var(--mid);font-size:14px}.fi-rep p{grid-column:1/-1;margin:0;font-size:15px;color:#3B424C}
+.fi-side{position:relative}
+.fi-contact{position:sticky;top:0;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.fi-ag{display:flex;gap:12px;align-items:center;margin-bottom:6px}.fi-ag b{display:block;font-size:16px}.fi-ag span{font-size:13px;color:var(--mid)}
+.fi-av{width:44px;height:44px;border-radius:50%;background:var(--gold-light);color:var(--gold-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex:none}
+.fi-note{margin:0;font-size:15px;color:#3B424C}
+@media(max-width:800px){.fi-bd{grid-template-columns:1fr;gap:8px;padding:18px}.fi-ph{aspect-ratio:4/3}.fi-pr{font-size:28px}.fi-feat{grid-template-columns:1fr}.fi .ann-media{padding:12px 18px 0}}
+/* Application : en-tête clair, comme la page d'accueil */
+.topnav{background:#fff;border-bottom:1px solid var(--line);height:64px}
+.tn-logo{color:var(--dark);font-size:21px;border-right-color:var(--line)}
+.tn-logo small{color:var(--mid)}
+.tn-tab{color:#4A515C;font-size:15px;font-weight:600;padding:0 14px;border-bottom-width:3px}
+.tn-tab:hover{color:var(--dark);background:var(--cream)}
+.tn-tab.on{color:var(--dark);border-bottom-color:var(--gold)}
+.tn-tabs.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
+.tn-btn{color:var(--dark);border-color:var(--line-strong);font-size:14px;font-weight:600}
+.tn-btn:hover{color:var(--dark);border-color:var(--dark);background:var(--cream)}
+.tn-out:hover{color:var(--red);border-color:var(--red);background:#fff}
+.tn-right .dev-sel{color:var(--dark);border-color:var(--line-strong)}
+.tn-prof{color:var(--mid);font-size:13px}
+.tn-prof select{background:var(--cream);color:var(--dark);border-color:var(--line-strong)}
+.content{background:var(--cream)}
+
+/* Composants communs, mêmes rayons, mêmes tailles partout */
+.card{border:1px solid var(--line);border-radius:14px;box-shadow:none}
+.card-title{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.btn{font-size:15px;padding:10px 18px;border-radius:10px}
+.btn-sm{font-size:14px;padding:7px 14px}
+.btn-outline{border:1px solid var(--line-strong);color:var(--dark);background:#fff}
+.btn-outline:hover{background:#fff;border-color:var(--dark);color:var(--dark)}
+.tag{font-size:13px;padding:3px 10px;border-radius:6px}
+.kpi{border:1px solid var(--line);box-shadow:none;border-radius:14px}.kpi-val{color:var(--dark)}.kpi-lbl{font-size:14px}
+.tbl{font-size:15px}.tbl th{font-size:13px}
+.modal-box{border-radius:14px}
+
+/* Lisibilité : aucun texte en dessous de 12 px, même dans les anciens écrans */
+.content [style*="font-size:8px"],.content [style*="font-size:9px"],.content [style*="font-size:10px"],.content [style*="font-size:10.5px"],.content [style*="font-size:11px"],
+#login-modal [style*="font-size:9px"],#login-modal [style*="font-size:10px"],#login-modal [style*="font-size:11px"]{font-size:12.5px!important}
+.content [style*="font-size:12px"],#login-modal [style*="font-size:12px"]{font-size:13.5px!important}
+.content [style*="color:rgba(255,255,255,0.3)"],.content [style*="color:rgba(255,255,255,0.4)"]{color:rgba(255,255,255,.72)!important}
+@media(max-width:900px){.topnav{height:auto}}
 </style>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0" aria-hidden="true"><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 17l.7 1.8L21.5 19.5l-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 004 0"/></symbol><symbol id="i-trend-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/></symbol><symbol id="i-trend-up" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol><symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0z"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></symbol><symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15"/><path d="M5 19c3-5 6-7 10-9"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-hammer" viewBox="0 0 24 24"><path d="M14 6l4 4-8 8-4-4zM12 4l2-2 6 6-2 2"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a1 1 0 011-1h5l2 2h9a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1z"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18c1.4 0 2-1 1.5-2-.5-1 0-2 1.2-2H17a4 4 0 004-4c0-5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="11" cy="7.5" r="1"/><circle cx="15.5" cy="8.5" r="1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16"/><path d="M8 16v-5M12 16V8M16 16v-3"/></symbol><symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1"/></symbol><symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></symbol><symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6 6.5-6s6.5 2 6.5 6M16 5a3.5 3.5 0 010 7M18 14c2.5.6 4 2.5 4 6"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0" aria-hidden="true"><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 17l.7 1.8L21.5 19.5l-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 004 0"/></symbol><symbol id="i-trend-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/></symbol><symbol id="i-trend-up" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol><symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0z"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></symbol><symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15"/><path d="M5 19c3-5 6-7 10-9"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-hammer" viewBox="0 0 24 24"><path d="M14 6l4 4-8 8-4-4zM12 4l2-2 6 6-2 2"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a1 1 0 011-1h5l2 2h9a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1z"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18c1.4 0 2-1 1.5-2-.5-1 0-2 1.2-2H17a4 4 0 004-4c0-5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="11" cy="7.5" r="1"/><circle cx="15.5" cy="8.5" r="1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16"/><path d="M8 16v-5M12 16V8M16 16v-3"/></symbol><symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1"/></symbol><symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></symbol><symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6 6.5-6s6.5 2 6.5 6M16 5a3.5 3.5 0 010 7M18 14c2.5.6 4 2.5 4 6"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.2 4c2 0 3.6 1.1 4.8 2.8C13.2 5.1 14.8 4 16.8 4c3.6 0 5.8 3.6 4.5 7.1-1.8 4.8-9.3 9.4-9.3 9.4z"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol></svg>
 
 <!-- ═══════════════════════════════════
      PAGE D'ACCUEIL — STYLE LEBONCOIN
 ═══════════════════════════════════ -->
   <div id="landing-page" style="display:block;min-height:100vh;overflow-y:auto">
 
-<!-- ══ ACCUEIL PUBLIC (refonte : simple, honnête, recherche d'abord) ══ -->
+<!-- ══ ACCUEIL PUBLIC (v3 : photo d'abord, recherche au centre, comme les grands portails) ══ -->
 <style>
-.lp{--lp-max:1120px;color:var(--dark);background:var(--cream)}
+.lp{--lp-max:1200px;color:var(--dark);background:#fff}
 .lp-in{max-width:var(--lp-max);margin:0 auto;padding:0 24px}
-.lp-head{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #E3E0D8}
-.lp-head .lp-in{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
-.lp-logo{font-size:22px;font-weight:700;color:var(--dark);white-space:nowrap}.lp-logo span{color:var(--gold)}
-.lp-logo small{font-size:13px;font-weight:400;color:var(--mid);margin-left:8px}
-.lp-nav{display:flex;align-items:center;gap:8px}
-.lp-link{background:none;border:0;color:var(--dark);font:600 15px inherit;font-family:inherit;padding:8px 10px;cursor:pointer;border-radius:6px}
-.lp-link:hover{color:var(--gold)}
-.lp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:8px;padding:11px 18px;font:600 15px/1.2 inherit;font-family:inherit;cursor:pointer;border:1px solid transparent;text-decoration:none;white-space:nowrap}
+.lp-head{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--line)}
+.lp-head .lp-in{display:flex;align-items:center;justify-content:space-between;height:68px;gap:12px}
+.lp-logo{font-size:24px;font-weight:700;color:var(--dark);white-space:nowrap;letter-spacing:-.01em}.lp-logo span{color:var(--gold)}
+.lp-logo small{font-size:14px;font-weight:400;color:var(--mid);margin-left:8px;letter-spacing:0}
+.lp-nav{display:flex;align-items:center;gap:6px}
+.lp-link{background:none;border:0;color:var(--dark);font-weight:600;font-size:15px;line-height:1;font-family:inherit;padding:10px 12px;cursor:pointer;border-radius:8px}
+.lp-link:hover{background:var(--cream)}
+.lp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;padding:12px 20px;font-weight:600;font-size:15px;line-height:1.2;font-family:inherit;cursor:pointer;border:1px solid transparent;text-decoration:none;white-space:nowrap;transition:background .15s,border-color .15s}
 .lp-btn.pri{background:var(--gold);color:#fff}.lp-btn.pri:hover{background:var(--gold-dark)}
-.lp-btn.sec{background:#fff;color:var(--dark);border-color:#B9BEC6}.lp-btn.sec:hover{border-color:var(--dark)}
-.lp-hero{padding:56px 0 48px}
-.lp-hero .lp-in{display:grid;grid-template-columns:1.35fr 1fr;gap:48px;align-items:start}
-.lp-hero h1{font-size:clamp(32px,4.4vw,48px);line-height:1.1;margin:0 0 16px;font-weight:700}
-.lp-hero p.lead{font-size:19px;color:#3B424C;margin:0 0 28px;max-width:560px}
-.lp-choices{display:grid;gap:10px;max-width:560px}
-.lp-choice{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;text-align:left;background:#fff;border:1px solid #D8D4CB;border-radius:10px;padding:16px 18px;cursor:pointer;font-family:inherit;color:var(--dark)}
-.lp-choice:hover{border-color:var(--gold)}
-.lp-choice b{display:block;font-size:17px}.lp-choice span{display:block;font-size:14px;color:var(--mid);margin-top:2px}
-.lp-choice i{font-style:normal;color:var(--gold);font-size:20px}
-.lp-market{background:#fff;border:1px solid #E3E0D8;border-radius:10px;padding:22px}
-.lp-market h2{font-size:18px;margin:0 0 4px}.lp-market .sub{font-size:14px;color:var(--mid);margin:0 0 16px}
-.lp-market dl{margin:0}.lp-market div.row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #EEEAE2;font-size:15px}
-.lp-market dt{color:#3B424C}.lp-market dd{margin:0;font-weight:700;white-space:nowrap}
-.lp-market .src{font-size:13px;color:var(--mid);margin-top:12px}.lp-market .src a{color:var(--gold)}
-.lp-sec{padding:48px 0}.lp-sec.white{background:#fff;border-top:1px solid #E3E0D8;border-bottom:1px solid #E3E0D8}
-.lp-sec h2{font-size:clamp(24px,3vw,30px);margin:0 0 6px}.lp-sec p.sub{color:var(--mid);margin:0 0 20px;font-size:16px}
-.lp-search{display:grid;grid-template-columns:1.2fr 1.4fr 1fr auto;gap:10px;align-items:end;margin-bottom:22px}
-.lp-search label{font-size:14px;font-weight:600;margin-bottom:6px;display:block}
-.lp-search select{background:#fff}
-.lp-budget{background:#fff;border:1px solid #B9BEC6;border-radius:8px;padding:8px 12px}
-.lp-budget .top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}.lp-budget input{width:100%;padding:0;border:0;accent-color:var(--gold)}
-.lp-count{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px;font-size:15px;color:var(--mid)}
-.lp-help{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
-.lp-help h3{font-size:19px;margin:0 0 8px}.lp-help ul{margin:0 0 12px;padding-left:18px;color:#3B424C;line-height:1.7}
-.lp-help .lp-link{padding:0;color:var(--gold)}
-.lp-card{display:block;width:100%;text-align:left;padding:0;background:#fff;border:1px solid #E3E0D8;border-radius:10px;overflow:hidden;cursor:pointer;font-family:inherit;color:var(--dark)}
-.lp-card:hover{border-color:var(--gold)}
-.lp-card .ph{position:relative;height:190px;background:#EEEAE2;display:flex;align-items:center;justify-content:center;color:#9A9384;font-size:40px}
-.lp-card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.lp-card .tag{position:absolute;top:10px;left:10px;background:#fff;color:var(--dark);font-size:13px;font-weight:600;padding:3px 9px;border-radius:6px}
-.lp-card .bd{padding:14px 16px 16px}.lp-card .pr{font-size:20px;font-weight:700}.lp-card .pr small{font-size:14px;font-weight:400;color:var(--mid);margin-left:6px}
-.lp-card .ti{font-size:16px;font-weight:600;margin:4px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lp-card .me{font-size:14px;color:var(--mid)}
-.lp-foot{background:#fff;border-top:1px solid #E3E0D8;padding:32px 0;font-size:14px;color:var(--mid)}
-.lp-foot .lp-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.lp-foot nav{display:flex;gap:16px;flex-wrap:wrap}.lp-foot button{background:none;border:0;padding:0;color:var(--mid);font:inherit;cursor:pointer}.lp-foot button:hover{color:var(--dark)}
+.lp-btn.sec{background:#fff;color:var(--dark);border-color:var(--line-strong)}.lp-btn.sec:hover{border-color:var(--dark)}
+.lp-btn.big{padding:15px 26px;font-size:16px}
+
+/* Bandeau photo + recherche */
+.lp-hero{position:relative;min-height:540px;display:flex;align-items:center;color:#fff;background:#2B3640 center/cover no-repeat}
+.lp-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,20,26,.72) 0%,rgba(14,20,26,.45) 55%,rgba(14,20,26,.2) 100%)}
+.lp-hero .lp-in{position:relative;width:100%;padding-top:64px;padding-bottom:64px}
+.lp-hero h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:0 0 14px;font-weight:700;max-width:760px;letter-spacing:-.02em;text-shadow:0 1px 18px rgba(0,0,0,.25)}
+.lp-hero p.lead{font-size:20px;margin:0 0 28px;max-width:620px;color:rgba(255,255,255,.92);text-shadow:0 1px 12px rgba(0,0,0,.3)}
+.lp-hero .credit{position:absolute;right:16px;bottom:10px;font-size:12px;color:rgba(255,255,255,.7)}
+.lp-sbox{background:#fff;color:var(--dark);border-radius:14px;max-width:920px;box-shadow:0 18px 50px rgba(10,20,30,.28);overflow:hidden}
+.lp-stabs{display:flex;border-bottom:1px solid var(--line)}
+.lp-stab{flex:none;background:none;border:0;border-bottom:3px solid transparent;padding:14px 22px 12px;font-weight:600;font-size:16px;font-family:inherit;color:var(--mid);cursor:pointer}
+.lp-stab:hover{color:var(--dark)}.lp-stab.on{color:var(--dark);border-bottom-color:var(--gold)}
+.lp-search{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:0;align-items:stretch;padding:8px}
+.lp-search .f{padding:8px 14px;border-right:1px solid var(--line);min-width:0}
+.lp-search .f:nth-child(3){border-right:0}
+.lp-search label{font-size:13px;font-weight:700;margin:0 0 2px;display:block;color:var(--dark)}
+.lp-search select{border:0;padding:4px 0;font-size:16px;background:transparent;box-shadow:none;cursor:pointer;color:var(--dark)}
+.lp-search select:focus{box-shadow:none;outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+.lp-search .go{margin:4px;border-radius:10px;padding:0 28px;font-size:16px}
+.lp-quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.lp-chip{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer;backdrop-filter:blur(6px)}
+.lp-chip:hover{background:rgba(255,255,255,.28)}
+
+/* Sections */
+.lp-sec{padding:56px 0}.lp-sec.alt{background:var(--cream)}
+.lp-sec h2{font-size:clamp(26px,3vw,34px);margin:0 0 6px;letter-spacing:-.01em}.lp-sec p.sub{color:var(--mid);margin:0;font-size:17px}
+.lp-sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.lp-count{font-size:15px;color:var(--mid);margin-top:6px}
+#landing-biens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:28px 22px;margin-bottom:32px}
+
+/* Tuiles « que voulez-vous faire » */
+.lp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.lp-tile{position:relative;display:flex;flex-direction:column;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;padding:0;font-family:inherit;color:var(--dark);transition:box-shadow .2s,transform .2s}
+.lp-tile:hover{box-shadow:0 10px 30px rgba(20,30,40,.12);transform:translateY(-2px)}
+.lp-tile .im{height:170px;background:var(--warm) center/cover no-repeat}
+.lp-tile .tx{padding:20px 22px 22px}
+.lp-tile h3{font-size:21px;margin:0 0 6px}.lp-tile p{margin:0 0 16px;color:var(--mid);font-size:16px;line-height:1.5}
+.lp-tile .cta{font-weight:700;color:var(--gold)}
+
+/* Chiffres du marché */
+.lp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.lp-stat{padding:22px 24px;border-right:1px solid var(--line)}.lp-stat:last-child{border-right:0}
+.lp-stat b{display:block;font-size:30px;letter-spacing:-.02em}.lp-stat span{display:block;color:var(--mid);font-size:15px;margin-top:4px}
+.lp-stat b.dn{color:var(--red)}
+.lp-src{font-size:14px;color:var(--mid);margin-top:12px}.lp-src a{color:var(--gold)}
+
+/* Professionnels */
+.lp-pro{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.lp-pro ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+.lp-pro li{display:flex;gap:10px;align-items:center;font-size:17px}.lp-pro li .i{color:var(--gold);font-size:20px}
+
+.lp-foot{background:var(--dark);color:rgba(255,255,255,.75);padding:36px 0;font-size:15px}
+.lp-foot .lp-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.lp-foot nav{display:flex;gap:20px;flex-wrap:wrap}.lp-foot button{background:none;border:0;padding:0;color:rgba(255,255,255,.75);font:inherit;cursor:pointer}.lp-foot button:hover{color:#fff}
 @media(max-width:900px){
-  .lp-hero .lp-in{grid-template-columns:1fr;gap:28px}.lp-hero{padding:32px 0}
-  .lp-search{grid-template-columns:1fr 1fr}.lp-search .go{grid-column:1/-1}
-  .lp-help{grid-template-columns:1fr;gap:20px}
+  .lp-hero{min-height:0}.lp-hero .lp-in{padding-top:40px;padding-bottom:40px}
+  .lp-search{grid-template-columns:1fr 1fr}.lp-search .f{border-right:0;border-bottom:1px solid var(--line)}
+  .lp-search .f:first-child{grid-column:1/-1}.lp-search .go{grid-column:1/-1;padding:14px}
+  .lp-tiles{grid-template-columns:1fr}.lp-tile{flex-direction:row}.lp-tile .im{width:120px;height:auto;flex:none}
+  .lp-stats{grid-template-columns:1fr 1fr}.lp-stat:nth-child(2){border-right:0}.lp-stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .lp-pro{grid-template-columns:1fr;gap:20px}
 }
 @media(max-width:560px){
-  .lp-in{padding:0 16px}.lp-logo small,.lp-nav .lp-link{display:none}
-  .lp-btn{padding:9px 12px;font-size:14px}
-  .lp-search{grid-template-columns:1fr}
+  .lp-in{padding:0 16px}.lp-logo small,.lp-nav .lp-link{display:none}.lp-logo{font-size:21px}
+  .lp-btn{padding:10px 13px;font-size:14px}
+  .lp-hero h1{font-size:32px}.lp-hero p.lead{font-size:17px}
+  .lp-stab{padding:12px 14px 10px;font-size:15px}
+  .lp-tile .im{width:96px}.lp-tile h3{font-size:18px}.lp-tile p{font-size:15px;margin-bottom:8px}.lp-tile .tx{padding:14px 16px}
+  .lp-pro ul{grid-template-columns:1fr}
+  .lp-sec{padding:40px 0}
 }
 </style>
 <div class="lp">
 <header class="lp-head"><div class="lp-in">
   <div class="lp-logo">Immo<span>360</span><small>Nouvelle-Calédonie</small></div>
   <nav class="lp-nav" aria-label="Accès">
-    <button type="button" class="lp-link" onclick="document.getElementById('section-annonces').scrollIntoView({behavior:'smooth'})">Annonces</button>
+    <button type="button" class="lp-link" onclick="document.getElementById('section-annonces').scrollIntoView({behavior:'smooth'})">Acheter</button>
+    <button type="button" class="lp-link" onclick="loginAs('sell');setTimeout(function(){go('depot')},60)">Vendre</button>
+    <button type="button" class="lp-link" onclick="loginAs('sell');setTimeout(function(){go('valorisation')},60)">Estimer</button>
     <button type="button" class="lp-btn sec" onclick="showLoginModal('buy')">Se connecter</button>
-    <button type="button" class="lp-btn pri" onclick="showLoginModal('buy')">Créer un compte</button>
   </nav>
 </div></header>
 
-<section class="lp-hero"><div class="lp-in">
-  <div>
-    <h1>Acheter, vendre ou estimer un bien en Nouvelle-Calédonie</h1>
+<section class="lp-hero" style="background-image:url('assets/demo/sejour-clair.jpg')">
+  <div class="lp-in">
+    <h1>Trouvez votre chez-vous en Nouvelle-Calédonie</h1>
     <p class="lead">Les annonces de tout le territoire, une estimation gratuite fondée sur les ventes réelles, et les bons professionnels au bon moment.</p>
-    <div class="lp-choices">
-      <button type="button" class="lp-choice" onclick="document.getElementById('section-annonces').scrollIntoView({behavior:'smooth'})"><span><b>Je cherche un bien</b><span>Parcourir les annonces, sans compte</span></span><i aria-hidden="true">→</i></button>
-      <button type="button" class="lp-choice" onclick="loginAs('sell');setTimeout(function(){go('depot')},60)"><span><b>Je vends mon bien</b><span>Déposer une annonce avec photos et vidéo</span></span><i aria-hidden="true">→</i></button>
-      <button type="button" class="lp-choice" onclick="loginAs('sell');setTimeout(function(){go('valorisation')},60)"><span><b>Combien vaut mon bien ?</b><span>Estimation gratuite en 2 minutes</span></span><i aria-hidden="true">→</i></button>
+    <div class="lp-sbox" role="search">
+      <div class="lp-stabs" role="tablist" aria-label="Que voulez-vous faire ?">
+        <button type="button" class="lp-stab on" role="tab" aria-selected="true">Acheter</button>
+        <button type="button" class="lp-stab" role="tab" aria-selected="false" onclick="loginAs('sell');setTimeout(function(){go('depot')},60)">Vendre</button>
+        <button type="button" class="lp-stab" role="tab" aria-selected="false" onclick="loginAs('sell');setTimeout(function(){go('valorisation')},60)">Estimer</button>
+      </div>
+      <div class="lp-search">
+        <div class="f"><label for="ld-zone-simple">Où ?</label>
+          <select id="ld-zone-simple" onchange="buildLandingBiensSimple()">
+            <option value="">Toute la Calédonie</option>
+            <optgroup label="Nouméa"><option>Nouméa</option><option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option><option>Tina</option><option>Faubourg Blanchot</option><option>Magenta</option><option>Motor Pool</option></optgroup>
+            <optgroup label="Grand Nouméa"><option>Dumbéa</option><option>Dumbéa sur Mer</option><option>Koutio</option><option>Mont-Dore</option><option>Boulari</option><option>Païta</option></optgroup>
+            <optgroup label="Brousse et îles"><option>La Foa</option><option>Bourail</option><option>Koné</option><option>Lifou</option><option>Maré</option><option>Ouvéa</option></optgroup>
+          </select></div>
+        <div class="f"><label for="ld-type-simple">Type de bien</label>
+          <select id="ld-type-simple" onchange="buildLandingBiensSimple()">
+            <option value="">Tous les types</option><option>Appartement</option><option>Maison</option><option>Villa</option><option>Studio</option><option>Terrain</option>
+          </select></div>
+        <div class="f"><label for="ld-budget-simple">Budget maximum</label>
+          <select id="ld-budget-simple" onchange="buildLandingBiensSimple()">
+            <option value="0">Tous budgets</option><option value="15000000">15 M F</option><option value="30000000">30 M F</option><option value="50000000">50 M F</option><option value="80000000">80 M F</option><option value="120000000">120 M F</option>
+          </select></div>
+        <button type="button" class="lp-btn pri go" onclick="buildLandingBiensSimple();document.getElementById('section-annonces').scrollIntoView({behavior:'smooth'})"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg>Rechercher</button>
+      </div>
+    </div>
+    <div class="lp-quick" aria-label="Recherches rapides">
+      <button type="button" class="lp-chip" onclick="lpQuick('Anse Vata','')">Anse Vata</button>
+      <button type="button" class="lp-chip" onclick="lpQuick('Dumbéa','Maison')">Maisons à Dumbéa</button>
+      <button type="button" class="lp-chip" onclick="lpQuick('','Appartement',50000000)">Appartements jusqu'à 50 M F</button>
+      <button type="button" class="lp-chip" onclick="lpQuick('','Terrain')">Terrains</button>
     </div>
   </div>
-  <aside class="lp-market" aria-label="Le marché en 2025">
-    <h2>Le marché en 2025</h2>
-    <p class="sub">Prix des ventes réellement conclues chez les notaires</p>
-    <dl>
-      <div class="row"><dt>Appartement vendu, prix médian au m²</dt><dd>280 000 F</dd></div>
-      <div class="row"><dt>Maison vendue, prix médian</dt><dd>23,0 M F</dd></div>
-      <div class="row"><dt>Ventes dans l'année</dt><dd>943</dd></div>
-      <div class="row"><dt>Évolution des prix des appartements</dt><dd>−29 % en un an</dd></div>
-    </dl>
-    <p class="src">Source : <a href="https://isee.nc/transactions-immobilieres-synthese-annuelle-2025" target="_blank" rel="noopener">ISEE, synthèse 2025</a> (offices notariaux, DSF).</p>
-  </aside>
+  <span class="credit">Photo d'illustration</span>
+</section>
+
+<section id="section-annonces" class="lp-sec"><div class="lp-in">
+  <div class="lp-sechead">
+    <div><h2>Annonces récentes</h2><div class="lp-count" id="ld-simple-count"></div></div>
+    <button type="button" class="lp-btn sec" onclick="loginAs('buy')">Voir toutes les annonces</button>
+  </div>
+  <div id="landing-biens-grid"></div>
 </div></section>
 
-<section id="section-annonces" class="lp-sec white"><div class="lp-in">
-  <h2>Les annonces</h2>
-  <p class="sub">Filtrez par lieu, budget et type de bien.</p>
-  <div class="lp-search">
-    <div><label for="ld-zone-simple">Lieu</label>
-      <select id="ld-zone-simple" onchange="buildLandingBiensSimple()">
-        <option value="">Toute la Calédonie</option>
-        <option>Anse Vata</option><option>Baie des Citrons</option><option>Val Plaisance</option>
-        <option>Faubourg Blanchot</option><option>Magenta</option><option>Motor Pool</option>
-        <option>Dumbéa sur Mer</option><option>Koutio</option><option>Savannah</option>
-        <option>Mont-Dore Centre</option><option>Plum</option><option>Boulari</option>
-        <option>Païta Centre</option><option>La Foa</option><option>Bourail</option>
-        <option>Koné</option><option>Lifou</option><option>Maré</option><option>Ouvéa</option>
-      </select></div>
-    <div><label for="ld-budget-simple">Budget maximum</label>
-      <div class="lp-budget"><div class="top"><span>Jusqu'à</span><b id="ld-budget-simple-label">Tous budgets</b></div>
-        <input type="range" id="ld-budget-simple" min="0" max="200000000" step="5000000" value="0" oninput="updateSimpleBudget(this.value);buildLandingBiensSimple()"></div></div>
-    <div><label for="ld-type-simple">Type de bien</label>
-      <select id="ld-type-simple" onchange="buildLandingBiensSimple()">
-        <option value="">Tous les types</option><option>Appartement</option><option>Maison</option><option>Villa</option><option>Studio</option><option>Terrain</option>
-      </select></div>
-    <button type="button" class="lp-btn pri go" onclick="buildLandingBiensSimple()">Rechercher</button>
+<section class="lp-sec alt"><div class="lp-in">
+  <div class="lp-sechead"><div><h2>Vous avez un projet ?</h2><p class="sub">On vous accompagne, du premier clic à la signature chez le notaire.</p></div></div>
+  <div class="lp-tiles">
+    <button type="button" class="lp-tile" onclick="loginAs('sell');setTimeout(function(){go('valorisation')},60)">
+      <span class="im" style="background-image:url('assets/demo/sejour-brique.jpg')" aria-hidden="true"></span>
+      <span class="tx"><h3>Estimer mon bien</h3><p>Gratuit, en 2 minutes, calé sur les ventes réellement conclues. Avec ou sans travaux.</p><span class="cta">Estimer →</span></span>
+    </button>
+    <button type="button" class="lp-tile" onclick="loginAs('sell');setTimeout(function(){go('depot')},60)">
+      <span class="im" style="background-image:url('assets/demo/cuisine.jpg')" aria-hidden="true"></span>
+      <span class="tx"><h3>Vendre mon bien</h3><p>Une annonce avec photos et vidéo de visite en 5 étapes courtes, et des devis d'artisans pour la préparer.</p><span class="cta">Déposer une annonce →</span></span>
+    </button>
+    <button type="button" class="lp-tile" onclick="loginAs('buy');setTimeout(function(){go('capacite')},60)">
+      <span class="im" style="background-image:url('assets/demo/chambre.jpg')" aria-hidden="true"></span>
+      <span class="tx"><h3>Calculer mon budget</h3><p>Votre budget réel, frais de notaire compris, et les aides possibles : prêt à taux zéro, Province Sud.</p><span class="cta">Calculer →</span></span>
+    </button>
   </div>
-  <div class="lp-count"><span id="ld-simple-count"></span><button type="button" class="lp-link" style="color:var(--gold)" onclick="loginAs('buy')">Plus de filtres</button></div>
-  <div id="landing-biens-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:28px"></div>
-  <div style="text-align:center"><button type="button" class="lp-btn sec" onclick="loginAs('buy')">Voir toutes les annonces</button></div>
 </div></section>
 
 <section class="lp-sec"><div class="lp-in">
-  <h2>Comment on vous aide</h2>
-  <p class="sub">Un seul endroit, du premier clic à la signature chez le notaire.</p>
-  <div class="lp-help">
-    <div><h3>Vous vendez</h3><ul><li>Estimation gratuite, avec ou sans travaux</li><li>Annonce avec photos et vidéo de visite</li><li>Devis d'artisans pour préparer la vente</li></ul>
-      <button type="button" class="lp-link" onclick="loginAs('sell');setTimeout(function(){go('valorisation')},60)">Estimer mon bien →</button></div>
-    <div><h3>Vous achetez</h3><ul><li>Annonces de toute la Calédonie</li><li>Votre budget réel, frais de notaire compris</li><li>Aides possibles : prêt à taux zéro, Province Sud</li></ul>
-      <button type="button" class="lp-link" onclick="loginAs('buy');setTimeout(function(){go('capacite')},60)">Calculer mon budget →</button></div>
-    <div><h3>Vous êtes professionnel</h3><ul><li>Artisans, notaires, banquiers, courtiers</li><li>Diagnostiqueurs, géomètres, assureurs</li><li>Des demandes de clients près de chez vous</li></ul>
-      <button type="button" class="lp-link" onclick="showLoginModal('agt')">Créer mon espace pro →</button></div>
+  <div class="lp-sechead"><div><h2>Le marché en 2025</h2><p class="sub">Les ventes réellement conclues chez les notaires, pas des prix affichés.</p></div></div>
+  <div class="lp-stats">
+    <div class="lp-stat"><b>280 000 F</b><span>par m², appartement vendu (médiane)</span></div>
+    <div class="lp-stat"><b>23,0 M F</b><span>maison vendue (médiane)</span></div>
+    <div class="lp-stat"><b>943</b><span>ventes dans l'année</span></div>
+    <div class="lp-stat"><b class="dn">−29 %</b><span>prix des appartements en un an</span></div>
   </div>
+  <p class="lp-src">Source : <a href="https://isee.nc/transactions-immobilieres-synthese-annuelle-2025" target="_blank" rel="noopener">ISEE, synthèse 2025</a> (offices notariaux, DSF).</p>
+</div></section>
+
+<section class="lp-sec alt"><div class="lp-in lp-pro">
+  <div><h2>Vous êtes professionnel ?</h2><p class="sub" style="margin-bottom:20px">Recevez les demandes des vendeurs et acheteurs près de chez vous, et suivez vos dossiers au même endroit.</p>
+    <button type="button" class="lp-btn pri big" onclick="showLoginModal('agt')">Créer mon espace pro</button></div>
+  <ul>
+    <li><svg class="i" aria-hidden="true"><use href="#i-hammer"/></svg>Artisans et entreprises</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-scale"/></svg>Notaires</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg>Banquiers et courtiers</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-file"/></svg>Diagnostiqueurs</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>Géomètres-experts</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Agents et assureurs</li>
+  </ul>
 </div></section>
 
 <footer class="lp-foot"><div class="lp-in">
-  <div><b style="color:var(--dark)">Immo<span style="color:var(--gold)">360</span></b> · Nouvelle-Calédonie · © 2026</div>
+  <div><b style="color:#fff">Immo<span style="color:var(--gold-light)">360</span></b> · Nouvelle-Calédonie · © 2026</div>
   <nav aria-label="Informations légales">
     <button type="button" onclick="showPage('mentions')">Mentions légales</button>
     <button type="button" onclick="showPage('cgv')">CGU / CGV</button>
     <button type="button" onclick="showPage('confidentialite')">Confidentialité</button>
     <button type="button" onclick="showPage('contact')">Contact</button>
+    <button type="button" onclick="showPage('credits')">Crédits photos</button>
   </nav>
 </div></footer>
 </div>
@@ -850,7 +998,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <option value="USD" data-s="$">USD</option>
       </select>
       <span class="topbar-badge badge-sell" id="profile-badge" hidden>Vendeur</span>
-      <button type="button" class="tn-btn" onclick="showLanding()">Accueil</button>
+      <button type="button" class="tn-btn" onclick="showLanding()" title="Retour au site public">Voir les annonces</button>
       <button type="button" class="tn-btn tn-out" onclick="logout()">Déconnexion</button>
     </div>
   </header>
@@ -1257,7 +1405,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
       <!-- VUE GRILLE -->
       <div id="mkt-grid-view">
-        <div id="mkt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
+        <div id="mkt-grid" class="pc-grid"></div>
       </div>
 
       <!-- VUE CARTE -->
@@ -1302,10 +1450,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       .dp-q{font-size:22px;font-weight:700;margin:0 0 4px}
       .dp-help{color:var(--mid);margin:0 0 16px;font-size:15px}
       .dp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
-      .dp-tile{background:#fff;border:1px solid #CFCAC0;border-radius:8px;padding:14px 10px;font:600 15px inherit;font-family:inherit;color:var(--dark);cursor:pointer;text-align:center}
+      .dp-tile{background:#fff;border:1px solid #CFCAC0;border-radius:8px;padding:14px 10px;font-weight:600;font-size:15px;font-family:inherit;color:var(--dark);cursor:pointer;text-align:center}
       .dp-tile:hover{border-color:var(--gold)}.dp-tile.on{border:2px solid var(--gold);background:#EAF4F4;padding:13px 9px}
       .dp-seg{display:inline-flex;border:1px solid #CFCAC0;border-radius:8px;overflow:hidden;margin-bottom:18px}
-      .dp-seg button{background:#fff;border:0;padding:10px 20px;font:600 15px inherit;font-family:inherit;cursor:pointer;color:var(--dark)}
+      .dp-seg button{background:#fff;border:0;padding:10px 20px;font-weight:600;font-size:15px;font-family:inherit;cursor:pointer;color:var(--dark)}
       .dp-seg button.on{background:var(--gold);color:#fff}
       .dp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.dp-row3{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px}
       .dp-f{margin-bottom:14px}.dp-f small{display:block;color:var(--mid);font-size:13px;margin-top:4px}
@@ -1315,7 +1463,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       .dp-hint small{display:block;color:var(--mid);font-size:13px;margin-top:4px}
       .dp-price{position:relative}.dp-price input{font-size:22px;font-weight:700;padding-right:44px}.dp-price span{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--mid)}
       .dp-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
-      .dp-chips label{display:inline-flex;align-items:center;gap:6px;border:1px solid #CFCAC0;border-radius:99px;padding:6px 12px;font:400 15px inherit;font-family:inherit;color:var(--dark);cursor:pointer;background:#fff;margin:0}
+      .dp-chips label{display:inline-flex;align-items:center;gap:6px;border:1px solid #CFCAC0;border-radius:99px;padding:6px 12px;font-weight:400;font-size:15px;font-family:inherit;color:var(--dark);cursor:pointer;background:#fff;margin:0}
       .dp-chips input{width:auto;margin:0;accent-color:var(--gold)}
       .dp-chips label:has(input:checked){border-color:var(--gold);background:#EAF4F4}
       details.dp-more{border:1px solid #DDD9D0;border-radius:8px;padding:0 14px;margin:6px 0 14px;background:#fff}
@@ -2792,6 +2940,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div>
 
 
+<script src="js/cards.js"></script>
+<script src="js/pages.js"></script>
 <script>
 // Échappe une valeur avant insertion dans du HTML (anti-XSS)
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -2945,9 +3095,9 @@ const S = {
 const RATES={XPF:1,EUR:0.00838,CHF:0.00892,CAD:0.01233,USD:0.00897};
 function conv(xpf){
   const r=RATES[S.curr]||1; const v=Math.round(xpf*r);
-  if(v>=1000000) return S.sym+' '+(v/1000000).toFixed(1).replace('.0','')+'M';
-  if(v>=1000) return S.sym+' '+(v/1000).toFixed(0)+'k';
-  return S.sym+' '+v.toLocaleString();
+  // Format français : nombre puis devise (« 48,5 M F », « 280 000 F »)
+  if(Math.abs(v)>=1000000) return (v/1000000).toFixed(1).replace(/\.0$/,'').replace('.',',')+' M '+S.sym;
+  return v.toLocaleString('fr-FR')+' '+S.sym;
 }
 function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 
@@ -3042,7 +3192,7 @@ function buildSB(){
     d.onclick=()=>go(panel);
     return d;
   };
-  nav.appendChild(mk('Accueil','dashboard'));
+  nav.appendChild(mk('Mon espace','dashboard'));
   items.forEach(it=>nav.appendChild(mk(it.l||lbl(it.k),it.k)));
   // Fondu à droite tant qu'il reste des onglets à faire défiler
   const fade=()=>nav.classList.toggle('more', nav.scrollWidth-nav.scrollLeft-nav.clientWidth>4);
@@ -3868,6 +4018,8 @@ const BIENS_DATA=[
   {id:12,titre:'Studio vue mer — Piscine résidence — Anse Vata',type:'Studio',surface:29,pieces:1,chambres:0,prix:14500000,statut:'En vente',dpe:'C',ville:'Nouméa',quartier:'Anse Vata',desc:"Studio vue mer directe dans résidence sécurisée. Balcon vue lagon. Piscine de la résidence. Idéal résidence secondaire ou locatif saisonnier. Loyer estimé 100 000 XPF/mois.",features:['Vue mer','Balcon','Piscine résidence','Saisonnier'],photos:['🌊'],date:'2026-06-02',agent:'Agence Soleil NC',tel:'+687 43 97 67',ref:'ASN-2026-067'},
 ]
 
+if(window.IMMO_CARDS) IMMO_CARDS.demoPhotos(BIENS_DATA); // photos libres de droits, marquées « Photo d'illustration »
+
 const MAP_POSITIONS={'Anse Vata':{x:72,y:78},'Baie des Citrons':{x:68,y:72},'Val Plaisance':{x:65,y:65},'Faubourg Blanchot':{x:55,y:55},'Motor Pool':{x:50,y:50},'Magenta':{x:48,y:42},'Dumbéa sur Mer':{x:35,y:35},'Boulari':{x:32,y:38},'Mont-Dore':{x:80,y:85},'La Coulée':{x:78,y:80},'Ouémo':{x:52,y:48},'Tina':{x:62,y:60},'Centre-ville':{x:50,y:52},'Artillerie':{x:52,y:54},'Nouville':{x:45,y:55},'Numbo':{x:28,y:40},'Numbo':{x:28,y:40}};
 const PIN_COLOR={'En vente':'#B83A2A','Compromis':'#0F6E75','Loué':'#2A7A4B','Vendu':'#2A4A7A'};
 const DPE_COLOR2={A:'#2d7f2d',B:'#5aaf2d',C:'#9ecf2d',D:'#f0c020',E:'#f08020',F:'#e04020'};
@@ -3909,27 +4061,8 @@ function setMktView(v){
 
 function renderMktGrid(){
   const g=document.getElementById('mkt-grid');if(!g)return;
-  if(!mktFiltered.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)">Aucun bien trouvé.</div>';return;}
-  g.innerHTML=mktFiltered.map(b=>`
-    <div class="card" style="margin-bottom:0;cursor:pointer" onclick="openBien(${b.id})">
-      <div style="background:linear-gradient(135deg,var(--warm),var(--cream));border-radius:10px;height:110px;display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:10px;position:relative;overflow:hidden">
-        ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">`:b.photos[0]}
-        <div style="position:absolute;top:6px;right:6px"><span class="tag ${STATUT_BADGE2[b.statut]||'tag-gold'}">${b.statut}</span></div>
-        <div style="position:absolute;top:6px;left:6px;background:${DPE_COLOR2[b.dpe]||'#9ecf2d'};color:#fff;padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700">DPE ${b.dpe}</div>
-      </div>
-      <div style="font-family:'Source Sans 3',sans-serif;font-size:13px;font-weight:500;margin-bottom:3px">${esc(b.titre)}</div>
-      <div style="font-size:10px;color:var(--mid);margin-bottom:6px">${b.quartier} · ${b.ville}</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">
-        <span class="tag tag-gold">${b.surface} m²</span>
-        <span class="tag tag-blue">${b.pieces} pcs</span>
-      </div>
-      <div style="font-family:'Source Sans 3',sans-serif;font-size:18px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
-      <div style="font-size:10px;color:var(--mid);margin-top:1px">${conv(Math.round(b.prix/b.surface))}/m²</div>
-      <div style="display:flex;gap:5px;margin-top:10px">
-        <button type="button" class="btn btn-gold btn-sm" onclick="event.stopPropagation();go('rdv')">Visiter</button>
-        <button type="button" class="btn btn-outline btn-sm" onclick="event.stopPropagation();openBien(${b.id})">Détail</button>
-      </div>
-    </div>`).join('');
+  g.classList.add('pc-grid');
+  g.innerHTML=IMMO_CARDS.grid(mktFiltered,{open:'openBien'});
 }
 
 function renderMktMap(){
@@ -3953,35 +4086,7 @@ function renderMktMap(){
 function openBien(id){
   const b=BIENS_DATA.find(x=>x.id===id);if(!b)return;
   const fin=document.getElementById('fin-prix');if(fin){fin.value=b.prix;calcFin();}
-  const ov=document.createElement('div');
-  ov.id='bien-popup';
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px';
-  ov.onclick=e=>{if(e.target===ov)ov.remove();};
-  ov.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-      <h3 style="font-family:'Source Sans 3',sans-serif;font-size:17px;color:var(--dark);flex:1">${esc(b.titre)}</h3>
-      <button type="button" onclick="closeLandingPopup()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);margin-left:8px">✕</button>
-    </div>
-    <div style="background:var(--warm);border-radius:10px;height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:12px">${b.photos[0]}</div>
-    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
-      <span class="tag tag-gold">${b.surface} m²</span>
-      <span class="tag tag-blue">${b.pieces} pièces</span>
-      <span class="tag tag-blue">${b.type}</span>
-      <span class="tag ${STATUT_BADGE2[b.statut]||'tag-gold'}">${b.statut}</span>
-      <span style="background:${DPE_COLOR2[b.dpe]};color:#fff;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700">DPE ${b.dpe}</span>
-    </div>
-    <div style="font-size:11px;color:var(--mid);margin-bottom:8px">${b.quartier} · ${b.ville}</div>
-    <div style="font-size:13px;line-height:1.6;margin-bottom:12px">${b.desc||b.description||""}</div>
-    <div style="font-family:'Source Sans 3',sans-serif;font-size:24px;font-weight:700;color:var(--gold)">${conv(b.prix)}</div>
-    <div style="font-size:11px;color:var(--mid);margin-bottom:14px">${conv(Math.round(b.prix/b.surface))}/m² · Via ${b.agent}</div>
-    <div style="display:flex;gap:7px;flex-wrap:wrap">
-      <button type="button" class="btn btn-gold" onclick="go('rdv');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">RDV visite</button>
-      <button type="button" class="btn btn-outline" onclick="go('financement');document.getElementById('landing-popup')?.remove();document.getElementById('bien-popup')?.remove()">Financement</button>
-    </div>
-  </div>`;
-  document.body.appendChild(ov);
-  if(window.IMMO_ANN) IMMO_ANN.attach(ov, b.id); // galerie photo (annonces publiées)
-  if(window.IMMO_VISITE) IMMO_VISITE.attach(ov, b.id); // visite vidéo publiée, s'il y en a une
+  openLandingBien(id); // une seule fiche pour tout le site
 }
 
 function contactVendeur(bienId){
@@ -4486,64 +4591,76 @@ function closeLandingPopup(){
 }
 
 function openLandingBien(id){
+  // Fiche unique d'un bien (accueil, annonces, tableaux de bord) : photo d'abord, prix, repère du marché, contact
   const b=BIENS_DATA.find(x=>x.id===id);
   if(!b) return;
-  const pm2=conv(Math.round(b.prix/(b.surface||1)));
-  const featHTML=(b.features||[]).map(f=>`<span style="background:var(--warm);padding:3px 10px;border-radius:20px;font-size:11px;color:var(--dark)">${f}</span>`).join('');
+  document.querySelectorAll('.fiche-ov').forEach(x=>x.remove());
   const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;display:flex;align-items:center;justify-content:center;padding:12px;overflow-y:auto';
-  ov.onclick=e=>{
-    if(e.target===ov){
-      try{document.body.removeChild(ov);}catch(err){}
+  ov.className='fiche-ov'; ov.id='bien-popup';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(20,26,32,.62);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto';
+  const fermer=()=>{ ov.remove(); document.removeEventListener('keydown',onKey); };
+  const onKey=e=>{ if(e.key==='Escape') fermer(); };
+  document.addEventListener('keydown',onKey);
+  ov.onclick=e=>{ if(e.target===ov) fermer(); };
+  const surf=Number(b.surface)||0, prix=Number(b.prix)||0;
+  const lieu=[b.quartier,b.ville].filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).map(esc).join(', ');
+  // Repère du secteur (moteur d'estimation) : affiché seulement s'il est calculable
+  let repere='';
+  try{
+    if(window.IMMO_EST && surf && prix && b.type!=='Terrain'){
+      const e=IMMO_EST.pm2(b.quartier,b.type,b.ville), pm=prix/surf, ec=Math.round((pm/e.value-1)*100);
+      const txt=Math.abs(ec)<=10?'dans la moyenne du secteur':(ec>0?ec+' % au-dessus du repère du secteur':Math.abs(ec)+' % en dessous du repère du secteur');
+      repere=`<div class="fi-rep"><div><b>${conv(Math.round(pm))}/m²</b><span>prix de cette annonce</span></div><div><b>${conv(Math.round(e.value))}/m²</b><span>repère du secteur</span></div><p>Ce prix est ${txt}. Repère indicatif, calé sur les ventes conclues en 2025 (ISEE).</p></div>`;
     }
-  };
-  const ctaBtns = APP_STATE.loggedIn ? `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button type="button" class="btn btn-gold btn-full" onclick="contactVendeur(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">Envoyer un message</button>
-      <button type="button" class="btn btn-outline btn-full" onclick="planifierVisite(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">Demander une visite</button>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-      <button type="button" class="btn btn-dark btn-full btn-sm" onclick="simulerFinancement(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">Simuler financement</button>
-      <button type="button" class="btn btn-outline btn-full btn-sm" onclick="ajouterFavori(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">Favoris</button>
-    </div>` : `
-    <div style="background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:12px;padding:16px;text-align:center;margin-bottom:10px">
-      <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:10px">Créez un compte gratuit pour contacter ce vendeur</div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button type="button" class="btn btn-gold" onclick="contactFromLanding(${b.id});document.body.removeChild(this.closest('[style*=fixed]'))">Contacter le vendeur</button>
-        <button type="button" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer" onclick="closeAnnonce(this)">Plus tard</button>
+  }catch(_){}
+  const spec=[];
+  if(b.type!=='Terrain'&&Number(b.chambres)>0) spec.push(['chambres',Number(b.chambres)]);
+  if(b.type!=='Terrain'&&Number(b.pieces)>0) spec.push(['pièces',Number(b.pieces)]);
+  if(surf) spec.push([b.type==='Terrain'?'m² de terrain':'m²',surf]);
+  if(b.dpe&&b.dpe!=='—') spec.push(['DPE',esc(b.dpe)]);
+  const feats=(b.features||[]).map(f=>`<li>${esc(f)}</li>`).join('');
+  const fav=window.IMMO_CARDS&&IMMO_CARDS.isFav(b.id);
+  const ferme="this.closest('.fiche-ov').remove()";
+  const cta = APP_STATE.loggedIn ? `
+      <button type="button" class="btn btn-gold btn-full" onclick="contactVendeur(${Number(b.id)});${ferme}">Envoyer un message</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="planifierVisite(${Number(b.id)});${ferme}">Demander une visite</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="simulerFinancement(${prix});${ferme}">Simuler le financement</button>` : `
+      <p class="fi-note">Créez un compte gratuit pour contacter le vendeur et demander une visite.</p>
+      <button type="button" class="btn btn-gold btn-full" onclick="contactFromLanding(${Number(b.id)});${ferme}">Contacter le vendeur</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="simulerFinancementPublic(${prix});${ferme}">Simuler le financement</button>`;
+  ov.innerHTML=`<div class="fi" role="dialog" aria-modal="true" aria-label="${esc(b.titre||'Fiche du bien')}">
+    <div class="fi-ph${b.photoUrl?'':' none'}">
+      ${b.photoUrl?`<img src="${esc(b.photoUrl)}" alt="" onerror="this.parentNode.classList.add('none');this.remove()">`:''}
+      <svg class="i fi-noimg" aria-hidden="true"><use href="#i-home"/></svg>
+      ${b.illustration?'<span class="pc-ill">Photo d\'illustration</span>':''}
+      <div class="fi-tools">
+        <button type="button" class="pc-fav" data-id="${Number(b.id)}" aria-pressed="${!!fav}" aria-label="Favori" onclick="IMMO_CARDS.fav(${Number(b.id)},this)"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg></button>
+        <button type="button" class="fi-x" aria-label="Fermer">✕</button>
       </div>
     </div>
-    <button type="button" class="btn btn-outline btn-full btn-sm" onclick="simulerFinancementPublic(${b.prix});document.body.removeChild(this.closest('[style*=fixed]'))">Simuler le financement</button>`;
-  ov.innerHTML=`<div style="background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">
-    <div style="background:linear-gradient(135deg,#1C1A16,#2a2520);height:180px;display:flex;align-items:center;justify-content:center;font-size:68px;border-radius:20px 20px 0 0;position:relative;overflow:hidden">
-      ${b.photoUrl?`<img src="${b.photoUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">`:b.photos[0]}
-      <button type="button" onclick="closeAnnonce(this)" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10">✕</button>
-      <div style="position:absolute;bottom:10px;left:12px;display:flex;gap:6px">
-        <span style="background:${b.statut==='En vente'?'var(--gold)':'var(--blue)'};color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${b.statut}</span>
-        ${b.dpe&&b.dpe!=='—'?`<span style="background:#2d7f2d;color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">DPE ${b.dpe}</span>`:''}
+    <div class="fi-bd">
+      <div class="fi-main">
+        ${b.statut&&b.statut!=='En vente'?`<span class="pc-badge alt" style="position:static;display:inline-block;margin-bottom:8px">${esc(b.statut)}</span>`:''}
+        <div class="fi-pr">${IMMO_CARDS?IMMO_CARDS.price(prix):conv(prix)}</div>
+        <h2 class="fi-ti">${esc(b.titre||b.type)}</h2>
+        <div class="pc-lo" style="font-size:16px"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>${lieu}</div>
+        <ul class="fi-spec">${spec.map(s=>`<li><b>${s[1]}</b><span>${s[0]}</span></li>`).join('')}</ul>
+        ${feats?`<h3>Points forts</h3><ul class="fi-feat">${feats}</ul>`:''}
+        <h3>Description</h3>
+        <p class="fi-desc">${esc(b.desc||b.description||'')}</p>
+        ${repere?'<h3>Le prix</h3>'+repere:''}
       </div>
-      <div style="position:absolute;bottom:10px;right:12px;font-size:10px;color:rgba(255,255,255,0.4)">Réf. ${b.ref||'—'}</div>
-    </div>
-    <div style="padding:20px">
-      <div style="font-family:'Source Sans 3',sans-serif;font-size:26px;font-weight:700;color:var(--dark)">${conv(b.prix)}</div>
-      <div style="font-size:12px;color:var(--mid);margin-bottom:8px">${pm2}/m² · ${b.type} · ${b.surface} m²</div>
-      <div style="font-family:'Source Sans 3',sans-serif;font-size:15px;color:var(--dark);margin-bottom:4px">${esc(b.titre)}</div>
-      <div style="font-size:12px;color:var(--mid);margin-bottom:14px">${b.quartier}, ${b.ville}</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
-        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--dark)">${b.surface}</div><div style="font-size:10px;color:var(--mid)">m²</div></div>
-        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--dark)">${b.pieces||'—'}</div><div style="font-size:10px;color:var(--mid)">pièces</div></div>
-        <div style="background:var(--warm);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--dark)">${b.chambres!==undefined?b.chambres:'—'}</div><div style="font-size:10px;color:var(--mid)">chambres</div></div>
-      </div>
-      ${featHTML?`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">${featHTML}</div>`:''}
-      <div style="font-size:13px;line-height:1.7;color:var(--dark);margin-bottom:14px;padding:12px;background:var(--warm);border-radius:10px">${b.desc||b.description||""}</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--warm);border-radius:10px;margin-bottom:14px">
-        <div><div style="font-size:13px;font-weight:600;color:var(--dark)">${b.agent}</div><div style="font-size:11px;color:var(--mid)">${b.tel||'Via messagerie'}</div></div>
-        <div style="font-size:10px;color:var(--soft)">Publié le ${b.date}</div>
-      </div>
-      ${ctaBtns}
+      <aside class="fi-side">
+        <div class="fi-contact">
+          <div class="fi-ag"><span class="fi-av" aria-hidden="true">${esc((b.agent||b.auteur||'Vendeur').trim().charAt(0).toUpperCase())}</span><div><b>${esc(b.agent||b.auteur||'Vendeur')}</b><span>${b.ref?'Réf. '+esc(b.ref):''}${b.date?' · publié le '+esc(new Date(b.date).toLocaleDateString('fr-FR')):''}</span></div></div>
+          ${cta}
+        </div>
+      </aside>
     </div>
   </div>`;
+  ov.querySelector('.fi-x').onclick=fermer;
   document.body.appendChild(ov);
+  try{ ov.querySelector('.fi-x').focus({preventScroll:true}); }catch(_){}
   if(window.IMMO_ANN) IMMO_ANN.attach(ov, b.id); // galerie photo (annonces publiées)
   if(window.IMMO_VISITE) IMMO_VISITE.attach(ov, b.id); // visite vidéo publiée, s'il y en a une
 }
@@ -4592,8 +4709,9 @@ function simulerFinancement(prix){
 
 
 function ajouterFavori(id){
-  const b=BIENS_DATA.find(x=>x.id===id);
-  if(b) alert('❤️ "'+b.titre+'" ajouté à vos favoris !');
+  // Favoris mémorisés sur l'appareil (même cœur que sur les cartes)
+  if(window.IMMO_CARDS && !IMMO_CARDS.isFav(id)) IMMO_CARDS.fav(id);
+  if(typeof showToast==='function') showToast('Ajouté à vos favoris');
 }
 
 
@@ -7995,11 +8113,7 @@ function buildSmartDashboard(){
       card(lbl('Raccourcis')+shortcut('','Toutes les annonces','marketplace')+shortcut('','Calculer mon budget','capacite')+shortcut('','Comparer des biens','comparateur'));
     const next=card(`${lbl('Prochaine étape')}<p style="margin:0 0 14px;font-size:16px;color:#3B424C;line-height:1.5">${budget?'Votre budget est prêt. Parcourez les annonces qui y correspondent.':'Commencez par calculer votre budget réel, frais de notaire compris : c\u2019est la première chose que la banque vous demandera.'}</p>
       <button type="button" class="btn btn-gold" onclick="go('${budget?'marketplace':'capacite'}')">${budget?'Voir les annonces':'Calculer mon budget'}</button>`);
-    const grid=card(`${lbl('Dernières annonces')}${recents.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">${recents.map(b=>`
-      <button type="button" onclick="openBien(${Number(b.id)})" style="text-align:left;padding:0;background:#fff;border:1px solid #E3E0D8;border-radius:10px;overflow:hidden;cursor:pointer;font-family:inherit;color:#1E2329">
-        <div style="height:110px;background:#EEEAE2;color:#9A9384;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative">${b.photoUrl?`<img src="${b.photoUrl}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:'<svg class="i" aria-hidden="true"><use href="#i-home"/></svg>'}</div>
-        <div style="padding:10px 12px"><div style="font-weight:700">${conv(b.prix)}</div><div style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.titre||b.type)}</div><div style="font-size:13px;color:var(--mid)">${esc(b.quartier||b.ville||'')} · ${Number(b.surface)||'—'} m²</div></div>
-      </button>`).join('')}</div>`:'<p style="margin:0;color:var(--mid)">Aucune annonce pour le moment.</p>'}`);
+    const grid=card(`${lbl('Dernières annonces')}${recents.length?`<div class="pc-grid sm">${IMMO_CARDS.grid(recents,{open:'openBien',compact:true})}</div>`:'<p style="margin:0;color:var(--mid)">Aucune annonce pour le moment.</p>'}`);
     const etapes=['Calculer son budget','Chercher et visiter','Faire une offre d\u2019achat','Signer le compromis chez le notaire','Obtenir le prêt','Signer l\u2019acte de vente'];
     const right=card(lbl('Les étapes d\u2019un achat')+'<ol style="margin:0;padding-left:20px;line-height:1.9;font-size:15px;color:#3B424C">'+etapes.map(e=>'<li>'+e+'</li>').join('')+'</ol>');
     dash.innerHTML=layout(left, next+grid, right);
@@ -9256,26 +9370,18 @@ function buildLandingBiensSimple(zone, budget, type){
     if(zone && !(b.quartier||'').includes(zone) && !(b.ville||'').includes(zone)) return false;
     if(budget>0 && b.prix>budget) return false;
     return true;
-  }).slice(0,8);
+  }).slice(0,12);
 
-  if(countEl) countEl.textContent = biens.length+' bien'+(biens.length>1?'s':'')+' trouvé'+(biens.length>1?'s':'');
+  if(countEl) countEl.textContent = biens.length ? biens.length+' bien'+(biens.length>1?'s':'')+' à vendre'+(zone?' · '+zone:'')+(type?' · '+type:'') : '';
 
-  if(!biens.length){
-    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mid)"><div style="font-size:36px;margin-bottom:10px"><svg class="i"><use href="#i-search"/></svg></div><div>Aucun résultat pour ces critères</div></div>';
-    return;
-  }
-
-  // Carte simple et honnête (aucune note inventée) ; tous les textes échappés
-  grid.innerHTML = biens.map(b=>{
-    const pm2 = conv(Math.round(b.prix/(b.surface||1)));
-    const lieu = [b.quartier, b.ville].filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).join(', ');
-    return `<button type="button" class="lp-card" onclick="openLandingBien(${Number(b.id)})">
-      <div class="ph">${b.photoUrl?`<img src="${b.photoUrl}" alt="" loading="lazy" onerror="this.remove()">`:'<svg class="i" aria-hidden="true"><use href="#i-home"/></svg>'}<span class="tag">${esc(b.type||'Bien')}</span></div>
-      <div class="bd"><div class="pr">${conv(b.prix)} <small>${pm2}/m²</small></div>
-        <div class="ti">${esc(b.titre||((b.type||'')+' '+(b.quartier||'')))}</div>
-        <div class="me">${esc(lieu)} · ${Number(b.surface)||'—'} m²${b.pieces?' · '+Number(b.pieces)+' pièces':''}</div></div>
-    </button>`;
-  }).join('');
+  grid.innerHTML = IMMO_CARDS.grid(biens, {open:'openLandingBien'});
+}
+// Raccourcis du bandeau (« Maisons à Dumbéa »…)
+function lpQuick(zone, type, budget){
+  const z=document.getElementById('ld-zone-simple'), t=document.getElementById('ld-type-simple'), bu=document.getElementById('ld-budget-simple');
+  if(z) z.value=zone||''; if(t) t.value=type||''; if(bu) bu.value=String(budget||0);
+  buildLandingBiensSimple();
+  document.getElementById('section-annonces')?.scrollIntoView({behavior:'smooth'});
 }
 
 // =============================================

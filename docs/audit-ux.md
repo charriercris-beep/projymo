@@ -55,5 +55,15 @@ acheteur / vendeur / artisan / banquier, dépôt d'annonce, valorisation, fiche 
 2. Page d'accueil refaite : simple, honnête, recherche d'abord. ✅ (cette étape)
 3. Navigation en langage courant ; sélecteur d'espace réservé à la démo ; bug de connexion ; chiffres inventés
    retirés du tableau de bord acheteur. ✅ (cette étape)
-4. Ensuite : formulaire de dépôt en étapes courtes, tableaux de bord épurés par espace, accessibilité
-   (navigation clavier, tailles de cible), tests avec 3-5 utilisateurs réels.
+4. Formulaire de dépôt en 5 étapes courtes. ✅
+5. Charte v3, inspirée des portails les plus visités (Zillow, Rightmove, Idealista, realestate.com.au) : ✅
+   - accueil « photo d'abord » : grande photo, recherche au centre (Acheter / Vendre / Estimer), raccourcis ;
+   - une seule carte d'annonce partout (`js/cards.js`) : photo 4:3, prix en grand, chambres · m² · type,
+     lieu, favori en un clic ; photos libres de droits marquées « Photo d'illustration » ;
+   - une seule fiche de bien (photo, caractéristiques, points forts, repère de prix du secteur, contact) ;
+   - en-tête de l'application clair comme l'accueil, mêmes boutons, cartes et tailles de texte partout
+     (plus de texte sous 12 px) ; prix au format français (« 48,5 M F ») ;
+   - corrections : liens du pied de page qui ne faisaient rien (`showPage` manquante), déclarations CSS
+     `font: … inherit` ignorées, fiches en double (deux versions différentes selon l'écran).
+6. Ensuite : photos d'extérieur libres de droits, accessibilité (navigation clavier complète), tests avec
+   3-5 utilisateurs réels.

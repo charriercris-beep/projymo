@@ -131,7 +131,8 @@
         ${ph.length > 1 ? `<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px">${ph.map((src, i) => `<img data-i="${i}" alt="Photo ${i + 1}" src="${src}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer;flex:none;outline:${i ? 'none' : '2px solid #0F6E75'}">`).join('')}</div>` : ''}`;
       gal.querySelectorAll('img[data-i]').forEach(t => t.onclick = () => { gal.querySelector('.ann-main').src = ph[+t.dataset.i]; gal.querySelectorAll('img[data-i]').forEach(x => { x.style.outline = x === t ? '2px solid #0F6E75' : 'none'; }); });
       // Masque l'ancien bloc « photo » (emoji ou miniature) de la fiche, remplacé par la galerie
-      card.querySelectorAll('div').forEach(d => { if (media.contains(d)) return; const im = d.querySelector(':scope > img'); if ((d.style.height === '130px' && d.textContent.trim() === '🏠') || (im && im.getAttribute('src') === b.photoUrl)) d.style.display = 'none'; });
+      const fph = card.querySelector('.fi-ph'); if (fph) fph.classList.add('gal'); // fiche v3 : la galerie remplace la photo d'en-tête, les boutons restent
+      card.querySelectorAll('div').forEach(d => { if (media.contains(d) || d.classList.contains('fi-ph')) return; const im = d.querySelector(':scope > img'); if ((d.style.height === '130px' && d.textContent.trim() === '🏠') || (im && im.getAttribute('src') === b.photoUrl)) d.style.display = 'none'; });
     });
   }
 
