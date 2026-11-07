@@ -239,7 +239,7 @@
     if (!dash) return;
     const box = document.createElement('div');
     box.className = 'sync-banner';
-    box.style.cssText = 'max-width:1180px;margin:0 auto 14px;border-radius:10px;padding:10px 14px;font:13px/1.5 "DM Sans",sans-serif';
+    box.style.cssText = 'max-width:1180px;margin:0 auto 14px;border-radius:10px;padding:10px 14px;font:13px/1.5 "Source Sans 3",sans-serif';
     const isPro = !!ROLE[profil] && profil !== 'agt';
     if (!uid) {
       box.style.background = 'var(--warm)'; box.style.color = 'var(--mid)';

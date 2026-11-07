@@ -86,7 +86,7 @@
   }
 
   /* ---------- Annonces publiées de tous ---------- */
-  let lastSig = '';
+  let lastSig = null; // null : le premier passage dessine toujours la grille publique
   async function refreshPublic() {
     if (typeof BIENS_DATA === 'undefined') return;
     const rows = window.IMMO_SYNC ? await IMMO_SYNC.fetchAll('annonce') : null;
@@ -128,8 +128,8 @@
       if (!ph.length || !document.body.contains(media)) return;
       const gal = media.querySelector('.ann-gal');
       gal.innerHTML = `<div style="position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:3/2;margin-bottom:6px"><img class="ann-main" alt="${E(b.titre)}" src="${ph[0]}" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-        ${ph.length > 1 ? `<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px">${ph.map((src, i) => `<img data-i="${i}" alt="Photo ${i + 1}" src="${src}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer;flex:none;outline:${i ? 'none' : '2px solid #B8922A'}">`).join('')}</div>` : ''}`;
-      gal.querySelectorAll('img[data-i]').forEach(t => t.onclick = () => { gal.querySelector('.ann-main').src = ph[+t.dataset.i]; gal.querySelectorAll('img[data-i]').forEach(x => { x.style.outline = x === t ? '2px solid #B8922A' : 'none'; }); });
+        ${ph.length > 1 ? `<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px">${ph.map((src, i) => `<img data-i="${i}" alt="Photo ${i + 1}" src="${src}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer;flex:none;outline:${i ? 'none' : '2px solid #0F6E75'}">`).join('')}</div>` : ''}`;
+      gal.querySelectorAll('img[data-i]').forEach(t => t.onclick = () => { gal.querySelector('.ann-main').src = ph[+t.dataset.i]; gal.querySelectorAll('img[data-i]').forEach(x => { x.style.outline = x === t ? '2px solid #0F6E75' : 'none'; }); });
       // Masque l'ancien bloc « photo » (emoji ou miniature) de la fiche, remplacé par la galerie
       card.querySelectorAll('div').forEach(d => { if (media.contains(d)) return; const im = d.querySelector(':scope > img'); if ((d.style.height === '130px' && d.textContent.trim() === '🏠') || (im && im.getAttribute('src') === b.photoUrl)) d.style.display = 'none'; });
     });
@@ -138,7 +138,7 @@
   /* ---------- Onglet « Mes annonces » ---------- */
   function buildMes(el) {
     const list = mine();
-    el.innerHTML = `<div style="max-width:1000px;margin:0 auto"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px"><div><h2 style="font-family:'Playfair Display',serif;font-size:24px;margin:0 0 4px">Mes annonces</h2>
+    el.innerHTML = `<div style="max-width:1000px;margin:0 auto"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px"><div><h2 style="font-family:'Source Sans 3',sans-serif;font-size:24px;margin:0 0 4px">Mes annonces</h2>
       <p style="color:var(--mid);font-size:13px;margin:0">${online() ? 'Vos annonces publiées sont visibles par tous les visiteurs d\'Immo360.' : 'Mode démonstration : vos annonces ne sont visibles que dans ce navigateur. Connectez-vous pour les publier en ligne.'}</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-outline" id="ma-texte">Rédiger un texte avec l'IA</button><button type="button" class="btn btn-gold" id="ma-new">Déposer une annonce</button></div></div>
       ${list.length ? list.map(a => `<div class="card" style="display:grid;grid-template-columns:120px 1fr auto;gap:14px;align-items:center;padding:12px">

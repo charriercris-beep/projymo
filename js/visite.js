@@ -50,10 +50,10 @@
     if (txt) {
       const fs = Math.round(Math.min(W, H) * 0.045), pad = fs * 0.7, a = Math.min(1, local / 0.5, (dur - local) / 0.4);
       ctx.save(); ctx.globalAlpha = Math.max(0, a);
-      ctx.font = `600 ${fs}px "DM Sans", Arial, sans-serif`;
+      ctx.font = `600 ${fs}px "Source Sans 3", Arial, sans-serif`;
       const tw = ctx.measureText(txt).width, y = H - fs * 2.6;
       ctx.fillStyle = 'rgba(15,13,10,.62)'; roundRect(ctx, fs, y - fs - pad / 2, tw + pad * 2, fs + pad * 1.4, fs * 0.35); ctx.fill();
-      ctx.fillStyle = '#B8922A'; ctx.fillRect(fs, y - fs - pad / 2, Math.max(4, fs * 0.12), fs + pad * 1.4);
+      ctx.fillStyle = '#0F6E75'; ctx.fillRect(fs, y - fs - pad / 2, Math.max(4, fs * 0.12), fs + pad * 1.4);
       ctx.fillStyle = '#fff'; ctx.fillText(txt, fs + pad + fs * 0.1, y + fs * 0.05);
       ctx.restore();
     }
@@ -68,29 +68,29 @@
     const a = Math.min(1, local / 0.6, (dur - local) / 0.5); ctx.save(); ctx.globalAlpha = Math.max(0, a);
     const u = Math.min(W, H), cx = W / 2; ctx.textAlign = 'center'; ctx.fillStyle = '#fff';
     if (kind === 'intro') {
-      ctx.font = `700 ${Math.round(u * 0.075)}px "Playfair Display", Georgia, serif`;
+      ctx.font = `700 ${Math.round(u * 0.075)}px "Source Sans 3", Arial, sans-serif`;
       const lines = wrap(ctx, V.intro.titre || 'Visite du bien', W * 0.84);
       let y = H / 2 - (lines.length - 1) * u * 0.045 - u * 0.03;
       lines.forEach(l => { ctx.fillText(l, cx, y); y += u * 0.09; });
-      ctx.font = `500 ${Math.round(u * 0.038)}px "DM Sans", Arial, sans-serif`; ctx.fillStyle = 'rgba(255,255,255,.82)';
+      ctx.font = `500 ${Math.round(u * 0.038)}px "Source Sans 3", Arial, sans-serif`; ctx.fillStyle = 'rgba(255,255,255,.82)';
       if (V.intro.sous) { ctx.fillText(V.intro.sous, cx, y + u * 0.01); y += u * 0.06; }
-      if (V.intro.prix) { ctx.font = `700 ${Math.round(u * 0.05)}px "Playfair Display", Georgia, serif`; ctx.fillStyle = '#F0D99A'; ctx.fillText(V.intro.prix, cx, y + u * 0.04); }
+      if (V.intro.prix) { ctx.font = `700 ${Math.round(u * 0.05)}px "Source Sans 3", Arial, sans-serif`; ctx.fillStyle = '#CDEBE9'; ctx.fillText(V.intro.prix, cx, y + u * 0.04); }
     } else {
-      ctx.font = `700 ${Math.round(u * 0.06)}px "Playfair Display", Georgia, serif`;
+      ctx.font = `700 ${Math.round(u * 0.06)}px "Source Sans 3", Arial, sans-serif`;
       ctx.fillText('Envie de visiter ?', cx, H / 2 - u * 0.05);
-      ctx.font = `500 ${Math.round(u * 0.04)}px "DM Sans", Arial, sans-serif`; ctx.fillStyle = 'rgba(255,255,255,.85)';
+      ctx.font = `500 ${Math.round(u * 0.04)}px "Source Sans 3", Arial, sans-serif`; ctx.fillStyle = 'rgba(255,255,255,.85)';
       if (V.outro.contact) ctx.fillText(V.outro.contact, cx, H / 2 + u * 0.04);
-      if (V.outro.tel) { ctx.fillStyle = '#F0D99A'; ctx.font = `700 ${Math.round(u * 0.05)}px "DM Sans", Arial, sans-serif`; ctx.fillText(V.outro.tel, cx, H / 2 + u * 0.12); }
+      if (V.outro.tel) { ctx.fillStyle = '#CDEBE9'; ctx.font = `700 ${Math.round(u * 0.05)}px "Source Sans 3", Arial, sans-serif`; ctx.fillText(V.outro.tel, cx, H / 2 + u * 0.12); }
     }
     ctx.restore(); ctx.textAlign = 'left';
   }
   function drawWatermark(V, ctx, W, H) {
     if (!V.filigrane) return;
     const fs = Math.round(Math.min(W, H) * 0.03); ctx.save(); ctx.globalAlpha = 0.85;
-    ctx.font = `700 ${fs}px "Playfair Display", Georgia, serif`; ctx.textAlign = 'right';
+    ctx.font = `700 ${fs}px "Source Sans 3", Arial, sans-serif`; ctx.textAlign = 'right';
     ctx.fillStyle = '#fff'; const x = W - fs, y = fs * 1.7; ctx.fillText('360', x, y);
     const w360 = ctx.measureText('360').width; ctx.fillText('Immo', x - w360, y);
-    ctx.fillStyle = '#B8922A'; ctx.fillText('360', x, y); ctx.restore();
+    ctx.fillStyle = '#0F6E75'; ctx.fillText('360', x, y); ctx.restore();
   }
   function render(ctx, W, H, t, V) {
     V = V || st; const { segs } = timeline(V);
@@ -149,19 +149,19 @@
     if ($('vv-style')) return;
     const c = document.createElement('style'); c.id = 'vv-style';
     c.textContent = `
-.vv-wrap{max-width:1180px;margin:0 auto}.vv-head h2{font-family:'Playfair Display',serif;font-size:24px;margin:0 0 4px}.vv-head p{color:var(--mid);font-size:13px;margin:0 0 18px}
+.vv-wrap{max-width:1180px;margin:0 auto}.vv-head h2{font-family:'Source Sans 3',sans-serif;font-size:24px;margin:0 0 4px}.vv-head p{color:var(--mid);font-size:13px;margin:0 0 18px}
 .vv-grid{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
 .vv-stage{background:#111;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;aspect-ratio:16/9;max-height:62vh}
 .vv-stage canvas{max-width:100%;max-height:62vh;display:block}
-.vv-bar{display:flex;align-items:center;gap:10px;margin:10px 0 16px}.vv-bar input[type=range]{flex:1;accent-color:var(--gold)}.vv-bar span{font:500 12px 'DM Sans',sans-serif;color:var(--mid);min-width:80px;text-align:right}
-.vv-f{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}.vv-f label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em}
-.vv-f input,.vv-f select{border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:8px 10px;font:14px 'DM Sans',sans-serif;background:#fff;width:100%;box-sizing:border-box}
+.vv-bar{display:flex;align-items:center;gap:10px;margin:10px 0 16px}.vv-bar input[type=range]{flex:1;accent-color:var(--gold)}.vv-bar span{font:500 12px 'Source Sans 3',sans-serif;color:var(--mid);min-width:80px;text-align:right}
+.vv-f{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}.vv-f label{font-size:14px;font-weight:600;color:var(--dark)}
+.vv-f input,.vv-f select{border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:8px 10px;font:14px 'Source Sans 3',sans-serif;background:#fff;width:100%;box-sizing:border-box}
 .vv-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.vv-chk{display:flex;align-items:center;gap:8px;font:400 13px 'DM Sans',sans-serif;margin:6px 0;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--dark)}.vv-chk input{width:16px;height:16px;accent-color:var(--gold);margin:0}
-.vv-drop{border:1.5px dashed var(--soft);border-radius:10px;padding:18px;text-align:center;color:var(--mid);font-size:13px;cursor:pointer;margin-bottom:12px}.vv-drop:hover,.vv-drop.over{border-color:var(--gold);background:rgba(184,146,42,.05)}
+.vv-chk{display:flex;align-items:center;gap:8px;font:400 13px 'Source Sans 3',sans-serif;margin:6px 0;cursor:pointer;text-transform:none;color:var(--dark)}.vv-chk input{width:16px;height:16px;accent-color:var(--gold);margin:0}
+.vv-drop{border:1.5px dashed var(--soft);border-radius:10px;padding:18px;text-align:center;color:var(--mid);font-size:13px;cursor:pointer;margin-bottom:12px}.vv-drop:hover,.vv-drop.over{border-color:var(--gold);background:rgba(15,110,117,.05)}
 .vv-list{display:flex;flex-direction:column;gap:8px}
 .vv-item{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;border:1px solid rgba(28,26,22,.1);border-radius:10px;padding:6px;background:#fff}
-.vv-item img{width:64px;height:48px;object-fit:cover;border-radius:6px}.vv-item select,.vv-item input{border:1px solid rgba(28,26,22,.15);border-radius:6px;padding:5px 7px;font:13px 'DM Sans',sans-serif;width:100%;box-sizing:border-box}
+.vv-item img{width:64px;height:48px;object-fit:cover;border-radius:6px}.vv-item select,.vv-item input{border:1px solid rgba(28,26,22,.15);border-radius:6px;padding:5px 7px;font:13px 'Source Sans 3',sans-serif;width:100%;box-sizing:border-box}
 .vv-item .b{display:flex;gap:2px}.vv-item .b button{border:1px solid rgba(28,26,22,.15);background:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:13px}
 .vv-note{font-size:12px;color:var(--mid);background:var(--warm);border-radius:8px;padding:9px 12px;line-height:1.5;margin:10px 0}
 .vv-prog{height:8px;background:var(--warm);border-radius:99px;overflow:hidden;margin:10px 0}.vv-prog div{height:100%;width:0;background:var(--gold);transition:width .2s}
@@ -330,10 +330,10 @@
     const [W, H] = FORMATS[V.format] || FORMATS['16:9'];
     container.innerHTML = `<div class="vv-player" style="position:relative;background:#111;border-radius:10px;overflow:hidden;aspect-ratio:${W}/${H};max-height:60vh;margin:0 auto 12px">
       <canvas style="width:100%;height:100%;display:block;object-fit:contain"></canvas>
-      <button type="button" class="vv-big" aria-label="Lancer la visite" style="position:absolute;inset:0;margin:auto;width:68px;height:68px;border-radius:50%;border:0;background:rgba(184,146,42,.92);color:#fff;font-size:26px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35)">▶</button>
+      <button type="button" class="vv-big" aria-label="Lancer la visite" style="position:absolute;inset:0;margin:auto;width:68px;height:68px;border-radius:50%;border:0;background:rgba(15,110,117,.92);color:#fff;font-size:26px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35)">▶</button>
       <div class="vv-ctrl" style="position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;align-items:center;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,.6))">
         <button type="button" class="vv-pp" style="background:none;border:0;color:#fff;font-size:15px;cursor:pointer;width:26px" aria-label="Lecture / pause">▶</button>
-        <input type="range" class="vv-sk" min="0" max="1000" value="0" style="flex:1;accent-color:#B8922A" aria-label="Position"><span class="vv-tm" style="color:#fff;font:500 11px 'DM Sans',sans-serif">0:00</span></div></div>`;
+        <input type="range" class="vv-sk" min="0" max="1000" value="0" style="flex:1;accent-color:#0F6E75" aria-label="Position"><span class="vv-tm" style="color:#fff;font:500 11px 'Source Sans 3',sans-serif">0:00</span></div></div>`;
     const cv = container.querySelector('canvas'), c2 = cv.getContext('2d'); cv.width = W; cv.height = H;
     const total = timeline(V).total; let t = 0, playing = false, t0 = 0, raf = 0;
     const draw = () => { render(c2, W, H, t, V); container.querySelector('.vv-sk').value = Math.round(t / total * 1000); container.querySelector('.vv-tm').textContent = fmt(t) + ' / ' + fmt(total); };
@@ -356,7 +356,7 @@
     const card = overlay.firstElementChild; if (!card) return;
     const box = document.createElement('div'); box.className = 'vv-attach';
     const slot = card.querySelector('.ann-media .ann-visite'); // emplacement préparé par js/annonces.js (sous la galerie)
-    box.innerHTML = '<div style="font:600 11px \'DM Sans\',sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin:0 0 6px">Visite vidéo</div><div class="vv-slot"></div>';
+    box.innerHTML = '<div style="font:600 11px \'Source Sans 3\',sans-serif;color:var(--mid);margin:0 0 6px">Visite vidéo</div><div class="vv-slot"></div>';
     const header = card.firstElementChild;
     if (slot) slot.appendChild(box); else if (header && header.nextSibling) card.insertBefore(box, header.nextSibling); else card.prepend(box);
     await mountPlayer(box.querySelector('.vv-slot'), doc);

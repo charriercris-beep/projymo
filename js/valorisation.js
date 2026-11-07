@@ -89,24 +89,24 @@
     const c = document.createElement('style'); c.id = 'val-style';
     c.textContent = `
 .val-wrap{max-width:1180px;margin:0 auto}
-.val-head h2{font-family:'Playfair Display',serif;font-size:24px;margin:0 0 4px}
+.val-head h2{font-family:'Source Sans 3',sans-serif;font-size:24px;margin:0 0 4px}
 .val-head p{color:var(--mid);font-size:13px;margin:0 0 18px}
 .val-grid{display:grid;grid-template-columns:330px 1fr;gap:20px;align-items:start}
 .val-side{position:sticky;top:8px}
 .val-f{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
-.val-f label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em}
-.val-f input,.val-f select,.val-f textarea{border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:8px 10px;font:14px 'DM Sans',sans-serif;background:#fff;width:100%;box-sizing:border-box}
+.val-f label{font-size:14px;font-weight:600;color:var(--dark)}
+.val-f input,.val-f select,.val-f textarea{border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:8px 10px;font:14px 'Source Sans 3',sans-serif;background:#fff;width:100%;box-sizing:border-box}
 .val-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .val-photos{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
 .val-photos img{width:58px;height:58px;object-fit:cover;border-radius:6px;border:1px solid rgba(28,26,22,.12)}
 .val-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
 .val-kpi{background:#fff;border:1px solid rgba(28,26,22,.08);border-radius:12px;padding:14px 16px}
-.val-kpi small{display:block;font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.val-kpi b{font:700 22px 'Playfair Display',serif;color:var(--dark)}
+.val-kpi small{display:block;font-size:11px;color:var(--mid);margin-bottom:6px}
+.val-kpi b{font:700 22px 'Source Sans 3',sans-serif;color:var(--dark)}
 .val-kpi em{display:block;font-style:normal;font-size:12px;color:var(--mid);margin-top:3px}
 .val-kpi.pos b{color:var(--green)}.val-kpi.neg b{color:var(--red)}.val-kpi.gold{background:var(--dark)}.val-kpi.gold small,.val-kpi.gold em{color:rgba(255,255,255,.6)}.val-kpi.gold b{color:var(--gold-light)}
 .val-presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.val-chip{border:1px solid rgba(28,26,22,.15);background:#fff;border-radius:999px;padding:7px 14px;font:500 13px 'DM Sans',sans-serif;cursor:pointer;transition:.15s}
+.val-chip{border:1px solid rgba(28,26,22,.15);background:#fff;border-radius:999px;padding:7px 14px;font:500 13px 'Source Sans 3',sans-serif;cursor:pointer;transition:.15s}
 .val-chip:hover{border-color:var(--gold)}.val-chip.on{background:var(--dark);color:#fff;border-color:var(--dark)}
 .val-grade{border:1px solid rgba(28,26,22,.1);border-radius:12px;margin-bottom:12px;background:#fff;overflow:hidden}
 .val-grade>header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--cream);cursor:pointer}
@@ -115,7 +115,7 @@
 .val-poste input{width:17px;height:17px;accent-color:var(--gold)}
 .val-poste .c{color:var(--mid);text-align:right;min-width:70px}.val-poste .g{color:var(--green);font-weight:600;text-align:right;min-width:78px}
 .val-poste .tip{grid-column:2/5;font-size:12px;color:var(--mid);margin-top:-4px}
-.val-prio{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px;text-transform:uppercase}
+.val-prio{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px;}
 .val-prio.haute{background:#FDE8E4;color:#B83A2A}.val-prio.moyenne{background:#FEF3C7;color:#92400E}.val-prio.basse{background:#EEF2F6;color:#475569}
 .val-bars{display:flex;flex-direction:column;gap:9px}
 .val-bar{display:grid;grid-template-columns:120px 1fr 120px;gap:10px;align-items:center;font-size:12px}
@@ -123,15 +123,15 @@
 .val-bar .f{position:absolute;inset:0 auto 0 0;background:var(--soft);border-radius:6px 0 0 6px}
 .val-bar .k{position:absolute;inset:0 auto 0 0;background:var(--gold);border-radius:6px 0 0 6px}
 .val-bar.cur .lbl{font-weight:700}
-.val-ai h4{margin:12px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mid)}
+.val-ai h4{margin:12px 0 4px;font-size:12px;color:var(--mid)}
 .val-ai ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6}
 .val-note{font-size:12px;color:var(--mid);background:var(--warm);border-radius:8px;padding:9px 12px;margin-top:10px;line-height:1.5}
 .val-mod{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px}
 .val-mod>div{background:#fff;border-radius:14px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:22px}
-.val-mod label.val-art{display:flex;flex-direction:row;justify-content:flex-start;gap:10px;align-items:center;padding:8px 10px;border:1px solid rgba(28,26,22,.1);border-radius:8px;margin:6px 0;font:400 13px 'DM Sans',sans-serif;text-transform:none;letter-spacing:0;color:var(--dark);cursor:pointer}
+.val-mod label.val-art{display:flex;flex-direction:row;justify-content:flex-start;gap:10px;align-items:center;padding:8px 10px;border:1px solid rgba(28,26,22,.1);border-radius:8px;margin:6px 0;font:400 13px 'Source Sans 3',sans-serif;text-transform:none;color:var(--dark);cursor:pointer}
 .val-mod label.val-art input{width:17px;height:17px;flex:none;margin:0;accent-color:var(--gold)}
-.val-mod label.val-art span{text-align:left;text-transform:none;letter-spacing:0}
-.val-mod label.val-art small{color:var(--mid);display:block;text-transform:none;letter-spacing:0;font-size:12px}
+.val-mod label.val-art span{text-align:left;text-transform:none;}
+.val-mod label.val-art small{color:var(--mid);display:block;text-transform:none;font-size:12px}
 .val-mod .val-f label{display:block}
 @media(max-width:980px){.val-grid{grid-template-columns:1fr}.val-side{position:static}.val-hero{grid-template-columns:1fr}.val-bar{grid-template-columns:90px 1fr 90px}}
 `;
@@ -178,7 +178,7 @@
           <div class="val-f"><label>Ton</label><select id="val-ton"><option>Moderne &amp; dynamique</option><option>Familial &amp; chaleureux</option><option>Luxe &amp; prestige</option><option>Investisseur</option></select></div>
           <div class="val-f"><label>&nbsp;</label><button type="button" class="btn btn-outline btn-full" id="val-ann-btn">Générer l'annonce pour ce scénario</button></div>
         </div>
-        <textarea id="val-ann" rows="7" style="width:100%;box-sizing:border-box;border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:10px;font:14px 'DM Sans',sans-serif" placeholder="L'annonce générée apparaîtra ici…"></textarea>
+        <textarea id="val-ann" rows="7" style="width:100%;box-sizing:border-box;border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:10px;font:14px 'Source Sans 3',sans-serif" placeholder="L'annonce générée apparaîtra ici…"></textarea>
         <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
           <button type="button" class="btn btn-sm btn-outline" id="val-copy">Copier</button>
           <button type="button" class="btn btn-sm btn-dark" id="val-depot">Utiliser dans « Déposer une annonce »</button>
