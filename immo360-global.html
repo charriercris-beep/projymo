@@ -1287,329 +1287,183 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       </div>
     </div>
 
-    <!-- ==================== DÉPOSER UNE ANNONCE ==================== -->
+    <!-- ==================== DÉPOSER UNE ANNONCE (parcours en 5 étapes courtes — js/depot.js) ==================== -->
     <div class="panel" id="panel-depot">
-      <div style="max-width:700px;margin:0 auto">
-
-        <!-- ÉTAPES -->
-        <div style="display:flex;align-items:center;gap:0;margin-bottom:24px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-          <div class="depot-step active" id="dstep-1" onclick="goDepotStep(1)">
-            <div class="depot-step-num">1</div>
-            <div class="depot-step-lbl">Le bien</div>
-          </div>
-          <div class="depot-step-line"></div>
-          <div class="depot-step" id="dstep-2" onclick="goDepotStep(2)">
-            <div class="depot-step-num">2</div>
-            <div class="depot-step-lbl">Photos</div>
-          </div>
-          <div class="depot-step-line"></div>
-          <div class="depot-step" id="dstep-3" onclick="goDepotStep(3)">
-            <div class="depot-step-num">3</div>
-            <div class="depot-step-lbl">Prix & détails</div>
-          </div>
-          <div class="depot-step-line"></div>
-          <div class="depot-step" id="dstep-4" onclick="goDepotStep(4)">
-            <div class="depot-step-num">4</div>
-            <div class="depot-step-lbl">Publication</div>
-          </div>
+      <style>
+      .dp-wrap{max-width:680px;margin:0 auto}
+      .dp-steps{display:flex;gap:6px;margin-bottom:18px}
+      .dp-steps .depot-step{flex:1;align-items:flex-start;gap:6px;cursor:default}
+      .dp-steps .depot-step-num{display:none}
+      .dp-steps .bar{height:5px;width:100%;border-radius:99px;background:#DDD9D0}
+      .dp-steps .depot-step.active .bar,.dp-steps .depot-step.done .bar{background:var(--gold)}
+      .dp-steps .depot-step-lbl{font-size:13px;color:var(--mid);text-align:left}
+      .dp-steps .depot-step.active .depot-step-lbl{color:var(--dark);font-weight:700}
+      .dp-steps .depot-step.done .depot-step-lbl{color:var(--mid)}
+      .dp-q{font-size:22px;font-weight:700;margin:0 0 4px}
+      .dp-help{color:var(--mid);margin:0 0 16px;font-size:15px}
+      .dp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+      .dp-tile{background:#fff;border:1px solid #CFCAC0;border-radius:8px;padding:14px 10px;font:600 15px inherit;font-family:inherit;color:var(--dark);cursor:pointer;text-align:center}
+      .dp-tile:hover{border-color:var(--gold)}.dp-tile.on{border:2px solid var(--gold);background:#EAF4F4;padding:13px 9px}
+      .dp-seg{display:inline-flex;border:1px solid #CFCAC0;border-radius:8px;overflow:hidden;margin-bottom:18px}
+      .dp-seg button{background:#fff;border:0;padding:10px 20px;font:600 15px inherit;font-family:inherit;cursor:pointer;color:var(--dark)}
+      .dp-seg button.on{background:var(--gold);color:#fff}
+      .dp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.dp-row3{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px}
+      .dp-f{margin-bottom:14px}.dp-f small{display:block;color:var(--mid);font-size:13px;margin-top:4px}
+      .dp-nav{display:flex;justify-content:space-between;gap:10px;margin-top:6px}
+      .dp-err{display:none;background:#FBEAE6;color:#8E2A1D;border-radius:8px;padding:10px 12px;margin:0 0 12px;font-size:15px}
+      .dp-hint{background:#EAF4F4;border-radius:8px;padding:12px 14px;margin:0 0 14px;font-size:15px;line-height:1.5}
+      .dp-hint small{display:block;color:var(--mid);font-size:13px;margin-top:4px}
+      .dp-price{position:relative}.dp-price input{font-size:22px;font-weight:700;padding-right:44px}.dp-price span{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--mid)}
+      .dp-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+      .dp-chips label{display:inline-flex;align-items:center;gap:6px;border:1px solid #CFCAC0;border-radius:99px;padding:6px 12px;font:400 15px inherit;font-family:inherit;color:var(--dark);cursor:pointer;background:#fff;margin:0}
+      .dp-chips input{width:auto;margin:0;accent-color:var(--gold)}
+      .dp-chips label:has(input:checked){border-color:var(--gold);background:#EAF4F4}
+      details.dp-more{border:1px solid #DDD9D0;border-radius:8px;padding:0 14px;margin:6px 0 14px;background:#fff}
+      details.dp-more summary{cursor:pointer;padding:12px 0;font-weight:600}
+      details.dp-more[open]{padding-bottom:6px}
+      @media(max-width:560px){.dp-tiles{grid-template-columns:repeat(2,1fr)}.dp-row,.dp-row3{grid-template-columns:1fr}}
+      </style>
+      <div class="dp-wrap">
+        <div class="dp-steps" aria-label="Étapes">
+          <div class="depot-step active" id="dstep-1"><div class="bar"></div><div class="depot-step-num">1</div><div class="depot-step-lbl">Le bien</div></div>
+          <div class="depot-step" id="dstep-2"><div class="bar"></div><div class="depot-step-num">2</div><div class="depot-step-lbl">Photos</div></div>
+          <div class="depot-step" id="dstep-3"><div class="bar"></div><div class="depot-step-num">3</div><div class="depot-step-lbl">Prix</div></div>
+          <div class="depot-step" id="dstep-4"><div class="bar"></div><div class="depot-step-num">4</div><div class="depot-step-lbl">Présentation</div></div>
+          <div class="depot-step" id="dstep-5"><div class="bar"></div><div class="depot-step-num">5</div><div class="depot-step-lbl">Publication</div></div>
         </div>
 
-        <!-- ÉTAPE 1 : LE BIEN -->
-        <div id="depot-step-1">
-          <div class="card">
-            <div class="card-title">Caractéristiques du bien</div>
-            <div class="field"><label>Titre de l'annonce *</label>
-              <input type="text" id="d-titre" placeholder="Ex: Appartement F4 lumineux — Vue mer Baie des Citrons">
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Type de bien *</label>
-                <select id="d-type">
-                  <option value="">Choisir...</option>
-                  <option>Appartement</option><option>Maison</option><option>Villa</option>
-                  <option>Studio</option><option>Terrain</option><option>Local commercial</option>
-                </select>
-              </div>
-              <div class="field"><label>Transaction *</label>
-                <select id="d-transaction">
-                  <option value="vente">Vente</option>
-                  <option value="location">Location</option>
-                </select>
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Surface (m²) *</label><input type="number" id="d-surface" placeholder="ex. 85"></div>
-              <div class="field"><label>Pièces</label><input type="number" id="d-pieces" placeholder="ex. 4"></div>
-              <div class="field"><label>Chambres</label><input type="number" id="d-chambres" placeholder="ex. 3"></div>
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Année construction</label><input type="number" id="d-annee" placeholder="ex. 2005"></div>
-              <div class="field"><label>Étage</label><input type="number" id="d-etage" placeholder="ex. 2"></div>
-            </div>
-            <div class="field"><label>État général *</label>
-              <select id="d-etat">
-                <option value="">Choisir...</option>
-                <option value="neuf">Neuf / Récent</option>
-                <option value="excellent">Excellent état</option>
-                <option value="bon">Bon état</option>
-                <option value="moyen">État moyen</option>
-                <option value="travaux">À rénover</option>
-              </select>
-            </div>
-            <div class="field"><label>DPE (Diagnostic énergétique)</label>
-              <select id="d-dpe">
-                <option value="">Non renseigné</option>
-                <option value="A">A — Excellent</option><option value="B">B — Très bon</option>
-                <option value="C">C — Bon</option><option value="D">D — Moyen</option>
-                <option value="E">E — Médiocre</option><option value="F">F — Mauvais</option>
-              </select>
-            </div>
+        <!-- 1. LE BIEN -->
+        <div id="depot-step-1" class="card">
+          <h2 class="dp-q">Quel bien mettez-vous en ligne ?</h2>
+          <p class="dp-help">Les questions essentielles. Le reste viendra ensuite, et beaucoup est facultatif.</p>
+          <div class="dp-err" role="alert"></div>
+          <div class="dp-tiles" role="group" aria-label="Type de bien">
+            <button type="button" class="dp-tile" data-type="Appartement">Appartement</button><button type="button" class="dp-tile" data-type="Maison">Maison</button><button type="button" class="dp-tile" data-type="Villa">Villa</button>
+            <button type="button" class="dp-tile" data-type="Studio">Studio</button><button type="button" class="dp-tile" data-type="Terrain">Terrain</button><button type="button" class="dp-tile" data-type="Local commercial">Local commercial</button>
           </div>
-
-          <div class="card">
-            <div class="card-title">Localisation</div>
-            <div class="field-row">
-              <div class="field"><label>Ville *</label>
-                <select id="d-ville" onchange="updateQuartiers()">
-                  <option value="Nouméa">Nouméa</option>
-                  <option value="Dumbéa">Dumbéa</option>
-                  <option value="Mont-Dore">Mont-Dore</option>
-                  <option value="Païta">Païta</option>
-                  <option value="Autre">Autre</option>
-                </select>
-              </div>
-              <div class="field"><label>Quartier</label>
-                <select id="d-quartier">
-                  <option value="Anse Vata">Anse Vata</option>
-                  <option value="Baie des Citrons">Baie des Citrons</option>
-                  <option value="Val Plaisance">Val Plaisance</option>
-                  <option value="Tina">Tina</option>
-                  <option value="Faubourg Blanchot">Faubourg Blanchot</option>
-                  <option value="Motor Pool">Motor Pool</option>
-                  <option value="Magenta">Magenta</option>
-                  <option value="Ouémo">Ouémo</option>
-                  <option value="Centre-ville">Centre-ville</option>
-                  <option value="Autre">Autre</option>
-                </select>
-              </div>
-            </div>
-            <div class="field"><label>Adresse (optionnel — non affichée publiquement)</label>
-              <input type="text" id="d-adresse" placeholder="Ex: 12 rue des Flamboyants">
-            </div>
+          <select id="d-type" hidden aria-hidden="true"><option value="">Choisir...</option><option>Appartement</option><option>Maison</option><option>Villa</option><option>Studio</option><option>Terrain</option><option>Local commercial</option></select>
+          <div class="dp-seg" role="group" aria-label="Vente ou location"><button type="button" data-tr="vente" class="on">À vendre</button><button type="button" data-tr="location">À louer</button></div>
+          <select id="d-transaction" hidden aria-hidden="true"><option value="vente">Vente</option><option value="location">Location</option></select>
+          <div class="dp-row">
+            <div class="dp-f"><label for="d-ville">Commune</label>
+              <select id="d-ville" onchange="updateQuartiers()">
+                <optgroup label="Grand Nouméa"><option>Nouméa</option><option>Dumbéa</option><option>Mont-Dore</option><option>Païta</option></optgroup>
+                <optgroup label="Brousse et Îles"><option>Boulouparis</option><option>La Foa</option><option>Farino</option><option>Sarraméa</option><option>Bourail</option><option>Poya</option><option>Thio</option><option>Yaté</option><option>Koné</option><option>Voh</option><option>Koumac</option><option>Kaala-Gomen</option><option>Poum</option><option>Poindimié</option><option>Touho</option><option>Ponérihouen</option><option>Houaïlou</option><option>Lifou</option><option>Maré</option><option>Ouvéa</option></optgroup>
+              </select></div>
+            <div class="dp-f"><label for="d-quartier">Quartier</label><select id="d-quartier"></select></div>
           </div>
-
-          <div class="card">
-            <div class="card-title">Équipements & options</div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px">
-              <label class="eq-check"><input type="checkbox" id="df-vue-mer"> Vue mer</label>
-              <label class="eq-check"><input type="checkbox" id="df-vue-lagon"> Vue lagon</label>
-              <label class="eq-check"><input type="checkbox" id="df-vue-deg"> Vue dégagée</label>
-              <label class="eq-check"><input type="checkbox" id="df-piscine"> Piscine</label>
-              <label class="eq-check"><input type="checkbox" id="df-jacuzzi"> Jacuzzi</label>
-              <label class="eq-check"><input type="checkbox" id="df-garage"> Garage</label>
-              <label class="eq-check"><input type="checkbox" id="df-parking"> 🅿️ Parking</label>
-              <label class="eq-check"><input type="checkbox" id="df-terrasse"> Terrasse</label>
-              <label class="eq-check"><input type="checkbox" id="df-jardin"> Jardin</label>
-              <label class="eq-check"><input type="checkbox" id="df-ascenseur"> Ascenseur</label>
-              <label class="eq-check"><input type="checkbox" id="df-gardien"> Gardien</label>
-              <label class="eq-check"><input type="checkbox" id="df-domotique"> Domotique</label>
-              <label class="eq-check"><input type="checkbox" id="df-solaire"> Solaire</label>
-              <label class="eq-check"><input type="checkbox" id="df-meuble"> Meublé</label>
-              <label class="eq-check"><input type="checkbox" id="df-clim"> Climatisation</label>
-              <label class="eq-check"><input type="checkbox" id="df-digicode"> Digicode</label>
-            </div>
+          <div class="dp-row3">
+            <div class="dp-f"><label for="d-surface">Surface habitable</label><div class="dp-price"><input type="number" id="d-surface" min="1" inputmode="numeric" placeholder="ex. 85"><span>m²</span></div></div>
+            <div class="dp-f"><label for="d-pieces">Pièces</label><input type="number" id="d-pieces" min="0" inputmode="numeric" placeholder="ex. 4"></div>
+            <div class="dp-f"><label for="d-chambres">Chambres</label><input type="number" id="d-chambres" min="0" inputmode="numeric" placeholder="ex. 3"></div>
           </div>
-
-          <div class="card">
-            <div class="card-title">Description</div>
-            <div class="field">
-              <label>Description du bien *</label>
-              <textarea id="d-desc" rows="5" placeholder="Décrivez votre bien : ses points forts, son environnement, son état, ses atouts..."></textarea>
-            </div>
-            <button type="button" class="btn btn-gold btn-sm" onclick="genDescriptionIA()" style="margin-top:-6px">Générer avec l'IA</button>
-          </div>
-
-          <div style="display:flex;justify-content:flex-end">
-            <button type="button" class="btn btn-gold" onclick="validateStep1()">Suivant — Photos →</button>
-          </div>
+          <div class="dp-nav"><span></span><button type="button" class="btn btn-gold" onclick="validateStep1()">Continuer</button></div>
         </div>
 
-        <!-- ÉTAPE 2 : PHOTOS -->
-        <div id="depot-step-2" style="display:none">
-          <div class="card">
-            <div class="card-title">Photos du bien</div>
-            <p style="font-size:13px;color:var(--mid);margin-bottom:14px">Ajoutez jusqu'à 15 photos. La première sera la photo principale de l'annonce.</p>
-            <div class="upload-zone" onclick="document.getElementById('d-photos-input').click()" style="margin-bottom:12px">
-              <input type="file" id="d-photos-input" accept="image/*,.heic,.heif" multiple onchange="handleDepotPhotos(event)">
-              <div style="font-size:36px;margin-bottom:8px"><svg class="i"><use href="#i-camera"/></svg></div>
-              <div style="font-size:13px;color:var(--mid)">Cliquez ou glissez vos photos ici<br><small>JPG, PNG, WEBP — 15 photos max</small></div>
-              <div style="font-size:11px;color:var(--soft);margin-top:4px">⚠️ Photos iPhone (HEIC) : convertissez-les en JPG pour un meilleur affichage</div>
-            </div>
-            <div id="d-photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px"></div>
-            <div id="d-photos-count" style="font-size:11px;color:var(--mid);margin-top:8px;text-align:center"></div>
+        <!-- 2. PHOTOS -->
+        <div id="depot-step-2" class="card" style="display:none">
+          <h2 class="dp-q">Ajoutez des photos</h2>
+          <p class="dp-help">Une annonce avec de belles photos est beaucoup plus consultée. La première sera la photo principale (jusqu'à 15).</p>
+          <div class="upload-zone" onclick="document.getElementById('d-photos-input').click()" style="margin-bottom:12px">
+            <input type="file" id="d-photos-input" accept="image/*,.heic,.heif" multiple onchange="handleDepotPhotos(event)">
+            <div style="font-size:34px;margin-bottom:6px"><svg class="i" aria-hidden="true"><use href="#i-camera"/></svg></div>
+            <div style="font-size:16px">Choisir des photos</div>
+            <div style="font-size:14px;color:var(--mid)">ou glissez-les ici · JPG, PNG, WEBP</div>
           </div>
-
-          <div class="card">
-            <div class="card-title">Analyse IA des photos</div>
-  if(result) result.innerHTML="<div style='text-align:center;padding:14px;color:var(--mid)'>L'IA analyse vos photos...</div>";
-            <button type="button" class="btn btn-dark btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Analyser mes photos avec l'IA</button>
-            <div id="depot-ia-result" style="margin-top:12px"></div>
-          </div>
-
-          <div style="display:flex;justify-content:space-between;margin-top:8px">
-            <button type="button" class="btn btn-outline" onclick="goDepotStep(1)">← Retour</button>
-            <button type="button" class="btn btn-gold" onclick="goDepotStep(3)">Suivant — Prix & détails →</button>
-          </div>
+          <div id="d-photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px"></div>
+          <div id="d-photos-count" style="font-size:14px;color:var(--mid);margin-top:8px;text-align:center"></div>
+          <details class="dp-more"><summary>Conseils et vérification de mes photos (facultatif)</summary>
+            <p style="font-size:15px;color:#3B424C;margin:0 0 10px">Photos prises de jour, pièces rangées, à l'horizontale. Les photos d'iPhone (HEIC) s'affichent mieux converties en JPG.</p>
+            <button type="button" class="btn btn-outline btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Faire vérifier mes photos</button>
+            <div id="depot-ia-result" style="margin:12px 0"></div>
+          </details>
+          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(1)">Retour</button><button type="button" class="btn btn-gold" id="dp-photos-next" onclick="goDepotStep(3)">Continuer</button></div>
         </div>
 
-        <!-- ÉTAPE 3 : PRIX & DÉTAILS -->
-        <div id="depot-step-3" style="display:none">
-          <div class="card">
-            <div class="card-title">Prix & conditions</div>
-            <div class="field-row">
-              <div class="field"><label>Prix de vente (XPF) *</label>
-                <input type="number" id="d-prix" placeholder="ex. 42500000" oninput="updateDepotEstim()">
-              </div>
-              <div class="field"><label>Prix négociable ?</label>
-                <select id="d-negociable">
-                  <option value="non">Non</option>
-                  <option value="oui">Oui</option>
-                  <option value="faire-offre">Faire une offre</option>
-                </select>
-              </div>
-            </div>
-            <!-- ESTIMATION IA vs PRIX DEMANDÉ -->
-            <div id="depot-estim-compare" style="display:none;background:var(--warm);border-radius:8px;padding:12px;margin-top:4px">
-              <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px">Positionnement par rapport au marché NC</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
-                <div><div style="font-size:10px;color:var(--mid)">Votre prix</div><div style="font-size:16px;font-weight:700;color:var(--dark)" id="depot-prix-user">—</div></div>
-                <div><div style="font-size:10px;color:var(--mid)">Estimation IA</div><div style="font-size:16px;font-weight:700;color:var(--gold)" id="depot-prix-ia">—</div></div>
-                <div><div style="font-size:10px;color:var(--mid)">Écart</div><div style="font-size:16px;font-weight:700" id="depot-ecart">—</div></div>
-              </div>
-            </div>
-
-            <div class="field" style="margin-top:14px">
-              <label>Charges mensuelles (XPF) — optionnel</label>
-              <input type="number" id="d-charges" placeholder="Ex: 45000">
-            </div>
-            <div class="field">
-              <label>Taxe foncière annuelle (XPF) — optionnel</label>
-              <input type="number" id="d-taxe" placeholder="Ex: 180000">
-            </div>
+        <!-- 3. PRIX -->
+        <div id="depot-step-3" class="card" style="display:none">
+          <h2 class="dp-q">À quel prix ?</h2>
+          <p class="dp-help">Vous fixez le prix. Voici un repère pour vous aider.</p>
+          <div class="dp-err" role="alert"></div>
+          <div class="dp-hint" id="dp-hint">—</div>
+          <div class="dp-f"><label for="d-prix">Prix demandé</label><div class="dp-price"><input type="number" id="d-prix" min="0" step="100000" inputmode="numeric" placeholder="ex. 42500000" oninput="updateDepotEstim()"><span>F</span></div><small id="dp-prix-lisible"></small></div>
+          <div id="depot-estim-compare" style="display:none;margin:-4px 0 14px;font-size:15px">
+            <span id="depot-prix-user" hidden></span><span id="depot-prix-ia" hidden></span>Écart avec le repère : <b id="depot-ecart">—</b>
           </div>
-
-          <div class="card">
-            <div class="card-title">Coordonnées de contact</div>
-            <div class="field-row">
-              <div class="field"><label>Nom affiché *</label>
-                <input type="text" id="d-contact-nom" placeholder="Jean Dupont ou Agence Soleil">
-              </div>
-              <div class="field"><label>Téléphone *</label>
-                <input type="tel" id="d-contact-tel" placeholder="+687 00 00 00">
-              </div>
-            </div>
-            <div class="field"><label>Email de contact *</label>
-              <input type="email" id="d-contact-email" placeholder="contact@email.com">
-            </div>
-            <div class="field">
-              <label>Disponibilités pour visites</label>
-              <div style="border:1px solid var(--warm);border-radius:8px;overflow:hidden">
-                <!-- Jours -->
-                <div style="padding:10px 12px;background:var(--warm)">
-                  <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px">Jours disponibles</div>
-                  <div style="display:flex;gap:5px;flex-wrap:wrap">
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-lun" value="Lundi"> Lun</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-mar" value="Mardi"> Mar</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-mer" value="Mercredi"> Mer</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-jeu" value="Jeudi"> Jeu</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-ven" value="Vendredi"> Ven</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-sam" value="Samedi"> Sam</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-dim" value="Dimanche"> Dim</label>
-                  </div>
-                </div>
-                <!-- Créneaux horaires -->
-                <div style="padding:10px 12px">
-                  <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px">Créneaux horaires</div>
-                  <div style="display:flex;gap:5px;flex-wrap:wrap">
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-matin" value="8h–12h"> Matin 8h–12h</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-midi" value="12h–14h"> Midi 12h–14h</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-aprem" value="14h–18h"> Après-midi 14h–18h</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-soir" value="18h–20h"> Soir 18h–20h</label>
-                    <label class="eq-check" style="padding:3px 10px;border-radius:20px;font-size:11px"><input type="checkbox" id="dispo-rdv" value="Sur RDV uniquement"> Sur RDV uniquement</label>
-                  </div>
-                </div>
-                <!-- Note libre -->
-                <div style="padding:6px 12px 10px;border-top:1px solid var(--warm)">
-                  <input type="text" id="d-dispos" placeholder="Précision optionnelle : Ex: éviter le mercredi matin" style="font-size:12px">
-                </div>
-              </div>
-            </div>
-            <div class="field"><label>Référence interne (optionnel)</label>
-              <input type="text" id="d-ref" placeholder="Ex: APPT-2026-001">
-            </div>
-          </div>
-
-          <div style="display:flex;justify-content:space-between;margin-top:8px">
-            <button type="button" class="btn btn-outline" onclick="goDepotStep(2)">← Retour</button>
-            <button type="button" class="btn btn-gold" onclick="validateStep3()">Suivant — Publication →</button>
-          </div>
+          <div class="dp-f"><label for="d-negociable">Le prix est-il négociable ?</label>
+            <select id="d-negociable"><option value="non">Non</option><option value="oui">Oui</option><option value="faire-offre">Faire une offre</option></select></div>
+          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(2)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePrix()">Continuer</button></div>
         </div>
 
-        <!-- ÉTAPE 4 : RÉCAP + PUBLICATION -->
-        <div id="depot-step-4" style="display:none">
-          <div class="card">
-            <div class="card-title">Aperçu de votre annonce</div>
-            <div id="depot-preview" style="border:1px solid var(--warm);border-radius:12px;overflow:hidden">
-              <!-- Photo principale -->
-              <div style="height:180px;background:linear-gradient(135deg,var(--warm),var(--cream));position:relative;display:flex;align-items:center;justify-content:center" id="dp-photo-zone">
-                <div style="font-size:56px" id="dp-emoji"><svg class="i"><use href="#i-home"/></svg></div>
-                <div style="position:absolute;top:10px;left:10px"><span class="tag tag-gold">En vente</span></div>
-                <div style="position:absolute;top:10px;right:10px;background:#2d7f2d;color:#fff;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700" id="dp-dpe-badge">DPE C</div>
-              </div>
-              <!-- Infos -->
-              <div style="padding:16px">
-                <div style="font-family:'Source Sans 3',sans-serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:6px" id="dp-titre">—</div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px" id="dp-tags"></div>
-                <div style="font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:12px" id="dp-desc">—</div>
-                <div style="font-family:'Source Sans 3',sans-serif;font-size:26px;font-weight:700;color:var(--gold)" id="dp-prix">—</div>
-                <div style="font-size:11px;color:var(--mid);margin-top:3px" id="dp-contact-info">—</div>
-              </div>
+        <!-- 4. PRÉSENTATION -->
+        <div id="depot-step-4" class="card" style="display:none">
+          <h2 class="dp-q">Présentez votre bien</h2>
+          <p class="dp-help">Nous avons préparé un titre ; modifiez-le si vous voulez.</p>
+          <div class="dp-err" role="alert"></div>
+          <div class="dp-f"><label for="d-titre">Titre de l'annonce</label><input type="text" id="d-titre" maxlength="100" placeholder="ex. Appartement F4 lumineux, vue mer — Baie des Citrons"></div>
+          <div class="dp-f"><label for="d-desc">Description</label>
+            <textarea id="d-desc" rows="6" placeholder="Ce qui rend votre bien agréable à vivre : luminosité, vue, quartier, rénovations…"></textarea>
+            <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" onclick="genDescriptionIA()">Rédiger une proposition pour moi</button></div>
+          <div class="dp-f"><label>Points forts</label>
+            <div class="dp-chips">
+              <label><input type="checkbox" id="df-vue-mer">Vue mer</label><label><input type="checkbox" id="df-vue-lagon">Vue lagon</label><label><input type="checkbox" id="df-vue-deg">Vue dégagée</label>
+              <label><input type="checkbox" id="df-piscine">Piscine</label><label><input type="checkbox" id="df-jardin">Jardin</label><label><input type="checkbox" id="df-terrasse">Terrasse</label>
+              <label><input type="checkbox" id="df-garage">Garage</label><label><input type="checkbox" id="df-parking">Parking</label><label><input type="checkbox" id="df-clim">Climatisation</label>
+              <label><input type="checkbox" id="df-ascenseur">Ascenseur</label><label><input type="checkbox" id="df-gardien">Gardien</label><label><input type="checkbox" id="df-meuble">Meublé</label>
+              <label><input type="checkbox" id="df-solaire">Solaire</label><label><input type="checkbox" id="df-jacuzzi">Jacuzzi</label><label><input type="checkbox" id="df-domotique">Domotique</label><label><input type="checkbox" id="df-digicode">Digicode</label>
+            </div></div>
+          <details class="dp-more"><summary>Plus de détails (facultatif)</summary>
+            <div class="dp-row">
+              <div class="dp-f"><label for="d-etat">État général</label><select id="d-etat"><option value="">Non précisé</option><option value="neuf">Neuf / récent</option><option value="excellent">Excellent état</option><option value="bon">Bon état</option><option value="moyen">État moyen</option><option value="travaux">À rénover</option></select></div>
+              <div class="dp-f"><label for="d-annee">Année de construction</label><input type="number" id="d-annee" inputmode="numeric" placeholder="ex. 2005"></div>
+              <div class="dp-f"><label for="d-etage">Étage</label><input type="number" id="d-etage" inputmode="numeric" placeholder="ex. 2"></div>
+              <div class="dp-f"><label for="d-dpe">Diagnostic énergétique</label><select id="d-dpe"><option value="">Non renseigné</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select></div>
+              <div class="dp-f"><label for="d-charges">Charges par mois</label><input type="number" id="d-charges" inputmode="numeric" placeholder="ex. 45000"></div>
+              <div class="dp-f"><label for="d-taxe">Taxe foncière par an</label><input type="number" id="d-taxe" inputmode="numeric" placeholder="ex. 180000"></div>
             </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">Options de publication</div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px">
-                <input type="checkbox" id="pub-immo360" checked> <div><strong>✅ Immo360</strong> — Publication sur notre plateforme (gratuit)</div>
-              </label>
-              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;opacity:.6">
-                <input type="checkbox" id="pub-immonc" disabled> <div><strong>ImmoNC.com</strong> — Bientôt disponible <span class="tag tag-blue" style="font-size:9px">Partenariat en cours</span></div>
-              </label>
-              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;opacity:.6">
-                <input type="checkbox" id="pub-properstar" disabled> <div><strong>Properstar</strong> — Bientôt disponible <span class="tag tag-blue" style="font-size:9px">Partenariat en cours</span></div>
-              </label>
-              <label class="eq-check" style="padding:10px 12px;border:1px solid var(--warm);border-radius:8px;opacity:.6">
-                <input type="checkbox" id="pub-facebook" disabled> <div><strong>Facebook Marketplace</strong> — Bientôt disponible</div>
-              </label>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">✅ Confirmation</div>
-            <div style="font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:14px">
-              En publiant cette annonce, vous certifiez que les informations sont exactes et conformes à la réglementation NC. Vous acceptez les <span style="color:var(--gold);cursor:pointer" onclick="openLegalPage('cgu')">conditions d'utilisation</span> d'Immo360.
-            </div>
-            <div id="depot-notif" style="display:none;padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px"></div>
-            <button type="button" class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">
-              Publier mon annonce
-            </button>
-            <button type="button" class="btn btn-gold btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px;background:var(--green)" onclick="ouvrirMonAnnonce()">
-              Voir mon annonce →
-            </button>
-            <button type="button" class="btn btn-outline btn-full" style="margin-top:8px" onclick="goDepotStep(3)">← Modifier</button>
-          </div>
+            <div class="dp-f"><label for="d-adresse">Adresse <span style="font-weight:400;color:var(--mid)">(jamais affichée publiquement)</span></label><input type="text" id="d-adresse"></div>
+            <div class="dp-f"><label for="d-ref">Votre référence</label><input type="text" id="d-ref" placeholder="ex. APPT-2026-001"></div>
+          </details>
+          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(3)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePresentation()">Continuer</button></div>
         </div>
 
+        <!-- 5. PUBLICATION -->
+        <div id="depot-step-5" class="card" style="display:none">
+          <h2 class="dp-q">Dernière étape</h2>
+          <p class="dp-help">Comment les acheteurs peuvent-ils vous joindre ?</p>
+          <div class="dp-err" role="alert"></div>
+          <div class="dp-row">
+            <div class="dp-f"><label for="d-contact-nom">Nom affiché</label><input type="text" id="d-contact-nom" autocomplete="name"></div>
+            <div class="dp-f"><label for="d-contact-tel">Téléphone</label><input type="tel" id="d-contact-tel" autocomplete="tel" placeholder="ex. +687 12 34 56"></div>
+          </div>
+          <div class="dp-f"><label for="d-contact-email">Email</label><input type="email" id="d-contact-email" autocomplete="email"></div>
+          <details class="dp-more"><summary>Mes disponibilités pour les visites (facultatif)</summary>
+            <div class="dp-chips" style="margin-top:4px">
+              <label><input type="checkbox" id="dispo-lun" value="Lundi">Lun</label><label><input type="checkbox" id="dispo-mar" value="Mardi">Mar</label><label><input type="checkbox" id="dispo-mer" value="Mercredi">Mer</label><label><input type="checkbox" id="dispo-jeu" value="Jeudi">Jeu</label><label><input type="checkbox" id="dispo-ven" value="Vendredi">Ven</label><label><input type="checkbox" id="dispo-sam" value="Samedi">Sam</label><label><input type="checkbox" id="dispo-dim" value="Dimanche">Dim</label>
+            </div>
+            <div class="dp-chips"><label><input type="checkbox" id="dispo-matin" value="8h–12h">Matin</label><label><input type="checkbox" id="dispo-midi" value="12h–14h">Midi</label><label><input type="checkbox" id="dispo-aprem" value="14h–18h">Après-midi</label><label><input type="checkbox" id="dispo-soir" value="18h–20h">Soir</label><label><input type="checkbox" id="dispo-rdv" value="Sur RDV uniquement">Sur rendez-vous</label></div>
+            <div class="dp-f"><input type="text" id="d-dispos" placeholder="Précision, ex. éviter le mercredi matin"></div>
+          </details>
+          <h3 style="font-size:17px;margin:18px 0 10px">Aperçu</h3>
+          <div id="depot-preview" style="border:1px solid #DDD9D0;border-radius:10px;overflow:hidden;margin-bottom:16px">
+            <div id="dp-photo-zone" style="height:200px;background:#EEEAE2;position:relative;display:flex;align-items:center;justify-content:center;color:#9A9384">
+              <div style="font-size:48px" id="dp-emoji"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></div>
+              <span id="dp-dpe-badge" style="position:absolute;top:10px;right:10px;color:#fff;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700"></span>
+            </div>
+            <div style="padding:14px 16px">
+              <div style="font-size:22px;font-weight:700" id="dp-prix">—</div>
+              <div style="font-size:17px;font-weight:600;margin:2px 0 6px" id="dp-titre">—</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px" id="dp-tags"></div>
+              <div style="font-size:15px;color:#3B424C;line-height:1.5;margin-bottom:8px" id="dp-desc">—</div>
+              <div style="font-size:14px;color:var(--mid)" id="dp-contact-info">—</div>
+            </div>
+          </div>
+          <p style="font-size:14px;color:var(--mid);margin:0 0 12px">En publiant, vous certifiez que les informations sont exactes et acceptez les <a href="#" onclick="openLegalPage('cgu');return false" style="color:var(--gold)">conditions d'utilisation</a>.</p>
+          <div id="depot-notif" style="display:none;padding:12px;border-radius:8px;margin-bottom:12px;font-size:15px"></div>
+          <button type="button" class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">Publier mon annonce</button>
+          <button type="button" class="btn btn-outline btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px" onclick="ouvrirMonAnnonce()">Voir mon annonce</button>
+          <div class="dp-nav" style="margin-top:10px"><button type="button" class="btn btn-outline" onclick="goDepotStep(4)">Retour</button><span></span></div>
+        </div>
       </div>
     </div>
 
@@ -9470,6 +9324,7 @@ go('dashboard');
 <script src="js/valorisation.js"></script>
 <script src="js/visite.js"></script>
 <script src="js/annonces.js"></script>
+<script src="js/depot.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
