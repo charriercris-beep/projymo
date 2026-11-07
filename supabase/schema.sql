@@ -253,10 +253,12 @@ create policy rec_update on public.records for update to authenticated
          or (assignee is null and audience_role is not null and public.is_verified_pro(audience_role, audience_metiers)))
   with check (owner_id = auth.uid() or assignee = auth.uid());
 create policy rec_delete on public.records for delete to authenticated using (owner_id = auth.uid());
--- Visites vidéo publiées : visibles de tous, y compris des visiteurs non connectés (annonces publiques)
+-- Contenus publics une fois publiés (annonces, photos d'annonces, visites vidéo) : visibles de tous,
+-- y compris des visiteurs non connectés ; modifiables uniquement par leur auteur (politiques ci-dessus)
 drop policy if exists rec_visite_public on public.records;
-create policy rec_visite_public on public.records for select to anon, authenticated
-  using (collection = 'visite' and coalesce((data->>'publie')::boolean, false));
+drop policy if exists rec_public on public.records;
+create policy rec_public on public.records for select to anon, authenticated
+  using (collection in ('visite', 'annonce', 'annonce_photos') and coalesce((data->>'publie')::boolean, false));
 
 -- Un non-propriétaire ne peut ni changer le propriétaire ni le public visé ; en modifiant, il prend en charge
 create or replace function public.records_guard() returns trigger

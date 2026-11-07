@@ -178,7 +178,8 @@
     if (window.IMMO_SYNC) IMMO_SYNC.saved(KEY, list);
     return okLocal;
   }
-  const biens = () => (typeof BIENS_DATA !== 'undefined' ? BIENS_DATA : []);
+  // Connecté : uniquement ses propres annonces ; démo : toutes les annonces de démonstration
+  const biens = () => (window.IMMO_SYNC && IMMO_SYNC.uid && window.IMMO_ANN) ? IMMO_ANN.mine() : (typeof BIENS_DATA !== 'undefined' ? BIENS_DATA : []);
   // Photo redimensionnée et compressée pour la publication (JPEG, 1024 px max)
   function toData(img) {
     const k = Math.min(1, PUB_SIZE / Math.max(img.width, img.height));
@@ -354,9 +355,10 @@
     const doc = await findPublished(bienId); if (!doc || !overlay || !document.body.contains(overlay)) return;
     const card = overlay.firstElementChild; if (!card) return;
     const box = document.createElement('div'); box.className = 'vv-attach';
+    const slot = card.querySelector('.ann-media .ann-visite'); // emplacement préparé par js/annonces.js (sous la galerie)
     box.innerHTML = '<div style="font:600 11px \'DM Sans\',sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin:0 0 6px">Visite vidéo</div><div class="vv-slot"></div>';
     const header = card.firstElementChild;
-    if (header && header.nextSibling) card.insertBefore(box, header.nextSibling); else card.prepend(box);
+    if (slot) slot.appendChild(box); else if (header && header.nextSibling) card.insertBefore(box, header.nextSibling); else card.prepend(box);
     await mountPlayer(box.querySelector('.vv-slot'), doc);
   }
 

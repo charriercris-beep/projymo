@@ -458,6 +458,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .tn-logo small{margin-left:5px;font:500 9px 'DM Sans',sans-serif;letter-spacing:.12em;color:rgba(255,255,255,.35);align-self:flex-start;margin-top:19px}
 .tn-tabs{display:flex;align-items:stretch;gap:2px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
 .tn-tabs::-webkit-scrollbar{display:none}
+.tn-tabs.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
 .tn-tab{background:none;border:0;border-bottom:2px solid transparent;color:rgba(255,255,255,.6);font:500 13px 'DM Sans',sans-serif;padding:0 14px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
 .tn-tab:hover{color:#fff}
 .tn-tab.on{color:#fff;border-bottom-color:var(--gold)}
@@ -3324,11 +3325,11 @@ const MENUS = {
   sell:[
     {ico:'💎',k:'analyse',l:'Estimation'},
     {ico:'',k:'valorisation',l:'Valorisation'},
-    {ico:'',k:'visite',l:'Visite vidéo'},
+    {ico:'',k:'mes-annonces',l:'Mes annonces'},
     {ico:'📝',k:'depot',l:'Déposer'},
-    {ico:'📣',k:'annonces',l:'Annonces'},
+    {ico:'',k:'visite',l:'Visite'},
     {ico:'📅',k:'rdv',l:'Visites'},
-    {ico:'🔄',k:'suivi',l:'Suivi vente'},
+    {ico:'🔄',k:'suivi',l:'Suivi'},
     {ico:'💬',k:'messagerie',l:'Messages'},
     {ico:'🏗️',k:'artisans',l:'Artisans'},
   ],
@@ -3346,6 +3347,7 @@ const MENUS = {
     {ico:'📝',k:'depot',l:'+ Annonce'},
     {ico:'',k:'valorisation',l:'Valorisation'},
     {ico:'',k:'visite',l:'Visite vidéo'},
+    {ico:'',k:'mes-annonces',l:'Mes annonces'},
     {ico:'📋',k:'mandats',l:'Mandats'},
     {ico:'👥',k:'crm',l:'Clients'},
     {ico:'🤖',k:'matching',l:'Matching'},
@@ -3410,6 +3412,10 @@ function buildSB(){
   };
   nav.appendChild(mk('Accueil','dashboard'));
   items.forEach(it=>nav.appendChild(mk(it.l||lbl(it.k),it.k)));
+  // Fondu à droite tant qu'il reste des onglets à faire défiler
+  const fade=()=>nav.classList.toggle('more', nav.scrollWidth-nav.scrollLeft-nav.clientWidth>4);
+  nav.onscroll=fade; requestAnimationFrame(fade);
+  const on=nav.querySelector('.tn-tab.on'); if(on&&on.scrollIntoView) on.scrollIntoView({block:'nearest',inline:'nearest'});
   // synchroniser le sélecteur de profil et le badge avec le profil courant
   const ps=document.getElementById('prof-sel'); if(ps && ps.value!==prof) ps.value=prof;
   const badge=document.getElementById('profile-badge');
@@ -4340,6 +4346,7 @@ function openBien(id){
     </div>
   </div>`;
   document.body.appendChild(ov);
+  if(window.IMMO_ANN) IMMO_ANN.attach(ov, b.id); // galerie photo (annonces publiées)
   if(window.IMMO_VISITE) IMMO_VISITE.attach(ov, b.id); // visite vidéo publiée, s'il y en a une
 }
 
@@ -4710,8 +4717,9 @@ function landingSearch(){
   const dpe=document.getElementById('ld-dpe')?.value||'';
 
   ldFiltered=BIENS_DATA.filter(b=>{
-    if(type&&b.type!==type) return false;
-    if(zone&&!b.ville.includes(zone)&&!b.quartier.includes(zone)) return false;
+    // Filtres multiples (cases cochées) : correctif — utilisait des variables inexistantes (type, zone)
+    if(typeVals.length&&!typeVals.includes(b.type)) return false;
+    if(zoneVals.length&&!zoneVals.some(z=>(b.ville||'').includes(z)||(b.quartier||'').includes(z))) return false;
     if(budget&&b.prix>budget) return false;
     if(surface&&b.surface<surface) return false;
     if(pieces&&b.pieces<pieces) return false;
@@ -4902,6 +4910,7 @@ function openLandingBien(id){
     </div>
   </div>`;
   document.body.appendChild(ov);
+  if(window.IMMO_ANN) IMMO_ANN.attach(ov, b.id); // galerie photo (annonces publiées)
   if(window.IMMO_VISITE) IMMO_VISITE.attach(ov, b.id); // visite vidéo publiée, s'il y en a une
 }
 
@@ -5499,50 +5508,29 @@ async function publierAnnonce(){
     ref: document.getElementById('d-ref')?.value||null,
   };
 
-  // Tenter sauvegarde Supabase
-  let saved=false;
-  const result=await saveBienToSupabase(bien);
-  if(result){
-    saved=true;
-    // Ajouter aussi dans BIENS_DATA local pour affichage immédiat
-    const newBien={
-      id:Date.now(), titre:bien.titre, type:bien.type, surface:bien.surface,
-      pieces:bien.pieces||0, chambres:bien.chambres||0, prix:bien.prix,
-      statut:'En vente', dpe:bien.dpe||'C', ville:bien.ville, quartier:bien.quartier,
-      description:bien.description, features:bien.features,
-      photos:[depotPhotos.length>0?'📸':'🏠'],
-      photoUrl:depotPhotos.length>0?depotPhotos[0].url:null,
-      date:new Date().toISOString().split('T')[0], agent:bien.agent, tel:bien.tel,
-      ref:bien.ref||'IMM-'+Date.now()
-    };
-    BIENS_DATA.unshift(newBien);
+  // Contrôles minimaux
+  if(!bien.titre||!bien.type||!bien.prix||!bien.surface){
+    if(notif){notif.style.display='block';notif.style.background='rgba(184,58,42,0.08)';notif.style.border='1px solid rgba(184,58,42,0.3)';notif.style.color='var(--red)';notif.textContent='Renseignez au minimum le titre, le type de bien, la surface et le prix.';}
+    btn.innerHTML='Publier mon annonce';btn.disabled=false;return;
   }
-
-  // Afficher résultat
+  // Publication (en ligne si connecté, sinon dans ce navigateur) — js/annonces.js
+  let res=null;
+  try{ res=window.IMMO_ANN ? await IMMO_ANN.publish(bien, depotPhotos) : null; }catch(e){ console.error(e); }
   if(notif){
     notif.style.display='block';
-    if(saved){
+    if(res && res.online && res.okPhotos){
       notif.style.background='rgba(42,122,75,0.1)';notif.style.border='1px solid rgba(42,122,75,0.3)';notif.style.color='var(--green)';
-      const ref=bien.ref||'IMM-'+Date.now();
-      notif.innerHTML='🎉 <strong>Annonce publiée avec succès !</strong><br>Elle est maintenant visible sur Immo360 NC.<br><small style="opacity:.7">Référence : '+ref+'</small>';
-      btn.innerHTML='✅ Publiée !';
-      // Afficher bouton "Voir mon annonce"
-      const voirBtn=document.getElementById('btn-voir-annonce');
-      if(voirBtn) voirBtn.style.display='block';
-    } else {
+      notif.innerHTML='<strong>Annonce publiée.</strong><br>Elle est maintenant visible par tous les visiteurs d\'Immo360 NC.<br><small style="opacity:.7">Référence : IMM-'+res.id+'</small>';
+      btn.innerHTML='Publiée';
+      const voirBtn=document.getElementById('btn-voir-annonce'); if(voirBtn) voirBtn.style.display='block';
+    } else if(res && !res.online){
       notif.style.background='rgba(184,146,42,0.1)';notif.style.border='1px solid rgba(184,146,42,0.3)';notif.style.color='var(--gold-dark)';
-      notif.innerHTML="⚠️ Annonce enregistrée localement. La connexion à la base de données n'est pas encore configurée.";
-      btn.innerHTML="Publier mon annonce";btn.disabled=false;
-      BIENS_DATA.unshift({
-        id:Date.now(),titre:bien.titre,type:bien.type,surface:bien.surface,
-        pieces:bien.pieces||0,prix:bien.prix,statut:'En vente',dpe:bien.dpe||'C',
-        ville:bien.ville,quartier:bien.quartier,description:bien.description,
-        features:bien.features,
-        photos:[depotPhotos.length>0?'📸':'🏠'],
-        photoUrl:depotPhotos.length>0?depotPhotos[0].url:null,
-        date:new Date().toISOString().split('T')[0],
-        agent:bien.agent,tel:bien.tel,ref:'IMM-'+Date.now()
-      });
+      notif.innerHTML='<strong>Annonce publiée en mode démonstration</strong> : visible dans ce navigateur uniquement. Connectez-vous pour la publier en ligne.'+(res.okPhotos?'':'<br><small>L\'espace de stockage du navigateur est plein : les photos n\'ont pas pu être conservées.</small>');
+      btn.innerHTML='Publiée (démo)';
+    } else {
+      notif.style.background='rgba(184,58,42,0.08)';notif.style.border='1px solid rgba(184,58,42,0.3)';notif.style.color='var(--red)';
+      notif.textContent='La publication a échoué (photos non enregistrées). Vérifiez votre connexion puis réessayez.';
+      btn.innerHTML='Publier mon annonce';btn.disabled=false;
     }
   }
 }
@@ -8658,8 +8646,9 @@ function buildLandingBiensPublic(){
 
   let biens=BIENS_DATA.filter(b=>{
     if(b.statut!=='En vente') return false;
-    if(typeVals.length&&!typeVals.includes(b.type||'')) return false;
-    if(zoneVals.length&&!zoneVals.some(z=>(b.quartier||'').includes(z)||(b.ville||'').includes(z))) return false;
+    // Correctif : utilisait typeVals / zoneVals, inexistants ici (la grille publique restait vide)
+    if(type&&b.type!==type) return false;
+    if(zone&&!(b.quartier||'').includes(zone)&&!(b.ville||'').includes(zone)) return false;
     if(budget>0&&b.prix>budget) return false;
     // Pièces : correspond à l'une des valeurs cochées
     if(piecesVals.length){
@@ -9757,6 +9746,7 @@ go('dashboard');
 <script src="js/sync.js"></script>
 <script src="js/valorisation.js"></script>
 <script src="js/visite.js"></script>
+<script src="js/annonces.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>

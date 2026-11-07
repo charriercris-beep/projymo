@@ -132,20 +132,47 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   await N.sync();
   ok('le notaire récupère le rapport livré', await N.evaluate(() => (JSON.parse(localStorage.getItem('immo360.missions.diag.v1')) || [])[0]?.liv?.ref) === 'RAP-2026-118');
 
+  // 8 bis. Annonce réelle : publiée par le vendeur (photos), visible du public et des autres utilisateurs
+  await A.espace('sell'); await A.evaluate(async () => { go('depot');
+    const mk = (n, c) => new Promise(r => { const cv = document.createElement('canvas'); cv.width = 1600; cv.height = 1000; const x = cv.getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1600, 1000); cv.toBlob(b => { const f = new File([b], n, { type: 'image/jpeg' }); r({ url: URL.createObjectURL(f), name: n, file: f }); }, 'image/jpeg', 0.9); });
+    depotPhotos.length = 0; depotPhotos.push(await mk('facade.jpg', '#2a7a4b'), await mk('sejour.jpg', '#2a4a7a'));
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    set('d-titre', 'Villa E2E — Vue lagon'); set('d-type', 'Villa'); set('d-surface', '160'); set('d-prix', '65000000'); set('d-desc', 'Annonce de test');
+    await publierAnnonce(); });
+  await A.waitForTimeout(1200);
+  ok('annonce publiée : enregistrement public en base', sql(`select (data->>'publie') || ' ' || (owner_id='${U['acheteur@test.nc'].id}')::text from public.records where collection='annonce'`) === 'true true');
+  ok('photos de l\'annonce en base (2)', sql(`select jsonb_array_length(data->'photos') from public.records where collection='annonce_photos'`) === '2');
+  ok('notification « Annonce publiée » (en ligne)', (await A.textContent('#depot-notif')).includes('visible par tous'));
+  const P = await user('public@anonyme.nc'); await P.waitForTimeout(2200);
+  ok('visiteur non connecté : annonce dans la grille publique', await P.evaluate(() => { const g = document.getElementById('landing-biens-grid'); return !!g && g.getClientRects().length > 0 && g.textContent.includes('Villa E2E'); }));
+  await P.evaluate(() => { const b = BIENS_DATA.find(x => x.titre.includes('Villa E2E')); openLandingBien(b.id); }); await P.waitForTimeout(1500);
+  ok('visiteur non connecté : galerie de 2 photos dans la fiche', await P.locator('.ann-gal img[data-i]').count() === 2);
+  await B.evaluate(() => IMMO_ANN.refreshPublic()); await B.waitForTimeout(500);
+  ok('autre utilisateur connecté : annonce visible', await B.evaluate(() => BIENS_DATA.some(b => b.titre.includes('Villa E2E'))));
+  ok('autre utilisateur : ne peut pas modifier l\'annonce', sql(`set role authenticated; select set_config('request.jwt.claim.sub','${U['banque@test.nc'].id}',false); with x as (update public.records set data = jsonb_set(data,'{prix}','1') where collection='annonce' returning 1) select count(*) from x;`).split('\n').pop() === '0');
+  ok('le vendeur, connecté, ne voit dans « Visite » que ses propres annonces', await A.evaluate(() => { go('visite'); const opts = [...document.querySelectorAll('#vv-bien option')].map(o => o.textContent); return opts.length === 2 && opts[1].includes('Villa E2E'); }));
+  await A.evaluate(() => go('mes-annonces')); await A.waitForTimeout(300); await A.click('#panel-mes-annonces [data-pub]'); await A.waitForTimeout(1500);
+  ok('annonce retirée : photos marquées non publiées en base', sql(`select data->>'publie' from public.records where collection='annonce_photos'`) === 'false');
+  const P2 = await user('public@anonyme.nc'); await P2.waitForTimeout(2200);
+  ok('annonce retirée : plus visible du public', !(await P2.evaluate(() => BIENS_DATA.some(b => b.titre.includes('Villa E2E')))));
+  const annId = sql(`select id from public.records where collection='annonce_photos'`);
+  ok('annonce retirée : photos illisibles par le public', await P2.evaluate(async id => (await IMMO_SYNC.fetchOne('annonce_photos', id)) === null, annId));
+  await A.evaluate(() => go('mes-annonces')); await A.waitForTimeout(300); await A.click('#panel-mes-annonces [data-pub]'); await A.waitForTimeout(1200);
+
   // 9. Visite vidéo : publiée par le vendeur, vue par un visiteur NON connecté sur un autre appareil
   await A.espace('sell'); await A.evaluate(() => go('visite')); await A.waitForTimeout(300);
   await A.evaluate(async () => { const mk = (n, c) => new Promise(r => { const cv = document.createElement('canvas'); cv.width = 1600; cv.height = 1000; const x = cv.getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1600, 1000); cv.toBlob(b => r(new File([b], n, { type: 'image/jpeg' })), 'image/jpeg', 0.9); });
     await IMMO_VISITE.addFiles([await mk('facade.jpg', '#2a7a4b'), await mk('salon.jpg', '#2a4a7a')]); go('visite'); });
-  await A.waitForTimeout(300); await A.selectOption('#vv-bien', '1'); await A.waitForTimeout(300); await A.click('#vv-pub'); await A.waitForTimeout(1200);
+  await A.waitForTimeout(300); await A.selectOption('#vv-bien', { index: 1 }); await A.waitForTimeout(300); await A.click('#vv-pub'); await A.waitForTimeout(1200);
   ok('visite publiée enregistrée en base', sql(`select (data->>'publie') || ' ' || jsonb_array_length(data->'photos') from public.records where collection='visite'`) === 'true 2');
-  const V = await user('visiteur@anonyme.nc');
-  await V.evaluate(() => { showLanding(); openLandingBien(1); }); await V.waitForTimeout(1500);
+  const V = await user('visiteur@anonyme.nc'); await V.waitForTimeout(2200);
+  await V.evaluate(() => { showLanding(); openLandingBien(BIENS_DATA.find(b => b.titre.includes('Villa E2E')).id); }); await V.waitForTimeout(1500);
   ok('visiteur non connecté : la visite s\'affiche dans la fiche publique', await V.locator('.vv-player canvas').count() === 1);
   await V.click('.vv-big'); await V.waitForTimeout(1300);
   ok('visiteur non connecté : la visite se joue', (await V.textContent('.vv-tm')).startsWith('0:01'));
   await A.evaluate(() => go('visite')); await A.waitForTimeout(300); await A.click('#vv-unpub'); await A.waitForTimeout(1200);
-  const V2 = await user('visiteur@anonyme.nc');
-  await V2.evaluate(() => { showLanding(); openLandingBien(1); }); await V2.waitForTimeout(1500);
+  const V2 = await user('visiteur@anonyme.nc'); await V2.waitForTimeout(2200);
+  await V2.evaluate(() => { showLanding(); openLandingBien(BIENS_DATA.find(b => b.titre.includes('Villa E2E')).id); }); await V2.waitForTimeout(1500);
   ok('visite retirée : plus visible du public', await V2.locator('.vv-player').count() === 0);
   ok('un autre utilisateur ne peut pas modifier la visite', sql(`set role authenticated; select set_config('request.jwt.claim.sub','${U['banque@test.nc'].id}',false); with x as (update public.records set data = jsonb_set(data,'{publie}','true') where collection='visite' returning 1) select count(*) from x;`).split('\n').pop() === '0');
 

@@ -24,6 +24,8 @@
     'immo360.missions.ass.v1': { c: 'mission_ass', aud: missionAud('assureur') },
     // Visites vidéo : lisibles publiquement une fois publiées ; on ne récupère que les siennes (photos volumineuses)
     'immo360.visites.v1': { c: 'visite', ownOnly: true },
+    // Annonces : on ne récupère périodiquement que les siennes ; les annonces publiées de tous sont lues par js/annonces.js
+    'immo360.annonces.v1': { c: 'annonce', ownOnly: true },
     'immo360.devis.v1': { c: 'devis', aud: r => ({ role: 'artisan', metiers: Array.isArray(r.metiers) ? r.metiers : [] }), strip: ['reponses', 'nom', 'tel', 'contactAccepte'] }  // coordonnées du client : jamais dans la demande partagée
   };
   const META = ['_o', '_u'];
@@ -135,6 +137,23 @@
     catch (_) { return null; }
   }
 
+  // Lecture de toute une collection visible (ex. annonces publiées : fonctionne aussi sans compte)
+  async function fetchAll(collection) {
+    const c = client(); if (!c) return null;
+    try { const { data, error } = await c.from('records').select('*').eq('collection', collection); return error ? null : (data || []); }
+    catch (_) { return null; }
+  }
+  // Écriture / suppression directes de ses propres enregistrements volumineux (photos), sans cache local
+  async function putRecord(collection, id, data) {
+    const c = client(); if (!c || !uid) return false;
+    try { const r = await c.from('records').upsert({ collection, id: String(id), data }, { onConflict: 'collection,id' }); if (r?.error) console.warn('Enregistrement', collection, r.error.message || r.error); return !r?.error; }
+    catch (_) { return false; }
+  }
+  async function delRecord(collection, id) {
+    const c = client(); if (!c || !uid) return false;
+    try { const r = await c.from('records').delete().eq('collection', collection).eq('id', String(id)); return !r?.error; } catch (_) { return false; }
+  }
+
   /* ---------- Récupération ---------- */
   async function pull(key) {
     const c = client(), cfg = COLLS[key]; if (!c || !uid || !cfg) return false;
@@ -238,5 +257,5 @@
     if (profil in proCache) show(proCache[profil]); else ensurePro(profil).then(show);
   }
 
-  window.IMMO_SYNC = { start, stop, saved, pull, pullAll, pushReponse, shareContact, fetchOne, ensurePro, decorate, get uid() { return uid; }, COLLS };
+  window.IMMO_SYNC = { start, stop, saved, pull, pullAll, pushReponse, shareContact, fetchOne, fetchAll, putRecord, delRecord, ensurePro, decorate, get uid() { return uid; }, COLLS };
 })();

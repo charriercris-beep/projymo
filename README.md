@@ -19,6 +19,7 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 | `js/banquier.js` | Espace Banquier/courtier : simulateur NC, éligibilité aux dispositifs, dossiers, attestation, barèmes datés ; « Capacité d'achat » côté acheteur |
 | `js/notaire.js` | Espace Notaire : dossiers de vente, pièces selon le contexte NC, conditions suspensives, échéancier, décompte des frais |
 | `js/missions.js` | Espaces Diagnostiqueur, Géomètre-expert, Assureur : modèle commun demande → mission → livrable |
+| `js/annonces.js` | Annonces réelles : publication (photos), lecture publique nettoyée, galerie, « Mes annonces » |
 | `js/visite.js` | Visite vidéo : éditeur (photos, ordre, légendes, réglages), publication sur l'annonce, lecteur intégré à la fiche du bien |
 | `js/sync.js` | Synchronisation avec Supabase (cache navigateur, envoi, récupération, purge à la déconnexion) |
 | `tests/e2e/` | Test de bout en bout multi-utilisateurs sur PostgreSQL avec RLS |
@@ -59,6 +60,8 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
   diagnostic, bornage, assurance) est visible des seuls professionnels **vérifiés** du métier visé ; une fois
   prise en charge, seulement du demandeur et du professionnel qui la traite. Les coordonnées d'un client ne
   sont transmises qu'à l'artisan dont il accepte le devis.
+- Les annonces publiées (avec leurs photos) et les visites vidéo publiées sont lisibles par tous, y compris
+  sans compte ; elles sont nettoyées à l'affichage (protection contre l'injection de code).
 - Conflits : la dernière écriture l'emporte.
 
 ## Sécurité
