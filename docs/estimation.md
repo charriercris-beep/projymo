@@ -1,0 +1,66 @@
+# Estimation des prix — méthode et sources
+
+Moteur : `js/estimation.js` (`IMMO_EST.pm2(quartier, type, commune)`), utilisé par la valorisation, l'estimation
+publique, l'estimation par photos, la page Estimation et le prix conseillé au dépôt.
+
+## Méthode (trois couches)
+
+1. **Observatoire Immo360** — prix au m² des annonces **publiées sur la plateforme** pour le quartier, puis
+   la commune ; appartements et maisons calculés séparément ; fenêtre de 3 mois, élargie à 6 puis 12 mois si
+   le volume est insuffisant ; valeurs extrêmes écartées (écart interquartile) ; **au moins 5 références**,
+   sinon aucun prix observé n'est utilisé ; fourchette = 1er–3e quartile.
+2. **Barème de référence** (`NC_PM2`, `NC_MARKET`) — prix **affichés** relevés en 2025-2026 (Properstar,
+   Nestenn, K&P Finance, AG Gestion). Il sert à la hiérarchie entre quartiers, tant que l'observatoire n'a pas
+   assez d'annonces.
+3. **Calage sur les prix conclus** — les deux couches reposent sur des prix affichés ; elles sont ramenées au
+   niveau des **ventes réellement conclues** par une décote calée sur la statistique officielle :
+
+   | | Valeur | Source |
+   |---|---|---|
+   | Prix médian au m² des appartements **vendus** en 2025 | 280 000 F | ISEE, offices notariaux, DSF |
+   | Prix médian au m² des appartements **en annonce** (avril 2026) | 340 054 F | Properstar |
+   | **Décote affiché → conclu** | **× 0,823** (≈ −18 %) | rapport des deux |
+
+   La décote est appliquée aussi aux maisons **par hypothèse** (l'ISEE publie pour les maisons un montant
+   médian — 23,0 M F en 2025 — mais pas de prix au m²).
+
+Chaque estimation affiche sa **provenance** (source, nombre de références, période).
+
+## Ce que la statistique officielle 2025 nous apprend
+
+Synthèse annuelle 2025 de l'ISEE (publiée en octobre 2026, ventes conclues, valeurs extrêmes exclues) :
+- 943 transactions (−65 % par rapport à la moyenne 2014-2023) : marché **très étroit** → seuils minimaux
+  de références indispensables ;
+- appartements : prix médian au m² **280 000 F** (395 000 F en 2024, 406 000 F en moyenne 2014-2023),
+  surface moyenne 65 m² ; baisse d'environ un tiers depuis 2023 dans le Sud et à la Vallée des Colons–Magenta ;
+- maisons : montant médian **23,0 M F** (31,1 M F en 2023), baisse d'environ 30 % à Nouméa, Païta, Mont-Dore ;
+- terrains à bâtir : médiane **406 000 F l'are**.
+
+Avant ce calage, le barème de Nouméa était **environ 38 % au-dessus** des prix conclus des appartements :
+les estimations étaient trop optimistes.
+
+## CombienLaKaz.nc
+
+Observatoire calédonien des prix affichés (Koko Conseil, Nouméa) : relevé des annonces tous les trois jours,
+médiane par commune/quartier et par type, fenêtre 3 → 6 → 12 mois, pas de prix sous 5 références, décote
+affiché → conclu, ajustements (état, vue, étage, terrasse, stationnement, terrain). Notre moteur suit des
+principes comparables, **sans réutiliser leurs données** :
+
+- leurs CGU interdisent « toute extraction, collecte ou réutilisation automatisée ou massive des données du
+  Site (notamment par robot, scraping, ou appel direct aux interfaces techniques) », leur base étant protégée
+  par le droit des producteurs de bases de données ;
+- **piste recommandée** : proposer un partenariat (licence de données ou API) à contact@combienlakaz.nc.
+
+## Paramètres et limites
+
+- Paramètres modifiables : `IMMO_EST.setParams({ decote, minRefs, fenetres })` (stockés dans le navigateur ;
+  une gestion centralisée est à prévoir).
+- La décote est un rapport de deux médianes territoriales : elle ne capture pas les écarts propres à chaque
+  quartier ; à recalculer à chaque nouvelle synthèse ISEE.
+- L'observatoire ne compte que les annonces publiées par les utilisateurs d'Immo360 (les annonces de
+  démonstration sont ignorées) ; il prendra le relais quartier par quartier à mesure que la plateforme vivra.
+
+## Sources
+- [ISEE — Transactions immobilières, synthèse annuelle 2025](https://isee.nc/transactions-immobilieres-synthese-annuelle-2025)
+- [CombienLaKaz.nc — FAQ (méthode)](https://www.combienlakaz.nc/faq) · [CGU](https://www.combienlakaz.nc/cgu) · [À propos](https://www.combienlakaz.nc/a-propos)
+- [Les Nouvelles Calédoniennes — Le marché reprend quelques couleurs en 2025](https://www.lnc.nc/article/immobilier-1/2-le-marche-reprend-quelques-couleurs-en-2025-mais-loin-des-niveaux-d-avant-crise)

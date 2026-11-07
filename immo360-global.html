@@ -3689,8 +3689,8 @@ function calcEstim(){
   // Base: prix médian du quartier selon type
   let pm2 = type==='villa'?q.maison*1.2 : type==='house'?q.maison : type==='studio'?q.apt*1.05 : type==='terrain'?q.apt*0.3 : q.apt;
 
-  // Correctifs marché NC 2026 (émeutes 2024 impact)
-  if(S.country==='NC') pm2 *= 0.96; // correction légère post-émeutes
+  // Barème en prix AFFICHÉS → ramené au prix CONCLU (décote calée sur les ventes 2025, ISEE) — js/estimation.js
+  if(S.country==='NC') pm2 *= (window.IMMO_EST ? IMMO_EST.decote() : 0.82);
 
   // Ancienneté
   const age=2026-annee;
@@ -5382,7 +5382,7 @@ function updateDepotEstim(){
   // Calcul estimation IA
   const qKey=Object.keys(NC_MARKET.quartiers).find(k=>NC_MARKET.quartiers[k].nom.includes(quartier))||'centre';
   const pm2=NC_MARKET.quartiers[qKey]?.apt||340000;
-  const prixIA=Math.round(pm2*surface*0.96);
+  const prixIA=Math.round(pm2*surface*(window.IMMO_EST ? IMMO_EST.decote() : 0.82)); // prix conclu estimé
   const ecart=Math.round((prix/prixIA-1)*100);
   const dp=document.getElementById('depot-prix-user');
   const di=document.getElementById('depot-prix-ia');
@@ -9105,7 +9105,7 @@ async function lancerAnalyseIA(){
     const typeBien = document.getElementById('estim-type-bien')?.value || 'appartement';
     const annee = document.getElementById('estim-annee')?.value || '2000';
     const equipements = getEquipementsSummary();
-    const pm2Local = NC_PM2[quartier] || 340000;
+    const pm2Local = pm2Ref(quartier);
 
     const images = [];
     for(const file of allFiles){
@@ -9129,7 +9129,7 @@ async function lancerAnalyseIA(){
     clearInterval(interval);
     console.error('Erreur API:', err);
     // Résultat de démonstration si l'API échoue
-    const pm2Demo = NC_PM2[quartier] || 340000;
+    const pm2Demo = pm2Ref(quartier);
     const surfNum = parseInt(surface||80);
     const demoResult = {
       _fallback: true,
@@ -9233,7 +9233,7 @@ function afficherResultats(result, surface, quartier){
   const marcheEl = document.getElementById('estim-marche-txt');
   if(marcheEl){
     const pct = result.positionnement_pct||55;
-    const pm2Local = NC_PM2[quartier] || 340000;
+    const pm2Local = pm2Ref(quartier);
     const valeurMarche = Math.round(pm2Local * parseInt(surface||80) / 1000000 * 10)/10;
     marcheEl.innerHTML = "<span>Votre bien est <strong style=\"color:var(--gold)\">mieux présenté que "+pct+"% des biens comparables</strong> dans le secteur de "+quartier+".</span><br>"
       + "<span style=\"font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;display:block\">Prix marché "+quartier+" : "+(pm2Local/1000).toFixed(0)+"k F/m² · Valeur marché brute : "+valeurMarche+"M F · Sources : Properstar · ImmoNC</span>";
@@ -9306,7 +9306,7 @@ function updatePrixMarche(){
   const sel = document.getElementById('estim-quartier');
   if(!sel) return;
   const quartier = sel.value;
-  const pm2 = NC_PM2[quartier] || 340000;
+  const pm2 = pm2Ref(quartier);
   const surface = parseInt(document.getElementById('estim-surface')?.value || 80);
 
   // Afficher le prix/m²
@@ -9422,7 +9422,7 @@ function updateEpPrixEstim(){
   const sel = document.getElementById('ep-quartier');
   const surface = parseInt(document.getElementById('ep-surface')?.value||0);
   if(!sel||!sel.value) return;
-  const pm2 = NC_PM2[sel.value] || 340000;
+  const pm2 = pm2Ref(sel.value);
   const display = document.getElementById('ep-pm2-display');
   const pm2El = document.getElementById('ep-pm2-val');
   const totalEl = document.getElementById('ep-pm2-total');
@@ -9491,7 +9491,7 @@ async function lancerEpAnalyse(){
 
   try {
     const allFiles = Object.values(epPhotos).flat().slice(0,6);
-    const pm2Local = NC_PM2[quartier]||340000;
+    const pm2Local = pm2Ref(quartier);
     const equipements = getEpEquipements();
     const typeBien = document.getElementById('ep-type')?.value||'appartement';
     const annee = document.getElementById('ep-annee')?.value||'2000';
@@ -9520,7 +9520,7 @@ async function lancerEpAnalyse(){
     clearInterval(interval);
     if(bar) bar.style.width='100%';
     const surf2=parseInt(surface||80);
-    const pm2=NC_PM2[quartier]||340000;
+    const pm2=pm2Ref(quartier);
     setTimeout(()=>afficherEpResultats(getDemoResult(surf2,pm2,quartier)), 500);
   }
 }
@@ -9744,6 +9744,7 @@ go('dashboard');
 </script>
 
 <script src="js/sync.js"></script>
+<script src="js/estimation.js"></script>
 <script src="js/valorisation.js"></script>
 <script src="js/visite.js"></script>
 <script src="js/annonces.js"></script>

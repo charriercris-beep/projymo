@@ -19,6 +19,7 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 | `js/banquier.js` | Espace Banquier/courtier : simulateur NC, éligibilité aux dispositifs, dossiers, attestation, barèmes datés ; « Capacité d'achat » côté acheteur |
 | `js/notaire.js` | Espace Notaire : dossiers de vente, pièces selon le contexte NC, conditions suspensives, échéancier, décompte des frais |
 | `js/missions.js` | Espaces Diagnostiqueur, Géomètre-expert, Assureur : modèle commun demande → mission → livrable |
+| `js/estimation.js` | Moteur d'estimation : observatoire des annonces Immo360 + barème, calés sur les ventes conclues (ISEE) — voir `docs/estimation.md` |
 | `js/annonces.js` | Annonces réelles : publication (photos), lecture publique nettoyée, galerie, « Mes annonces » |
 | `js/visite.js` | Visite vidéo : éditeur (photos, ordre, légendes, réglages), publication sur l'annonce, lecteur intégré à la fiche du bien |
 | `js/sync.js` | Synchronisation avec Supabase (cache navigateur, envoi, récupération, purge à la déconnexion) |

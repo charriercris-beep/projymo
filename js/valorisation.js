@@ -48,7 +48,9 @@
   };
 
   window.addEventListener('immo360:purge', () => { st.bien = { type: 'appartement', surface: 80, quartier: 'Magenta', annee: 2005, etat: 'correct', prixSouhaite: 0, description: '' }; st.selected = new Set(); st.ai = null; st.photos = []; st.annonce = ''; });
-  const pm2Of = q => (typeof NC_PM2 !== 'undefined' && NC_PM2[q]) || 340000;
+  // Prix au m² conclu estimé (observatoire Immo360 ou barème calé ISEE) — js/estimation.js
+  const estOf = (q, t) => window.IMMO_EST ? IMMO_EST.pm2(q, t) : { value: (typeof NC_PM2 !== 'undefined' && NC_PM2[q]) || 340000, label: 'Barème de référence' };
+  const pm2Of = (q, t) => estOf(q, t).value;
   const money = v => (typeof conv === 'function' ? conv(v) : Math.round(v).toLocaleString('fr-FR') + ' F');
   const E = v => (typeof esc === 'function' ? esc(v) : String(v));
   const $ = id => document.getElementById(id);
@@ -59,7 +61,7 @@
     const up = p.up * sens;
     return { ...p, cout: Math.round(p.cost(s) / 1000) * 1000, upEff: up, gain: Math.round(V * up / 1000) * 1000 };
   }
-  function baseValue() { return pm2Of(st.bien.quartier) * st.bien.surface * (ETAT_COEF[st.bien.etat] || 1); }
+  function baseValue() { return pm2Of(st.bien.quartier, st.bien.type) * st.bien.surface * (ETAT_COEF[st.bien.etat] || 1); }
 
   function compute(ids) {
     const V = baseValue();
@@ -191,6 +193,7 @@
 </div>`;
     $('val-type').value = b.type;
     bind();
+    if (st.photos.length) $('val-photos').innerHTML = st.photos.map(p => `<img alt="" src="${p.url}">`).join('');
     if (!st.selected.size && !st._init) { st._init = true; }
     renderAll();
   }
@@ -222,7 +225,7 @@
     let souTxt = '';
     if (sou) { const d = (sou - base.V) / base.V * 100; souTxt = `Votre prix : ${money(sou)} (${d >= 0 ? '+' : ''}${d.toFixed(0)} % vs estimation)`; }
     $('val-hero').innerHTML = `
-      <div class="val-kpi"><small>Prix en l'état</small><b>${money(base.V)}</b><em>Fourchette ${money(lo)} – ${money(hi)}</em></div>
+      <div class="val-kpi"><small>Prix en l'état</small><b>${money(base.V)}</b><em>Fourchette ${money(lo)} – ${money(hi)}</em><em style="font-size:11px;margin-top:4px" title="${E(estOf(st.bien.quartier, st.bien.type).label)}">${E(estOf(st.bien.quartier, st.bien.type).source === 'observatoire' ? 'Base : annonces Immo360 du secteur' : 'Base : barème calé sur les ventes 2025 (ISEE)')}</em></div>
       <div class="val-kpi gold"><small>Prix après travaux</small><b>${money(cur.apres)}</b><em>${st.selected.size ? 'Coût des travaux : ' + money(cur.cout) + ' · environ ' + cur.jours + ' j' : 'Choisissez un niveau de préparation'}</em></div>
       <div class="val-kpi ${cur.gainNet >= 0 ? 'pos' : 'neg'}"><small>Gain net estimé</small><b>${st.selected.size ? (cur.gainNet >= 0 ? '+' : '−') + money(Math.abs(cur.gainNet)) : '—'}</b><em>${st.selected.size ? 'Rendement des travaux : ' + (cur.roi * 100).toFixed(0) + ' %' : (souTxt || '&nbsp;')}</em></div>`;
 
@@ -300,7 +303,7 @@
       const r = await fetch('/api/valorisation', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...b, pm2: pm2Of(b.quartier),
+          ...b, pm2: pm2Of(b.quartier, b.type),
           postes: POSTES.map(posteCalc).map(p => ({ id: p.id, label: p.label, grade: p.grade, cout: p.cout, gain: p.gain })),
           images: st.photos.map(p => ({ data: p.data, mediaType: p.mediaType }))
         })
@@ -399,5 +402,7 @@
   }
 
   window.buildValorisation = buildValorisation;
+  // Reconstruite à chaque visite (l'état est conservé) : l'estimation suit les nouvelles annonces et barèmes
+  window.IMMO_PANELS = Object.assign(window.IMMO_PANELS || {}, { valorisation: () => buildValorisation() });
   window.IMMO_VAL = { compute, POSTES, GRADES, METIER_LABEL, state: st }; // exposé pour les tests
 })();
