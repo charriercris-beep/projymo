@@ -53,7 +53,7 @@
       ctx.font = `600 ${fs}px "Source Sans 3", Arial, sans-serif`;
       const tw = ctx.measureText(txt).width, y = H - fs * 2.6;
       ctx.fillStyle = 'rgba(15,13,10,.62)'; roundRect(ctx, fs, y - fs - pad / 2, tw + pad * 2, fs + pad * 1.4, fs * 0.35); ctx.fill();
-      ctx.fillStyle = '#0F6E75'; ctx.fillRect(fs, y - fs - pad / 2, Math.max(4, fs * 0.12), fs + pad * 1.4);
+      ctx.fillStyle = '#0A7A84'; ctx.fillRect(fs, y - fs - pad / 2, Math.max(4, fs * 0.12), fs + pad * 1.4);
       ctx.fillStyle = '#fff'; ctx.fillText(txt, fs + pad + fs * 0.1, y + fs * 0.05);
       ctx.restore();
     }
@@ -74,13 +74,13 @@
       lines.forEach(l => { ctx.fillText(l, cx, y); y += u * 0.09; });
       ctx.font = `500 ${Math.round(u * 0.038)}px "Source Sans 3", Arial, sans-serif`; ctx.fillStyle = 'rgba(255,255,255,.82)';
       if (V.intro.sous) { ctx.fillText(V.intro.sous, cx, y + u * 0.01); y += u * 0.06; }
-      if (V.intro.prix) { ctx.font = `700 ${Math.round(u * 0.05)}px "Source Sans 3", Arial, sans-serif`; ctx.fillStyle = '#CDEBE9'; ctx.fillText(V.intro.prix, cx, y + u * 0.04); }
+      if (V.intro.prix) { ctx.font = `700 ${Math.round(u * 0.05)}px "Source Sans 3", Arial, sans-serif`; ctx.fillStyle = '#C4EEEA'; ctx.fillText(V.intro.prix, cx, y + u * 0.04); }
     } else {
       ctx.font = `700 ${Math.round(u * 0.06)}px "Source Sans 3", Arial, sans-serif`;
       ctx.fillText('Envie de visiter ?', cx, H / 2 - u * 0.05);
       ctx.font = `500 ${Math.round(u * 0.04)}px "Source Sans 3", Arial, sans-serif`; ctx.fillStyle = 'rgba(255,255,255,.85)';
       if (V.outro.contact) ctx.fillText(V.outro.contact, cx, H / 2 + u * 0.04);
-      if (V.outro.tel) { ctx.fillStyle = '#CDEBE9'; ctx.font = `700 ${Math.round(u * 0.05)}px "Source Sans 3", Arial, sans-serif`; ctx.fillText(V.outro.tel, cx, H / 2 + u * 0.12); }
+      if (V.outro.tel) { ctx.fillStyle = '#C4EEEA'; ctx.font = `700 ${Math.round(u * 0.05)}px "Source Sans 3", Arial, sans-serif`; ctx.fillText(V.outro.tel, cx, H / 2 + u * 0.12); }
     }
     ctx.restore(); ctx.textAlign = 'left';
   }
@@ -90,7 +90,7 @@
     ctx.font = `700 ${fs}px "Source Sans 3", Arial, sans-serif`; ctx.textAlign = 'right';
     ctx.fillStyle = '#fff'; const x = W - fs, y = fs * 1.7; ctx.fillText('360', x, y);
     const w360 = ctx.measureText('360').width; ctx.fillText('Immo', x - w360, y);
-    ctx.fillStyle = '#0F6E75'; ctx.fillText('360', x, y); ctx.restore();
+    ctx.fillStyle = '#0A7A84'; ctx.fillText('360', x, y); ctx.restore();
   }
   function render(ctx, W, H, t, V) {
     V = V || st; const { segs } = timeline(V);
@@ -158,7 +158,7 @@
 .vv-f input,.vv-f select{border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:8px 10px;font:14px 'Source Sans 3',sans-serif;background:#fff;width:100%;box-sizing:border-box}
 .vv-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .vv-chk{display:flex;align-items:center;gap:8px;font:400 13px 'Source Sans 3',sans-serif;margin:6px 0;cursor:pointer;text-transform:none;color:var(--dark)}.vv-chk input{width:16px;height:16px;accent-color:var(--gold);margin:0}
-.vv-drop{border:1.5px dashed var(--soft);border-radius:10px;padding:18px;text-align:center;color:var(--mid);font-size:13px;cursor:pointer;margin-bottom:12px}.vv-drop:hover,.vv-drop.over{border-color:var(--gold);background:rgba(15,110,117,.05)}
+.vv-drop{border:1.5px dashed var(--soft);border-radius:10px;padding:18px;text-align:center;color:var(--mid);font-size:13px;cursor:pointer;margin-bottom:12px}.vv-drop:hover,.vv-drop.over{border-color:var(--gold);background:rgba(10,122,132,.05)}
 .vv-list{display:flex;flex-direction:column;gap:8px}
 .vv-item{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;border:1px solid rgba(28,26,22,.1);border-radius:10px;padding:6px;background:#fff}
 .vv-item img{width:64px;height:48px;object-fit:cover;border-radius:6px}.vv-item select,.vv-item input{border:1px solid rgba(28,26,22,.15);border-radius:6px;padding:5px 7px;font:13px 'Source Sans 3',sans-serif;width:100%;box-sizing:border-box}
@@ -330,10 +330,10 @@
     const [W, H] = FORMATS[V.format] || FORMATS['16:9'];
     container.innerHTML = `<div class="vv-player" style="position:relative;background:#111;border-radius:10px;overflow:hidden;aspect-ratio:${W}/${H};max-height:60vh;margin:0 auto 12px">
       <canvas style="width:100%;height:100%;display:block;object-fit:contain"></canvas>
-      <button type="button" class="vv-big" aria-label="Lancer la visite" style="position:absolute;inset:0;margin:auto;width:68px;height:68px;border-radius:50%;border:0;background:rgba(15,110,117,.92);color:#fff;font-size:26px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35)">▶</button>
+      <button type="button" class="vv-big" aria-label="Lancer la visite" style="position:absolute;inset:0;margin:auto;width:68px;height:68px;border-radius:50%;border:0;background:rgba(10,122,132,.92);color:#fff;font-size:26px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35)">▶</button>
       <div class="vv-ctrl" style="position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;align-items:center;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,.6))">
         <button type="button" class="vv-pp" style="background:none;border:0;color:#fff;font-size:15px;cursor:pointer;width:26px" aria-label="Lecture / pause">▶</button>
-        <input type="range" class="vv-sk" min="0" max="1000" value="0" style="flex:1;accent-color:#0F6E75" aria-label="Position"><span class="vv-tm" style="color:#fff;font:500 11px 'Source Sans 3',sans-serif">0:00</span></div></div>`;
+        <input type="range" class="vv-sk" min="0" max="1000" value="0" style="flex:1;accent-color:#0A7A84" aria-label="Position"><span class="vv-tm" style="color:#fff;font:500 11px 'Source Sans 3',sans-serif">0:00</span></div></div>`;
     const cv = container.querySelector('canvas'), c2 = cv.getContext('2d'); cv.width = W; cv.height = H;
     const total = timeline(V).total; let t = 0, playing = false, t0 = 0, raf = 0;
     const draw = () => { render(c2, W, H, t, V); container.querySelector('.vv-sk').value = Math.round(t / total * 1000); container.querySelector('.vv-tm').textContent = fmt(t) + ' / ' + fmt(total); };
