@@ -64,3 +64,23 @@ principes comparables, **sans réutiliser leurs données** :
 - [ISEE — Transactions immobilières, synthèse annuelle 2025](https://isee.nc/transactions-immobilieres-synthese-annuelle-2025)
 - [CombienLaKaz.nc — FAQ (méthode)](https://www.combienlakaz.nc/faq) · [CGU](https://www.combienlakaz.nc/cgu) · [À propos](https://www.combienlakaz.nc/a-propos)
 - [Les Nouvelles Calédoniennes — Le marché reprend quelques couleurs en 2025](https://www.lnc.nc/article/immobilier-1/2-le-marche-reprend-quelques-couleurs-en-2025-mais-loin-des-niveaux-d-avant-crise)
+
+## Valorisation : diagnostic d'abord
+
+L'assistant de valorisation (`js/valorisation.js`) ne prête plus de plus-value automatique à chaque poste coché.
+Le vendeur décrit d'abord l'état de chaque élément (présentation, petits défauts, murs, sols, cuisine,
+salle de bain, électricité, climatisation, menuiseries, extérieur, photos), et chaque poste reçoit un
+coefficient « besoin » :
+
+- **0** : rien à corriger (murs en bon état, cuisine récente, pas de jardin…) → poste grisé, 0 F ;
+- **0,2 à 0,8** : gain partiel (cuisine « correcte », climatisation dans certaines pièces…) ;
+- **1 à 1,3** : défaut net → gain plein ou renforcé, poste marqué « conseillé ».
+
+Tant qu'un élément n'est pas décrit, le gain du poste correspondant reste « à évaluer » et ne compte pas.
+Les niveaux (Rangement, Home staging…) ne retiennent que les postes utiles. Avec des photos, l'analyse IA
+peut remplir les éléments non décrits (mention « vu sur les photos »), sans jamais écraser ce que le
+vendeur a indiqué.
+
+Les prestations (vue mer ou lagon +7 %, piscine +4 %, parking +3 %, grande terrasse ou jardin +3 %,
+résidence sécurisée +2 %) ajustent la valeur en l'état. Ce sont des repères indicatifs, à recaler sur
+les ventes observées dès que l'observatoire disposera d'assez d'annonces.

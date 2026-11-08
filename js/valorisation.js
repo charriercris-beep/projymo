@@ -9,8 +9,6 @@
   /* ---------- Moteur de calcul (déterministe, transparent) ---------- */
   const ETAT_COEF = { a_renover: 0.80, correct: 0.92, bon: 1.0, tres_bon: 1.08 };
   const ETAT_LABEL = { a_renover: 'À rénover', correct: 'Correct', bon: 'Bon état', tres_bon: 'Très bon état' };
-  // Les travaux lourds rapportent plus sur un bien dégradé que sur un bien déjà en bon état
-  const SENSI = { a_renover: 1.5, correct: 1.1, bon: 0.8, tres_bon: 0.5 };
 
   const GRADES = [
     { id: 'rangement', label: 'Rangement & remise en état', short: 'Rangement', desc: 'Désencombrer, nettoyer, petites réparations.' },
@@ -36,6 +34,49 @@
     { id: 'menuiseries', grade: 'renovation', label: 'Menuiseries & volets', metier: 'menuiserie', cost: s => s * 10000, up: 0.035, jours: 10 }
   ];
 
+  /* ---------- Diagnostic d'abord : l'état de chaque élément décide si un poste rapporte ----------
+   * Un poste n'apporte de la valeur que s'il corrige un défaut constaté : repeindre des murs en bon état,
+   * refaire une cuisine récente ou entretenir un jardin qui n'existe pas ne rapporte rien.
+   * Coefficient « besoin » : 0 = inutile, 1 = gain plein, > 1 = défaut marqué (gain renforcé). */
+  const DIAG = [
+    { key: 'presentation', label: 'Présentation actuelle', opts: [['vide', 'Vide et propre'], ['meuble', 'Meublé, rangé'], ['encombre', 'Encombré ou à nettoyer']] },
+    { key: 'defauts', label: 'Petits défauts (joints, prises, poignées…)', opts: [['aucun', 'Aucun'], ['quelques', 'Quelques-uns'], ['nombreux', 'Nombreux']] },
+    { key: 'murs', label: 'Murs et peintures', opts: [['bon', 'En bon état'], ['defraichi', 'Défraîchis'], ['abime', 'Abîmés']] },
+    { key: 'sols', label: 'Sols', opts: [['bon', 'En bon état'], ['use', 'Usés'], ['abime', 'Abîmés']] },
+    { key: 'cuisine', label: 'Cuisine', opts: [['recente', 'Récente'], ['correcte', 'Correcte'], ['datee', 'Datée']] },
+    { key: 'sdb', label: 'Salle de bain', opts: [['recente', 'Récente'], ['correcte', 'Correcte'], ['datee', 'Datée']] },
+    { key: 'electricite', label: 'Électricité', opts: [['normes', 'Aux normes'], ['ancienne', 'Ancienne'], ['inconnue', 'Je ne sais pas']] },
+    { key: 'clim', label: 'Climatisation', opts: [['complete', 'Toutes les pièces'], ['partielle', 'Certaines pièces'], ['aucune', 'Aucune']] },
+    { key: 'menuiseries', label: 'Fenêtres, baies et volets', opts: [['bon', 'En bon état'], ['fatigue', 'Fatigués'], ['changer', 'À changer']] },
+    { key: 'exterieur', label: 'Jardin ou terrasse', opts: [['sans', 'Pas d\'extérieur'], ['entretenu', 'Entretenu'], ['a_entretenir', 'À entretenir']] },
+    { key: 'photos', label: 'Photos pour l\'annonce', opts: [['aucune', 'Pas encore'], ['telephone', 'Au téléphone'], ['pro', 'Professionnelles']] }
+  ];
+  const NEED = {
+    desencombrement: { key: 'presentation', m: { vide: 0, meuble: 0.4, encombre: 1 } },
+    nettoyage: { key: 'presentation', m: { vide: 0.2, meuble: 0.5, encombre: 1 } },
+    reparations: { key: 'defauts', m: { aucun: 0, quelques: 0.7, nombreux: 1.2 } },
+    exterieur: { key: 'exterieur', m: { sans: 0, entretenu: 0, a_entretenir: 1 } },
+    staging: { key: 'presentation', m: { vide: 0.9, meuble: 0.5, encombre: 1 } },
+    photos: { key: 'photos', m: { aucune: 1, telephone: 0.8, pro: 0 } },
+    peinture: { key: 'murs', m: { bon: 0, defraichi: 1, abime: 1.3 } },
+    sols: { key: 'sols', m: { bon: 0, use: 1, abime: 1.3 } },
+    luminaires: { key: 'electricite', m: { normes: 0.2, ancienne: 1, inconnue: 0.6 } },
+    cuisine: { key: 'cuisine', m: { recente: 0, correcte: 0.35, datee: 1.3 } },
+    sdb: { key: 'sdb', m: { recente: 0, correcte: 0.35, datee: 1.3 } },
+    electricite: { key: 'electricite', m: { normes: 0, ancienne: 1.2, inconnue: 0.6 } },
+    clim: { key: 'clim', m: { complete: 0, partielle: 0.6, aucune: 1.2 } },
+    menuiseries: { key: 'menuiseries', m: { bon: 0, fatigue: 0.8, changer: 1.3 } }
+  };
+  // Prestations : ajustements indicatifs de la valeur en l'état (le barème donne un prix moyen du secteur)
+  const PRESTA = [
+    { id: 'vue_mer', label: 'Vue mer ou lagon', up: 0.07 },
+    { id: 'piscine', label: 'Piscine', up: 0.04 },
+    { id: 'parking', label: 'Parking ou garage', up: 0.03 },
+    { id: 'terrasse', label: 'Grande terrasse ou jardin', up: 0.03 },
+    { id: 'securise', label: 'Résidence sécurisée', up: 0.02 }
+  ];
+  const diagLabel = (k, v) => { const d = DIAG.find(x => x.key === k); const o = d && d.opts.find(x => x[0] === v); return o ? o[1].toLowerCase() : ''; };
+
   const METIER_LABEL = {
     peinture: 'Peintre', plomberie: 'Plombier', electricite: 'Électricien', cuisine: 'Cuisiniste', climatisation: 'Climatisation',
     jardin: 'Paysagiste', photo: 'Photographe', menuiserie: 'Menuisier', nettoyage: 'Entreprise de nettoyage', homestaging: 'Home stager'
@@ -43,11 +84,11 @@
 
   const st = {
     bien: { type: 'appartement', surface: 80, quartier: 'Magenta', annee: 2005, etat: 'correct', prixSouhaite: 0, description: '' },
-    selected: new Set(),
+    selected: new Set(), diag: {}, diagSrc: {}, presta: new Set(),
     ai: null, aiLoading: false, photos: [], annonce: ''
   };
 
-  window.addEventListener('immo360:purge', () => { st.bien = { type: 'appartement', surface: 80, quartier: 'Magenta', annee: 2005, etat: 'correct', prixSouhaite: 0, description: '' }; st.selected = new Set(); st.ai = null; st.photos = []; st.annonce = ''; });
+  window.addEventListener('immo360:purge', () => { st.bien = { type: 'appartement', surface: 80, quartier: 'Magenta', annee: 2005, etat: 'correct', prixSouhaite: 0, description: '' }; st.selected = new Set(); st.diag = {}; st.diagSrc = {}; st.presta = new Set(); st.ai = null; st.photos = []; st.annonce = ''; });
   // Prix au m² conclu estimé (observatoire Immo360 ou barème calé ISEE) — js/estimation.js
   const estOf = (q, t) => window.IMMO_EST ? IMMO_EST.pm2(q, t) : { value: (typeof NC_PM2 !== 'undefined' && NC_PM2[q]) || 340000, label: 'Barème de référence' };
   const pm2Of = (q, t) => estOf(q, t).value;
@@ -55,17 +96,22 @@
   const E = v => (typeof esc === 'function' ? esc(v) : String(v));
   const $ = id => document.getElementById(id);
 
+  // statut : 'inconnu' (état pas encore décrit), 'inutile' (rien à corriger), 'utile', 'conseille' (défaut marqué)
   function posteCalc(p) {
-    const s = st.bien.surface, V = baseValue();
-    const sens = (p.grade === 'rafraichissement' || p.grade === 'renovation') ? (SENSI[st.bien.etat] || 1) : 1;
-    const up = p.up * sens;
-    return { ...p, cout: Math.round(p.cost(s) / 1000) * 1000, upEff: up, gain: Math.round(V * up / 1000) * 1000 };
+    const s = st.bien.surface, V = baseValue(), nd = NEED[p.id];
+    const v = nd ? st.diag[nd.key] : undefined;
+    const need = nd ? (v === undefined ? null : (nd.m[v] ?? 0)) : 1;
+    const statut = need === null ? 'inconnu' : need === 0 ? 'inutile' : need >= 1 ? 'conseille' : 'utile';
+    const up = (need || 0) * p.up;
+    return { ...p, cout: Math.round(p.cost(s) / 1000) * 1000, upEff: up, gain: Math.round(V * up / 1000) * 1000, statut, need, diagKey: nd && nd.key, diagVal: v };
   }
-  function baseValue() { return pm2Of(st.bien.quartier, st.bien.type) * st.bien.surface * (ETAT_COEF[st.bien.etat] || 1); }
+  function prestaCoef() { return PRESTA.filter(x => st.presta.has(x.id)).reduce((a, x) => a + x.up, 0); }
+  function baseValue() { return pm2Of(st.bien.quartier, st.bien.type) * st.bien.surface * (ETAT_COEF[st.bien.etat] || 1) * (1 + prestaCoef()); }
+  const diagCount = () => DIAG.filter(d => st.diag[d.key] !== undefined).length;
 
   function compute(ids) {
     const V = baseValue();
-    const list = POSTES.filter(p => ids.has(p.id)).map(posteCalc);
+    const list = POSTES.filter(p => ids.has(p.id)).map(posteCalc).filter(p => p.statut !== 'inutile');
     const cout = list.reduce((a, p) => a + p.cout, 0);
     // rendements décroissants : 1 - Π(1 - u)
     const up = 1 - list.reduce((a, p) => a * (1 - p.upEff), 1);
@@ -76,7 +122,8 @@
   }
   function idsUpTo(gradeId) {
     const idx = GRADES.findIndex(g => g.id === gradeId);
-    return new Set(POSTES.filter(p => GRADES.findIndex(g => g.id === p.grade) <= idx).map(p => p.id));
+    // Un niveau ne retient que les postes qui corrigent un défaut constaté
+    return new Set(POSTES.filter(p => GRADES.findIndex(g => g.id === p.grade) <= idx).map(posteCalc).filter(p => p.statut === 'utile' || p.statut === 'conseille').map(p => p.id));
   }
   function scenarios() {
     return [{ id: 'etat', label: 'En l\'état', ids: new Set() }, ...GRADES.map(g => ({ id: g.id, label: g.short, ids: idsUpTo(g.id) }))]
@@ -117,6 +164,21 @@
 .val-poste .tip{grid-column:2/5;font-size:12px;color:var(--mid);margin-top:-4px}
 .val-prio{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px;}
 .val-prio.haute{background:#FDE8E4;color:#B83A2A}.val-prio.moyenne{background:#FEF3C7;color:#92400E}.val-prio.basse{background:#EEF2F6;color:#475569}
+.val-lead{margin:-4px 0 12px;color:var(--mid);font-size:15px}
+.val-diag{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.val-dl{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:10px;align-items:center;padding:9px 14px;border-top:1px solid var(--line)}
+.val-dl:first-child{border-top:0}.val-dl .l{font-weight:600;font-size:14px}
+.val-ia{font-style:normal;font-weight:600;font-size:12px;color:var(--gold);background:var(--gold-light);padding:1px 7px;border-radius:99px;margin-left:4px}
+.val-seg{display:inline-flex;flex-wrap:wrap;gap:4px}
+.val-seg button{border:1px solid var(--line-strong);background:#fff;border-radius:8px;padding:6px 11px;font-family:inherit;font-size:13.5px;cursor:pointer;color:var(--dark)}
+.val-seg button:hover{border-color:var(--gold)}.val-seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:600}
+.val-sub{font-weight:700;font-size:14px;margin:16px 0 8px}
+.val-presta{display:flex;flex-wrap:wrap;gap:8px}
+.val-pc{display:inline-flex!important;flex-direction:row!important;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-weight:500!important;font-size:14px!important;cursor:pointer;margin:0!important}
+.val-pc input{width:16px;height:16px;accent-color:var(--gold);margin:0}.val-pc small{color:var(--green);font-weight:600}
+.val-poste .why{display:block;font-size:12.5px;color:var(--mid);font-weight:400;margin-top:2px}
+.val-poste.inutile{opacity:.55}.val-poste.inutile input{cursor:not-allowed}
+.val-poste .g.q{color:var(--mid);font-weight:500;font-style:italic}.val-poste .g.z{color:var(--mid)}
 .val-bars{display:flex;flex-direction:column;gap:9px}
 .val-bar{display:grid;grid-template-columns:120px 1fr 120px;gap:10px;align-items:center;font-size:12px}
 .val-bar .t{height:22px;background:var(--warm);border-radius:6px;position:relative;overflow:hidden}
@@ -133,6 +195,7 @@
 .val-mod label.val-art span{text-align:left;text-transform:none;}
 .val-mod label.val-art small{color:var(--mid);display:block;text-transform:none;font-size:12px}
 .val-mod .val-f label{display:block}
+@media(max-width:700px){.val-dl{grid-template-columns:1fr}}
 @media(max-width:980px){.val-grid{grid-template-columns:1fr}.val-side{position:static}.val-hero{grid-template-columns:1fr}.val-bar{grid-template-columns:90px 1fr 90px}}
 `;
     document.head.appendChild(c);
@@ -167,7 +230,13 @@
     </aside>
     <section>
       <div class="val-hero" id="val-hero"></div>
-      <div class="card"><div class="card-title">Niveau de préparation</div>
+      <div class="card"><div class="card-title">1. L'état actuel de votre bien</div>
+        <p class="val-lead">Décrivez chaque élément : un travail n'apporte de la valeur que s'il corrige un vrai défaut. <span id="val-diag-n"></span></p>
+        <div class="val-diag" id="val-diag"></div>
+        <div class="val-sub">Prestations du bien</div>
+        <div class="val-presta" id="val-presta"></div>
+      </div>
+      <div class="card"><div class="card-title">2. Travaux et préparation</div>
         <div class="val-presets" id="val-presets"></div>
         <div id="val-grades"></div>
       </div>
@@ -218,16 +287,32 @@
     $('val-devis-btn').addEventListener('click', openDevis);
   }
 
+  function renderDiag() {
+    const n = diagCount();
+    $('val-diag-n').textContent = n < DIAG.length ? `${n} sur ${DIAG.length} renseignés.` : 'Diagnostic complet.';
+    $('val-diag').innerHTML = DIAG.map(d => `<div class="val-dl"><span class="l">${E(d.label)}${st.diagSrc[d.key] === 'ia' ? ' <em class="val-ia">vu sur les photos</em>' : ''}</span>
+      <span class="val-seg" role="group" aria-label="${E(d.label)}">${d.opts.map(o => `<button type="button" data-k="${d.key}" data-v="${o[0]}" aria-pressed="${st.diag[d.key] === o[0]}">${E(o[1])}</button>`).join('')}</span></div>`).join('');
+    $('val-diag').querySelectorAll('button[data-k]').forEach(b => b.onclick = () => {
+      st.diag[b.dataset.k] = b.dataset.v; delete st.diagSrc[b.dataset.k];
+      // un poste devenu inutile est retiré de la sélection
+      POSTES.map(posteCalc).forEach(p => { if (p.statut === 'inutile') st.selected.delete(p.id); });
+      renderAll();
+    });
+    $('val-presta').innerHTML = PRESTA.map(x => `<label class="val-pc"><input type="checkbox" data-pr="${x.id}"${st.presta.has(x.id) ? ' checked' : ''}> ${E(x.label)} <small>+${Math.round(x.up * 100)} %</small></label>`).join('');
+    $('val-presta').querySelectorAll('input[data-pr]').forEach(i => i.onchange = () => { i.checked ? st.presta.add(i.dataset.pr) : st.presta.delete(i.dataset.pr); renderAll(); });
+  }
+
   function renderAll() {
+    renderDiag();
     const cur = compute(st.selected), base = compute(new Set());
     const lo = base.V * 0.93, hi = base.V * 1.07;
     const sou = st.bien.prixSouhaite;
     let souTxt = '';
     if (sou) { const d = (sou - base.V) / base.V * 100; souTxt = `Votre prix : ${money(sou)} (${d >= 0 ? '+' : ''}${d.toFixed(0)} % vs estimation)`; }
     $('val-hero').innerHTML = `
-      <div class="val-kpi"><small>Prix en l'état</small><b>${money(base.V)}</b><em>Fourchette ${money(lo)} – ${money(hi)}</em><em style="font-size:11px;margin-top:4px" title="${E(estOf(st.bien.quartier, st.bien.type).label)}">${E(estOf(st.bien.quartier, st.bien.type).source === 'observatoire' ? 'Base : annonces Immo360 du secteur' : 'Base : barème calé sur les ventes 2025 (ISEE)')}</em></div>
-      <div class="val-kpi gold"><small>Prix après travaux</small><b>${money(cur.apres)}</b><em>${st.selected.size ? 'Coût des travaux : ' + money(cur.cout) + ' · environ ' + cur.jours + ' j' : 'Choisissez un niveau de préparation'}</em></div>
-      <div class="val-kpi ${cur.gainNet >= 0 ? 'pos' : 'neg'}"><small>Gain net estimé</small><b>${st.selected.size ? (cur.gainNet >= 0 ? '+' : '−') + money(Math.abs(cur.gainNet)) : '—'}</b><em>${st.selected.size ? 'Rendement des travaux : ' + (cur.roi * 100).toFixed(0) + ' %' : (souTxt || '&nbsp;')}</em></div>`;
+      <div class="val-kpi"><small>Prix en l'état</small><b>${money(base.V)}</b><em>Fourchette ${money(lo)} – ${money(hi)}</em><em style="font-size:11px;margin-top:4px" title="${E(estOf(st.bien.quartier, st.bien.type).label)}">${E(estOf(st.bien.quartier, st.bien.type).source === 'observatoire' ? 'Base : annonces Immo360 du secteur' : 'Base : barème calé sur les ventes 2025 (ISEE)')}${st.presta.size ? ' · prestations +' + Math.round(prestaCoef() * 100) + ' %' : ''}</em></div>
+      <div class="val-kpi gold"><small>Prix après travaux</small><b>${money(cur.apres)}</b><em>${cur.list.length ? 'Coût des travaux : ' + money(cur.cout) + ' · environ ' + cur.jours + ' j' : diagCount() ? 'Choisissez les travaux utiles ci-dessous' : 'Décrivez d\'abord l\'état du bien'}</em></div>
+      <div class="val-kpi ${cur.gainNet >= 0 ? 'pos' : 'neg'}"><small>Gain net estimé</small><b>${cur.list.length ? (cur.gainNet >= 0 ? '+' : '−') + money(Math.abs(cur.gainNet)) : '—'}</b><em>${cur.list.length ? 'Rendement des travaux : ' + (cur.roi * 100).toFixed(0) + ' %' : (souTxt || '&nbsp;')}</em></div>`;
 
     // préréglages
     const matches = id => { const ids = id === 'etat' ? new Set() : idsUpTo(id); return ids.size === st.selected.size && [...ids].every(x => st.selected.has(x)); };
@@ -239,10 +324,15 @@
     const adv = {}; (st.ai?.conseils || []).forEach(c => { adv[c.poste_id] = c; });
     $('val-grades').innerHTML = GRADES.map(g => {
       const ps = POSTES.filter(p => p.grade === g.id).map(posteCalc);
-      const tot = ps.filter(p => st.selected.has(p.id)).reduce((a, p) => a + p.cout, 0);
-      return `<div class="val-grade"><header><div><b>${E(g.label)}</b><br><span>${E(g.desc)}</span></div><span>${tot ? money(tot) : ps.reduce((a, p) => a + p.cout, 0) ? 'jusqu\'à ' + money(ps.reduce((a, p) => a + p.cout, 0)) : ''}</span></header>
-        ${ps.map(p => { const c = adv[p.id]; return `<label class="val-poste"><input type="checkbox" data-p="${p.id}"${st.selected.has(p.id) ? ' checked' : ''}>
-          <span>${E(p.label)}${c ? `<span class="val-prio ${E(c.priorite)}">${E(c.priorite)}</span>` : ''}</span><span class="c">${money(p.cout)}</span><span class="g">+${money(p.gain)}</span>
+      const tot = ps.filter(p => st.selected.has(p.id) && p.statut !== 'inutile').reduce((a, p) => a + p.cout, 0);
+      return `<div class="val-grade"><header><div><b>${E(g.label)}</b><br><span>${E(g.desc)}</span></div><span>${tot ? money(tot) : ps.filter(p => p.statut !== 'inutile').length ? ps.filter(p => p.statut !== 'inutile').length + ' poste(s) utile(s) possible(s)' : diagCount() ? 'rien à faire ici' : ''}</span></header>
+        ${ps.map(p => { const c = adv[p.id];
+          const why = p.statut === 'inconnu' ? `Indiquez l'état « ${E((DIAG.find(d => d.key === p.diagKey) || {}).label || '')} » ci-dessus`
+            : p.statut === 'inutile' ? `Pas nécessaire : ${E((DIAG.find(d => d.key === p.diagKey) || {}).label || '').toLowerCase()} — ${E(diagLabel(p.diagKey, p.diagVal))}`
+            : `${E((DIAG.find(d => d.key === p.diagKey) || {}).label || '')} : ${E(diagLabel(p.diagKey, p.diagVal))}`;
+          const gainTxt = p.statut === 'inconnu' ? '<span class="g q">à évaluer</span>' : p.statut === 'inutile' ? '<span class="g z">0 F</span>' : `<span class="g">+${money(p.gain)}</span>`;
+          return `<label class="val-poste ${p.statut}"><input type="checkbox" data-p="${p.id}"${st.selected.has(p.id) && p.statut !== 'inutile' ? ' checked' : ''}${p.statut === 'inutile' ? ' disabled' : ''}>
+          <span>${E(p.label)}${p.statut === 'conseille' ? '<span class="val-prio haute">conseillé</span>' : ''}${c ? `<span class="val-prio ${E(c.priorite)}">${E(c.priorite)}</span>` : ''}<small class="why">${why}</small></span><span class="c">${money(p.cout)}</span>${gainTxt}
           ${c ? `<span class="tip">${E(c.conseil)}</span>` : ''}</label>`; }).join('')}</div>`;
     }).join('');
     $('val-grades').querySelectorAll('input[data-p]').forEach(i => i.onchange = () => { i.checked ? st.selected.add(i.dataset.p) : st.selected.delete(i.dataset.p); renderAll(); });
@@ -268,10 +358,10 @@
 
     // devis
     const metiers = [...new Set(cur.list.map(p => p.metier))];
-    $('val-devis-info').textContent = st.selected.size
+    $('val-devis-info').textContent = cur.list.length
       ? `${cur.list.length} poste(s) sélectionné(s) · budget estimé ${money(cur.cout)} · métiers concernés : ${metiers.map(m => METIER_LABEL[m] || m).join(', ')}.`
       : 'Sélectionnez des travaux ci-dessus pour demander des devis aux artisans inscrits.';
-    $('val-devis-btn').disabled = !st.selected.size;
+    $('val-devis-btn').disabled = !cur.list.length;
   }
 
   /* ---------- Photos & IA ---------- */
@@ -304,7 +394,9 @@
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...b, pm2: pm2Of(b.quartier, b.type),
-          postes: POSTES.map(posteCalc).map(p => ({ id: p.id, label: p.label, grade: p.grade, cout: p.cout, gain: p.gain })),
+          diagnostic: Object.fromEntries(DIAG.filter(d => st.diag[d.key] !== undefined).map(d => [d.key, st.diag[d.key]])),
+          prestations: PRESTA.filter(x => st.presta.has(x.id)).map(x => x.label),
+          postes: POSTES.map(posteCalc).map(p => ({ id: p.id, label: p.label, grade: p.grade, cout: p.cout, gain: p.statut === 'inconnu' ? null : p.gain, statut: p.statut })),
           images: st.photos.map(p => ({ data: p.data, mediaType: p.mediaType }))
         })
       });
@@ -312,6 +404,11 @@
       if (!r.ok || d.error) throw new Error(d.error || 'Erreur ' + r.status);
       st.ai = d;
       if (ETAT_COEF[d.etat_detecte] && st.photos.length) { st.bien.etat = d.etat_detecte; $('val-etat').value = d.etat_detecte; }
+      // État vu sur les photos : ne remplit que les éléments que le vendeur n'a pas décrits
+      if (st.photos.length && d.diagnostic && typeof d.diagnostic === 'object') DIAG.forEach(x => {
+        const v = d.diagnostic[x.key];
+        if (st.diag[x.key] === undefined && x.opts.some(o => o[0] === v)) { st.diag[x.key] = v; st.diagSrc[x.key] = 'ia'; }
+      });
       const pre = { en_l_etat: null, rangement: 'rangement', home_staging: 'staging', rafraichissement: 'rafraichissement', renovation: 'renovation' }[d.strategie];
       if (pre && !st.selected.size) st.selected = idsUpTo(pre);
     } catch (e) {

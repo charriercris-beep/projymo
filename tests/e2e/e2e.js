@@ -64,6 +64,8 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 
   // 2. L'acheteur, vendeur d'un bien, demande des devis (peinture + plomberie)
   await A.espace('sell'); await A.evaluate(() => go('valorisation')); await A.waitForTimeout(400);
+  // diagnostic d'abord : murs défraîchis et petits défauts → peinture et petites réparations (plomberie)
+  for (const [k, v] of [['murs', 'defraichi'], ['defauts', 'quelques']]) await A.click(`#val-diag button[data-k="${k}"][data-v="${v}"]`);
   await A.click('[data-pre="rafraichissement"]'); await A.click('#val-devis-btn');
   await A.fill('#vd-nom', 'Marie Dupont'); await A.fill('#vd-tel', '+687 11 22 33'); await A.click('#vd-send'); await A.waitForTimeout(1000);
   const devisRow = sql(`select audience_role || ' ' || array_to_string(audience_metiers, ',') || ' | ' || data::text from public.records where collection='devis'`);
