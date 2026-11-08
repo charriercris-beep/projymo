@@ -83,12 +83,12 @@
   };
 
   const st = {
-    bien: { type: 'appartement', surface: 80, quartier: 'Magenta', annee: 2005, etat: 'correct', prixSouhaite: 0, description: '' },
+    bien: { type: '', surface: 0, quartier: '', annee: '', etat: '', prixSouhaite: 0, description: '' }, // on part de zéro : aucune valeur pré-remplie
     selected: new Set(), diag: {}, diagSrc: {}, presta: new Set(),
     ai: null, aiLoading: false, photos: [], annonce: ''
   };
 
-  window.addEventListener('immo360:purge', () => { st.bien = { type: 'appartement', surface: 80, quartier: 'Magenta', annee: 2005, etat: 'correct', prixSouhaite: 0, description: '' }; st.selected = new Set(); st.diag = {}; st.diagSrc = {}; st.presta = new Set(); st.ai = null; st.photos = []; st.annonce = ''; });
+  window.addEventListener('immo360:purge', () => { st.bien = { type: '', surface: 0, quartier: '', annee: '', etat: '', prixSouhaite: 0, description: '' }; st.selected = new Set(); st.diag = {}; st.diagSrc = {}; st.presta = new Set(); st.ai = null; st.photos = []; st.annonce = ''; });
   // Prix au m² conclu estimé (observatoire Immo360 ou barème calé ISEE) — js/estimation.js
   const estOf = (q, t) => window.IMMO_EST ? IMMO_EST.pm2(q, t) : { value: (typeof NC_PM2 !== 'undefined' && NC_PM2[q]) || 340000, label: 'Barème de référence' };
   const pm2Of = (q, t) => estOf(q, t).value;
@@ -107,6 +107,10 @@
   }
   function prestaCoef() { return PRESTA.filter(x => st.presta.has(x.id)).reduce((a, x) => a + x.up, 0); }
   function baseValue() { return pm2Of(st.bien.quartier, st.bien.type) * st.bien.surface * (ETAT_COEF[st.bien.etat] || 1) * (1 + prestaCoef()); }
+  // Estimation possible seulement quand le vendeur a décrit son bien (type, surface, quartier, état)
+  const MANQUE = { type: 'le type', surface: 'la surface', quartier: 'le quartier', etat: 'l\'état général' };
+  const manque = () => Object.keys(MANQUE).filter(k => !st.bien[k]).map(k => MANQUE[k]);
+  const ready = () => !manque().length;
   const diagCount = () => DIAG.filter(d => st.diag[d.key] !== undefined).length;
 
   function compute(ids) {
@@ -137,40 +141,43 @@
     c.textContent = `
 .val-wrap{max-width:1180px;margin:0 auto}
 .val-head h2{font-family:'Source Sans 3',sans-serif;font-size:24px;margin:0 0 4px}
-.val-head p{color:var(--mid);font-size:13px;margin:0 0 18px}
+.val-head p{color:var(--mid);font-size:16px;margin:0 0 18px}
+.val-head h2{font-size:28px;color:var(--ocean)}
 .val-grid{display:grid;grid-template-columns:330px 1fr;gap:20px;align-items:start}
 .val-side{position:sticky;top:8px}
 .val-f{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
-.val-f label{font-size:14px;font-weight:600;color:var(--dark)}
-.val-f input,.val-f select,.val-f textarea{border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:8px 10px;font:14px 'Source Sans 3',sans-serif;background:#fff;width:100%;box-sizing:border-box}
+.val-f label{font-size:15px;font-weight:700;color:var(--dark)}
+.val-f input,.val-f select,.val-f textarea{border:1.5px solid var(--line-strong);font-size:16px!important;border-radius:8px;padding:8px 10px;font:14px 'Source Sans 3',sans-serif;background:#fff;width:100%;box-sizing:border-box}
 .val-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .val-photos{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
 .val-photos img{width:58px;height:58px;object-fit:cover;border-radius:6px;border:1px solid rgba(28,26,22,.12)}
 .val-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.val-kpi{background:#fff;border:1px solid rgba(28,26,22,.08);border-radius:12px;padding:14px 16px}
-.val-kpi small{display:block;font-size:11px;color:var(--mid);margin-bottom:6px}
-.val-kpi b{font:700 22px 'Source Sans 3',sans-serif;color:var(--dark)}
-.val-kpi em{display:block;font-style:normal;font-size:12px;color:var(--mid);margin-top:3px}
-.val-kpi.pos b{color:var(--green)}.val-kpi.neg b{color:var(--red)}.val-kpi.gold{background:var(--dark)}.val-kpi.gold small,.val-kpi.gold em{color:rgba(255,255,255,.6)}.val-kpi.gold b{color:var(--gold-light)}
+.val-kpi{background:#fff;border:1px solid #D9D2C3;border-top:4px solid var(--gold);border-radius:12px;padding:16px 18px;box-shadow:0 4px 14px rgba(15,42,56,.06)}
+.val-kpi small{display:block;font-size:14px;font-weight:700;color:var(--ocean);margin-bottom:6px}
+.val-kpi b{font:700 30px 'Source Sans 3',sans-serif;color:var(--dark);letter-spacing:-.02em}
+.val-kpi em{display:block;font-style:normal;font-size:14px;color:var(--mid);margin-top:4px}
+.val-kpi.pos{border-top-color:var(--green)}.val-kpi.pos b{color:var(--green)}.val-kpi.neg{border-top-color:var(--red)}.val-kpi.neg b{color:var(--red)}
+.val-kpi.gold{background:var(--ocean);border-color:var(--ocean);border-top-color:var(--lagoon)}.val-kpi.gold small{color:#9BEAE3}.val-kpi.gold em{color:rgba(255,255,255,.85)}.val-kpi.gold b{color:#fff}
 .val-presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.val-chip{border:1px solid rgba(28,26,22,.15);background:#fff;border-radius:999px;padding:7px 14px;font:500 13px 'Source Sans 3',sans-serif;cursor:pointer;transition:.15s}
-.val-chip:hover{border-color:var(--gold)}.val-chip.on{background:var(--dark);color:#fff;border-color:var(--dark)}
-.val-grade{border:1px solid rgba(28,26,22,.1);border-radius:12px;margin-bottom:12px;background:#fff;overflow:hidden}
-.val-grade>header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--cream);cursor:pointer}
-.val-grade>header b{font-size:14px}.val-grade>header span{font-size:12px;color:var(--mid)}
-.val-poste{display:grid;grid-template-columns:22px 1fr auto auto;gap:12px;align-items:center;padding:10px 16px;border-top:1px solid rgba(28,26,22,.06);font-size:13px}
+.val-chip{border:1.5px solid var(--line-strong);background:#fff;border-radius:999px;padding:8px 16px;font:600 15px 'Source Sans 3',sans-serif;color:var(--dark);cursor:pointer;transition:.15s}
+.val-chip:hover{border-color:var(--gold)}.val-chip.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+.val-grade{border:1px solid #CFC8B8;border-radius:12px;margin-bottom:12px;background:#fff;overflow:hidden}
+.val-grade>header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--lagoon-pale);border-bottom:1px solid #CDE9E6}
+.val-grade>header b{font-size:16px;color:var(--ocean)}.val-grade>header span{font-size:14px;color:var(--mid)}
+.val-poste{display:grid;grid-template-columns:22px 1fr auto auto;gap:12px;align-items:center;padding:11px 16px;border-top:1px solid #E6E0D4;font-size:15px}
 .val-poste input{width:17px;height:17px;accent-color:var(--gold)}
-.val-poste .c{color:var(--mid);text-align:right;min-width:70px}.val-poste .g{color:var(--green);font-weight:600;text-align:right;min-width:78px}
+.val-poste .c{color:var(--dark);text-align:right;min-width:80px}.val-poste .g{color:var(--green);font-weight:700;text-align:right;min-width:88px}
 .val-poste .tip{grid-column:2/5;font-size:12px;color:var(--mid);margin-top:-4px}
 .val-prio{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px;}
 .val-prio.haute{background:#FDE8E4;color:#B83A2A}.val-prio.moyenne{background:#FEF3C7;color:#92400E}.val-prio.basse{background:#EEF2F6;color:#475569}
-.val-lead{margin:-4px 0 12px;color:var(--mid);font-size:15px}
-.val-diag{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.val-dl{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:10px;align-items:center;padding:9px 14px;border-top:1px solid var(--line)}
+.val-lead{margin:-4px 0 12px;color:var(--mid);font-size:16px}
+.val-diag{display:flex;flex-direction:column;border:1px solid #CFC8B8;border-radius:12px;overflow:hidden}
+.val-dl{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.val-dl:nth-child(even){background:#FAF7F1}
 .val-dl:first-child{border-top:0}.val-dl .l{font-weight:600;font-size:14px}
 .val-ia{font-style:normal;font-weight:600;font-size:12px;color:var(--gold);background:var(--gold-light);padding:1px 7px;border-radius:99px;margin-left:4px}
 .val-seg{display:inline-flex;flex-wrap:wrap;gap:4px}
-.val-seg button{border:1px solid var(--line-strong);background:#fff;border-radius:8px;padding:6px 11px;font-family:inherit;font-size:13.5px;cursor:pointer;color:var(--dark)}
+.val-seg button{border:1.5px solid var(--line-strong);font-weight:500;background:#fff;border-radius:8px;padding:6px 11px;font-family:inherit;font-size:13.5px;cursor:pointer;color:var(--dark)}
 .val-seg button:hover{border-color:var(--gold)}.val-seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:600}
 .val-sub{font-weight:700;font-size:14px;margin:16px 0 8px}
 .val-presta{display:flex;flex-wrap:wrap;gap:8px}
@@ -179,6 +186,8 @@
 .val-poste .why{display:block;font-size:12.5px;color:var(--mid);font-weight:400;margin-top:2px}
 .val-poste.inutile{opacity:.55}.val-poste.inutile input{cursor:not-allowed}
 .val-poste .g.q{color:var(--mid);font-weight:500;font-style:italic}.val-poste .g.z{color:var(--mid)}
+.val-wait{margin:0;padding:16px;background:var(--cream);border-radius:10px;color:var(--mid);font-size:15px}
+.val-opt{color:var(--mid);font-size:12.5px}
 .val-bars{display:flex;flex-direction:column;gap:9px}
 .val-bar{display:grid;grid-template-columns:120px 1fr 120px;gap:10px;align-items:center;font-size:12px}
 .val-bar .t{height:22px;background:var(--warm);border-radius:6px;position:relative;overflow:hidden}
@@ -187,7 +196,7 @@
 .val-bar.cur .lbl{font-weight:700}
 .val-ai h4{margin:12px 0 4px;font-size:12px;color:var(--mid)}
 .val-ai ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6}
-.val-note{font-size:12px;color:var(--mid);background:var(--warm);border-radius:8px;padding:9px 12px;margin-top:10px;line-height:1.5}
+.val-note{font-size:14px;color:var(--dark);background:var(--lagoon-pale);border-radius:8px;padding:9px 12px;margin-top:10px;line-height:1.5}
 .val-mod{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px}
 .val-mod>div{background:#fff;border-radius:14px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:22px}
 .val-mod label.val-art{display:flex;flex-direction:row;justify-content:flex-start;gap:10px;align-items:center;padding:8px 10px;border:1px solid rgba(28,26,22,.1);border-radius:8px;margin:6px 0;font:400 13px 'Source Sans 3',sans-serif;text-transform:none;color:var(--dark);cursor:pointer}
@@ -214,13 +223,13 @@
   <div class="val-grid">
     <aside class="val-side card">
       <div class="card-title">Votre bien</div>
-      <div class="val-f"><label>Type</label><select id="val-type"><option value="appartement">Appartement</option><option value="maison">Maison</option><option value="villa">Villa</option><option value="studio">Studio</option></select></div>
+      <div class="val-f"><label>Type</label><select id="val-type"><option value="">Choisir…</option><option value="appartement">Appartement</option><option value="maison">Maison</option><option value="villa">Villa</option><option value="studio">Studio</option></select></div>
       <div class="val-row2">
-        <div class="val-f"><label>Surface (m²)</label><input id="val-surface" type="number" min="10" max="2000" value="${b.surface}"></div>
-        <div class="val-f"><label>Année</label><input id="val-annee" type="number" min="1900" max="2030" value="${b.annee}"></div>
+        <div class="val-f"><label>Surface (m²)</label><input id="val-surface" type="number" min="10" max="2000" inputmode="numeric" value="${b.surface || ''}"></div>
+        <div class="val-f"><label>Année</label><input id="val-annee" type="number" min="1900" max="2030" inputmode="numeric" value="${b.annee || ''}" aria-describedby="val-annee-f"><small id="val-annee-f" class="val-opt">Facultatif</small></div>
       </div>
-      <div class="val-f"><label>Quartier</label><select id="val-quartier">${quartiers.map(q => `<option${q === b.quartier ? ' selected' : ''}>${E(q)}</option>`).join('')}</select></div>
-      <div class="val-f"><label>État général</label><select id="val-etat">${Object.keys(ETAT_LABEL).map(k => `<option value="${k}"${k === b.etat ? ' selected' : ''}>${ETAT_LABEL[k]}</option>`).join('')}</select></div>
+      <div class="val-f"><label>Quartier</label><select id="val-quartier"><option value="">Choisir…</option>${quartiers.map(q => `<option${q === b.quartier ? ' selected' : ''}>${E(q)}</option>`).join('')}</select></div>
+      <div class="val-f"><label>État général</label><select id="val-etat"><option value="">Choisir…</option>${Object.keys(ETAT_LABEL).map(k => `<option value="${k}"${k === b.etat ? ' selected' : ''}>${ETAT_LABEL[k]}</option>`).join('')}</select></div>
       <div class="val-f"><label>Prix souhaité (F, facultatif)</label><input id="val-prix" type="number" min="0" step="100000" value="${b.prixSouhaite || ''}" placeholder="ex. 45000000"></div>
       <div class="val-f"><label>Description</label><textarea id="val-desc" rows="3" placeholder="Atouts, particularités, travaux déjà faits…">${E(b.description)}</textarea></div>
       <div class="val-f"><label>Photos (jusqu'à 4, pour l'analyse IA)</label><input id="val-files" type="file" accept="image/*" multiple></div>
@@ -270,8 +279,9 @@
   function bind() {
     const rd = () => {
       st.bien.type = $('val-type').value;
-      st.bien.surface = Math.min(2000, Math.max(10, parseInt($('val-surface').value) || 80));
-      st.bien.annee = parseInt($('val-annee').value) || 2000;
+      const sf = parseInt($('val-surface').value, 10);
+      st.bien.surface = sf >= 10 ? Math.min(2000, sf) : 0; // pas de surface par défaut
+      st.bien.annee = parseInt($('val-annee').value, 10) || '';
       st.bien.quartier = $('val-quartier').value;
       st.bien.etat = $('val-etat').value;
       st.bien.prixSouhaite = parseInt($('val-prix').value) || 0;
@@ -302,8 +312,36 @@
     $('val-presta').querySelectorAll('input[data-pr]').forEach(i => i.onchange = () => { i.checked ? st.presta.add(i.dataset.pr) : st.presta.delete(i.dataset.pr); renderAll(); });
   }
 
+  function renderAI() {
+    $('val-ai').innerHTML = st.aiLoading ? '<div class="card-title">Analyse IA</div><div style="color:var(--mid);font-size:13px">Analyse en cours…</div>' :
+      st.ai ? `<div class="card-title">Analyse IA</div>
+        ${st.ai.synthese ? `<p style="margin:0 0 6px;font-size:14px;line-height:1.6">${E(st.ai.synthese)}</p>` : ''}
+        ${st.ai.avis_prix ? `<p style="margin:0;font-size:13px;color:var(--mid)">${E(st.ai.avis_prix)}</p>` : ''}
+        ${(st.ai.points_forts || []).length ? `<h4>Points forts</h4><ul>${st.ai.points_forts.map(x => `<li>${E(x)}</li>`).join('')}</ul>` : ''}
+        ${(st.ai.points_faibles || []).length ? `<h4>Points d'amélioration</h4><ul>${st.ai.points_faibles.map(x => `<li>${E(x)}</li>`).join('')}</ul>` : ''}
+        ${st.ai.strategie ? `<div class="val-note">Stratégie conseillée : <b>${E({ en_l_etat: 'vendre en l\'état', rangement: 'rangement', home_staging: 'home staging', rafraichissement: 'rafraîchissement', renovation: 'rénovation' }[st.ai.strategie] || st.ai.strategie)}</b></div>` : ''}`
+      : `<div class="card-title">Analyse IA</div><div style="color:var(--mid);font-size:13px">${st.aiError ? E(st.aiError) : 'Lancez l\'analyse pour obtenir un diagnostic, l\'état détecté sur vos photos et la priorité de chaque poste.'}</div>`;
+
+  }
+
   function renderAll() {
     renderDiag();
+    if (!ready()) {
+      const m = manque(), txt = 'Indiquez ' + (m.length > 1 ? m.slice(0, -1).join(', ') + ' et ' + m[m.length - 1] : m[0]) + ' de votre bien.';
+      $('val-hero').innerHTML = `
+      <div class="val-kpi"><small>Prix en l'état</small><b>—</b><em>${E(txt)}</em></div>
+      <div class="val-kpi gold"><small>Prix après travaux</small><b>—</b><em>Calculé après la description du bien</em></div>
+      <div class="val-kpi"><small>Gain net estimé</small><b>—</b><em>&nbsp;</em></div>`;
+      $('val-presets').innerHTML = '';
+      $('val-grades').innerHTML = `<p class="val-wait">Commencez par « Votre bien » : ${E(txt.charAt(0).toLowerCase() + txt.slice(1))} Les travaux et leur effet sur le prix s'afficheront ensuite.</p>`;
+      $('val-bars').innerHTML = '<p class="val-wait">Les scénarios apparaîtront une fois le bien décrit.</p>';
+      $('val-devis-info').textContent = 'Décrivez votre bien puis choisissez les travaux utiles pour demander des devis.';
+      $('val-devis-btn').disabled = true;
+      ['val-ai-btn', 'val-ann-btn', 'val-depot'].forEach(id => { if ($(id)) $(id).disabled = true; });
+      renderAI();
+      return;
+    }
+    ['val-ai-btn', 'val-ann-btn', 'val-depot'].forEach(id => { if ($(id)) $(id).disabled = false; });
     const cur = compute(st.selected), base = compute(new Set());
     const lo = base.V * 0.93, hi = base.V * 1.07;
     const sou = st.bien.prixSouhaite;
@@ -346,16 +384,7 @@
         <span>${money(s.r.apres)}${s.r.cout ? ` <small style="color:var(--mid)">(net ${s.r.gainNet >= 0 ? '+' : '−'}${money(Math.abs(s.r.gainNet))})</small>` : ''}</span></div>`;
     }).join('') + '<div style="font-size:11px;color:var(--mid)">Barre dorée : valeur en l\'état · barre grise : valeur après travaux · net = gain − coût des travaux.</div>';
 
-    // IA
-    $('val-ai').innerHTML = st.aiLoading ? '<div class="card-title">Analyse IA</div><div style="color:var(--mid);font-size:13px">Analyse en cours…</div>' :
-      st.ai ? `<div class="card-title">Analyse IA</div>
-        ${st.ai.synthese ? `<p style="margin:0 0 6px;font-size:14px;line-height:1.6">${E(st.ai.synthese)}</p>` : ''}
-        ${st.ai.avis_prix ? `<p style="margin:0;font-size:13px;color:var(--mid)">${E(st.ai.avis_prix)}</p>` : ''}
-        ${(st.ai.points_forts || []).length ? `<h4>Points forts</h4><ul>${st.ai.points_forts.map(x => `<li>${E(x)}</li>`).join('')}</ul>` : ''}
-        ${(st.ai.points_faibles || []).length ? `<h4>Points d'amélioration</h4><ul>${st.ai.points_faibles.map(x => `<li>${E(x)}</li>`).join('')}</ul>` : ''}
-        ${st.ai.strategie ? `<div class="val-note">Stratégie conseillée : <b>${E({ en_l_etat: 'vendre en l\'état', rangement: 'rangement', home_staging: 'home staging', rafraichissement: 'rafraîchissement', renovation: 'rénovation' }[st.ai.strategie] || st.ai.strategie)}</b></div>` : ''}`
-      : `<div class="card-title">Analyse IA</div><div style="color:var(--mid);font-size:13px">${st.aiError ? E(st.aiError) : 'Lancez l\'analyse pour obtenir un diagnostic, l\'état détecté sur vos photos et la priorité de chaque poste.'}</div>`;
-
+    renderAI();
     // devis
     const metiers = [...new Set(cur.list.map(p => p.metier))];
     $('val-devis-info').textContent = cur.list.length

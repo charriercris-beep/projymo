@@ -21,7 +21,7 @@ html{overflow-x:hidden;max-width:100vw}
   --gold:#0A7A84;--gold-light:#C4EEEA;--gold-dark:#06575F;
   --lagoon:#35C3BC;--lagoon-pale:#E6F7F5;--ocean:#0B3954;--sand:#F5EDDF;
   --cream:#FBF8F2;--warm:#F1E9DA;
-  --dark:#12303F;--mid:#4D6473;--soft:#C3CDD3;--line:#E2DED3;--line-strong:#AFBCC4;
+  --dark:#0F2A38;--mid:#3E5462;--soft:#C3CDD3;--line:#D9D2C3;--line-strong:#97A8B2;
   --green:#2E7D4F;--red:#B4442C;--blue:#1F5F8B;--accent:#E8704F;
 }
 body{font-family:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.5;background:var(--cream);color:var(--dark);-webkit-font-smoothing:antialiased}
@@ -597,7 +597,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .pc-noimg{color:#3E9E9A}
 .pc-fav[aria-pressed="true"]{color:var(--accent)}
 .tn-tab.on{border-bottom-color:var(--lagoon)}
-.content{background:linear-gradient(180deg,var(--lagoon-pale) 0,var(--cream) 320px)}
+.content{background:#EFE7D8}
+/* Contraste : cartes blanches nettement détachées du fond sable */
+.content .card{background:#fff;border:1px solid #D9D2C3;box-shadow:0 1px 2px rgba(15,42,56,.06),0 4px 14px rgba(15,42,56,.05)}
+.content .card-title{color:var(--ocean);font-size:19px}
+.content h2{color:var(--ocean)}
 .btn-gold{background:var(--gold)}.btn-gold:hover{background:var(--gold-dark)}
 .lp-btn.pri{box-shadow:0 2px 0 rgba(6,87,95,.25)}
 /* Application : en-tête clair, comme la page d'accueil */
@@ -614,7 +618,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .tn-right .dev-sel{color:var(--dark);border-color:var(--line-strong)}
 .tn-prof{color:var(--mid);font-size:13px}
 .tn-prof select{background:var(--cream);color:var(--dark);border-color:var(--line-strong)}
-.content{background:var(--cream)}
+/* fond de l application : voir thème lagon */
 
 /* Composants communs, mêmes rayons, mêmes tailles partout */
 .card{border:1px solid var(--line);border-radius:14px;box-shadow:none}
@@ -1224,10 +1228,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="card-title">Générateur d'annonce</div>
             <div class="field"><label>Titre accrocheur</label><input type="text" id="ann-titre" placeholder="Villa d'exception avec vue mer..."></div>
             <div class="field-row">
-              <div class="field"><label>Surface</label><input type="number" id="ann-surface" value="85"></div>
-              <div class="field"><label>Prix</label><input type="number" id="ann-prix" value="42500000"></div>
+              <div class="field"><label>Surface</label><input type="number" id="ann-surface" min="1" inputmode="numeric"></div>
+              <div class="field"><label>Prix</label><input type="number" id="ann-prix" min="0" inputmode="numeric"></div>
             </div>
-            <div class="field"><label>Description</label><textarea id="ann-desc">Magnifique appartement lumineux, entièrement rénové, vue dégagée sur la baie.</textarea></div>
+            <div class="field"><label>Description</label><textarea id="ann-desc"></textarea></div>
             <div class="field-row">
               <div class="field"><label>Ton</label>
                 <select id="ann-ton"><option>Luxe & prestige</option><option>Familial & chaleureux</option><option>Investisseur</option><option>Moderne & dynamique</option></select>
@@ -1264,8 +1268,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <div class="grid2">
         <div class="card">
           <div class="card-title">Simulateur de financement</div>
-          <div class="field"><label>Prix du bien</label><input type="number" id="fin-prix" value="42500000" oninput="calcFin()"></div>
-          <div class="field"><label>Apport</label><input type="number" id="fin-apport" value="8500000" oninput="calcFin()"></div>
+          <div class="field"><label>Prix du bien</label><input type="number" id="fin-prix" min="0" inputmode="numeric" oninput="calcFin()"></div>
+          <div class="field"><label>Apport</label><input type="number" id="fin-apport" min="0" inputmode="numeric" oninput="calcFin()"></div>
           <div class="field">
             <label>Durée : <span id="fin-duree-lbl">20 ans</span></label>
             <input type="range" min="5" max="30" value="20" id="fin-duree" oninput="calcFin()">
@@ -2699,8 +2703,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div>
           <div class="card">
             <div class="card-title">Simulation complète</div>
-            <div class="field"><label>Prix du bien (F)</label><input type="number" id="fp-prix" value="45000000" oninput="calcFinancementPlus()"></div>
-            <div class="field"><label>Apport personnel (F)</label><input type="number" id="fp-apport" value="9000000" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Prix du bien (F)</label><input type="number" id="fp-prix" min="0" inputmode="numeric" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Apport personnel (F)</label><input type="number" id="fp-apport" min="0" inputmode="numeric" oninput="calcFinancementPlus()"></div>
             <div class="field-row">
               <div class="field"><label>Taux (%)</label><input type="number" id="fp-taux" value="3.5" step="0.1" oninput="calcFinancementPlus()"></div>
               <div class="field"><label>Durée (ans)</label>
@@ -2711,7 +2715,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               </div>
             </div>
             <div class="field"><label>Travaux estimés (F)</label><input type="number" id="fp-travaux" value="0" oninput="calcFinancementPlus()"></div>
-            <div class="field"><label>Assurance mensuelle (F)</label><input type="number" id="fp-assurance" value="15000" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Assurance mensuelle (F)</label><input type="number" id="fp-assurance" min="0" inputmode="numeric" oninput="calcFinancementPlus()"></div>
 
             <!-- SITUATION ACQUÉREUR — FRAIS NOTAIRE NC -->
             <div class="field">
@@ -2747,8 +2751,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="card-title">Pré-approbation bancaire</div>
             <p style="font-size:12px;color:var(--mid);margin-bottom:12px">Estimez votre capacité d'emprunt et initiez votre dossier</p>
             <div class="field-row">
-              <div class="field"><label>Revenus nets mensuels (F)</label><input type="number" id="pa-revenus" value="400000" oninput="calcPreAppro()"></div>
-              <div class="field"><label>Charges mensuelles (F)</label><input type="number" id="pa-charges" value="50000" oninput="calcPreAppro()"></div>
+              <div class="field"><label>Revenus nets mensuels (F)</label><input type="number" id="pa-revenus" min="0" inputmode="numeric" oninput="calcPreAppro()"></div>
+              <div class="field"><label>Charges mensuelles (F)</label><input type="number" id="pa-charges" min="0" inputmode="numeric" oninput="calcPreAppro()"></div>
             </div>
             <div id="pa-result" style="background:var(--warm);border-radius:10px;padding:14px;margin-bottom:12px">
               <div style="font-size:11px;color:var(--mid);margin-bottom:6px">Capacité d'emprunt estimée</div>
@@ -3903,10 +3907,13 @@ const TPLS={
   'Moderne & dynamique':(t,s,p,d)=>`${t}\n\n⚡ ${s} m² au cœur de Nouméa\n\n${d}\n\nConception contemporaine, proche de tout, vie urbaine optimale.`,
 };
 async function generateAnnonce(){
-  const titre=document.getElementById('ann-titre').value||'Villa d\'exception';
-  const surface=document.getElementById('ann-surface').value||'85';
-  const prix=parseInt(document.getElementById('ann-prix').value)||42500000;
-  const desc=document.getElementById('ann-desc').value||'Beau bien';
+  const titre=(document.getElementById('ann-titre').value||'').trim();
+  const surface=parseInt(document.getElementById('ann-surface').value)||0;
+  const prix=parseInt(document.getElementById('ann-prix').value)||0;
+  const desc=(document.getElementById('ann-desc').value||'').trim();
+  // Aucune valeur inventée : on rédige à partir de ce que le vendeur a saisi
+  const manque=[!titre&&'un titre',!surface&&'la surface',!prix&&'le prix',!desc&&'une courte description'].filter(Boolean);
+  if(manque.length){ const f=!titre?'ann-titre':!surface?'ann-surface':!prix?'ann-prix':'ann-desc'; document.getElementById(f)?.focus(); showToast('Indiquez '+manque.join(', ')+' pour rédiger l\'annonce.'); return; }
   const ton=document.getElementById('ann-ton').value||'Luxe & prestige';
   const plateforme=document.getElementById('ann-plateforme').value||'Multi-plateformes';
   const btn=document.querySelector('[onclick="generateAnnonce()"]');
@@ -3945,14 +3952,20 @@ function copyAnnonce(){navigator.clipboard.writeText(document.getElementById('pr
 // FINANCEMENT
 // =============================================
 function calcFin(){
-  const prix=parseInt(document.getElementById('fin-prix')?.value)||42500000;
-  const apport=parseInt(document.getElementById('fin-apport')?.value)||8500000;
+  const prix=parseInt(document.getElementById('fin-prix')?.value)||0;
+  const apport=parseInt(document.getElementById('fin-apport')?.value)||0;
   const duree=parseInt(document.getElementById('fin-duree')?.value)||20;
   const taux=parseFloat(document.getElementById('fin-taux')?.value)||3.5;
   const assur=document.getElementById('fin-assurance')?.checked;
   document.getElementById('fin-duree-lbl').textContent=duree+' ans';
   document.getElementById('fin-taux-lbl').textContent=taux.toFixed(1)+'%';
   const capital=prix-apport, r=(taux/100)/12, n=duree*12;
+  if(!prix||capital<=0){ // rien de calculé tant que le prix n'est pas saisi
+    document.getElementById('fin-mensualite').textContent='—';
+    document.getElementById('fin-details-lines').innerHTML='<div style="font-size:14px;color:var(--mid)">'+(prix?'L\'apport couvre le prix : pas de prêt nécessaire.':'Indiquez le prix du bien et votre apport.')+'</div>';
+    const at=document.getElementById('amort-table'); if(at) at.innerHTML='';
+    return;
+  }
   let mensuel=r===0?capital/n:capital*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
   if(assur) mensuel+=capital*0.003/12;
   const totalR=mensuel*n, cout=totalR-capital;
@@ -3961,8 +3974,7 @@ function calcFin(){
     <div class="ai-line"><span>Capital emprunté</span><span style="color:var(--gold-light)">${conv(capital)}</span></div>
     <div class="ai-line"><span>Durée</span><span style="color:var(--gold-light)">${n} mensualités</span></div>
     <div class="ai-line"><span>Coût total crédit</span><span style="color:#f48a7a">${conv(Math.round(cout))}</span></div>
-    <div class="ai-line"><span>Total remboursé</span><span style="color:#f48a7a">${conv(Math.round(totalR))}</span></div>
-    <div class="ai-line"><span>Taux endettement est.</span><span class="ai-chip ${mensuel/500000*100<33?'ai-ok':'ai-bad'}">${(mensuel/500000*100).toFixed(1)}%</span></div>`;
+    <div class="ai-line"><span>Total remboursé</span><span style="color:#f48a7a">${conv(Math.round(totalR))}</span></div>`; // (le taux d'endettement supposait 500 000 F de revenus : retiré, il se calcule dans « Mon budget »)
   let bal=capital, rows='<thead><tr><th>Année</th><th>Mensualité</th><th>Intérêts</th><th>Capital</th><th>Restant</th></tr></thead><tbody>';
   for(let y=1;y<=duree;y++){
     let iA=0,cA=0;
@@ -7312,7 +7324,7 @@ function calcFinancementPlus(){
   const taux=parseFloat(document.getElementById('fp-taux')?.value||3.5)/100/12;
   const duree=parseInt(document.getElementById('fp-duree')?.value||20)*12;
   const travaux=parseInt(document.getElementById('fp-travaux')?.value||0);
-  const assurance=parseInt(document.getElementById('fp-assurance')?.value||15000);
+  const assurance=parseInt(document.getElementById('fp-assurance')?.value||0);
   if(!prix)return;
 
   // VRAIS TAUX NC — Source : AG Gestion, ImmoCal NC 2025
