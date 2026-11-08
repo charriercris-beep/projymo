@@ -604,6 +604,25 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .content h2{color:var(--ocean)}
 .btn-gold{background:var(--gold)}.btn-gold:hover{background:var(--gold-dark)}
 .lp-btn.pri{box-shadow:0 2px 0 rgba(6,87,95,.25)}
+
+/* Sous-onglets (pages regroupées) */
+.subnav{display:flex;gap:6px;flex-wrap:wrap;max-width:1180px;margin:0 auto 18px;padding:4px;background:#fff;border:1px solid var(--line);border-radius:12px;width:fit-content}
+.sn-tab{background:none;border:0;border-radius:9px;padding:9px 16px;font-family:inherit;font-size:15px;font-weight:600;color:var(--mid);cursor:pointer}
+.sn-tab:hover{color:var(--dark);background:var(--lagoon-pale)}
+.sn-tab.on{background:var(--gold);color:#fff}
+@media(max-width:700px){.subnav{width:auto;flex-wrap:nowrap;overflow-x:auto}.sn-tab{white-space:nowrap;padding:8px 12px}}
+
+/* Dépôt : vignette choisie bien visible */
+#panel-depot .dp-tile.on{background:var(--gold)!important;color:#fff!important;border-color:var(--gold)!important}
+/* Dépôt : arrivée depuis l'estimation */
+.dp-from-est{background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--dark);border-radius:10px;padding:10px 14px;font-size:15px;margin:0 0 14px}
+.dp-est-link{font-size:15px;color:var(--mid);margin:-4px 0 14px}
+/* Dépôt : visite vidéo intégrée */
+.dp-video{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--lagoon-pale)}
+.dp-video-h{display:flex!important;gap:10px;align-items:flex-start;font-weight:400!important;font-size:15px!important;cursor:pointer;margin:0 0 10px!important}
+.dp-video-h input{width:20px;height:20px;margin-top:2px;accent-color:var(--gold);flex:none}
+.dp-video-help{margin:0;font-size:14px;color:var(--mid)}
+.dp-video-prev:empty{display:none}
 /* Application : en-tête clair, comme la page d'accueil */
 .topnav{background:#fff;border-bottom:1px solid var(--line);height:64px}
 .tn-logo{color:var(--dark);font-size:21px;border-right-color:var(--line)}
@@ -1494,6 +1513,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div id="depot-step-1" class="card">
           <h2 class="dp-q">Quel bien mettez-vous en ligne ?</h2>
           <p class="dp-help">Les questions essentielles. Le reste viendra ensuite, et beaucoup est facultatif.</p>
+          <div id="dp-from-est" class="dp-from-est" style="display:none"></div>
+          <p class="dp-est-link" id="dp-est-link">Pas encore estimé ? <button type="button" class="lp-link" style="padding:0;color:var(--gold);font-size:15px" onclick="go('valorisation')">Estimez d'abord votre bien</button> : le dépôt reprendra tout.</p>
           <div class="dp-err" role="alert"></div>
           <div class="dp-tiles" role="group" aria-label="Type de bien">
             <button type="button" class="dp-tile" data-type="Appartement">Appartement</button><button type="button" class="dp-tile" data-type="Maison">Maison</button><button type="button" class="dp-tile" data-type="Villa">Villa</button>
@@ -1530,6 +1551,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </div>
           <div id="d-photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px"></div>
           <div id="d-photos-count" style="font-size:14px;color:var(--mid);margin-top:8px;text-align:center"></div>
+          <div class="dp-video" id="dp-video">
+            <label class="dp-video-h"><input type="checkbox" id="d-video" checked> <span><b>Visite vidéo de votre bien</b><br>Créée automatiquement avec vos photos et publiée avec l'annonce. Vous pourrez la personnaliser ensuite.</span></label>
+            <div id="dp-video-prev" class="dp-video-prev"></div>
+            <p id="dp-video-help" class="dp-video-help">Ajoutez au moins 2 photos pour voir l'aperçu de la vidéo.</p>
+          </div>
           <details class="dp-more"><summary>Conseils et vérification de mes photos (facultatif)</summary>
             <p style="font-size:15px;color:#3B424C;margin:0 0 10px">Photos prises de jour, pièces rangées, à l'horizontale. Les photos d'iPhone (HEIC) s'affichent mieux converties en JPG.</p>
             <button type="button" class="btn btn-outline btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Faire vérifier mes photos</button>
@@ -3114,74 +3140,49 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 // =============================================
 // NAVIGATION
 // =============================================
+// Onglets regroupés : un onglet par besoin, les pages voisines en sous-onglets (moins de choix d'emblée)
 const MENUS = {
   sell:[
-    {ico:'💎',k:'analyse',l:'Estimer'},
-    {ico:'',k:'valorisation',l:'Préparer la vente'},
-    {ico:'',k:'mes-annonces',l:'Mes annonces'},
-    {ico:'📝',k:'depot',l:'Déposer'},
-    {ico:'',k:'visite',l:'Vidéo'},
-    {ico:'📅',k:'rdv',l:'Rendez-vous'},
-    {ico:'🔄',k:'suivi',l:'Ma vente'},
-    {ico:'💬',k:'messagerie',l:'Messages'},
-    {ico:'🏗️',k:'artisans',l:'Artisans'},
+    {l:'Estimer et vendre',sub:[{k:'valorisation',l:'1. Estimer'},{k:'depot',l:'2. Déposer l\'annonce'},{k:'artisans',l:'Devis d\'artisans'},{k:'analyse',l:'Photos et décoration'}]},
+    {l:'Mes annonces',sub:[{k:'mes-annonces',l:'Mes annonces'},{k:'visite',l:'Visites vidéo'}]},
+    {k:'suivi',l:'Ma vente'},
+    {l:'Messages',sub:[{k:'messagerie',l:'Messages'},{k:'rdv',l:'Rendez-vous'}]},
   ],
   buy:[
-    {ico:'🔭',k:'marketplace',l:'Annonces'},
-    {ico:'🤖',k:'matching',l:'Biens pour moi'},
-    {ico:'🌟',k:'projetdevie',l:'Mon projet'},
-    {ico:'',k:'capacite',l:'Mon budget'},
-    {ico:'⚖️',k:'comparateur',l:'Comparer'},
-    {ico:'📍',k:'suiviachat',l:'Mon achat'},
-    {ico:'💬',k:'messagerie',l:'Messages'},
+    {l:'Annonces',sub:[{k:'marketplace',l:'Toutes les annonces'},{k:'matching',l:'Biens pour moi'},{k:'comparateur',l:'Comparer'}]},
+    {l:'Mon budget',sub:[{k:'capacite',l:'Mon budget'},{k:'projetdevie',l:'Mon projet'}]},
+    {k:'suiviachat',l:'Mon achat'},
+    {k:'messagerie',l:'Messages'},
   ],
   agt:[
-    {ico:'📝',k:'depot',l:'Déposer'},
-    {ico:'',k:'valorisation',l:'Préparer la vente'},
-    {ico:'',k:'visite',l:'Vidéo'},
-    {ico:'',k:'mes-annonces',l:'Mes annonces'},
-    {ico:'📋',k:'mandats',l:'Mandats'},
-    {ico:'👥',k:'crm',l:'Clients'},
-    {ico:'🤖',k:'matching',l:'Acheteurs'},
-    {ico:'🗓️',k:'visites',l:'Rendez-vous'},
-    {ico:'⚖️',k:'notaire',l:'Notaire'},
-    {ico:'📊',k:'statsannonces',l:'Statistiques'},
-    {ico:'💬',k:'messagerie',l:'Messages'},
+    {l:'Estimer et vendre',sub:[{k:'valorisation',l:'1. Estimer'},{k:'depot',l:'2. Déposer l\'annonce'}]},
+    {l:'Annonces',sub:[{k:'mes-annonces',l:'Mes annonces'},{k:'visite',l:'Visites vidéo'},{k:'statsannonces',l:'Statistiques'}]},
+    {k:'mandats',l:'Mandats'},
+    {l:'Clients',sub:[{k:'crm',l:'Clients'},{k:'matching',l:'Acheteurs'}]},
+    {l:'Agenda et messages',sub:[{k:'visites',l:'Rendez-vous'},{k:'messagerie',l:'Messages'}]},
+    {k:'notaire',l:'Notaire'},
   ],
   art:[
-    {ico:'',k:'art-demandes',l:'Demandes'},
-    {ico:'',k:'art-devis',l:'Mes devis'},
-    {ico:'',k:'art-profil',l:'Profil & justificatifs'},
-    {ico:'',k:'messagerie',l:'Messages'},
+    {l:'Demandes et devis',sub:[{k:'art-demandes',l:'Demandes'},{k:'art-devis',l:'Mes devis'}]},
+    {k:'art-profil',l:'Profil & justificatifs'},
+    {k:'messagerie',l:'Messages'},
   ],
   bnk:[
-    {ico:'',k:'bnk-dossiers',l:'Dossiers'},
-    {ico:'',k:'bnk-simu',l:'Simulateur'},
-    {ico:'',k:'bnk-baremes',l:'Barèmes'},
-    {ico:'',k:'messagerie',l:'Messages'},
+    {k:'bnk-dossiers',l:'Dossiers'},
+    {l:'Simulateur',sub:[{k:'bnk-simu',l:'Simulateur'},{k:'bnk-baremes',l:'Barèmes'}]},
+    {k:'messagerie',l:'Messages'},
   ],
   not:[
-    {ico:'',k:'not-dossiers',l:'Dossiers'},
-    {ico:'',k:'not-echeancier',l:'Échéancier'},
-    {ico:'',k:'not-frais',l:'Calcul des frais'},
-    {ico:'',k:'messagerie',l:'Messages'},
+    {l:'Dossiers',sub:[{k:'not-dossiers',l:'Dossiers'},{k:'not-echeancier',l:'Échéancier'}]},
+    {k:'not-frais',l:'Calcul des frais'},
+    {k:'messagerie',l:'Messages'},
   ],
-  diag:[
-    {ico:'',k:'diag-missions',l:'Missions'},
-    {ico:'',k:'diag-profil',l:'Profil'},
-    {ico:'',k:'messagerie',l:'Messages'},
-  ],
-  geo:[
-    {ico:'',k:'geo-missions',l:'Missions'},
-    {ico:'',k:'geo-profil',l:'Profil'},
-    {ico:'',k:'messagerie',l:'Messages'},
-  ],
-  ass:[
-    {ico:'',k:'ass-missions',l:'Demandes'},
-    {ico:'',k:'ass-profil',l:'Profil'},
-    {ico:'',k:'messagerie',l:'Messages'},
-  ],
+  diag:[{k:'diag-missions',l:'Missions'},{k:'diag-profil',l:'Profil'},{k:'messagerie',l:'Messages'}],
+  geo:[{k:'geo-missions',l:'Missions'},{k:'geo-profil',l:'Profil'},{k:'messagerie',l:'Messages'}],
+  ass:[{k:'ass-missions',l:'Demandes'},{k:'ass-profil',l:'Profil'},{k:'messagerie',l:'Messages'}],
 };
+// Dernier sous-onglet ouvert dans chaque groupe (on y revient en cliquant sur l'onglet)
+const MENU_LAST = {};
 const LABELS = {
   fr:{dashboard:'Tableau de bord',offre:'Faire une offre',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',parcours:'Mon Parcours',comparateur:'Comparateur',assistantvisite:'Assistant Visite',financementplus:'Financement Réel',suiviachat:'Suivi de mon achat',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
@@ -3194,16 +3195,33 @@ function buildSB(){
   nav.innerHTML='';
   const prof=S.profile||APP_STATE.user?.profil||'sell';
   const items=MENUS[prof]||MENUS.sell;
-  const mk=(label,panel)=>{
+  const keys=it=>it.sub?it.sub.map(x=>x.k):[it.k];
+  const mk=(label,panel,on)=>{
     const d=document.createElement('button');
     d.type='button';
-    d.className='tn-tab'+(S.panel===panel?' on':'');
+    d.className='tn-tab'+(on?' on':'');
     d.textContent=label;
+    if(on) d.setAttribute('aria-current','page');
     d.onclick=()=>go(panel);
     return d;
   };
-  nav.appendChild(mk('Mon espace','dashboard'));
-  items.forEach(it=>nav.appendChild(mk(it.l||lbl(it.k),it.k)));
+  nav.appendChild(mk('Mon espace','dashboard',S.panel==='dashboard'));
+  let grp=null;
+  items.forEach((it,i)=>{
+    const on=keys(it).includes(S.panel);
+    if(on){ grp=it; if(it.sub) MENU_LAST[prof+i]=S.panel; }
+    nav.appendChild(mk(it.l||lbl(it.k), it.sub?(MENU_LAST[prof+i]||it.sub[0].k):it.k, on));
+  });
+  // Sous-onglets du groupe courant, en tête de page
+  const cnt=document.querySelector('.content');
+  let sn=document.getElementById('subnav');
+  if(grp&&grp.sub&&cnt){
+    if(!sn){ sn=document.createElement('nav'); sn.id='subnav'; sn.className='subnav'; sn.setAttribute('aria-label','Sous-rubriques'); }
+    if(cnt.firstElementChild!==sn) cnt.prepend(sn);
+    sn.innerHTML=grp.sub.map(x=>`<button type="button" class="sn-tab${x.k===S.panel?' on':''}"${x.k===S.panel?' aria-current="page"':''} data-k="${x.k}">${esc(x.l)}</button>`).join('');
+    sn.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>go(b.dataset.k));
+    sn.style.display='';
+  } else if(sn) sn.style.display='none';
   // Fondu à droite tant qu'il reste des onglets à faire défiler
   const fade=()=>nav.classList.toggle('more', nav.scrollWidth-nav.scrollLeft-nav.clientWidth>4);
   nav.onscroll=fade; requestAnimationFrame(fade);
@@ -5310,16 +5328,22 @@ async function publierAnnonce(){
   // Publication (en ligne si connecté, sinon dans ce navigateur) — js/annonces.js
   let res=null;
   try{ res=window.IMMO_ANN ? await IMMO_ANN.publish(bien, depotPhotos) : null; }catch(e){ console.error(e); }
+  // Visite vidéo créée avec les photos et publiée avec l'annonce
+  let videoOk=false;
+  if(res && document.getElementById('d-video')?.checked && depotPhotos.length>=2 && window.IMMO_VISITE){
+    try{ videoOk=await IMMO_VISITE.autoCreate(res.id, depotPhotos, {titre:bien.titre, sous:[bien.quartier,bien.ville].filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).join(', '), prix:bien.prix?bien.prix.toLocaleString('fr-FR')+' F':'', contact:bien.agent||'', tel:bien.tel||''}); }catch(e){ console.error(e); }
+  }
+  const videoTxt=videoOk?'<br>Visite vidéo publiée avec l\'annonce. <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" onclick="IMMO_VISITE.openFor('+Number(res.id)+')">Personnaliser la vidéo</button>':'';
   if(notif){
     notif.style.display='block';
     if(res && res.online && res.okPhotos){
       notif.style.background='rgba(42,122,75,0.1)';notif.style.border='1px solid rgba(42,122,75,0.3)';notif.style.color='var(--green)';
-      notif.innerHTML='<strong>Annonce publiée.</strong><br>Elle est maintenant visible par tous les visiteurs d\'Immo360 NC.<br><small style="opacity:.7">Référence : IMM-'+res.id+'</small>';
+      notif.innerHTML='<strong>Annonce publiée.</strong><br>Elle est maintenant visible par tous les visiteurs d\'Immo360 NC.<br><small style="opacity:.7">Référence : IMM-'+res.id+'</small>'+videoTxt;
       btn.innerHTML='Publiée';
       const voirBtn=document.getElementById('btn-voir-annonce'); if(voirBtn) voirBtn.style.display='block';
     } else if(res && !res.online){
       notif.style.background='rgba(10,122,132,0.1)';notif.style.border='1px solid rgba(10,122,132,0.3)';notif.style.color='var(--gold-dark)';
-      notif.innerHTML='<strong>Annonce publiée en mode démonstration</strong> : visible dans ce navigateur uniquement. Connectez-vous pour la publier en ligne.'+(res.okPhotos?'':'<br><small>L\'espace de stockage du navigateur est plein : les photos n\'ont pas pu être conservées.</small>');
+      notif.innerHTML='<strong>Annonce publiée en mode démonstration</strong> : visible dans ce navigateur uniquement. Connectez-vous pour la publier en ligne.'+(res.okPhotos?'':'<br><small>L\'espace de stockage du navigateur est plein : les photos n\'ont pas pu être conservées.</small>')+videoTxt;
       btn.innerHTML='Publiée (démo)';
     } else {
       notif.style.background='rgba(184,58,42,0.08)';notif.style.border='1px solid rgba(184,58,42,0.3)';notif.style.color='var(--red)';

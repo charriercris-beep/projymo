@@ -244,6 +244,13 @@
 .val-seg button:hover{border-color:var(--gold)}.val-seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:600}
 .val-sub{font-weight:700;font-size:14px;margin:16px 0 8px}
 .val-presta{display:flex;flex-direction:column;gap:12px}
+.val-vente{border:2px solid var(--gold)!important}
+.val-px{display:flex;flex-direction:column;gap:8px;margin:4px 0 14px}
+.val-pxo{display:flex!important;flex-direction:row!important;align-items:center;gap:12px;border:1.5px solid var(--line-strong);border-radius:10px;padding:12px 14px;cursor:pointer;margin:0!important;font-weight:500!important}
+.val-pxo input{width:18px;height:18px;accent-color:var(--gold);margin:0}.val-pxo span{flex:1;font-size:16px}.val-pxo b{font-size:20px;color:var(--ocean)}
+.val-pxo.on{border-color:var(--gold);background:var(--lagoon-pale)}
+.val-txt{margin:0 0 14px}.val-txt summary{cursor:pointer;font-weight:600;color:var(--gold);padding:6px 0;font-size:15px}
+.val-go{font-size:17px!important;padding:13px 26px!important}
 .val-hint{margin:-4px 0 0;font-size:13.5px;color:var(--mid)}
 .val-ext{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px}
 .val-pg>b{display:block;font-size:14px;color:var(--ocean);margin-bottom:6px}.val-pg>div{display:flex;flex-wrap:wrap;gap:8px}
@@ -316,21 +323,23 @@
         <div id="val-grades"></div>
       </div>
       <div class="card"><div class="card-title">Comparaison des scénarios</div><div class="val-bars" id="val-bars"></div></div>
-      <div class="card val-ai" id="val-ai"></div>
-      <div class="card"><div class="card-title">Annonce</div>
-        <div class="val-row2">
-          <div class="val-f"><label>Ton</label><select id="val-ton"><option>Moderne &amp; dynamique</option><option>Familial &amp; chaleureux</option><option>Luxe &amp; prestige</option><option>Investisseur</option></select></div>
-          <div class="val-f"><label>&nbsp;</label><button type="button" class="btn btn-outline btn-full" id="val-ann-btn">Générer l'annonce pour ce scénario</button></div>
-        </div>
-        <textarea id="val-ann" rows="7" style="width:100%;box-sizing:border-box;border:1px solid rgba(28,26,22,.15);border-radius:8px;padding:10px;font:14px 'Source Sans 3',sans-serif" placeholder="L'annonce générée apparaîtra ici…"></textarea>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-          <button type="button" class="btn btn-sm btn-outline" id="val-copy">Copier</button>
-          <button type="button" class="btn btn-sm btn-dark" id="val-depot">Utiliser dans « Déposer une annonce »</button>
-        </div>
+      <div class="card"><div class="card-title">Devis d'artisans</div>
+        <p style="font-size:15px;color:var(--mid);margin:0 0 12px" id="val-devis-info"></p>
+        <button type="button" class="btn btn-outline" id="val-devis-btn">Demander des devis aux artisans</button>
       </div>
-      <div class="card"><div class="card-title">Devis</div>
-        <p style="font-size:13px;color:var(--mid);margin:0 0 12px" id="val-devis-info"></p>
-        <button type="button" class="btn btn-gold" id="val-devis-btn">Demander des devis aux artisans</button>
+      <div class="card val-ai" id="val-ai"></div>
+      <div class="card val-vente" id="val-vente"><div class="card-title">3. Mettre en vente</div>
+        <p class="val-lead">Votre estimation est prête : déposez l'annonce, tout ce que vous avez saisi est repris (type, lieu, surface, prestations, prix).</p>
+        <div class="val-px" id="val-px" role="radiogroup" aria-label="Prix de l'annonce"></div>
+        <details class="val-txt"><summary>Rédiger le texte de l'annonce maintenant (facultatif)</summary>
+          <div class="val-row2">
+            <div class="val-f"><label>Ton</label><select id="val-ton"><option>Moderne &amp; dynamique</option><option>Familial &amp; chaleureux</option><option>Luxe &amp; prestige</option><option>Investisseur</option></select></div>
+            <div class="val-f"><label>&nbsp;</label><button type="button" class="btn btn-outline btn-full" id="val-ann-btn">Rédiger le texte</button></div>
+          </div>
+          <textarea id="val-ann" rows="6" style="width:100%;box-sizing:border-box;border:1.5px solid var(--line-strong);border-radius:8px;padding:10px;font:15px 'Source Sans 3',sans-serif" placeholder="Le texte rédigé apparaîtra ici ; vous pourrez le modifier."></textarea>
+          <button type="button" class="btn btn-sm btn-outline" id="val-copy" style="margin-top:8px">Copier</button>
+        </details>
+        <button type="button" class="btn btn-gold val-go" id="val-depot">Déposer mon annonce</button>
       </div>
     </section>
   </div>
@@ -466,6 +475,12 @@
     }).join('') + '<div style="font-size:11px;color:var(--mid)">Barre dorée : valeur en l\'état · barre grise : valeur après travaux · net = gain − coût des travaux.</div>';
 
     renderAI();
+    // Mettre en vente : prix de l'annonce (en l'état, après travaux, ou prix souhaité)
+    const choix = [['etat', 'Vendre en l\'état', base.V]].concat(cur.list.length ? [['travaux', 'Vendre après les travaux choisis', cur.apres]] : []).concat(st.bien.prixSouhaite ? [['souhaite', 'Mon prix souhaité', st.bien.prixSouhaite]] : []);
+    // Par défaut le prix suit les travaux choisis ; un choix fait par le vendeur est respecté
+    if (!st.prixManuel || !choix.some(c => c[0] === st.prixChoix)) { st.prixManuel = false; st.prixChoix = cur.list.length ? 'travaux' : 'etat'; }
+    $('val-px').innerHTML = choix.map(c => `<label class="val-pxo${st.prixChoix === c[0] ? ' on' : ''}"><input type="radio" name="val-px" value="${c[0]}"${st.prixChoix === c[0] ? ' checked' : ''}><span>${E(c[1])}</span><b>${money(Math.round(c[2] / 100000) * 100000)}</b></label>`).join('');
+    $('val-px').querySelectorAll('input').forEach(i => i.onchange = () => { st.prixChoix = i.value; st.prixManuel = true; renderAll(); });
     // devis
     const metiers = [...new Set(cur.list.map(p => p.metier))];
     $('val-devis-info').textContent = cur.list.length
@@ -547,11 +562,27 @@
     } catch (e) { out.value = ''; alert("La génération d'annonce est momentanément indisponible. Réessayez dans un instant."); }
     btn.disabled = false;
   }
+  // Dépôt de l'annonce à partir de l'estimation : tout ce qui a été saisi est repris
+  const TYPE_DEPOT = { appartement: 'Appartement', maison: 'Maison', villa: 'Villa', studio: 'Studio' };
+  const PRESTA_DEPOT = { vue_mer: 'df-vue-mer', vue_degagee: 'df-vue-deg', piscine: 'df-piscine', piscine_res: 'df-piscine', spa: 'df-jacuzzi', garage: 'df-garage', parking: 'df-parking', parking_secu: 'df-parking', ascenseur: 'df-ascenseur', securise: 'df-gardien', solaire: 'df-solaire' };
   function toDepot() {
-    const cur = compute(st.selected), set = (id, v) => { const e = $(id); if (e) e.value = v; };
-    set('d-titre', `${st.bien.type.charAt(0).toUpperCase() + st.bien.type.slice(1)} ${st.bien.surface} m² — ${st.bien.quartier}`);
-    set('d-surface', st.bien.surface); set('d-prix', Math.round(cur.apres / 100000) * 100000); set('d-desc', $('val-ann').value || st.bien.description);
+    if (!ready()) return;
+    const cur = compute(st.selected), b = st.bien, set = (id, v) => { const e = $(id); if (e) e.value = v; };
+    const prix = st.prixChoix === 'souhaite' ? b.prixSouhaite : st.prixChoix === 'travaux' ? cur.apres : compute(new Set()).V;
     go('depot');
+    // type (vignette), commune puis quartier
+    const tile = document.querySelector(`#panel-depot .dp-tile[data-type="${TYPE_DEPOT[b.type] || ''}"]`); if (tile) tile.click();
+    const Q = (window.IMMO_DEPOT && IMMO_DEPOT.QUARTIERS) || {};
+    const commune = Object.keys(Q).find(c => Q[c].includes(b.quartier)) || (Q[b.quartier] ? b.quartier : null);
+    if (commune) { set('d-ville', commune); if (typeof updateQuartiers === 'function') updateQuartiers(); set('d-quartier', Q[b.quartier] ? Q[commune][0] : b.quartier); }
+    set('d-surface', b.surface); set('d-prix', Math.round(prix / 100000) * 100000);
+    if (b.annee) set('d-annee', b.annee);
+    const txt = ($('val-ann') && $('val-ann').value.trim()) || b.description; if (txt) set('d-desc', txt);
+    // prestations et extérieurs → points forts de l'annonce
+    const ids = new Set(Object.keys(PRESTA_DEPOT).filter(k => st.presta.has(k)).map(k => PRESTA_DEPOT[k]));
+    if (b.terrasse) ids.add('df-terrasse'); if (b.jardin) ids.add('df-jardin'); if (st.diag.clim === 'complete' || st.diag.clim === 'partielle') ids.add('df-clim');
+    ids.forEach(id => { const c = $(id); if (c && !c.checked) { c.checked = true; c.dispatchEvent(new Event('change', { bubbles: true })); } });
+    if (window.IMMO_DEPOT && IMMO_DEPOT.fromEstimation) IMMO_DEPOT.fromEstimation({ prix, choix: st.prixChoix });
   }
 
   /* ---------- Devis aux artisans ---------- */

@@ -362,7 +362,35 @@
     await mountPlayer(box.querySelector('.vv-slot'), doc);
   }
 
+  /* ---------- Vidéo créée automatiquement au dépôt d'une annonce ---------- */
+  // Ordre logique des pièces quand le nom de fichier l'indique ; sinon l'ordre choisi par le vendeur
+  function autoDoc(bienId, photos, meta, publie) {
+    const order = p => { const i = ORDRE.indexOf(p.piece); return i < 0 ? ORDRE.length : i; };
+    const list = photos.slice(0, MAX_PHOTOS).map((p, i) => Object.assign({ i }, p)).sort((a, b) => (order(a) - order(b)) || (a.i - b.i));
+    return { id: 'v' + bienId, bienId, publie, maj: new Date().toISOString(), format: '16:9', duree: 3.5, transition: 'fondu', mouvement: true, filigrane: true,
+      intro: { titre: meta.titre || '', sous: meta.sous || '', prix: meta.prix || '' }, outro: { contact: meta.contact || '', tel: meta.tel || '' },
+      photos: list.map(p => ({ src: p.src, piece: p.piece, legende: '' })) };
+  }
+  const fromUrls = items => (items || []).map(x => ({ src: x.url, piece: guessPiece(x.name) }));
+  // Aperçu en direct dans le formulaire de dépôt (photos locales, rien n'est enregistré)
+  async function preview(container, items, meta) {
+    if (!container) return null;
+    const ph = fromUrls(items); if (ph.length < 2) { container.innerHTML = ''; return null; }
+    return mountPlayer(container, autoDoc('apercu', ph, meta || {}, false));
+  }
+  // À la publication de l'annonce : la visite est créée et publiée avec elle
+  async function autoCreate(bienId, items, meta) {
+    const ph = [];
+    for (const x of fromUrls(items)) { try { const img = await loadImage(x.src); ph.push({ src: toData(img), piece: x.piece }); } catch (_) { /* photo illisible ignorée */ } }
+    if (ph.length < 2) return false;
+    const doc = autoDoc(bienId, ph, meta || {}, true);
+    const list = readAll().filter(v => String(v.bienId) !== String(bienId)); list.unshift(doc);
+    return writeAll(list);
+  }
+  // Ouvrir l'éditeur sur la visite d'une annonce (pour la personnaliser)
+  async function openFor(bienId) { pause(); await editBien(bienId); if (typeof go === 'function') go('visite'); }
+
   window.addEventListener('immo360:purge', () => { pause(); st.photos.forEach(p => { if (!p.shared) URL.revokeObjectURL(p.url); }); st.photos = []; st.bienId = null; st.intro = { titre: '', sous: '', prix: '' }; st.outro = { contact: '', tel: '' }; });
   window.IMMO_PANELS = Object.assign(window.IMMO_PANELS || {}, { visite: el => { pause(); build(el); } });
-  window.IMMO_VISITE = { addFiles, timeline, render, state: st, publish, attach, mountPlayer, findPublished }; // exposé pour les tests
+  window.IMMO_VISITE = { addFiles, timeline, render, state: st, publish, attach, mountPlayer, findPublished, preview, autoCreate, openFor }; // exposé pour les tests
 })();
