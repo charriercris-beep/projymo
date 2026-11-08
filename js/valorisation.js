@@ -7,8 +7,9 @@
   'use strict';
 
   /* ---------- Moteur de calcul (déterministe, transparent) ---------- */
-  const ETAT_COEF = { a_renover: 0.80, correct: 0.92, bon: 1.0, tres_bon: 1.08 };
-  const ETAT_LABEL = { a_renover: 'À rénover', correct: 'Correct', bon: 'Bon état', tres_bon: 'Très bon état' };
+  // L'état n'est plus choisi d'un bloc : il se déduit du diagnostic élément par élément (voir COND)
+  const ETAT_COEF = { a_renover: 0.80, correct: 0.92, bon: 1.0, tres_bon: 1.08 }; // utilisé seulement pour l'état détecté par l'IA
+  const ETAT_LABEL = { a_renover: 'à rénover', correct: 'correct', bon: 'bon', tres_bon: 'très bon' };
 
   const GRADES = [
     { id: 'rangement', label: 'Rangement & remise en état', short: 'Rangement', desc: 'Désencombrer, nettoyer, petites réparations.' },
@@ -21,7 +22,7 @@
     { id: 'desencombrement', grade: 'rangement', label: 'Désencombrement & tri', metier: 'homestaging', cost: s => 40000 + s * 500, up: 0.006, jours: 2 },
     { id: 'nettoyage', grade: 'rangement', label: 'Nettoyage professionnel', metier: 'nettoyage', cost: s => s * 1500, up: 0.008, jours: 1 },
     { id: 'reparations', grade: 'rangement', label: 'Petites réparations (joints, poignées, prises)', metier: 'plomberie', cost: s => 50000 + s * 800, up: 0.010, jours: 3 },
-    { id: 'exterieur', grade: 'rangement', label: 'Entretien du jardin / extérieur', metier: 'jardin', cost: s => 60000 + s * 300, up: 0.008, jours: 2 },
+    { id: 'exterieur', grade: 'rangement', label: 'Entretien du jardin / extérieur', metier: 'jardin', cost: (s, b) => 40000 + Math.min(5000, (b && (b.jardin || 0) + (b.terrasse || 0)) || s) * 200, up: 0.008, jours: 2 },
     { id: 'staging', grade: 'staging', label: 'Home staging (mobilier, déco, mise en scène)', metier: 'homestaging', cost: s => 120000 + s * 2500, up: 0.030, jours: 5 },
     { id: 'photos', grade: 'staging', label: 'Photos professionnelles & visite', metier: 'photo', cost: () => 55000, up: 0.012, jours: 1 },
     { id: 'peinture', grade: 'rafraichissement', label: 'Peinture intérieure', metier: 'peinture', cost: s => s * 9000, up: 0.035, jours: 6 },
@@ -67,14 +68,58 @@
     clim: { key: 'clim', m: { complete: 0, partielle: 0.6, aucune: 1.2 } },
     menuiseries: { key: 'menuiseries', m: { bon: 0, fatigue: 0.8, changer: 1.3 } }
   };
-  // Prestations : ajustements indicatifs de la valeur en l'état (le barème donne un prix moyen du secteur)
+  // Effet de l'état de chaque élément sur la valeur en l'état, par rapport à un bien « moyen » du secteur
+  // (le barème est une médiane de ventes : un élément non décrit est supposé dans la moyenne, effet 0)
+  const COND = {
+    presentation: { vide: 0, meuble: 0, encombre: -0.015 },
+    defauts: { aucun: 0.005, quelques: -0.005, nombreux: -0.015 },
+    murs: { bon: 0.01, defraichi: -0.015, abime: -0.03 },
+    sols: { bon: 0.01, use: -0.015, abime: -0.03 },
+    cuisine: { recente: 0.03, correcte: 0, datee: -0.04 },
+    sdb: { recente: 0.02, correcte: 0, datee: -0.03 },
+    electricite: { normes: 0.01, ancienne: -0.03, inconnue: -0.01 },
+    clim: { complete: 0.02, partielle: 0, aucune: -0.02 },
+    menuiseries: { bon: 0.01, fatigue: -0.015, changer: -0.03 },
+    exterieur: { sans: 0, entretenu: 0.005, a_entretenir: -0.01 },
+    photos: {}
+  };
+  // Année de construction (facultative)
+  const ageCoef = a => { a = parseInt(a, 10); if (!a) return 0; return a >= 2015 ? 0.03 : a >= 2005 ? 0.01 : a >= 1990 ? 0 : a >= 1975 ? -0.02 : -0.04; };
+
+  // Prestations, regroupées comme sur les grands portails ; ajustements indicatifs de la valeur en l'état
+  const APPART = t => t === 'appartement' || t === 'studio';
   const PRESTA = [
-    { id: 'vue_mer', label: 'Vue mer ou lagon', up: 0.07 },
-    { id: 'piscine', label: 'Piscine', up: 0.04 },
-    { id: 'parking', label: 'Parking ou garage', up: 0.03 },
-    { id: 'terrasse', label: 'Grande terrasse ou jardin', up: 0.03 },
-    { id: 'securise', label: 'Résidence sécurisée', up: 0.02 }
+    { g: 'Vue et situation', id: 'vue_mer', label: 'Vue mer ou lagon', up: 0.07 },
+    { g: 'Vue et situation', id: 'vue_degagee', label: 'Vue dégagée', up: 0.02 },
+    { g: 'Vue et situation', id: 'plage', label: 'Plage à pied', up: 0.03 },
+    { g: 'Piscine et bien-être', id: 'piscine', label: 'Piscine privée', up: 0.05 },
+    { g: 'Piscine et bien-être', id: 'piscine_res', label: 'Piscine de la résidence', up: 0.02, only: APPART },
+    { g: 'Piscine et bien-être', id: 'spa', label: 'Spa ou jacuzzi', up: 0.015 },
+    { g: 'Piscine et bien-être', id: 'pool_house', label: 'Pool house ou faré', up: 0.015, only: t => !APPART(t) },
+    { g: 'Stationnement', id: 'garage', label: 'Garage ou box fermé', up: 0.03 },
+    { g: 'Stationnement', id: 'parking_secu', label: 'Parking sécurisé', up: 0.02 },
+    { g: 'Stationnement', id: 'parking', label: 'Place de parking', up: 0.015 },
+    { g: 'Stationnement', id: 'carport', label: 'Carport', up: 0.01, only: t => !APPART(t) },
+    { g: 'Sécurité et accès', id: 'securise', label: 'Résidence sécurisée ou gardien', up: 0.02 },
+    { g: 'Sécurité et accès', id: 'ascenseur', label: 'Ascenseur', up: 0.01, only: APPART },
+    { g: 'Sécurité et accès', id: 'alarme', label: 'Alarme ou vidéosurveillance', up: 0.005 },
+    { g: 'Confort et annexes', id: 'dependance', label: 'Studio ou logement indépendant', up: 0.06, only: t => !APPART(t) },
+    { g: 'Confort et annexes', id: 'solaire', label: 'Chauffe-eau ou panneaux solaires', up: 0.01 },
+    { g: 'Confort et annexes', id: 'buanderie', label: 'Buanderie ou cellier', up: 0.005 },
+    { g: 'Confort et annexes', id: 'dressing', label: 'Dressing', up: 0.005 },
+    { g: 'Confort et annexes', id: 'cave', label: 'Cave ou local de rangement', up: 0.005 }
   ];
+  const PRESTA_MAX = 0.25; // plafond : au-delà, le bien sort du marché de référence du secteur
+  // Extérieurs en surface pondérée (usage des professionnels), sans double compte :
+  // - terrasse ou balcon : 30 % du prix au m² en appartement, 15 % en maison (souvent déjà dans le prix du secteur) ;
+  // - maison ou villa : le prix au m² du secteur inclut un terrain courant (~600 m²) ; seul le surplus compte (3 %) ;
+  // - appartement : jardin privatif à 3 % jusqu'à 200 m², puis 1 %.
+  const TERRAIN_INCLUS = 600;
+  const extValue = (b, pm2) => {
+    const t = Math.min(300, Math.max(0, +b.terrasse || 0)), j = Math.min(10000, Math.max(0, +b.jardin || 0));
+    if (APPART(b.type)) return pm2 * (t * 0.30 + Math.min(j, 200) * 0.03 + Math.max(0, j - 200) * 0.01);
+    return pm2 * (t * 0.15 + Math.max(0, j - TERRAIN_INCLUS) * 0.03);
+  };
   const diagLabel = (k, v) => { const d = DIAG.find(x => x.key === k); const o = d && d.opts.find(x => x[0] === v); return o ? o[1].toLowerCase() : ''; };
 
   const METIER_LABEL = {
@@ -88,6 +133,14 @@
     ai: null, aiLoading: false, photos: [], annonce: ''
   };
 
+  // Saisie conservée pour l'onglet en cours : une actualisation ne fait pas tout perdre
+  const SKEY = 'immo360.val.v1';
+  try {
+    const sv = JSON.parse(sessionStorage.getItem(SKEY) || 'null');
+    if (sv && sv.bien) { Object.assign(st.bien, sv.bien); st.selected = new Set(sv.selected || []); st.diag = sv.diag || {}; st.diagSrc = sv.diagSrc || {}; st.presta = new Set(sv.presta || []); }
+  } catch (_) { /* rien à reprendre */ }
+  function persist() { try { sessionStorage.setItem(SKEY, JSON.stringify({ bien: st.bien, selected: [...st.selected], diag: st.diag, diagSrc: st.diagSrc, presta: [...st.presta] })); } catch (_) { /* ignoré */ } }
+  window.addEventListener('immo360:purge', () => { try { sessionStorage.removeItem(SKEY); } catch (_) { /* ignoré */ } });
   window.addEventListener('immo360:purge', () => { st.bien = { type: '', surface: 0, quartier: '', annee: '', etat: '', prixSouhaite: 0, description: '' }; st.selected = new Set(); st.diag = {}; st.diagSrc = {}; st.presta = new Set(); st.ai = null; st.photos = []; st.annonce = ''; });
   // Prix au m² conclu estimé (observatoire Immo360 ou barème calé ISEE) — js/estimation.js
   const estOf = (q, t) => window.IMMO_EST ? IMMO_EST.pm2(q, t) : { value: (typeof NC_PM2 !== 'undefined' && NC_PM2[q]) || 340000, label: 'Barème de référence' };
@@ -103,12 +156,22 @@
     const need = nd ? (v === undefined ? null : (nd.m[v] ?? 0)) : 1;
     const statut = need === null ? 'inconnu' : need === 0 ? 'inutile' : need >= 1 ? 'conseille' : 'utile';
     const up = (need || 0) * p.up;
-    return { ...p, cout: Math.round(p.cost(s) / 1000) * 1000, upEff: up, gain: Math.round(V * up / 1000) * 1000, statut, need, diagKey: nd && nd.key, diagVal: v };
+    return { ...p, cout: Math.round(p.cost(s, st.bien) / 1000) * 1000, upEff: up, gain: Math.round(V * up / 1000) * 1000, statut, need, diagKey: nd && nd.key, diagVal: v };
   }
-  function prestaCoef() { return PRESTA.filter(x => st.presta.has(x.id)).reduce((a, x) => a + x.up, 0); }
-  function baseValue() { return pm2Of(st.bien.quartier, st.bien.type) * st.bien.surface * (ETAT_COEF[st.bien.etat] || 1) * (1 + prestaCoef()); }
+  const prestaOk = x => !x.only || x.only(st.bien.type);
+  function prestaCoef() { return Math.min(PRESTA_MAX, PRESTA.filter(x => prestaOk(x) && st.presta.has(x.id)).reduce((a, x) => a + x.up, 0)); }
+  function condCoef() { return DIAG.reduce((a, d) => a + ((COND[d.key] || {})[st.diag[d.key]] || 0), 0) + ageCoef(st.bien.annee); }
+  // Valeur en l'état : prix au m² du secteur × surface, ajusté par l'état décrit, l'année, les prestations ; + extérieurs
+  function parts() {
+    const pm2 = pm2Of(st.bien.quartier, st.bien.type), brut = pm2 * st.bien.surface;
+    const etat = condCoef(), presta = prestaCoef(), ext = extValue(st.bien, pm2);
+    return { pm2, brut, etat, presta, ext, V: brut * (1 + etat) * (1 + presta) + ext };
+  }
+  function baseValue() { return parts().V; }
+  // État déduit (transmis à l'IA et utilisé pour la rédaction)
+  function etatDeduit() { const c = condCoef(); return c <= -0.08 ? 'a_renover' : c < 0 ? 'correct' : c < 0.05 ? 'bon' : 'tres_bon'; }
   // Estimation possible seulement quand le vendeur a décrit son bien (type, surface, quartier, état)
-  const MANQUE = { type: 'le type', surface: 'la surface', quartier: 'le quartier', etat: 'l\'état général' };
+  const MANQUE = { type: 'le type', surface: 'la surface', quartier: 'le quartier' };
   const manque = () => Object.keys(MANQUE).filter(k => !st.bien[k]).map(k => MANQUE[k]);
   const ready = () => !manque().length;
   const diagCount = () => DIAG.filter(d => st.diag[d.key] !== undefined).length;
@@ -180,7 +243,11 @@
 .val-seg button{border:1.5px solid var(--line-strong);font-weight:500;background:#fff;border-radius:8px;padding:6px 11px;font-family:inherit;font-size:13.5px;cursor:pointer;color:var(--dark)}
 .val-seg button:hover{border-color:var(--gold)}.val-seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:600}
 .val-sub{font-weight:700;font-size:14px;margin:16px 0 8px}
-.val-presta{display:flex;flex-wrap:wrap;gap:8px}
+.val-presta{display:flex;flex-direction:column;gap:12px}
+.val-hint{margin:-4px 0 0;font-size:13.5px;color:var(--mid)}
+.val-ext{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px}
+.val-pg>b{display:block;font-size:14px;color:var(--ocean);margin-bottom:6px}.val-pg>div{display:flex;flex-wrap:wrap;gap:8px}
+.val-det{font-size:13px!important;color:var(--dark)!important;margin-top:6px!important}
 .val-pc{display:inline-flex!important;flex-direction:row!important;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-weight:500!important;font-size:14px!important;cursor:pointer;margin:0!important}
 .val-pc input{width:16px;height:16px;accent-color:var(--gold);margin:0}.val-pc small{color:var(--green);font-weight:600}
 .val-poste .why{display:block;font-size:12.5px;color:var(--mid);font-weight:400;margin-top:2px}
@@ -229,7 +296,6 @@
         <div class="val-f"><label>Année</label><input id="val-annee" type="number" min="1900" max="2030" inputmode="numeric" value="${b.annee || ''}" aria-describedby="val-annee-f"><small id="val-annee-f" class="val-opt">Facultatif</small></div>
       </div>
       <div class="val-f"><label>Quartier</label><select id="val-quartier"><option value="">Choisir…</option>${quartiers.map(q => `<option${q === b.quartier ? ' selected' : ''}>${E(q)}</option>`).join('')}</select></div>
-      <div class="val-f"><label>État général</label><select id="val-etat"><option value="">Choisir…</option>${Object.keys(ETAT_LABEL).map(k => `<option value="${k}"${k === b.etat ? ' selected' : ''}>${ETAT_LABEL[k]}</option>`).join('')}</select></div>
       <div class="val-f"><label>Prix souhaité (F, facultatif)</label><input id="val-prix" type="number" min="0" step="100000" value="${b.prixSouhaite || ''}" placeholder="ex. 45000000"></div>
       <div class="val-f"><label>Description</label><textarea id="val-desc" rows="3" placeholder="Atouts, particularités, travaux déjà faits…">${E(b.description)}</textarea></div>
       <div class="val-f"><label>Photos (jusqu'à 4, pour l'analyse IA)</label><input id="val-files" type="file" accept="image/*" multiple></div>
@@ -242,7 +308,7 @@
       <div class="card"><div class="card-title">1. L'état actuel de votre bien</div>
         <p class="val-lead">Décrivez chaque élément : un travail n'apporte de la valeur que s'il corrige un vrai défaut. <span id="val-diag-n"></span></p>
         <div class="val-diag" id="val-diag"></div>
-        <div class="val-sub">Prestations du bien</div>
+        <div class="val-sub">Extérieurs et prestations</div>
         <div class="val-presta" id="val-presta"></div>
       </div>
       <div class="card"><div class="card-title">2. Travaux et préparation</div>
@@ -283,12 +349,11 @@
       st.bien.surface = sf >= 10 ? Math.min(2000, sf) : 0; // pas de surface par défaut
       st.bien.annee = parseInt($('val-annee').value, 10) || '';
       st.bien.quartier = $('val-quartier').value;
-      st.bien.etat = $('val-etat').value;
       st.bien.prixSouhaite = parseInt($('val-prix').value) || 0;
       st.bien.description = $('val-desc').value.slice(0, 800);
       renderAll();
     };
-    ['val-type', 'val-surface', 'val-annee', 'val-quartier', 'val-etat', 'val-prix', 'val-desc'].forEach(id => $(id).addEventListener('input', rd));
+    ['val-type', 'val-surface', 'val-annee', 'val-quartier', 'val-prix', 'val-desc'].forEach(id => $(id).addEventListener('input', rd));
     $('val-files').addEventListener('change', onFiles);
     $('val-ai-btn').addEventListener('click', runAI);
     $('val-ann-btn').addEventListener('click', genAnnonce);
@@ -297,7 +362,8 @@
     $('val-devis-btn').addEventListener('click', openDevis);
   }
 
-  function renderDiag() {
+  function renderDiag(keepInputs) {
+    if (keepInputs) return; // saisie en cours dans un champ du diagnostic
     const n = diagCount();
     $('val-diag-n').textContent = n < DIAG.length ? `${n} sur ${DIAG.length} renseignés.` : 'Diagnostic complet.';
     $('val-diag').innerHTML = DIAG.map(d => `<div class="val-dl"><span class="l">${E(d.label)}${st.diagSrc[d.key] === 'ia' ? ' <em class="val-ia">vu sur les photos</em>' : ''}</span>
@@ -308,8 +374,18 @@
       POSTES.map(posteCalc).forEach(p => { if (p.statut === 'inutile') st.selected.delete(p.id); });
       renderAll();
     });
-    $('val-presta').innerHTML = PRESTA.map(x => `<label class="val-pc"><input type="checkbox" data-pr="${x.id}"${st.presta.has(x.id) ? ' checked' : ''}> ${E(x.label)} <small>+${Math.round(x.up * 100)} %</small></label>`).join('');
+    const groupes = [...new Set(PRESTA.map(x => x.g))];
+    const jl = APPART(st.bien.type) ? 'Jardin privatif (m²)' : 'Jardin ou terrain (m²)';
+    $('val-presta').innerHTML = `<div class="val-ext">
+        <div class="val-f"><label for="val-terrasse">Terrasse ou balcon (m²)</label><input id="val-terrasse" type="number" min="0" max="300" inputmode="numeric" value="${st.bien.terrasse || ''}"></div>
+        <div class="val-f"><label for="val-jardin">${jl}</label><input id="val-jardin" type="number" min="0" max="10000" inputmode="numeric" value="${st.bien.jardin || ''}"></div>
+      </div><p class="val-hint">${APPART(st.bien.type) ? 'Comptés en surface pondérée : terrasse à 30 % du prix au m², jardin privatif à 3 %.' : 'Le prix du secteur comprend déjà un terrain d\'environ ' + TERRAIN_INCLUS + ' m² : seul le surplus est ajouté. Terrasse comptée à 15 % du prix au m².'}</p>` + groupes.map(g => {
+        const items = PRESTA.filter(x => x.g === g && prestaOk(x)); if (!items.length) return '';
+        return `<div class="val-pg"><b>${E(g)}</b><div>${items.map(x => `<label class="val-pc"><input type="checkbox" data-pr="${x.id}"${st.presta.has(x.id) ? ' checked' : ''}> ${E(x.label)} <small>+${(x.up * 100).toLocaleString('fr-FR')} %</small></label>`).join('')}</div></div>`;
+      }).join('');
     $('val-presta').querySelectorAll('input[data-pr]').forEach(i => i.onchange = () => { i.checked ? st.presta.add(i.dataset.pr) : st.presta.delete(i.dataset.pr); renderAll(); });
+    // Saisie des surfaces extérieures : mise à jour du prix sans redessiner les champs (le curseur reste en place)
+    ['terrasse', 'jardin'].forEach(k => { const f = $('val-' + k); f.oninput = () => { st.bien[k] = Math.max(0, parseInt(f.value, 10) || 0); renderAll(true); }; });
   }
 
   function renderAI() {
@@ -324,8 +400,9 @@
 
   }
 
-  function renderAll() {
-    renderDiag();
+  function renderAll(keepInputs) {
+    persist();
+    renderDiag(keepInputs);
     if (!ready()) {
       const m = manque(), txt = 'Indiquez ' + (m.length > 1 ? m.slice(0, -1).join(', ') + ' et ' + m[m.length - 1] : m[0]) + ' de votre bien.';
       $('val-hero').innerHTML = `
@@ -343,12 +420,16 @@
     }
     ['val-ai-btn', 'val-ann-btn', 'val-depot'].forEach(id => { if ($(id)) $(id).disabled = false; });
     const cur = compute(st.selected), base = compute(new Set());
-    const lo = base.V * 0.93, hi = base.V * 1.07;
+    // Plus le bien est décrit, plus la fourchette est étroite (±12 % sans description, ±5 % avec tout)
+    const pt = parts(), spread = 0.12 - 0.07 * (diagCount() / DIAG.length) - (st.bien.annee ? 0.005 : 0);
+    const lo = base.V * (1 - spread), hi = base.V * (1 + spread);
+    const pc = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 1000) / 10).toLocaleString('fr-FR') + ' %';
+    const detail = [`Secteur : ${money(pt.pm2)}/m² × ${st.bien.surface} m²`, diagCount() || st.bien.annee ? 'état ' + pc(pt.etat) : '', pt.presta ? 'prestations ' + pc(pt.presta) : '', pt.ext ? 'extérieurs +' + money(pt.ext) : ''].filter(Boolean).join(' · ');
     const sou = st.bien.prixSouhaite;
     let souTxt = '';
     if (sou) { const d = (sou - base.V) / base.V * 100; souTxt = `Votre prix : ${money(sou)} (${d >= 0 ? '+' : ''}${d.toFixed(0)} % vs estimation)`; }
     $('val-hero').innerHTML = `
-      <div class="val-kpi"><small>Prix en l'état</small><b>${money(base.V)}</b><em>Fourchette ${money(lo)} – ${money(hi)}</em><em style="font-size:11px;margin-top:4px" title="${E(estOf(st.bien.quartier, st.bien.type).label)}">${E(estOf(st.bien.quartier, st.bien.type).source === 'observatoire' ? 'Base : annonces Immo360 du secteur' : 'Base : barème calé sur les ventes 2025 (ISEE)')}${st.presta.size ? ' · prestations +' + Math.round(prestaCoef() * 100) + ' %' : ''}</em></div>
+      <div class="val-kpi"><small>Prix en l'état</small><b>${money(base.V)}</b><em>Fourchette ${money(lo)} – ${money(hi)}</em><em class="val-det">${E(detail)}</em><em style="font-size:12px;margin-top:4px" title="${E(estOf(st.bien.quartier, st.bien.type).label)}">${E(estOf(st.bien.quartier, st.bien.type).source === 'observatoire' ? 'Base : annonces Immo360 du secteur' : 'Base : barème calé sur les ventes 2025 (ISEE)')}</em></div>
       <div class="val-kpi gold"><small>Prix après travaux</small><b>${money(cur.apres)}</b><em>${cur.list.length ? 'Coût des travaux : ' + money(cur.cout) + ' · environ ' + cur.jours + ' j' : diagCount() ? 'Choisissez les travaux utiles ci-dessous' : 'Décrivez d\'abord l\'état du bien'}</em></div>
       <div class="val-kpi ${cur.gainNet >= 0 ? 'pos' : 'neg'}"><small>Gain net estimé</small><b>${cur.list.length ? (cur.gainNet >= 0 ? '+' : '−') + money(Math.abs(cur.gainNet)) : '—'}</b><em>${cur.list.length ? 'Rendement des travaux : ' + (cur.roi * 100).toFixed(0) + ' %' : (souTxt || '&nbsp;')}</em></div>`;
 
@@ -422,9 +503,9 @@
       const r = await fetch('/api/valorisation', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...b, pm2: pm2Of(b.quartier, b.type),
+          ...b, etat: etatDeduit(), pm2: pm2Of(b.quartier, b.type),
           diagnostic: Object.fromEntries(DIAG.filter(d => st.diag[d.key] !== undefined).map(d => [d.key, st.diag[d.key]])),
-          prestations: PRESTA.filter(x => st.presta.has(x.id)).map(x => x.label),
+          prestations: PRESTA.filter(x => prestaOk(x) && st.presta.has(x.id)).map(x => x.label).concat(b.terrasse ? ['terrasse ' + b.terrasse + ' m²'] : [], b.jardin ? ['jardin ' + b.jardin + ' m²'] : []),
           postes: POSTES.map(posteCalc).map(p => ({ id: p.id, label: p.label, grade: p.grade, cout: p.cout, gain: p.statut === 'inconnu' ? null : p.gain, statut: p.statut })),
           images: st.photos.map(p => ({ data: p.data, mediaType: p.mediaType }))
         })
@@ -432,7 +513,6 @@
       const d = await r.json();
       if (!r.ok || d.error) throw new Error(d.error || 'Erreur ' + r.status);
       st.ai = d;
-      if (ETAT_COEF[d.etat_detecte] && st.photos.length) { st.bien.etat = d.etat_detecte; $('val-etat').value = d.etat_detecte; }
       // État vu sur les photos : ne remplit que les éléments que le vendeur n'a pas décrits
       if (st.photos.length && d.diagnostic && typeof d.diagnostic === 'object') DIAG.forEach(x => {
         const v = d.diagnostic[x.key];

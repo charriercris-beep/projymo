@@ -81,6 +81,23 @@ Les niveaux (Rangement, Home staging…) ne retiennent que les postes utiles. Av
 peut remplir les éléments non décrits (mention « vu sur les photos »), sans jamais écraser ce que le
 vendeur a indiqué.
 
-Les prestations (vue mer ou lagon +7 %, piscine +4 %, parking +3 %, grande terrasse ou jardin +3 %,
-résidence sécurisée +2 %) ajustent la valeur en l'état. Ce sont des repères indicatifs, à recaler sur
-les ventes observées dès que l'observatoire disposera d'assez d'annonces.
+### Valeur en l'état, calculée en direct
+
+Valeur = prix au m² du secteur × surface × (1 + état) × (1 + prestations) + extérieurs.
+
+- **État** : il n'y a plus de champ « État général ». L'état se déduit du diagnostic, élément par élément,
+  par rapport à un bien moyen du secteur (le barème est une médiane de ventes) : par exemple cuisine récente
+  +3 %, datée −4 % ; électricité ancienne −3 % ; climatisation partout +2 %, aucune −2 % ; murs abîmés −3 %.
+  Un élément non décrit compte pour 0. L'année de construction (facultative) ajoute de +3 % (depuis 2015)
+  à −4 % (avant 1975).
+- **Prestations**, regroupées comme sur les grands portails (vue, piscine et bien-être, stationnement,
+  sécurité, confort et annexes) : vue mer ou lagon +7 %, piscine privée +5 %, studio indépendant +6 %,
+  garage fermé +3 %, plage à pied +3 %, parking sécurisé +2 %, spa +1,5 %… Le total est plafonné à +25 %.
+  Certaines dépendent du type de bien (ascenseur pour un appartement, carport ou pool house pour une maison).
+- **Extérieurs**, en surface pondérée et sans double compte : en appartement, terrasse à 30 % du prix au m²
+  et jardin privatif à 3 % (1 % au-delà de 200 m²) ; en maison ou villa, le prix du secteur comprend déjà un
+  terrain d'environ 600 m², seul le surplus compte (3 %), et la terrasse compte pour 15 %.
+- **Fourchette** : ±12 % quand le bien n'est pas décrit, jusqu'à ±5 % quand le diagnostic est complet.
+
+Tous ces coefficients sont des repères indicatifs, à recaler sur les ventes observées dès que
+l'observatoire disposera d'assez d'annonces.

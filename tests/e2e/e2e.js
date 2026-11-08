@@ -65,7 +65,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   // 2. L'acheteur, vendeur d'un bien, demande des devis (peinture + plomberie)
   await A.espace('sell'); await A.evaluate(() => go('valorisation')); await A.waitForTimeout(400);
   // le formulaire part de zéro : décrire le bien d'abord
-  await A.selectOption('#val-type', 'appartement'); await A.fill('#val-surface', '80'); await A.selectOption('#val-quartier', 'Magenta'); await A.selectOption('#val-etat', 'correct');
+  await A.selectOption('#val-type', 'appartement'); await A.fill('#val-surface', '80'); await A.selectOption('#val-quartier', 'Magenta');
   // diagnostic d'abord : murs défraîchis et petits défauts → peinture et petites réparations (plomberie)
   for (const [k, v] of [['murs', 'defraichi'], ['defauts', 'quelques']]) await A.click(`#val-diag button[data-k="${k}"][data-v="${v}"]`);
   await A.click('[data-pre="rafraichissement"]'); await A.click('#val-devis-btn');
