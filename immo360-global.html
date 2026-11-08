@@ -19,9 +19,9 @@ html{overflow-x:hidden;max-width:100vw}
      Les noms historiques (--gold…) sont conservés pour ne pas casser les gabarits existants. */
   /* Thème « lagon du Pacifique » : turquoise du lagon, bleu du large, sable blanc, corail */
   --gold:#0A7A84;--gold-light:#C4EEEA;--gold-dark:#06575F;
-  --lagoon:#35C3BC;--lagoon-pale:#E6F7F5;--ocean:#0B3954;--sand:#F5EDDF;
-  --cream:#FBF8F2;--warm:#F1E9DA;
-  --dark:#0F2A38;--mid:#3E5462;--soft:#C3CDD3;--line:#D9D2C3;--line-strong:#97A8B2;
+  --lagoon:#35C3BC;--lagoon-pale:#E6F7F5;--ocean:#0B3954;--sand:#EEF4F5;
+  --cream:#F5F8F9;--warm:#E8EEF0;
+  --dark:#0F2A38;--mid:#3E5462;--soft:#C3CDD3;--line:#D3DEE2;--line-strong:#97A8B2;
   --green:#2E7D4F;--red:#B4442C;--blue:#1F5F8B;--accent:#E8704F;
 }
 body{font-family:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.5;background:var(--cream);color:var(--dark);-webkit-font-smoothing:antialiased}
@@ -516,7 +516,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:28px 22px}
 .pc-grid.sm{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
 .pc{position:relative;display:flex;flex-direction:column;background:#fff;color:var(--dark);font-family:'Source Sans 3',sans-serif;min-width:0}
-.pc-ph{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#DCEBEA,#EEEAE2)}
+.pc-ph{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#DCEBEA,#E8EEF0)}
 .pc-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
 .pc:hover .pc-ph img{transform:scale(1.04)}
 .pc-noimg{display:none;position:absolute;inset:0;margin:auto;width:44px;height:44px;color:#7FA9A6}
@@ -544,7 +544,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 /* Fiche d'un bien */
 .fi{background:#fff;border-radius:16px;width:100%;max-width:980px;overflow:hidden;font-family:'Source Sans 3',sans-serif;color:var(--dark);margin:auto 0}
-.fi-ph{position:relative;aspect-ratio:16/8;background:linear-gradient(135deg,#DCEBEA,#EEEAE2)}
+.fi-ph{position:relative;aspect-ratio:16/8;background:linear-gradient(135deg,#DCEBEA,#E8EEF0)}
 .fi-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .fi-noimg{display:none;position:absolute;inset:0;margin:auto;width:64px;height:64px;color:#7FA9A6}.fi-ph.none .fi-noimg{display:block}
 .fi-tools{position:absolute;top:14px;right:14px;display:flex;gap:8px;z-index:2}
@@ -593,13 +593,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-chip:hover{background:rgba(53,195,188,.34)}
 .lp-stab.on{border-bottom-color:var(--lagoon)}
 .lp-pro li .i{color:var(--gold)}
-.pc-ph{background:linear-gradient(160deg,#BFEDEA 0%,#E6F7F5 55%,#F5EDDF 100%)}
+.pc-ph{background:linear-gradient(160deg,#BFEDEA 0%,#E6F7F5 60%,#EEF4F5 100%)}
 .pc-noimg{color:#3E9E9A}
 .pc-fav[aria-pressed="true"]{color:var(--accent)}
 .tn-tab.on{border-bottom-color:var(--lagoon)}
-.content{background:#EFE7D8}
-/* Contraste : cartes blanches nettement détachées du fond sable */
-.content .card{background:#fff;border:1px solid #D9D2C3;box-shadow:0 1px 2px rgba(15,42,56,.06),0 4px 14px rgba(15,42,56,.05)}
+.content{background:#E9F0F2}
+/* Contraste : cartes blanches nettement détachées du fond gris-bleu */
+.content .card{background:#fff;border:1px solid #D3DEE2;box-shadow:0 1px 2px rgba(15,42,56,.06),0 4px 14px rgba(15,42,56,.05)}
 .content .card-title{color:var(--ocean);font-size:19px}
 .content h2{color:var(--ocean)}
 .btn-gold{background:var(--gold)}.btn-gold:hover{background:var(--gold-dark)}
@@ -1604,7 +1604,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </details>
           <h3 style="font-size:17px;margin:18px 0 10px">Aperçu</h3>
           <div id="depot-preview" style="border:1px solid #DDD9D0;border-radius:10px;overflow:hidden;margin-bottom:16px">
-            <div id="dp-photo-zone" style="height:200px;background:#EEEAE2;position:relative;display:flex;align-items:center;justify-content:center;color:#9A9384">
+            <div id="dp-photo-zone" style="height:200px;background:#E8EEF0;position:relative;display:flex;align-items:center;justify-content:center;color:#9A9384">
               <div style="font-size:48px" id="dp-emoji"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></div>
               <span id="dp-dpe-badge" style="position:absolute;top:10px;right:10px;color:#fff;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700"></span>
             </div>
@@ -8102,7 +8102,7 @@ function buildSmartDashboard(){
 
   // Colonne GAUCHE : carte profil
   const profilCard=(emoji,role,sub,color)=>`
-    <div style="background:#fff;border-radius:10px;border:1px solid #E3E0D8;padding:18px;margin-bottom:16px;display:flex;gap:14px;align-items:center">
+    <div style="background:#fff;border-radius:10px;border:1px solid #D3DEE2;padding:18px;margin-bottom:16px;display:flex;gap:14px;align-items:center">
       <div style="width:48px;height:48px;border-radius:50%;background:${color}1A;color:${color};display:flex;align-items:center;justify-content:center;font:700 17px 'Source Sans 3',sans-serif;flex:none">${esc((nom||'?').trim().slice(0,2).toUpperCase())}</div>
       <div style="min-width:0"><div style="font-size:18px;font-weight:700;color:#12303F">Bonjour ${esc(nom)}</div>
         <div style="font-size:14px;color:var(--mid)">${role}</div>
@@ -8170,7 +8170,7 @@ function buildSmartDashboard(){
         <button type="button" onclick="go('valorisation')" style="text-align:left;background:#fff;border:1px solid #D8D4CB;border-radius:10px;padding:16px;cursor:pointer;font-family:inherit;color:#12303F"><b style="display:block;font-size:17px">Savoir combien vaut mon bien</b><span style="font-size:14px;color:var(--mid)">Estimation gratuite, avec ou sans travaux</span></button>
         <button type="button" onclick="go('depot')" style="text-align:left;background:#fff;border:1px solid #D8D4CB;border-radius:10px;padding:16px;cursor:pointer;font-family:inherit;color:#12303F"><b style="display:block;font-size:17px">Mettre mon bien en vente</b><span style="font-size:14px;color:var(--mid)">Annonce avec photos, visible de tous</span></button>
       </div>`);
-    const annonces=card(`${lbl('Mes annonces')}${mes.length?mes.slice(0,4).map(x=>`<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-top:1px solid #EEEAE2">
+    const annonces=card(`${lbl('Mes annonces')}${mes.length?mes.slice(0,4).map(x=>`<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-top:1px solid #E8EEF0">
         <div style="min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.titre)}</div><div style="font-size:14px;color:var(--mid)">${x.publie?'En ligne':'Retirée'} · ${x.prix?Number(x.prix).toLocaleString('fr-FR')+' F':''}</div></div>
         <button type="button" class="btn btn-sm btn-outline" onclick="go('mes-annonces')">Gérer</button></div>`).join(''):'<p style="margin:0 0 12px;color:var(--mid)">Vous n\u2019avez pas encore d\u2019annonce.</p><button type="button" class="btn btn-gold" onclick="go(\'depot\')">Déposer une annonce</button>'}`);
     const etapes=['Estimer le prix','Préparer le bien (rangement, petits travaux)','Publier l\u2019annonce avec photos','Organiser les visites','Accepter une offre','Signer chez le notaire'];
