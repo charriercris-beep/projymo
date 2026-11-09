@@ -17,10 +17,12 @@ html{overflow-x:hidden;max-width:100vw}
 :root{
   /* Palette : lagon (action), sable (fond), encre (texte), corail (accent rare).
      Les noms historiques (--gold…) sont conservés pour ne pas casser les gabarits existants. */
-  --gold:#0F6E75;--gold-light:#CDEBE9;--gold-dark:#0A4F54;
-  --cream:#F7F5F0;--warm:#EEEAE2;
-  --dark:#1E2329;--mid:#5A6270;--soft:#C9CDD3;--line:#E4E1DA;--line-strong:#B9BEC6;
-  --green:#2E7D4F;--red:#B4442C;--blue:#2B5C8A;--accent:#D9694A;
+  /* Thème « lagon du Pacifique » : turquoise du lagon, bleu du large, sable blanc, corail */
+  --gold:#0A7A84;--gold-light:#C4EEEA;--gold-dark:#06575F;
+  --lagoon:#35C3BC;--lagoon-pale:#E6F7F5;--ocean:#0B3954;--sand:#EEF4F5;
+  --cream:#F5F8F9;--warm:#E8EEF0;
+  --dark:#0F2A38;--mid:#3E5462;--soft:#C3CDD3;--line:#D3DEE2;--line-strong:#97A8B2;
+  --green:#2E7D4F;--red:#B4442C;--blue:#1F5F8B;--accent:#E8704F;
 }
 body{font-family:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.5;background:var(--cream);color:var(--dark);-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{font-weight:700;letter-spacing:-0.01em}
@@ -143,7 +145,7 @@ h1,h2,h3,h4{font-family:'Source Sans 3',sans-serif}
 .nav-section{font-size:9px;color:rgba(255,255,255,0.25);padding:14px 20px 5px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.5);transition:.2s;border-left:2px solid transparent}
 .nav-item:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.04)}
-.nav-item.active{color:#fff;background:rgba(15,110,117,0.12);border-left-color:var(--gold)}
+.nav-item.active{color:#fff;background:rgba(10,122,132,0.12);border-left-color:var(--gold)}
 .nav-item .ico{font-size:15px;width:20px;text-align:center}
 .lang-bar{padding:12px 14px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:5px;align-items:center}
 .lb{padding:4px 9px;border-radius:5px;font-size:11px;cursor:pointer;color:rgba(255,255,255,0.4);border:1px solid transparent;transition:.2s}
@@ -157,7 +159,7 @@ h1,h2,h3,h4{font-family:'Source Sans 3',sans-serif}
 .topbar-title{font-family:'Source Sans 3',sans-serif;font-size:17px;font-weight:500;flex:1}
 .dev-sel{padding:6px 10px;border:1px solid rgba(0,0,0,0.12);border-radius:7px;font-size:12px;background:#fff;cursor:pointer;color:var(--dark)}
 .topbar-badge{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;}
-.badge-sell{background:rgba(15,110,117,0.1);color:var(--gold-dark)}
+.badge-sell{background:rgba(10,122,132,0.1);color:var(--gold-dark)}
 .badge-buy{background:rgba(42,74,122,0.1);color:var(--blue)}
 .badge-agt{background:rgba(42,122,75,0.1);color:var(--green)}
 .content{flex:1;overflow-y:auto;padding:24px 28px;width:100%}
@@ -180,7 +182,7 @@ input,select,textarea{width:100%;padding:10px 12px;border:1px solid #B9BEC6;bord
 input::placeholder,textarea::placeholder{color:#9AA1AB;opacity:1}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
 button:focus-visible,a:focus-visible,[role=button]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(15,110,117,0.1)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(10,122,132,0.1)}
 textarea{resize:vertical;min-height:80px}
 .field{margin-bottom:14px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -202,7 +204,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 /* TAGS */
 .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px}
-.tag-gold{background:rgba(15,110,117,0.12);color:var(--gold-dark)}
+.tag-gold{background:rgba(10,122,132,0.12);color:var(--gold-dark)}
 .tag-green{background:rgba(42,122,75,0.12);color:var(--green)}
 .tag-red{background:rgba(184,58,42,0.12);color:var(--red)}
 .tag-blue{background:rgba(42,74,122,0.12);color:var(--blue)}
@@ -215,11 +217,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 /* UPLOAD */
 .upload-zone{border:2px dashed var(--soft);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s}
-.upload-zone:hover{border-color:var(--gold);background:rgba(15,110,117,0.03)}
+.upload-zone:hover{border-color:var(--gold);background:rgba(10,122,132,0.03)}
 .upload-zone input{display:none}
 .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:12px}
 .photo-thumb{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:2px solid transparent;cursor:pointer;transition:.2s}
-.photo-thumb:hover,.photo-thumb.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(15,110,117,0.3)}
+.photo-thumb:hover,.photo-thumb.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(10,122,132,0.3)}
 
 /* BEFORE/AFTER */
 .ba-container{position:relative;width:100%;height:200px;border-radius:12px;overflow:hidden;cursor:ew-resize;user-select:none}
@@ -254,7 +256,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .notif{border-radius:8px;padding:10px 14px;font-size:12.5px;margin-bottom:10px;display:none}
 .notif.show{display:block}
 .notif-ok{background:rgba(42,122,75,0.08);border:1px solid rgba(42,122,75,0.2);color:var(--green)}
-.notif-warn{background:rgba(15,110,117,0.08);border:1px solid rgba(15,110,117,0.2);color:var(--gold-dark)}
+.notif-warn{background:rgba(10,122,132,0.08);border:1px solid rgba(10,122,132,0.2);color:var(--gold-dark)}
 
 /* AI BOX */
 .ai-box{background:linear-gradient(135deg,var(--dark),#2a2520);border-radius:14px;padding:20px;color:#fff}
@@ -263,7 +265,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .ai-line:last-child{border:none}
 .ai-chip{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
 .ai-ok{background:rgba(42,122,75,0.3);color:#6fd98a}
-.ai-warn{background:rgba(15,110,117,0.3);color:var(--gold-light)}
+.ai-warn{background:rgba(10,122,132,0.3);color:var(--gold-light)}
 .ai-bad{background:rgba(184,58,42,0.3);color:#f48a7a}
 
 /* ANNONCE */
@@ -276,8 +278,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 /* IMPROVEMENT CARD */
 .improve-card{border:1.5px solid var(--warm);border-radius:12px;padding:14px;margin-bottom:10px;transition:.2s}
-.improve-card:hover{border-color:var(--gold);background:rgba(15,110,117,0.02)}
-.improve-card.selected{border-color:var(--gold);background:rgba(15,110,117,0.05)}
+.improve-card:hover{border-color:var(--gold);background:rgba(10,122,132,0.02)}
+.improve-card.selected{border-color:var(--gold);background:rgba(10,122,132,0.05)}
 .improve-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
 .improve-title{font-weight:600;font-size:13.5px}
 .improve-badges{display:flex;gap:6px}
@@ -354,7 +356,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .ld-filter-select:focus{outline:none;border-color:var(--gold)}
 .ld-dropdown-btn{background:#fff;border:1px solid var(--warm);color:var(--dark);padding:7px 12px;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:'Source Sans 3',sans-serif;transition:.15s;display:flex;align-items:center;gap:5px}
 .ld-dropdown-btn:hover{border-color:var(--gold);color:var(--gold)}
-.ld-dropdown-btn.has-selection{border-color:var(--gold);background:rgba(15,110,117,0.06);color:var(--gold);font-weight:600}
+.ld-dropdown-btn.has-selection{border-color:var(--gold);background:rgba(10,122,132,0.06);color:var(--gold);font-weight:600}
 .ld-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--warm);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);z-index:200;min-width:180px;padding:10px 0;max-height:320px;overflow-y:auto}
 .ld-dropdown.open{display:block}
 .ld-dd-title{font-size:10px;font-weight:700;color:var(--mid);padding:2px 14px 8px;border-bottom:1px solid var(--warm);margin-bottom:4px}
@@ -383,13 +385,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .eq-check{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--dark);cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid transparent;transition:.15s;white-space:nowrap}
 .eq-check:hover{background:var(--warm)}
 .eq-check input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer;flex-shrink:0}
-.eq-check:has(input:checked){background:rgba(15,110,117,0.08);border-color:rgba(15,110,117,0.3);color:var(--gold-dark);font-weight:500}
+.eq-check:has(input:checked){background:rgba(10,122,132,0.08);border-color:rgba(10,122,132,0.3);color:var(--gold-dark);font-weight:500}
 
 /* ── PAGE ACCUEIL ── */
 .landing{position:fixed;inset:0;background:var(--cream);z-index:1000;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
 /* Carte annonce grille */
 .ld-card{background:#fff;border:1px solid var(--warm);border-radius:10px;cursor:pointer;overflow:hidden;transition:.15s}
-.ld-card:hover{border-color:var(--gold);box-shadow:0 2px 12px rgba(15,110,117,0.12);transform:translateY(-1px)}
+.ld-card:hover{border-color:var(--gold);box-shadow:0 2px 12px rgba(10,122,132,0.12);transform:translateY(-1px)}
 .ld-card-img{height:140px;background:linear-gradient(135deg,var(--warm),var(--cream));display:flex;align-items:center;justify-content:center;font-size:44px;position:relative}
 .ld-card-body{padding:12px}
 .ld-card-price{font-family:'Source Sans 3',sans-serif;font-size:18px;font-weight:700;color:var(--dark)}
@@ -398,7 +400,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .ld-card-tag{background:var(--warm);padding:2px 7px;border-radius:4px;font-size:10px}
 /* Carte annonce liste */
 .ld-list-item{background:#fff;border:1px solid var(--warm);border-radius:10px;cursor:pointer;overflow:hidden;transition:.15s;display:flex;gap:0}
-.ld-list-item:hover{border-color:var(--gold);box-shadow:0 2px 8px rgba(15,110,117,0.1)}
+.ld-list-item:hover{border-color:var(--gold);box-shadow:0 2px 8px rgba(10,122,132,0.1)}
 .ld-list-img{width:120px;min-width:120px;background:linear-gradient(135deg,var(--warm),var(--cream));display:flex;align-items:center;justify-content:center;font-size:36px}
 .ld-list-body{padding:12px 14px;flex:1}
 .ld-list-price{font-family:'Source Sans 3',sans-serif;font-size:18px;font-weight:700;color:var(--dark)}
@@ -414,7 +416,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .modal-sub{font-size:13px;color:var(--mid);margin-bottom:24px}
 .profile-choice{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
 .profile-opt{border:1.5px solid var(--warm);border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;transition:.2s}
-.profile-opt:hover,.profile-opt.sel{border-color:var(--gold);background:rgba(15,110,117,0.05)}
+.profile-opt:hover,.profile-opt.sel{border-color:var(--gold);background:rgba(10,122,132,0.05)}
 .profile-opt-icon{font-size:24px;margin-bottom:6px}
 .profile-opt-name{font-size:12px;font-weight:600;color:var(--dark)}
 
@@ -423,7 +425,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .msg-sidebar{border-right:1px solid var(--warm);overflow-y:auto;background:#fff}
 .msg-sidebar-header{padding:14px 16px;border-bottom:1px solid var(--warm);font-weight:600;font-size:14px}
 .conv-item{padding:12px 16px;border-bottom:1px solid var(--warm);cursor:pointer;transition:.15s}
-.conv-item:hover,.conv-item.active{background:rgba(15,110,117,0.06)}
+.conv-item:hover,.conv-item.active{background:rgba(10,122,132,0.06)}
 .conv-item-name{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px}
 .conv-item-preview{font-size:11px;color:var(--mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .conv-item-meta{font-size:10px;color:var(--soft);float:right;margin-top:2px}
@@ -495,7 +497,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .doc-chevron{color:var(--mid);font-size:12px}
 .doc-cat-body{padding:12px 16px;border-top:1px solid rgba(28,26,22,.08)}
 .doc-drop-zone{border:1.5px dashed var(--soft);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:.15s;margin-bottom:8px}
-.doc-drop-zone:hover{border-color:var(--gold);background:rgba(15,110,117,.04)}
+.doc-drop-zone:hover{border-color:var(--gold);background:rgba(10,122,132,.04)}
 .doc-list{display:flex;flex-direction:column;gap:6px}
 
 .tn-prof{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.5);font:500 11px 'Source Sans 3',sans-serif;}
@@ -514,7 +516,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:28px 22px}
 .pc-grid.sm{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
 .pc{position:relative;display:flex;flex-direction:column;background:#fff;color:var(--dark);font-family:'Source Sans 3',sans-serif;min-width:0}
-.pc-ph{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#DCEBEA,#EEEAE2)}
+.pc-ph{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#DCEBEA,#E8EEF0)}
 .pc-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
 .pc:hover .pc-ph img{transform:scale(1.04)}
 .pc-noimg{display:none;position:absolute;inset:0;margin:auto;width:44px;height:44px;color:#7FA9A6}
@@ -542,7 +544,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 /* Fiche d'un bien */
 .fi{background:#fff;border-radius:16px;width:100%;max-width:980px;overflow:hidden;font-family:'Source Sans 3',sans-serif;color:var(--dark);margin:auto 0}
-.fi-ph{position:relative;aspect-ratio:16/8;background:linear-gradient(135deg,#DCEBEA,#EEEAE2)}
+.fi-ph{position:relative;aspect-ratio:16/8;background:linear-gradient(135deg,#DCEBEA,#E8EEF0)}
 .fi-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .fi-noimg{display:none;position:absolute;inset:0;margin:auto;width:64px;height:64px;color:#7FA9A6}.fi-ph.none .fi-noimg{display:block}
 .fi-tools{position:absolute;top:14px;right:14px;display:flex;gap:8px;z-index:2}
@@ -568,6 +570,59 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .fi-av{width:44px;height:44px;border-radius:50%;background:var(--gold-light);color:var(--gold-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex:none}
 .fi-note{margin:0;font-size:15px;color:#3B424C}
 @media(max-width:800px){.fi-bd{grid-template-columns:1fr;gap:8px;padding:18px}.fi-ph{aspect-ratio:4/3}.fi-pr{font-size:28px}.fi-feat{grid-template-columns:1fr}.fi .ann-media{padding:12px 18px 0}}
+
+/* Inscription : choix du profil */
+.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.reg-grid.pro{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.reg-opt{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px 8px;cursor:pointer;font-family:inherit;color:var(--dark)}
+.reg-opt .i{font-size:22px;color:var(--gold);margin-bottom:4px}.reg-opt b{font-size:14px}.reg-opt span{font-size:12.5px;color:var(--mid)}
+.reg-opt:hover{border-color:var(--gold)}
+.reg-opt.on{border-color:var(--gold);background:rgba(10,122,132,.07);box-shadow:inset 0 0 0 1px var(--gold)}
+.reg-sep{display:flex;align-items:center;gap:8px;margin:4px 0 10px;font-size:13px;font-weight:600;color:var(--mid)}
+.reg-sep::before,.reg-sep::after{content:'';flex:1;height:1px;background:var(--line)}
+
+/* Thème lagon */
+.logo-mk{width:30px;height:30px;margin-right:8px;vertical-align:-7px;flex:none}
+.tn-logo{display:flex;align-items:center}
+.lp-logo{display:flex;align-items:center}
+.lp-stat b{color:var(--ocean)}.lp-stat b.dn{color:var(--accent)}
+.lp-stats{border-color:#CDE9E6}
+.lp-tile:hover{border-color:var(--lagoon)}
+.lp-tile .cta,.lp-tile .cta{color:var(--gold)}
+.lp-chip{background:rgba(53,195,188,.18);border-color:rgba(155,234,227,.7)}
+.lp-chip:hover{background:rgba(53,195,188,.34)}
+.lp-stab.on{border-bottom-color:var(--lagoon)}
+.lp-pro li .i{color:var(--gold)}
+.pc-ph{background:linear-gradient(160deg,#BFEDEA 0%,#E6F7F5 60%,#EEF4F5 100%)}
+.pc-noimg{color:#3E9E9A}
+.pc-fav[aria-pressed="true"]{color:var(--accent)}
+.tn-tab.on{border-bottom-color:var(--lagoon)}
+.content{background:#E9F0F2}
+/* Contraste : cartes blanches nettement détachées du fond gris-bleu */
+.content .card{background:#fff;border:1px solid #D3DEE2;box-shadow:0 1px 2px rgba(15,42,56,.06),0 4px 14px rgba(15,42,56,.05)}
+.content .card-title{color:var(--ocean);font-size:19px}
+.content h2{color:var(--ocean)}
+.btn-gold{background:var(--gold)}.btn-gold:hover{background:var(--gold-dark)}
+.lp-btn.pri{box-shadow:0 2px 0 rgba(6,87,95,.25)}
+
+/* Sous-onglets (pages regroupées) */
+.subnav{display:flex;gap:6px;flex-wrap:wrap;max-width:1180px;margin:0 auto 18px;padding:4px;background:#fff;border:1px solid var(--line);border-radius:12px;width:fit-content}
+.sn-tab{background:none;border:0;border-radius:9px;padding:9px 16px;font-family:inherit;font-size:15px;font-weight:600;color:var(--mid);cursor:pointer}
+.sn-tab:hover{color:var(--dark);background:var(--lagoon-pale)}
+.sn-tab.on{background:var(--gold);color:#fff}
+@media(max-width:700px){.subnav{width:auto;flex-wrap:nowrap;overflow-x:auto}.sn-tab{white-space:nowrap;padding:8px 12px}}
+
+/* Dépôt : vignette choisie bien visible */
+#panel-depot .dp-tile.on{background:var(--gold)!important;color:#fff!important;border-color:var(--gold)!important}
+/* Dépôt : arrivée depuis l'estimation */
+.dp-from-est{background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--dark);border-radius:10px;padding:10px 14px;font-size:15px;margin:0 0 14px}
+.dp-est-link{font-size:15px;color:var(--mid);margin:-4px 0 14px}
+/* Dépôt : visite vidéo intégrée */
+.dp-video{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--lagoon-pale)}
+.dp-video-h{display:flex!important;gap:10px;align-items:flex-start;font-weight:400!important;font-size:15px!important;cursor:pointer;margin:0 0 10px!important}
+.dp-video-h input{width:20px;height:20px;margin-top:2px;accent-color:var(--gold);flex:none}
+.dp-video-help{margin:0;font-size:14px;color:var(--mid)}
+.dp-video-prev:empty{display:none}
 /* Application : en-tête clair, comme la page d'accueil */
 .topnav{background:#fff;border-bottom:1px solid var(--line);height:64px}
 .tn-logo{color:var(--dark);font-size:21px;border-right-color:var(--line)}
@@ -582,7 +637,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .tn-right .dev-sel{color:var(--dark);border-color:var(--line-strong)}
 .tn-prof{color:var(--mid);font-size:13px}
 .tn-prof select{background:var(--cream);color:var(--dark);border-color:var(--line-strong)}
-.content{background:var(--cream)}
+/* fond de l application : voir thème lagon */
 
 /* Composants communs, mêmes rayons, mêmes tailles partout */
 .card{border:1px solid var(--line);border-radius:14px;box-shadow:none}
@@ -630,7 +685,9 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 
 /* Bandeau photo + recherche */
 .lp-hero{position:relative;min-height:540px;display:flex;align-items:center;color:#fff;background:#2B3640 center/cover no-repeat}
-.lp-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,20,26,.72) 0%,rgba(14,20,26,.45) 55%,rgba(14,20,26,.2) 100%)}
+.lp-hero{background-position:center bottom}
+.lp-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(7,45,66,.72) 0%,rgba(7,45,66,.42) 42%,rgba(7,45,66,0) 68%)}
+.lp-hero::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:56px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 56' preserveAspectRatio='none'%3E%3Cpath d='M0 30C180 6 360 6 540 26s360 26 540 6 270-22 360-10V56H0z' fill='%23ffffff'/%3E%3C/svg%3E") bottom/100% 100% no-repeat}
 .lp-hero .lp-in{position:relative;width:100%;padding-top:64px;padding-bottom:64px}
 .lp-hero h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:0 0 14px;font-weight:700;max-width:760px;letter-spacing:-.02em;text-shadow:0 1px 18px rgba(0,0,0,.25)}
 .lp-hero p.lead{font-size:20px;margin:0 0 28px;max-width:620px;color:rgba(255,255,255,.92);text-shadow:0 1px 12px rgba(0,0,0,.3)}
@@ -651,7 +708,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-chip:hover{background:rgba(255,255,255,.28)}
 
 /* Sections */
-.lp-sec{padding:56px 0}.lp-sec.alt{background:var(--cream)}
+.lp-sec{padding:56px 0}.lp-sec.alt{background:var(--sand)}.lp-sec.sea{background:var(--lagoon-pale)}
 .lp-sec h2{font-size:clamp(26px,3vw,34px);margin:0 0 6px;letter-spacing:-.01em}.lp-sec p.sub{color:var(--mid);margin:0;font-size:17px}
 .lp-sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:24px;flex-wrap:wrap}
 .lp-count{font-size:15px;color:var(--mid);margin-top:6px}
@@ -678,7 +735,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-pro ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
 .lp-pro li{display:flex;gap:10px;align-items:center;font-size:17px}.lp-pro li .i{color:var(--gold);font-size:20px}
 
-.lp-foot{background:var(--dark);color:rgba(255,255,255,.75);padding:36px 0;font-size:15px}
+.lp-foot{position:relative;background:var(--ocean);color:rgba(255,255,255,.78);padding:56px 0 36px;font-size:15px}
+.lp-foot::before{content:'';position:absolute;left:0;right:0;top:-1px;height:40px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0h1440v12c-200 22-420 26-720 8S160 6 0 22z' fill='%23E6F7F5'/%3E%3C/svg%3E") top/100% 100% no-repeat}
 .lp-foot .lp-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
 .lp-foot nav{display:flex;gap:20px;flex-wrap:wrap}.lp-foot button{background:none;border:0;padding:0;color:rgba(255,255,255,.75);font:inherit;cursor:pointer}.lp-foot button:hover{color:#fff}
 @media(max-width:900px){
@@ -701,7 +759,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </style>
 <div class="lp">
 <header class="lp-head"><div class="lp-in">
-  <div class="lp-logo">Immo<span>360</span><small>Nouvelle-Calédonie</small></div>
+  <div class="lp-logo"><svg class="logo-mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#0A7A84"/><path d="M5 19c3.5-3 7-3 10.5 0s7 3 11.5-.5" fill="none" stroke="#9BEAE3" stroke-width="2.4" stroke-linecap="round"/><path d="M5 24c3.5-3 7-3 10.5 0s7 3 11.5-.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".75"/><circle cx="22" cy="10" r="3.4" fill="#F7C873"/></svg>Immo<span>360</span><small>Nouvelle-Calédonie</small></div>
   <nav class="lp-nav" aria-label="Accès">
     <button type="button" class="lp-link" onclick="document.getElementById('section-annonces').scrollIntoView({behavior:'smooth'})">Acheter</button>
     <button type="button" class="lp-link" onclick="loginAs('sell');setTimeout(function(){go('depot')},60)">Vendre</button>
@@ -710,7 +768,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
   </nav>
 </div></header>
 
-<section class="lp-hero" style="background-image:url('assets/demo/sejour-clair.jpg')">
+<section class="lp-hero" style="background-image:url('assets/lagon.svg')">
   <div class="lp-in">
     <h1>Trouvez votre chez-vous en Nouvelle-Calédonie</h1>
     <p class="lead">Les annonces de tout le territoire, une estimation gratuite fondée sur les ventes réelles, et les bons professionnels au bon moment.</p>
@@ -746,7 +804,6 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <button type="button" class="lp-chip" onclick="lpQuick('','Terrain')">Terrains</button>
     </div>
   </div>
-  <span class="credit">Photo d'illustration</span>
 </section>
 
 <section id="section-annonces" class="lp-sec"><div class="lp-in">
@@ -786,7 +843,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
   <p class="lp-src">Source : <a href="https://isee.nc/transactions-immobilieres-synthese-annuelle-2025" target="_blank" rel="noopener">ISEE, synthèse 2025</a> (offices notariaux, DSF).</p>
 </div></section>
 
-<section class="lp-sec alt"><div class="lp-in lp-pro">
+<section class="lp-sec sea"><div class="lp-in lp-pro">
   <div><h2>Vous êtes professionnel ?</h2><p class="sub" style="margin-bottom:20px">Recevez les demandes des vendeurs et acheteurs près de chez vous, et suivez vos dossiers au même endroit.</p>
     <button type="button" class="lp-btn pri big" onclick="showLoginModal('agt')">Créer mon espace pro</button></div>
   <ul>
@@ -800,13 +857,14 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div></section>
 
 <footer class="lp-foot"><div class="lp-in">
-  <div><b style="color:#fff">Immo<span style="color:var(--gold-light)">360</span></b> · Nouvelle-Calédonie · © 2026</div>
+  <div><b style="color:#fff">Immo<span style="color:var(--lagoon)">360</span></b> · Nouvelle-Calédonie · © 2026</div>
   <nav aria-label="Informations légales">
     <button type="button" onclick="showPage('mentions')">Mentions légales</button>
     <button type="button" onclick="showPage('cgv')">CGU / CGV</button>
     <button type="button" onclick="showPage('confidentialite')">Confidentialité</button>
     <button type="button" onclick="showPage('contact')">Contact</button>
     <button type="button" onclick="showPage('credits')">Crédits photos</button>
+    <button type="button" id="lp-tarifs" hidden onclick="showPage('tarifs')">Tarifs</button>
   </nav>
 </div></footer>
 </div>
@@ -832,10 +890,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <button type="button" onclick="closeLoginModal()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
         </div>
         <!-- PROFIL SÉLECTIONNÉ -->
-        <div id="auth-profil-badge" style="margin-top:14px;background:rgba(15,110,117,0.2);border:1px solid rgba(15,110,117,0.4);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px">
+        <div id="auth-profil-badge" style="margin-top:14px;background:rgba(10,122,132,0.2);border:1px solid rgba(10,122,132,0.4);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px">
           <span id="auth-profil-icon" style="font-size:18px"><svg class="i"><use href="#i-home"/></svg></span>
           <div>
-            <div id="auth-profil-name" style="font-size:13px;font-weight:600;color:#CDEBE9">Espace Vendeur</div>
+            <div id="auth-profil-name" style="font-size:13px;font-weight:600;color:#C4EEEA">Espace Vendeur</div>
             <div id="auth-profil-desc" style="font-size:11px;color:rgba(255,255,255,0.5)">Estimation IA · Annonces · Suivi de vente</div>
           </div>
         </div>
@@ -878,49 +936,19 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div style="margin-bottom:16px">
           <label style="display:block;font-size:11px;font-weight:600;color:var(--mid);margin-bottom:10px;">Je suis</label>
 
-          <!-- PARTICULIER -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-            <div class="reg-profil-opt active" id="rp-buy" onclick="selectRegProfil('buy')" style="border:1.5px solid var(--gold);background:rgba(15,110,117,0.06);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s">
-              <div style="font-size:24px;margin-bottom:5px"><svg class="i"><use href="#i-search"/></svg></div>
-              <div style="font-size:13px;font-weight:700;color:var(--dark)">Acheteur</div>
-              <div style="font-size:10px;color:var(--mid);margin-top:2px">Je cherche un bien</div>
-            </div>
-            <div class="reg-profil-opt" id="rp-sell" onclick="selectRegProfil('sell')" style="border:1.5px solid var(--warm);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s">
-              <div style="font-size:24px;margin-bottom:5px"><svg class="i"><use href="#i-home"/></svg></div>
-              <div style="font-size:13px;font-weight:700;color:var(--dark)">Vendeur</div>
-              <div style="font-size:10px;color:var(--mid);margin-top:2px">Je vends un bien</div>
-            </div>
+          <div class="reg-grid">
+            <button type="button" class="reg-opt on" id="rp-buy" data-p="buy" aria-pressed="true" onclick="selectRegProfil('buy')"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><b>Acheteur</b><span>Je cherche un bien</span></button>
+            <button type="button" class="reg-opt" id="rp-sell" data-p="sell" aria-pressed="false" onclick="selectRegProfil('sell')"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg><b>Vendeur</b><span>Je vends un bien</span></button>
           </div>
-
-          <!-- SÉPARATEUR -->
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-            <div style="flex:1;height:1px;background:var(--warm)"></div>
-            <span style="font-size:10px;font-weight:600;color:var(--soft);">Professionnel</span>
-            <div style="flex:1;height:1px;background:var(--warm)"></div>
-          </div>
-
-          <!-- PROFESSIONNEL — un seul bouton large -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div class="reg-profil-opt" id="rp-agt" onclick="selectRegProfil('agt')" style="border:1.5px solid var(--warm);border-radius:10px;padding:10px 12px;cursor:pointer;transition:.2s;text-align:center">
-              <div style="font-size:22px;margin-bottom:5px"><svg class="i"><use href="#i-home"/></svg></div>
-              <div style="font-size:12px;font-weight:700;color:var(--dark)">Agent immobilier</div>
-              <div style="font-size:10px;color:var(--mid)">Mandats · Clients</div>
-            </div>
-            <div class="reg-profil-opt" id="rp-not" onclick="selectRegProfil('not')" style="border:1.5px solid var(--warm);border-radius:10px;padding:10px 12px;cursor:pointer;transition:.2s;text-align:center">
-              <div style="font-size:22px;margin-bottom:5px"><svg class="i"><use href="#i-scale"/></svg></div>
-              <div style="font-size:12px;font-weight:700;color:var(--dark)">Notaire</div>
-              <div style="font-size:10px;color:var(--mid)">Dossiers · Actes</div>
-            </div>
-            <div class="reg-profil-opt" id="rp-art" onclick="selectRegProfil('art')" style="border:1.5px solid var(--warm);border-radius:10px;padding:10px 12px;cursor:pointer;transition:.2s;text-align:center">
-              <div style="font-size:22px;margin-bottom:5px"><svg class="i"><use href="#i-hammer"/></svg></div>
-              <div style="font-size:12px;font-weight:700;color:var(--dark)">Artisan</div>
-              <div style="font-size:10px;color:var(--mid)">Devis · Chantiers</div>
-            </div>
-            <div class="reg-profil-opt" onclick="selectRegProfil('agt')" style="border:1.5px solid var(--warm);border-radius:10px;padding:10px 12px;cursor:pointer;transition:.2s;text-align:center">
-              <div style="font-size:22px;margin-bottom:5px">🏦</div>
-              <div style="font-size:12px;font-weight:700;color:var(--dark)">Courtier</div>
-              <div style="font-size:10px;color:var(--mid)">Financement</div>
-            </div>
+          <div class="reg-sep"><span>Professionnel</span></div>
+          <div class="reg-grid pro">
+            <button type="button" class="reg-opt" id="rp-agt" data-p="agt" aria-pressed="false" onclick="selectRegProfil('agt')"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg><b>Agent immobilier</b><span>Mandats, clients</span></button>
+            <button type="button" class="reg-opt" id="rp-not" data-p="not" aria-pressed="false" onclick="selectRegProfil('not')"><svg class="i" aria-hidden="true"><use href="#i-scale"/></svg><b>Notaire</b><span>Dossiers, actes</span></button>
+            <button type="button" class="reg-opt" id="rp-art" data-p="art" aria-pressed="false" onclick="selectRegProfil('art')"><svg class="i" aria-hidden="true"><use href="#i-hammer"/></svg><b>Artisan</b><span>Devis, chantiers</span></button>
+            <button type="button" class="reg-opt" id="rp-bnk" data-p="bnk" aria-pressed="false" onclick="selectRegProfil('bnk')"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg><b>Banquier / courtier</b><span>Financement</span></button>
+            <button type="button" class="reg-opt" id="rp-diag" data-p="diag" aria-pressed="false" onclick="selectRegProfil('diag')"><svg class="i" aria-hidden="true"><use href="#i-file"/></svg><b>Diagnostiqueur</b><span>Diagnostics</span></button>
+            <button type="button" class="reg-opt" id="rp-geo" data-p="geo" aria-pressed="false" onclick="selectRegProfil('geo')"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><b>Géomètre-expert</b><span>Bornage, surfaces</span></button>
+            <button type="button" class="reg-opt" id="rp-ass" data-p="ass" aria-pressed="false" onclick="selectRegProfil('ass')"><svg class="i" aria-hidden="true"><use href="#i-building"/></svg><b>Assureur</b><span>Habitation, emprunteur</span></button>
           </div>
         </div>
         <div class="field-row">
@@ -931,12 +959,14 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div class="field"><label>Téléphone</label><input type="tel" id="reg-tel" placeholder="+687 00 00 00"></div>
         <div class="field"><label>Mot de passe</label><input type="password" id="reg-password" placeholder="Min. 8 caractères"></div>
         <div id="reg-extra-agt" style="display:none">
-          <div class="field"><label>Nom de l'agence</label><input type="text" id="reg-agence" placeholder="Agence Soleil NC"></div>
-          <div class="field"><label>N° carte professionnelle (optionnel)</label><input type="text" id="reg-cartepro" placeholder="FNAIM / CCI NC"></div>
+          <div class="field"><label for="reg-agence" id="reg-agence-lbl">Nom de l'entreprise</label><input type="text" id="reg-agence" autocomplete="organization"></div>
+          <div class="field"><label for="reg-ridet">Numéro RIDET</label><input type="text" id="reg-ridet" inputmode="numeric" autocomplete="off" aria-describedby="reg-ridet-aide"><small id="reg-ridet-aide" style="display:block;color:var(--mid);font-size:13px;margin-top:4px">Votre profil est vérifié par notre équipe avant d'être visible des particuliers.</small></div>
+          <div class="field" id="reg-cartepro-f"><label for="reg-cartepro">N° de carte professionnelle (facultatif)</label><input type="text" id="reg-cartepro"></div>
         </div>
-        <button type="button" class="btn btn-gold btn-full" style="margin-top:8px" onclick="doRegister()">✅ Créer mon compte gratuit</button>
+        <p id="reg-err" role="alert" style="display:none;background:#FBEAE6;color:#8A2E1C;border-radius:8px;padding:10px 12px;font-size:14px;margin:4px 0 0"></p>
+        <button type="button" class="btn btn-gold btn-full" style="margin-top:8px" id="reg-submit" onclick="doRegister()">Créer mon compte gratuit</button>
         <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--mid)">
-          En vous inscrivant, vous acceptez nos <span style="color:var(--gold);cursor:pointer;font-weight:600" onclick="openLegalPage('cgu')">conditions d'utilisation</span>
+          En vous inscrivant, vous acceptez nos <span style="color:var(--gold);cursor:pointer;font-weight:600" onclick="showPage('cgv')">conditions d'utilisation</span>
         </div>
       </div>
     </div>
@@ -984,7 +1014,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 <!-- MAIN -->
 <div class="main">
   <header id="app-topnav" class="topnav">
-    <a class="tn-logo" onclick="showLanding()" role="button" tabindex="0">Immo<span>360</span><small>NC</small></a>
+    <a class="tn-logo" onclick="showLanding()" role="button" tabindex="0"><svg class="logo-mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#0A7A84"/><path d="M5 19c3.5-3 7-3 10.5 0s7 3 11.5-.5" fill="none" stroke="#9BEAE3" stroke-width="2.4" stroke-linecap="round"/><path d="M5 24c3.5-3 7-3 10.5 0s7 3 11.5-.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".75"/><circle cx="22" cy="10" r="3.4" fill="#F7C873"/></svg>Immo<span>360</span><small>NC</small></a>
     <nav id="nav-container" class="tn-tabs" aria-label="Navigation principale"></nav>
     <div class="tn-right">
       <label class="tn-prof" title="Mode démonstration : changer d'espace"><span>Démo</span>
@@ -1162,7 +1192,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="card-title"><span class="icon">💡</span> Recommandations d'améliorations</div>
             <div id="need-improvement-verdict"></div>
             <div id="improvements-list"></div>
-            <div id="improvements-summary" style="display:none;margin-top:12px;padding:12px;background:linear-gradient(135deg,rgba(42,122,75,0.08),rgba(15,110,117,0.08));border-radius:10px;border:1px solid rgba(15,110,117,0.2)">
+            <div id="improvements-summary" style="display:none;margin-top:12px;padding:12px;background:linear-gradient(135deg,rgba(42,122,75,0.08),rgba(10,122,132,0.08));border-radius:10px;border:1px solid rgba(10,122,132,0.2)">
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
                 <div><div style="font-size:10px;color:var(--mid)">Investissement total</div><div style="font-size:16px;font-weight:700;color:var(--gold)" id="sum-cout">—</div></div>
                 <div><div style="font-size:10px;color:var(--mid)">Plus-value estimée</div><div style="font-size:16px;font-weight:700;color:var(--green)" id="sum-gain">—</div></div>
@@ -1218,10 +1248,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="card-title">Générateur d'annonce</div>
             <div class="field"><label>Titre accrocheur</label><input type="text" id="ann-titre" placeholder="Villa d'exception avec vue mer..."></div>
             <div class="field-row">
-              <div class="field"><label>Surface</label><input type="number" id="ann-surface" value="85"></div>
-              <div class="field"><label>Prix</label><input type="number" id="ann-prix" value="42500000"></div>
+              <div class="field"><label>Surface</label><input type="number" id="ann-surface" min="1" inputmode="numeric"></div>
+              <div class="field"><label>Prix</label><input type="number" id="ann-prix" min="0" inputmode="numeric"></div>
             </div>
-            <div class="field"><label>Description</label><textarea id="ann-desc">Magnifique appartement lumineux, entièrement rénové, vue dégagée sur la baie.</textarea></div>
+            <div class="field"><label>Description</label><textarea id="ann-desc"></textarea></div>
             <div class="field-row">
               <div class="field"><label>Ton</label>
                 <select id="ann-ton"><option>Luxe & prestige</option><option>Familial & chaleureux</option><option>Investisseur</option><option>Moderne & dynamique</option></select>
@@ -1258,8 +1288,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       <div class="grid2">
         <div class="card">
           <div class="card-title">Simulateur de financement</div>
-          <div class="field"><label>Prix du bien</label><input type="number" id="fin-prix" value="42500000" oninput="calcFin()"></div>
-          <div class="field"><label>Apport</label><input type="number" id="fin-apport" value="8500000" oninput="calcFin()"></div>
+          <div class="field"><label>Prix du bien</label><input type="number" id="fin-prix" min="0" inputmode="numeric" oninput="calcFin()"></div>
+          <div class="field"><label>Apport</label><input type="number" id="fin-apport" min="0" inputmode="numeric" oninput="calcFin()"></div>
           <div class="field">
             <label>Durée : <span id="fin-duree-lbl">20 ans</span></label>
             <input type="range" min="5" max="30" value="20" id="fin-duree" oninput="calcFin()">
@@ -1484,6 +1514,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div id="depot-step-1" class="card">
           <h2 class="dp-q">Quel bien mettez-vous en ligne ?</h2>
           <p class="dp-help">Les questions essentielles. Le reste viendra ensuite, et beaucoup est facultatif.</p>
+          <div id="dp-from-est" class="dp-from-est" style="display:none"></div>
+          <p class="dp-est-link" id="dp-est-link">Pas encore estimé ? <button type="button" class="lp-link" style="padding:0;color:var(--gold);font-size:15px" onclick="go('valorisation')">Estimez d'abord votre bien</button> : le dépôt reprendra tout.</p>
           <div class="dp-err" role="alert"></div>
           <div class="dp-tiles" role="group" aria-label="Type de bien">
             <button type="button" class="dp-tile" data-type="Appartement">Appartement</button><button type="button" class="dp-tile" data-type="Maison">Maison</button><button type="button" class="dp-tile" data-type="Villa">Villa</button>
@@ -1520,6 +1552,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </div>
           <div id="d-photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px"></div>
           <div id="d-photos-count" style="font-size:14px;color:var(--mid);margin-top:8px;text-align:center"></div>
+          <div class="dp-video" id="dp-video">
+            <label class="dp-video-h"><input type="checkbox" id="d-video" checked> <span><b>Visite vidéo de votre bien</b><br>Créée automatiquement avec vos photos et publiée avec l'annonce. Vous pourrez la personnaliser ensuite.</span></label>
+            <div id="dp-video-prev" class="dp-video-prev"></div>
+            <p id="dp-video-help" class="dp-video-help">Ajoutez au moins 2 photos pour voir l'aperçu de la vidéo.</p>
+          </div>
           <details class="dp-more"><summary>Conseils et vérification de mes photos (facultatif)</summary>
             <p style="font-size:15px;color:#3B424C;margin:0 0 10px">Photos prises de jour, pièces rangées, à l'horizontale. Les photos d'iPhone (HEIC) s'affichent mieux converties en JPG.</p>
             <button type="button" class="btn btn-outline btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Faire vérifier mes photos</button>
@@ -1538,8 +1575,6 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div id="depot-estim-compare" style="display:none;margin:-4px 0 14px;font-size:15px">
             <span id="depot-prix-user" hidden></span><span id="depot-prix-ia" hidden></span>Écart avec le repère : <b id="depot-ecart">—</b>
           </div>
-          <div class="dp-f"><label for="d-negociable">Le prix est-il négociable ?</label>
-            <select id="d-negociable"><option value="non">Non</option><option value="oui">Oui</option><option value="faire-offre">Faire une offre</option></select></div>
           <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(2)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePrix()">Continuer</button></div>
         </div>
 
@@ -1594,7 +1629,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </details>
           <h3 style="font-size:17px;margin:18px 0 10px">Aperçu</h3>
           <div id="depot-preview" style="border:1px solid #DDD9D0;border-radius:10px;overflow:hidden;margin-bottom:16px">
-            <div id="dp-photo-zone" style="height:200px;background:#EEEAE2;position:relative;display:flex;align-items:center;justify-content:center;color:#9A9384">
+            <div id="dp-photo-zone" style="height:200px;background:#E8EEF0;position:relative;display:flex;align-items:center;justify-content:center;color:#9A9384">
               <div style="font-size:48px" id="dp-emoji"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></div>
               <span id="dp-dpe-badge" style="position:absolute;top:10px;right:10px;color:#fff;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700"></span>
             </div>
@@ -1607,6 +1642,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             </div>
           </div>
           <p style="font-size:14px;color:var(--mid);margin:0 0 12px">En publiant, vous certifiez que les informations sont exactes et acceptez les <a href="#" onclick="openLegalPage('cgu');return false" style="color:var(--gold)">conditions d'utilisation</a>.</p>
+          <div class="dp-boost" id="dp-boost" hidden></div>
           <div id="depot-notif" style="display:none;padding:12px;border-radius:8px;margin-bottom:12px;font-size:15px"></div>
           <button type="button" class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">Publier mon annonce</button>
           <button type="button" class="btn btn-outline btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px" onclick="ouvrirMonAnnonce()">Voir mon annonce</button>
@@ -2693,8 +2729,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div>
           <div class="card">
             <div class="card-title">Simulation complète</div>
-            <div class="field"><label>Prix du bien (F)</label><input type="number" id="fp-prix" value="45000000" oninput="calcFinancementPlus()"></div>
-            <div class="field"><label>Apport personnel (F)</label><input type="number" id="fp-apport" value="9000000" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Prix du bien (F)</label><input type="number" id="fp-prix" min="0" inputmode="numeric" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Apport personnel (F)</label><input type="number" id="fp-apport" min="0" inputmode="numeric" oninput="calcFinancementPlus()"></div>
             <div class="field-row">
               <div class="field"><label>Taux (%)</label><input type="number" id="fp-taux" value="3.5" step="0.1" oninput="calcFinancementPlus()"></div>
               <div class="field"><label>Durée (ans)</label>
@@ -2705,7 +2741,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               </div>
             </div>
             <div class="field"><label>Travaux estimés (F)</label><input type="number" id="fp-travaux" value="0" oninput="calcFinancementPlus()"></div>
-            <div class="field"><label>Assurance mensuelle (F)</label><input type="number" id="fp-assurance" value="15000" oninput="calcFinancementPlus()"></div>
+            <div class="field"><label>Assurance mensuelle (F)</label><input type="number" id="fp-assurance" min="0" inputmode="numeric" oninput="calcFinancementPlus()"></div>
 
             <!-- SITUATION ACQUÉREUR — FRAIS NOTAIRE NC -->
             <div class="field">
@@ -2741,8 +2777,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="card-title">Pré-approbation bancaire</div>
             <p style="font-size:12px;color:var(--mid);margin-bottom:12px">Estimez votre capacité d'emprunt et initiez votre dossier</p>
             <div class="field-row">
-              <div class="field"><label>Revenus nets mensuels (F)</label><input type="number" id="pa-revenus" value="400000" oninput="calcPreAppro()"></div>
-              <div class="field"><label>Charges mensuelles (F)</label><input type="number" id="pa-charges" value="50000" oninput="calcPreAppro()"></div>
+              <div class="field"><label>Revenus nets mensuels (F)</label><input type="number" id="pa-revenus" min="0" inputmode="numeric" oninput="calcPreAppro()"></div>
+              <div class="field"><label>Charges mensuelles (F)</label><input type="number" id="pa-charges" min="0" inputmode="numeric" oninput="calcPreAppro()"></div>
             </div>
             <div id="pa-result" style="background:var(--warm);border-radius:10px;padding:14px;margin-bottom:12px">
               <div style="font-size:11px;color:var(--mid);margin-bottom:6px">Capacité d'emprunt estimée</div>
@@ -2940,6 +2976,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div>
 
 
+<script src="js/tarifs.js"></script>
 <script src="js/cards.js"></script>
 <script src="js/pages.js"></script>
 <script>
@@ -3104,74 +3141,49 @@ function convRaw(xpf){return Math.round(xpf*(RATES[S.curr]||1));}
 // =============================================
 // NAVIGATION
 // =============================================
+// Onglets regroupés : un onglet par besoin, les pages voisines en sous-onglets (moins de choix d'emblée)
 const MENUS = {
   sell:[
-    {ico:'💎',k:'analyse',l:'Estimer'},
-    {ico:'',k:'valorisation',l:'Préparer la vente'},
-    {ico:'',k:'mes-annonces',l:'Mes annonces'},
-    {ico:'📝',k:'depot',l:'Déposer'},
-    {ico:'',k:'visite',l:'Vidéo'},
-    {ico:'📅',k:'rdv',l:'Rendez-vous'},
-    {ico:'🔄',k:'suivi',l:'Ma vente'},
-    {ico:'💬',k:'messagerie',l:'Messages'},
-    {ico:'🏗️',k:'artisans',l:'Artisans'},
+    {l:'Estimer et vendre',sub:[{k:'valorisation',l:'1. Estimer'},{k:'depot',l:'2. Déposer l\'annonce'},{k:'artisans',l:'Devis d\'artisans'},{k:'analyse',l:'Photos et décoration'}]},
+    {l:'Mes annonces',sub:[{k:'mes-annonces',l:'Mes annonces'},{k:'visite',l:'Visites vidéo'}]},
+    {k:'suivi',l:'Ma vente'},
+    {l:'Messages',sub:[{k:'messagerie',l:'Messages'},{k:'rdv',l:'Rendez-vous'}]},
   ],
   buy:[
-    {ico:'🔭',k:'marketplace',l:'Annonces'},
-    {ico:'🤖',k:'matching',l:'Biens pour moi'},
-    {ico:'🌟',k:'projetdevie',l:'Mon projet'},
-    {ico:'',k:'capacite',l:'Mon budget'},
-    {ico:'⚖️',k:'comparateur',l:'Comparer'},
-    {ico:'📍',k:'suiviachat',l:'Mon achat'},
-    {ico:'💬',k:'messagerie',l:'Messages'},
+    {l:'Annonces',sub:[{k:'marketplace',l:'Toutes les annonces'},{k:'matching',l:'Biens pour moi'},{k:'comparateur',l:'Comparer'}]},
+    {l:'Mon budget',sub:[{k:'capacite',l:'Mon budget'},{k:'projetdevie',l:'Mon projet'}]},
+    {k:'suiviachat',l:'Mon achat'},
+    {k:'messagerie',l:'Messages'},
   ],
   agt:[
-    {ico:'📝',k:'depot',l:'Déposer'},
-    {ico:'',k:'valorisation',l:'Préparer la vente'},
-    {ico:'',k:'visite',l:'Vidéo'},
-    {ico:'',k:'mes-annonces',l:'Mes annonces'},
-    {ico:'📋',k:'mandats',l:'Mandats'},
-    {ico:'👥',k:'crm',l:'Clients'},
-    {ico:'🤖',k:'matching',l:'Acheteurs'},
-    {ico:'🗓️',k:'visites',l:'Rendez-vous'},
-    {ico:'⚖️',k:'notaire',l:'Notaire'},
-    {ico:'📊',k:'statsannonces',l:'Statistiques'},
-    {ico:'💬',k:'messagerie',l:'Messages'},
+    {l:'Estimer et vendre',sub:[{k:'valorisation',l:'1. Estimer'},{k:'depot',l:'2. Déposer l\'annonce'}]},
+    {l:'Annonces',sub:[{k:'mes-annonces',l:'Mes annonces'},{k:'visite',l:'Visites vidéo'},{k:'statsannonces',l:'Statistiques'}]},
+    {l:'Mandats',sub:[{k:'mandats',l:'Mandats'},{k:'notaire',l:'Suivi notaire'}]},
+    {l:'Clients',sub:[{k:'crm',l:'Clients'},{k:'matching',l:'Acheteurs'}]},
+    {l:'Agenda et messages',sub:[{k:'visites',l:'Rendez-vous'},{k:'messagerie',l:'Messages'}]},
+    {k:'agt-profil',l:'Mon agence'},
   ],
   art:[
-    {ico:'',k:'art-demandes',l:'Demandes'},
-    {ico:'',k:'art-devis',l:'Mes devis'},
-    {ico:'',k:'art-profil',l:'Profil & justificatifs'},
-    {ico:'',k:'messagerie',l:'Messages'},
+    {l:'Demandes et devis',sub:[{k:'art-demandes',l:'Demandes'},{k:'art-devis',l:'Mes devis'}]},
+    {k:'art-profil',l:'Profil & justificatifs'},
+    {k:'messagerie',l:'Messages'},
   ],
   bnk:[
-    {ico:'',k:'bnk-dossiers',l:'Dossiers'},
-    {ico:'',k:'bnk-simu',l:'Simulateur'},
-    {ico:'',k:'bnk-baremes',l:'Barèmes'},
-    {ico:'',k:'messagerie',l:'Messages'},
+    {k:'bnk-dossiers',l:'Dossiers'},
+    {l:'Simulateur',sub:[{k:'bnk-simu',l:'Simulateur'},{k:'bnk-baremes',l:'Barèmes'}]},
+    {k:'messagerie',l:'Messages'},
   ],
   not:[
-    {ico:'',k:'not-dossiers',l:'Dossiers'},
-    {ico:'',k:'not-echeancier',l:'Échéancier'},
-    {ico:'',k:'not-frais',l:'Calcul des frais'},
-    {ico:'',k:'messagerie',l:'Messages'},
+    {l:'Dossiers',sub:[{k:'not-dossiers',l:'Dossiers'},{k:'not-echeancier',l:'Échéancier'}]},
+    {k:'not-frais',l:'Calcul des frais'},
+    {k:'messagerie',l:'Messages'},
   ],
-  diag:[
-    {ico:'',k:'diag-missions',l:'Missions'},
-    {ico:'',k:'diag-profil',l:'Profil'},
-    {ico:'',k:'messagerie',l:'Messages'},
-  ],
-  geo:[
-    {ico:'',k:'geo-missions',l:'Missions'},
-    {ico:'',k:'geo-profil',l:'Profil'},
-    {ico:'',k:'messagerie',l:'Messages'},
-  ],
-  ass:[
-    {ico:'',k:'ass-missions',l:'Demandes'},
-    {ico:'',k:'ass-profil',l:'Profil'},
-    {ico:'',k:'messagerie',l:'Messages'},
-  ],
+  diag:[{k:'diag-missions',l:'Missions'},{k:'diag-profil',l:'Profil'},{k:'messagerie',l:'Messages'}],
+  geo:[{k:'geo-missions',l:'Missions'},{k:'geo-profil',l:'Profil'},{k:'messagerie',l:'Messages'}],
+  ass:[{k:'ass-missions',l:'Demandes'},{k:'ass-profil',l:'Profil'},{k:'messagerie',l:'Messages'}],
 };
+// Dernier sous-onglet ouvert dans chaque groupe (on y revient en cliquant sur l'onglet)
+const MENU_LAST = {};
 const LABELS = {
   fr:{dashboard:'Tableau de bord',offre:'Faire une offre',depot:'Déposer une annonce',matching:'Matching IA',artisans:'Artisans NC',crm:'CRM Clients',notaire:'Module Notaire',projetdevie:'Mon Projet de Vie',mandats:'Gestion Mandats',visites:'Visites & CR',statsannonces:'Stats Annonces',parcours:'Mon Parcours',comparateur:'Comparateur',assistantvisite:'Assistant Visite',financementplus:'Financement Réel',suiviachat:'Suivi de mon achat',estimation:'Estimation IA',analyse:'Analyse & Photos',decoration:'Décoration IA',annonces:'Annonces',financement:'Financement',rdv:'Rendez-vous',biens:'Mes biens',suivi:'Suivi de vente',stats:'Statistiques',marketplace:'Annonces en ligne',messagerie:'Messagerie'},
   en:{dashboard:'Dashboard',estimation:'AI Valuation',analyse:'Analysis & Photos',decoration:'AI Decor',annonces:'Listings',financement:'Financing',rdv:'Appointments',biens:'My Properties',suivi:'Sale Tracking',stats:'Statistics',marketplace:'Listings',messagerie:'Messages'},
@@ -3183,17 +3195,39 @@ function buildSB(){
   if(!nav){ setTimeout(buildSB,200); return; }
   nav.innerHTML='';
   const prof=S.profile||APP_STATE.user?.profil||'sell';
-  const items=MENUS[prof]||MENUS.sell;
-  const mk=(label,panel)=>{
+  let items=MENUS[prof]||MENUS.sell;
+  // Onglet « Abonnement » pour les pros, seulement quand la partie payante est allumée (js/tarifs.js)
+  if(window.IMMO_TARIFS && IMMO_TARIFS.actif() && IMMO_TARIFS.plans(prof).some(p=>p.prix>0)){
+    const ab={k:'abonnement',l:'Abonnement'}, ip=items.findIndex(it=>!it.sub && /-profil$/.test(it.k||''));
+    items = ip<0 ? items.concat([ab]) : items.map((it,i)=>i===ip?{l:it.l,sub:[{k:it.k,l:it.l},ab]}:it);
+  }
+  const keys=it=>it.sub?it.sub.map(x=>x.k):[it.k];
+  const mk=(label,panel,on)=>{
     const d=document.createElement('button');
     d.type='button';
-    d.className='tn-tab'+(S.panel===panel?' on':'');
+    d.className='tn-tab'+(on?' on':'');
     d.textContent=label;
+    if(on) d.setAttribute('aria-current','page');
     d.onclick=()=>go(panel);
     return d;
   };
-  nav.appendChild(mk('Mon espace','dashboard'));
-  items.forEach(it=>nav.appendChild(mk(it.l||lbl(it.k),it.k)));
+  nav.appendChild(mk('Mon espace','dashboard',S.panel==='dashboard'));
+  let grp=null;
+  items.forEach((it,i)=>{
+    const on=keys(it).includes(S.panel);
+    if(on){ grp=it; if(it.sub) MENU_LAST[prof+i]=S.panel; }
+    nav.appendChild(mk(it.l||lbl(it.k), it.sub?(MENU_LAST[prof+i]||it.sub[0].k):it.k, on));
+  });
+  // Sous-onglets du groupe courant, en tête de page
+  const cnt=document.querySelector('.content');
+  let sn=document.getElementById('subnav');
+  if(grp&&grp.sub&&cnt){
+    if(!sn){ sn=document.createElement('nav'); sn.id='subnav'; sn.className='subnav'; sn.setAttribute('aria-label','Sous-rubriques'); }
+    if(cnt.firstElementChild!==sn) cnt.prepend(sn);
+    sn.innerHTML=grp.sub.map(x=>`<button type="button" class="sn-tab${x.k===S.panel?' on':''}"${x.k===S.panel?' aria-current="page"':''} data-k="${x.k}">${esc(x.l)}</button>`).join('');
+    sn.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>go(b.dataset.k));
+    sn.style.display='';
+  } else if(sn) sn.style.display='none';
   // Fondu à droite tant qu'il reste des onglets à faire défiler
   const fade=()=>nav.classList.toggle('more', nav.scrollWidth-nav.scrollLeft-nav.clientWidth>4);
   nav.onscroll=fade; requestAnimationFrame(fade);
@@ -3375,7 +3409,7 @@ function updateScoreDisplay(score){
   const circumference=213;
   const offset=circumference-(score/100)*circumference;
   circle.style.strokeDashoffset=offset;
-  circle.style.stroke=score>=75?'#2A7A4B':score>=50?'#0F6E75':'#B83A2A';
+  circle.style.stroke=score>=75?'#2A7A4B':score>=50?'#0A7A84':'#B83A2A';
   if(number) number.textContent=score;
   if(label) label.textContent=score>=80?'Excellent état — prêt à vendre':score>=60?'Bon état — quelques améliorations possibles':'Des travaux peuvent fortement valoriser le bien';
   if(sub) sub.textContent='Score calculé par l\'IA sur '+S.photos.length+' photo(s)';
@@ -3727,7 +3761,7 @@ function generateImprovements(score, needsWork){
 
   // Bien nécessitant améliorations — proposer des travaux intelligents
   verdictEl.innerHTML=`
-    <div style="background:rgba(15,110,117,0.08);border:1px solid rgba(15,110,117,0.25);border-radius:10px;padding:14px;margin-bottom:4px">
+    <div style="background:rgba(10,122,132,0.08);border:1px solid rgba(10,122,132,0.25);border-radius:10px;padding:14px;margin-bottom:4px">
       <div style="font-size:15px;font-weight:600;margin-bottom:4px">Des améliorations peuvent augmenter votre prix de vente</div>
       <div style="font-size:12.5px;color:var(--mid)">Score actuel : ${score}/100. Sélectionnez les travaux que vous souhaitez réaliser pour voir l'impact sur le prix.</div>
     </div>`;
@@ -3897,10 +3931,13 @@ const TPLS={
   'Moderne & dynamique':(t,s,p,d)=>`${t}\n\n⚡ ${s} m² au cœur de Nouméa\n\n${d}\n\nConception contemporaine, proche de tout, vie urbaine optimale.`,
 };
 async function generateAnnonce(){
-  const titre=document.getElementById('ann-titre').value||'Villa d\'exception';
-  const surface=document.getElementById('ann-surface').value||'85';
-  const prix=parseInt(document.getElementById('ann-prix').value)||42500000;
-  const desc=document.getElementById('ann-desc').value||'Beau bien';
+  const titre=(document.getElementById('ann-titre').value||'').trim();
+  const surface=parseInt(document.getElementById('ann-surface').value)||0;
+  const prix=parseInt(document.getElementById('ann-prix').value)||0;
+  const desc=(document.getElementById('ann-desc').value||'').trim();
+  // Aucune valeur inventée : on rédige à partir de ce que le vendeur a saisi
+  const manque=[!titre&&'un titre',!surface&&'la surface',!prix&&'le prix',!desc&&'une courte description'].filter(Boolean);
+  if(manque.length){ const f=!titre?'ann-titre':!surface?'ann-surface':!prix?'ann-prix':'ann-desc'; document.getElementById(f)?.focus(); showToast('Indiquez '+manque.join(', ')+' pour rédiger l\'annonce.'); return; }
   const ton=document.getElementById('ann-ton').value||'Luxe & prestige';
   const plateforme=document.getElementById('ann-plateforme').value||'Multi-plateformes';
   const btn=document.querySelector('[onclick="generateAnnonce()"]');
@@ -3939,14 +3976,20 @@ function copyAnnonce(){navigator.clipboard.writeText(document.getElementById('pr
 // FINANCEMENT
 // =============================================
 function calcFin(){
-  const prix=parseInt(document.getElementById('fin-prix')?.value)||42500000;
-  const apport=parseInt(document.getElementById('fin-apport')?.value)||8500000;
+  const prix=parseInt(document.getElementById('fin-prix')?.value)||0;
+  const apport=parseInt(document.getElementById('fin-apport')?.value)||0;
   const duree=parseInt(document.getElementById('fin-duree')?.value)||20;
   const taux=parseFloat(document.getElementById('fin-taux')?.value)||3.5;
   const assur=document.getElementById('fin-assurance')?.checked;
   document.getElementById('fin-duree-lbl').textContent=duree+' ans';
   document.getElementById('fin-taux-lbl').textContent=taux.toFixed(1)+'%';
   const capital=prix-apport, r=(taux/100)/12, n=duree*12;
+  if(!prix||capital<=0){ // rien de calculé tant que le prix n'est pas saisi
+    document.getElementById('fin-mensualite').textContent='—';
+    document.getElementById('fin-details-lines').innerHTML='<div style="font-size:14px;color:var(--mid)">'+(prix?'L\'apport couvre le prix : pas de prêt nécessaire.':'Indiquez le prix du bien et votre apport.')+'</div>';
+    const at=document.getElementById('amort-table'); if(at) at.innerHTML='';
+    return;
+  }
   let mensuel=r===0?capital/n:capital*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
   if(assur) mensuel+=capital*0.003/12;
   const totalR=mensuel*n, cout=totalR-capital;
@@ -3955,8 +3998,7 @@ function calcFin(){
     <div class="ai-line"><span>Capital emprunté</span><span style="color:var(--gold-light)">${conv(capital)}</span></div>
     <div class="ai-line"><span>Durée</span><span style="color:var(--gold-light)">${n} mensualités</span></div>
     <div class="ai-line"><span>Coût total crédit</span><span style="color:#f48a7a">${conv(Math.round(cout))}</span></div>
-    <div class="ai-line"><span>Total remboursé</span><span style="color:#f48a7a">${conv(Math.round(totalR))}</span></div>
-    <div class="ai-line"><span>Taux endettement est.</span><span class="ai-chip ${mensuel/500000*100<33?'ai-ok':'ai-bad'}">${(mensuel/500000*100).toFixed(1)}%</span></div>`;
+    <div class="ai-line"><span>Total remboursé</span><span style="color:#f48a7a">${conv(Math.round(totalR))}</span></div>`; // (le taux d'endettement supposait 500 000 F de revenus : retiré, il se calcule dans « Mon budget »)
   let bal=capital, rows='<thead><tr><th>Année</th><th>Mensualité</th><th>Intérêts</th><th>Capital</th><th>Restant</th></tr></thead><tbody>';
   for(let y=1;y<=duree;y++){
     let iA=0,cA=0;
@@ -4021,7 +4063,7 @@ const BIENS_DATA=[
 if(window.IMMO_CARDS) IMMO_CARDS.demoPhotos(BIENS_DATA); // photos libres de droits, marquées « Photo d'illustration »
 
 const MAP_POSITIONS={'Anse Vata':{x:72,y:78},'Baie des Citrons':{x:68,y:72},'Val Plaisance':{x:65,y:65},'Faubourg Blanchot':{x:55,y:55},'Motor Pool':{x:50,y:50},'Magenta':{x:48,y:42},'Dumbéa sur Mer':{x:35,y:35},'Boulari':{x:32,y:38},'Mont-Dore':{x:80,y:85},'La Coulée':{x:78,y:80},'Ouémo':{x:52,y:48},'Tina':{x:62,y:60},'Centre-ville':{x:50,y:52},'Artillerie':{x:52,y:54},'Nouville':{x:45,y:55},'Numbo':{x:28,y:40},'Numbo':{x:28,y:40}};
-const PIN_COLOR={'En vente':'#B83A2A','Compromis':'#0F6E75','Loué':'#2A7A4B','Vendu':'#2A4A7A'};
+const PIN_COLOR={'En vente':'#B83A2A','Compromis':'#0A7A84','Loué':'#2A7A4B','Vendu':'#2A4A7A'};
 const DPE_COLOR2={A:'#2d7f2d',B:'#5aaf2d',C:'#9ecf2d',D:'#f0c020',E:'#f08020',F:'#e04020'};
 const STATUT_BADGE2={'En vente':'tag-gold','Compromis':'tag-blue','Vendu':'tag-green','Loué':'tag-green'};
 
@@ -4041,7 +4083,7 @@ function filterMarketplace(){
   if(tri==='prix_asc')mktFiltered.sort((a,b)=>a.prix-b.prix);
   else if(tri==='prix_desc')mktFiltered.sort((a,b)=>b.prix-a.prix);
   else if(tri==='surface')mktFiltered.sort((a,b)=>b.surface-a.surface);
-  else mktFiltered.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  else mktFiltered = window.IMMO_OPT ? IMMO_OPT.sort(mktFiltered) : mktFiltered.sort((a,b)=>new Date(b.date)-new Date(a.date));
   const c=document.getElementById('mkt-count');
   if(c)c.textContent=mktFiltered.length+' bien(s)';
   if(mktView==='grid')renderMktGrid();else renderMktMap();
@@ -4172,12 +4214,12 @@ function drawCharts(){
   const mn=Math.min(...vals),mx=Math.max(...vals);
   c1.beginPath();
   vals.forEach((v,i)=>{const x=40+i*60,y=160-((v-mn)/(mx-mn||1))*100;i===0?c1.moveTo(x,y):c1.lineTo(x,y);});
-  c1.strokeStyle='#0F6E75';c1.lineWidth=2.5;c1.stroke();
-  vals.forEach((v,i)=>{const x=40+i*60,y=160-((v-mn)/(mx-mn||1))*100;c1.beginPath();c1.arc(x,y,4,0,Math.PI*2);c1.fillStyle='#0F6E75';c1.fill();c1.fillStyle='#6B6456';c1.font='10px Source Sans 3';c1.fillText(months[i],x-8,185);});
+  c1.strokeStyle='#0A7A84';c1.lineWidth=2.5;c1.stroke();
+  vals.forEach((v,i)=>{const x=40+i*60,y=160-((v-mn)/(mx-mn||1))*100;c1.beginPath();c1.arc(x,y,4,0,Math.PI*2);c1.fillStyle='#0A7A84';c1.fill();c1.fillStyle='#6B6456';c1.font='10px Source Sans 3';c1.fillText(months[i],x-8,185);});
 
   const c2=document.getElementById('chart-types')?.getContext('2d');
   if(!c2) return;
-  const data=[{l:'Appartements',v:45,c:'#0F6E75'},{l:'Maisons',v:30,c:'#2A7A4B'},{l:'Villas',v:15,c:'#2A4A7A'},{l:'Studios',v:10,c:'#B83A2A'}];
+  const data=[{l:'Appartements',v:45,c:'#0A7A84'},{l:'Maisons',v:30,c:'#2A7A4B'},{l:'Villas',v:15,c:'#2A4A7A'},{l:'Studios',v:10,c:'#B83A2A'}];
   const cx=130,cy=100,r=70;let ang=0;c2.clearRect(0,0,400,200);
   data.forEach(d=>{const s=(d.v/100)*Math.PI*2;c2.beginPath();c2.moveTo(cx,cy);c2.arc(cx,cy,r,ang,ang+s);c2.fillStyle=d.c;c2.fill();ang+=s;});
   data.forEach((d,i)=>{c2.fillStyle=d.c;c2.fillRect(220,25+i*32,12,12);c2.fillStyle='#1C1A16';c2.font='12px Source Sans 3';c2.fillText(`${d.l} (${d.v}%)`,238,37+i*32);});
@@ -4201,7 +4243,8 @@ function setProfile(p,btn){
   document.querySelectorAll('.prof-btn').forEach(b=>b.classList.remove('on'));
   if(btn) btn.classList.add('on');
   const badge=document.getElementById('profile-badge');
-  const labels={sell:'Vendeur',buy:'Acheteur',agt:'Agent',not:'Notaire',art:'Artisan'};
+  const labels={sell:'Vendeur',buy:'Acheteur',agt:'Agent',not:'Notaire',art:'Artisan',bnk:'Banquier',diag:'Diagnostiqueur',geo:'Géomètre',ass:'Assureur'};
+  const ps=document.getElementById('prof-sel'); if(ps && ps.value!==p) ps.value=p;
   if(badge){ badge.textContent=labels[p]||p; badge.className='topbar-badge '+(p==='sell'?'badge-sell':p==='buy'?'badge-buy':'badge-agt'); }
   S.panel='dashboard';
   go('dashboard');
@@ -4217,37 +4260,40 @@ const APP_STATE = {
 
 const PROFIL_CONFIG = {
   sell:{icon:'',name:'Je vends',desc:'Estimer, publier une annonce, suivre la vente'},
-  agt:{icon:'',name:'Agent immobilier',desc:'Mandats, clients, annonces'},
   buy:{icon:'',name:'J\'achète',desc:'Chercher un bien, calculer son budget'},
+  agt:{icon:'',name:'Agent immobilier',desc:'Mandats, clients, annonces'},
+  not:{icon:'',name:'Notaire',desc:'Dossiers de vente, échéances, frais d\'acte'},
+  art:{icon:'',name:'Artisan',desc:'Demandes de devis, chantiers, profil'},
+  bnk:{icon:'',name:'Banquier / courtier',desc:'Dossiers de financement, simulateur, barèmes'},
+  diag:{icon:'',name:'Diagnostiqueur',desc:'Missions de diagnostic'},
+  geo:{icon:'',name:'Géomètre-expert',desc:'Bornage, mesurage, division'},
+  ass:{icon:'',name:'Assureur / courtier',desc:'Assurance habitation et emprunteur'},
 };
-
+const PRO_PROFILS=['agt','not','art','bnk','diag','geo','ass'];
 
 function updateAuthModalProfil(profil){
   const cfg=PROFIL_CONFIG[profil]||PROFIL_CONFIG.buy;
-  const titles={sell:'Déposer une annonce',agt:'Espace Agent',buy:'Se connecter'};
-  const subs={sell:"Vendez votre bien avec l'IA en quelques minutes",agt:'Accédez à votre tableau de bord professionnel',buy:'Trouvez votre bien idéal en NC'};
+  const pro=PRO_PROFILS.includes(profil);
+  const titles={sell:'Vendre ou estimer',buy:'Bienvenue sur Immo360'};
+  const subs={sell:'Estimez et publiez votre annonce en quelques minutes',buy:'Trouvez votre bien en Nouvelle-Calédonie'};
+  const vals={title:titles[profil]||(pro?'Espace professionnel':titles.buy),sub:subs[profil]||(pro?'Recevez les demandes des particuliers près de chez vous':subs.buy),icon:cfg.icon,name:cfg.name,desc:cfg.desc};
   const els={title:'auth-modal-title',sub:'auth-modal-sub',icon:'auth-profil-icon',name:'auth-profil-name',desc:'auth-profil-desc'};
-  const vals={title:titles[profil]||titles.buy,sub:subs[profil]||subs.buy,icon:cfg.icon,name:cfg.name,desc:cfg.desc};
   Object.keys(els).forEach(k=>{const e=document.getElementById(els[k]);if(e)e.textContent=vals[k];});
 }
 
 
 
 function selectRegProfil(p){
-  ['buy','sell','agt'].forEach(x=>{
-    const el=document.getElementById('rp-'+x);
-    if(!el) return;
-    if(x===p){
-      el.style.border='1.5px solid var(--gold)';
-      el.style.background='rgba(15,110,117,0.06)';
-    } else {
-      el.style.border='1.5px solid var(--warm)';
-      el.style.background='';
-    }
-  });
+  if(!PROFIL_CONFIG[p]) p='buy';
+  // Correctif : toutes les options s'affichent sélectionnées (avant : seulement acheteur, vendeur, agent)
+  document.querySelectorAll('#form-register .reg-opt').forEach(el=>{const on=el.dataset.p===p;el.classList.toggle('on',on);el.setAttribute('aria-pressed',on);});
   document.getElementById('login-modal').dataset.profil=p;
-  const extra=document.getElementById('reg-extra-agt');
-  if(extra) extra.style.display=(p==='agt')?'block':'none';
+  const pro=PRO_PROFILS.includes(p);
+  const extra=document.getElementById('reg-extra-agt'); if(extra) extra.style.display=pro?'block':'none';
+  const lbl=document.getElementById('reg-agence-lbl');
+  if(lbl) lbl.textContent={agt:'Nom de l\'agence',not:'Nom de l\'étude',bnk:'Banque ou cabinet de courtage',ass:'Compagnie ou cabinet'}[p]||'Nom de l\'entreprise';
+  const cp=document.getElementById('reg-cartepro-f'); if(cp) cp.style.display=p==='agt'?'block':'none';
+  const er=document.getElementById('reg-err'); if(er) er.style.display='none';
   updateAuthModalProfil(p);
 }
 
@@ -4263,6 +4309,7 @@ function switchAuthTab(tab){
     if(tr){tr.style.color='var(--mid)';tr.style.borderBottom='none';tr.style.fontWeight='500';}
   } else {
     fl.style.display='none';fr.style.display='block';
+    selectRegProfil(document.getElementById('login-modal')?.dataset?.profil||'buy'); // pré-sélectionne l'espace choisi
     if(tr){tr.style.color='var(--gold)';tr.style.borderBottom='2px solid var(--gold)';tr.style.fontWeight='600';}
     if(tl){tl.style.color='var(--mid)';tl.style.borderBottom='none';tl.style.fontWeight='500';}
   }
@@ -4297,32 +4344,53 @@ async function doLoginExisting(){
   if(error||!data?.user){alert(authErrorMsg(error));return;}
   APP_STATE.user=userFromSupabase(data.user,profil);
   APP_STATE.loggedIn=true;
-  if(window.IMMO_SYNC) IMMO_SYNC.start();
+  if(window.IMMO_SYNC){
+    IMMO_SYNC.start();
+    // Première connexion après confirmation de l'email : créer la fiche pro (en attente de vérification)
+    const md=data.user.user_metadata||{}, pp=APP_STATE.user.profil;
+    if(PRO_PROFILS.includes(pp) && md.ridet) IMMO_SYNC.ensurePro(pp,{nom:md.entreprise||APP_STATE.user.nom,ridet:md.ridet,tel:md.tel||'',email:data.user.email});
+  }
   showAuthStep2('Connexion réussie !');
 }
 
+function regErr(msg,id){
+  const e=document.getElementById('reg-err');
+  document.querySelectorAll('#form-register [aria-invalid]').forEach(x=>x.removeAttribute('aria-invalid'));
+  if(!e) return false;
+  if(!msg){e.style.display='none';return true;}
+  e.textContent=msg;e.style.display='block';
+  const f=id&&document.getElementById(id); if(f){f.setAttribute('aria-invalid','true');f.focus();}
+  return false;
+}
 async function doRegister(){
-  const prenom=document.getElementById('reg-prenom')?.value?.trim();
-  const nom=document.getElementById('reg-nom')?.value?.trim();
-  const email=document.getElementById('reg-email')?.value?.trim();
-  const tel=document.getElementById('reg-tel')?.value?.trim()||'';
-  const pwd=document.getElementById('reg-password')?.value||'';
-  if(!prenom||!nom){alert('Veuillez entrer votre prénom et nom');return;}
-  if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){alert('Veuillez entrer un email valide');return;}
-  if(pwd.length<8){alert('Le mot de passe doit contenir au moins 8 caractères');return;}
-  if(!sb){authUnavailable();return;}
+  const v=id=>(document.getElementById(id)?.value||'').trim();
+  const prenom=v('reg-prenom'), nom=v('reg-nom'), email=v('reg-email'), tel=v('reg-tel'), pwd=document.getElementById('reg-password')?.value||'';
   const profil=document.getElementById('login-modal')?.dataset?.profil||'buy';
-  const {data,error}=await sb.auth.signUp({email,password:pwd,options:{data:{nom:prenom+' '+nom,tel,profil}}});
-  if(error){alert(authErrorMsg(error));return;}
-  if(!data?.session){
-    alert('Compte créé. Un email de confirmation vient de vous être envoyé : cliquez sur le lien puis connectez-vous.');
-    switchAuthTab('login');
-    return;
-  }
-  APP_STATE.user=userFromSupabase(data.user,profil);
-  APP_STATE.loggedIn=true;
-  if(window.IMMO_SYNC) IMMO_SYNC.start();
-  showAuthStep2('Compte créé avec succès !');
+  const pro=PRO_PROFILS.includes(profil);
+  const entreprise=v('reg-agence'), ridet=v('reg-ridet').replace(/\s|\./g,''), cartepro=v('reg-cartepro');
+  if(!prenom) return regErr('Indiquez votre prénom.','reg-prenom');
+  if(!nom) return regErr('Indiquez votre nom.','reg-nom');
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return regErr('Indiquez une adresse email valide.','reg-email');
+  if(pwd.length<8) return regErr('Le mot de passe doit contenir au moins 8 caractères.','reg-password');
+  if(pro && !entreprise) return regErr('Indiquez le nom de votre entreprise.','reg-agence');
+  if(pro && !/^\d{6,10}$/.test(ridet)) return regErr('Le numéro RIDET doit contenir 6 à 10 chiffres (par exemple 1234567.001 → 1234567001).','reg-ridet');
+  regErr('');
+  if(!sb){authUnavailable();return;}
+  const btn=document.getElementById('reg-submit'); if(btn){btn.disabled=true;btn.textContent='Création du compte…';}
+  try{
+    const meta={nom:prenom+' '+nom,tel,profil}; if(pro) Object.assign(meta,{entreprise,ridet,cartepro});
+    const {data,error}=await sb.auth.signUp({email,password:pwd,options:{data:meta}});
+    if(error) return regErr(authErrorMsg(error));
+    if(!data?.session){
+      alert('Compte créé. Un email de confirmation vient de vous être envoyé : cliquez sur le lien puis connectez-vous.');
+      switchAuthTab('login');
+      return;
+    }
+    APP_STATE.user=userFromSupabase(data.user,profil);
+    APP_STATE.loggedIn=true;
+    if(window.IMMO_SYNC){ IMMO_SYNC.start(); if(pro) IMMO_SYNC.ensurePro(profil,{nom:entreprise,ridet,tel,email}); }
+    showAuthStep2('Compte créé avec succès !');
+  } finally { if(btn){btn.disabled=false;btn.textContent='Créer mon compte gratuit';} }
 }
 
 function showAuthStep2(msg){
@@ -4359,8 +4427,7 @@ function doLoginConfirm(){
   const profil=APP_STATE.user?.profil||'buy';
   closeLoginModal();
   hideLanding();
-  const btn=document.getElementById('t-'+profil);
-  if(btn) setProfile(profil,btn); else go('dashboard');
+  setProfile(PROFIL_CONFIG[profil]?profil:'buy',null); // correctif : les espaces pro arrivaient sur le mauvais tableau de bord
   initConversations();
   updateUserDisplay();
   if(window._pendingBien){setTimeout(()=>{contactVendeur(window._pendingBien);window._pendingBien=null;},300);}
@@ -4641,6 +4708,7 @@ function openLandingBien(id){
     <div class="fi-bd">
       <div class="fi-main">
         ${b.statut&&b.statut!=='En vente'?`<span class="pc-badge alt" style="position:static;display:inline-block;margin-bottom:8px">${esc(b.statut)}</span>`:''}
+        ${window.IMMO_OPT&&IMMO_OPT.badges(b.id)?'<div class="fi-obs">'+IMMO_OPT.badges(b.id)+'</div>':''}
         <div class="fi-pr">${IMMO_CARDS?IMMO_CARDS.price(prix):conv(prix)}</div>
         <h2 class="fi-ti">${esc(b.titre||b.type)}</h2>
         <div class="pc-lo" style="font-size:16px"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>${lieu}</div>
@@ -4652,7 +4720,7 @@ function openLandingBien(id){
       </div>
       <aside class="fi-side">
         <div class="fi-contact">
-          <div class="fi-ag"><span class="fi-av" aria-hidden="true">${esc((b.agent||b.auteur||'Vendeur').trim().charAt(0).toUpperCase())}</span><div><b>${esc(b.agent||b.auteur||'Vendeur')}</b><span>${b.ref?'Réf. '+esc(b.ref):''}${b.date?' · publié le '+esc(new Date(b.date).toLocaleDateString('fr-FR')):''}</span></div></div>
+          <div class="fi-ag">${b.agence&&b.agence.logo?`<span class="fi-av logo"><img src="${esc(b.agence.logo)}" alt=""></span>`:`<span class="fi-av" aria-hidden="true">${esc((b.agent||b.auteur||'Vendeur').trim().charAt(0).toUpperCase())}</span>`}<div><b>${esc((b.agence&&b.agence.nom)||b.agent||b.auteur||'Vendeur')}</b><span>${b.ref?'Réf. '+esc(b.ref):''}${b.date?' · publié le '+esc(new Date(b.date).toLocaleDateString('fr-FR')):''}</span></div></div>
           ${cta}
         </div>
       </aside>
@@ -4751,9 +4819,7 @@ function doLogin(){
   closeLoginModal();
   hideLanding();
   // Mettre à jour l'affichage du profil
-  const btn=document.getElementById('t-'+profil);
-  if(btn) setProfile(profil,btn);
-  else go('dashboard');
+  setProfile(PROFIL_CONFIG[profil]?profil:'buy',null);
   initConversations();
   // Mettre à jour le nom dans la topbar
   updateUserDisplay();
@@ -5095,7 +5161,7 @@ async function analyzeDepotPhotos(){
       <div class="ai-box" style="margin-top:0">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
           <div style="text-align:center">
-            <div style="font-size:28px;font-weight:700;color:${score>=75?'#6fd98a':score>=55?'#CDEBE9':'#e07070'}">${score}<span style="font-size:14px">/100</span></div>
+            <div style="font-size:28px;font-weight:700;color:${score>=75?'#6fd98a':score>=55?'#C4EEEA':'#e07070'}">${score}<span style="font-size:14px">/100</span></div>
             <div style="font-size:10px;color:rgba(255,255,255,0.4)">Score IA</div>
           </div>
           <div style="flex:1">
@@ -5260,25 +5326,54 @@ async function publierAnnonce(){
     tel: document.getElementById('d-contact-tel')?.value,
     ref: document.getElementById('d-ref')?.value||null,
   };
+  // Agence : nom et logo apposés sur l'annonce (selon la formule en mode payant) — js/agence.js
+  const marque=window.IMMO_AGENCE?IMMO_AGENCE.marque('logo'):null;
+  if(marque){ bien.agence={nom:marque.nom,logo:marque.logo}; if(!bien.agent) bien.agent=marque.nom; if(!bien.tel) bien.tel=marque.tel; }
 
   // Contrôles minimaux
   if(!bien.titre||!bien.type||!bien.prix||!bien.surface){
     if(notif){notif.style.display='block';notif.style.background='rgba(184,58,42,0.08)';notif.style.border='1px solid rgba(184,58,42,0.3)';notif.style.color='var(--red)';notif.textContent='Renseignez au minimum le titre, le type de bien, la surface et le prix.';}
     btn.innerHTML='Publier mon annonce';btn.disabled=false;return;
   }
+  // Formule de l'agence : nombre d'annonces publiées (mode payant uniquement, js/abonnement.js)
+  if(S.profile==='agt' && window.IMMO_ABO && window.IMMO_ANN){
+    const max=IMMO_ABO.limite('agt','annonces'), n=IMMO_ANN.mine().filter(a=>a.publie).length;
+    if(n>=max){
+      notif.style.display='block';notif.style.background='var(--lagoon-pale)';notif.style.border='1.5px dashed var(--gold)';notif.style.color='var(--dark)';
+      notif.innerHTML='<b>Votre formule permet '+max+' annonces en ligne.</b> Retirez une annonce ou passez à la formule supérieure. <button type="button" class="btn btn-gold btn-sm" onclick="go(\'abonnement\')">Voir les formules</button>';
+      btn.innerHTML='Publier mon annonce';btn.disabled=false;return;
+    }
+  }
   // Publication (en ligne si connecté, sinon dans ce navigateur) — js/annonces.js
   let res=null;
   try{ res=window.IMMO_ANN ? await IMMO_ANN.publish(bien, depotPhotos) : null; }catch(e){ console.error(e); }
+  // Visite vidéo créée avec les photos et publiée avec l'annonce
+  let videoOk=false;
+  if(res && document.getElementById('d-video')?.checked && depotPhotos.length>=2 && window.IMMO_VISITE){
+    try{ videoOk=await IMMO_VISITE.autoCreate(res.id, depotPhotos, {titre:bien.titre, sous:[bien.quartier,bien.ville].filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).join(', '), prix:bien.prix?bien.prix.toLocaleString('fr-FR')+' F':'', contact:bien.agent||'', tel:bien.tel||''}); }catch(e){ console.error(e); }
+  }
+  // Options choisies au dépôt (bulles, remontée, à la une…) : commandées pour la nouvelle annonce
+  let optTxt='';
+  if(res && window.IMMO_DEPOT && IMMO_DEPOT.boostChoisi && window.IMMO_OPT){
+    const ch=IMMO_DEPOT.boostChoisi();
+    if(ch.ids.length){
+      const r=await IMMO_OPT.order(res.id, ch.ids, ch.date);
+      optTxt=!r.ok?'<br>Les options n\'ont pas pu être commandées : réessayez depuis « Mes annonces ».'
+        :r.aPayer?'<br>Options commandées : <b>'+IMMO_TARIFS.fmt(r.total)+' à régler</b>. Elles s\'activent dès réception du paiement.'
+        :'<br>Options activées'+(r.online?'.':' (démonstration, sans paiement).');
+    }
+  }
+  const videoTxt=optTxt+(videoOk?'<br>Visite vidéo publiée avec l\'annonce. <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" onclick="IMMO_VISITE.openFor('+Number(res.id)+')">Personnaliser la vidéo</button>':'');
   if(notif){
     notif.style.display='block';
     if(res && res.online && res.okPhotos){
       notif.style.background='rgba(42,122,75,0.1)';notif.style.border='1px solid rgba(42,122,75,0.3)';notif.style.color='var(--green)';
-      notif.innerHTML='<strong>Annonce publiée.</strong><br>Elle est maintenant visible par tous les visiteurs d\'Immo360 NC.<br><small style="opacity:.7">Référence : IMM-'+res.id+'</small>';
+      notif.innerHTML='<strong>Annonce publiée.</strong><br>Elle est maintenant visible par tous les visiteurs d\'Immo360 NC.<br><small style="opacity:.7">Référence : IMM-'+res.id+'</small>'+videoTxt;
       btn.innerHTML='Publiée';
       const voirBtn=document.getElementById('btn-voir-annonce'); if(voirBtn) voirBtn.style.display='block';
     } else if(res && !res.online){
-      notif.style.background='rgba(15,110,117,0.1)';notif.style.border='1px solid rgba(15,110,117,0.3)';notif.style.color='var(--gold-dark)';
-      notif.innerHTML='<strong>Annonce publiée en mode démonstration</strong> : visible dans ce navigateur uniquement. Connectez-vous pour la publier en ligne.'+(res.okPhotos?'':'<br><small>L\'espace de stockage du navigateur est plein : les photos n\'ont pas pu être conservées.</small>');
+      notif.style.background='rgba(10,122,132,0.1)';notif.style.border='1px solid rgba(10,122,132,0.3)';notif.style.color='var(--gold-dark)';
+      notif.innerHTML='<strong>Annonce publiée en mode démonstration</strong> : visible dans ce navigateur uniquement. Connectez-vous pour la publier en ligne.'+(res.okPhotos?'':'<br><small>L\'espace de stockage du navigateur est plein : les photos n\'ont pas pu être conservées.</small>')+videoTxt;
       btn.innerHTML='Publiée (démo)';
     } else {
       notif.style.background='rgba(184,58,42,0.08)';notif.style.border='1px solid rgba(184,58,42,0.3)';notif.style.color='var(--red)';
@@ -5364,7 +5459,7 @@ const LEGAL_PAGES = {
     title: "Qui sommes-nous ?",
     content: `
       <div style="text-align:center;margin-bottom:20px">
-        <div style="font-family:'Source Sans 3',sans-serif;font-size:28px;font-weight:700;color:#1C1A16">Immo<span style="color:#0F6E75">360</span></div>
+        <div style="font-family:'Source Sans 3',sans-serif;font-size:28px;font-weight:700;color:#1C1A16">Immo<span style="color:#0A7A84">360</span></div>
         <div style="font-size:13px;color:#888;margin-top:4px">La plateforme immobilière intelligente de Nouvelle-Calédonie</div>
       </div>
       <p style="font-size:13px;line-height:1.7;color:#444;margin-bottom:14px">Immo360 NC est né d'un constat simple : le marché immobilier de Nouvelle-Calédonie manquait d'un outil numérique moderne, intelligent et accessible à tous les acteurs — vendeurs particuliers, acheteurs, et professionnels de l'immobilier.</p>
@@ -5385,7 +5480,7 @@ const LEGAL_PAGES = {
     content: `
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
         <div>
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0F6E75">Vendeurs</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0A7A84">Vendeurs</h3>
           <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
             <li>Estimation IA</li><li>Analyse photos</li>
             <li>Générateur d'annonces</li><li>Décoration IA</li>
@@ -5393,7 +5488,7 @@ const LEGAL_PAGES = {
           </ul>
         </div>
         <div>
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0F6E75">Acheteurs</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0A7A84">Acheteurs</h3>
           <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
             <li>Annonces en ligne</li><li>Recherche avancée</li>
             <li>Simulation financement</li><li>Messagerie</li>
@@ -5401,7 +5496,7 @@ const LEGAL_PAGES = {
           </ul>
         </div>
         <div>
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0F6E75">Agents pro</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0A7A84">Agents pro</h3>
           <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
             <li>Tableau de bord</li><li>CRM & leads</li>
             <li>Multi-biens</li><li>Statistiques</li>
@@ -5409,7 +5504,7 @@ const LEGAL_PAGES = {
           </ul>
         </div>
         <div>
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0F6E75">Informations</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:#0A7A84">Informations</h3>
           <ul style="font-size:13px;line-height:2;color:#444;padding-left:16px">
             <li>Qui sommes-nous</li><li>CGU</li>
             <li>Confidentialité</li><li>CGV</li>
@@ -5599,7 +5694,7 @@ function renderArtisansGrid(){
     jardin:     {bg:'#F0FDF4',accent:'#16A34A',light:'#BBF7D0'},
     climatisation:{bg:'#F0F9FF',accent:'#0369A1',light:'#BAE6FD'},
     domotique:  {bg:'#F8FAFC',accent:'#475569',light:'#CBD5E1'},
-    photo:      {bg:'#1C1A16',accent:'#0F6E75',light:'#CDEBE9'},
+    photo:      {bg:'#1C1A16',accent:'#0A7A84',light:'#C4EEEA'},
     homestaging:{bg:'#FFF7ED',accent:'#C2410C',light:'#FED7AA'},
   };
   const defaultColor = {bg:'#F8FAFC',accent:'#475569',light:'#CBD5E1'};
@@ -5619,7 +5714,7 @@ function renderArtisansGrid(){
       jardin:      {h:'#16A34A',t:'#fff',bg:'#16A34A'},
       climatisation:{h:'#0369A1',t:'#fff',bg:'#0369A1'},
       domotique:   {h:'#374151',t:'#fff',bg:'#374151'},
-      photo:       {h:'#1C1A16',t:'#CDEBE9',bg:'#1C1A16'},
+      photo:       {h:'#1C1A16',t:'#C4EEEA',bg:'#1C1A16'},
       homestaging: {h:'#9A3412',t:'#fff',bg:'#9A3412'},
     };
     const c = CATS[a.categorie] || {h:'#374151',t:'#fff',bg:'#374151'};
@@ -5734,7 +5829,7 @@ function openArtisanDetail(id){
         <button type="button" class="btn btn-gold btn-full" onclick="demanderDevisArtisan(${a.id});document.getElementById('artisan-detail-modal').style.display='none'">Demander un devis</button>
         <a href="tel:${esc(a.tel)}" class="btn btn-outline" style="white-space:nowrap">Appeler</a>
       </div>
-      ${APP_STATE.user?.profil==='agt'?`<div style="margin-top:10px;padding:8px 12px;background:rgba(15,110,117,0.08);border-radius:8px;font-size:12px;color:var(--gold-dark);text-align:center">Commission agent : ${a.commission_agent}% sur les travaux réalisés</div>`:''}
+      ${APP_STATE.user?.profil==='agt'?`<div style="margin-top:10px;padding:8px 12px;background:rgba(10,122,132,0.08);border-radius:8px;font-size:12px;color:var(--gold-dark);text-align:center">Commission agent : ${a.commission_agent}% sur les travaux réalisés</div>`:''}
     </div>`;
 
   modal.style.display = 'flex';
@@ -5781,7 +5876,7 @@ function envoyerDevis(){
 
   // Notification
   const notif=document.createElement('div');
-  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(15,110,117,0.3);max-width:300px';
+  notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(10,122,132,0.3);max-width:300px';
   notif.innerHTML='Demande envoyée à 3 artisans partenaires !<br><small style="font-weight:400">Vous recevrez les devis sous 48h</small>';
   document.body.appendChild(notif);
   setTimeout(()=>document.body.removeChild(notif),4000);
@@ -5954,7 +6049,7 @@ function getScoreClass(score){
 function getScoreColor(score){
   if(score >= 90) return '#2A7A4B';
   if(score >= 80) return '#5aaf2d';
-  if(score >= 70) return '#0F6E75';
+  if(score >= 70) return '#0A7A84';
   return '#888';
 }
 
@@ -6128,7 +6223,7 @@ function runGlobalMatching(){
     btn.innerHTML='Lancer le matching global';btn.disabled=false;
     // Notification
     const notif=document.createElement('div');
-    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(15,110,117,0.3)';
+    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--gold);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 12px rgba(10,122,132,0.3)';
     notif.textContent='Matching terminé — '+ACHETEURS.length+' acheteurs × '+BIENS_DATA.filter(b=>b.statut==='En vente').length+' biens analysés';
     document.body.appendChild(notif);
     setTimeout(()=>document.body.removeChild(notif),3500);
@@ -6258,7 +6353,7 @@ function renderCRMList(){
     const s=STATUT_CRM[c.statut]||STATUT_CRM.actif;
     const t=TYPE_CRM[c.type]||TYPE_CRM.acheteur;
     const relanceUrgente=c.relance&&c.relance<=today;
-    return `<div style="background:#fff;border:1px solid ${relanceUrgente?'#FCA5A5':'#E5E7EB'};border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:.2s" onclick="openClientDetail(${c.id})" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 2px 8px rgba(15,110,117,0.1)'" onmouseout="this.style.borderColor='${relanceUrgente?'#FCA5A5':'#E5E7EB'}';this.style.boxShadow=''">
+    return `<div style="background:#fff;border:1px solid ${relanceUrgente?'#FCA5A5':'#E5E7EB'};border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:.2s" onclick="openClientDetail(${c.id})" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 2px 8px rgba(10,122,132,0.1)'" onmouseout="this.style.borderColor='${relanceUrgente?'#FCA5A5':'#E5E7EB'}';this.style.boxShadow=''">
       <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:44px;height:44px;border-radius:50%;background:${t.bg};color:${t.color};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0">${c.nom.charAt(0)}</div>
@@ -6979,7 +7074,7 @@ function renderStatsPortails(){
   const el=document.getElementById('stats-portails');
   if(!el)return;
   const portails=[
-    {nom:'Immo360',vues:1450,color:'#0F6E75',pct:51},
+    {nom:'Immo360',vues:1450,color:'#0A7A84',pct:51},
     {nom:'Immobilier.nc',vues:680,color:'#2563EB',pct:24},
     {nom:'ImmoNC.com',vues:420,color:'#16A34A',pct:15},
     {nom:'Properstar',vues:180,color:'#9333EA',pct:6},
@@ -7042,7 +7137,7 @@ function renderParcoursSteps(){
     const isNext=!done&&i>0&&parcoursProgress[PARCOURS_STEPS[i-1]?.id];
     const locked=i>0&&!parcoursProgress[PARCOURS_STEPS[i-1]?.id]&&!done;
     return `<div style="background:#fff;border:${done?'2px solid #16A34A':isNext?'2px solid var(--gold)':'1px solid #E5E7EB'};border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px;cursor:${locked?'default':'pointer'};opacity:${locked?0.5:1};transition:.2s" onclick="${locked?'':('goParcoursStep("'+step.id+'")')}">
-      <div style="width:44px;height:44px;border-radius:50%;background:${done?'#DCFCE7':isNext?'rgba(15,110,117,0.12)':'#F9FAFB'};border:2px solid ${done?'#16A34A':isNext?'var(--gold)':'#E5E7EB'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${done?'✅':step.icon}</div>
+      <div style="width:44px;height:44px;border-radius:50%;background:${done?'#DCFCE7':isNext?'rgba(10,122,132,0.12)':'#F9FAFB'};border:2px solid ${done?'#16A34A':isNext?'var(--gold)':'#E5E7EB'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${done?'✅':step.icon}</div>
       <div style="flex:1">
         <div style="font-size:14px;font-weight:700;color:${done?'#16A34A':isNext?'var(--gold)':'var(--dark)'}">${i+1}. ${step.label}</div>
         <div style="font-size:11px;color:var(--mid);margin-top:2px">${esc(step.desc)}</div>
@@ -7220,7 +7315,7 @@ function renderChecklistVisite(){
 function setAvNote(btn,note){
   avNote=note;
   document.querySelectorAll('.av-note-btn').forEach(b=>{
-    b.style.background=b===btn?'rgba(15,110,117,0.12)':'#fff';
+    b.style.background=b===btn?'rgba(10,122,132,0.12)':'#fff';
     b.style.borderColor=b===btn?'var(--gold)':'var(--warm)';
   });
 }
@@ -7283,7 +7378,7 @@ function calcFinancementPlus(){
   const taux=parseFloat(document.getElementById('fp-taux')?.value||3.5)/100/12;
   const duree=parseInt(document.getElementById('fp-duree')?.value||20)*12;
   const travaux=parseInt(document.getElementById('fp-travaux')?.value||0);
-  const assurance=parseInt(document.getElementById('fp-assurance')?.value||15000);
+  const assurance=parseInt(document.getElementById('fp-assurance')?.value||0);
   if(!prix)return;
 
   // VRAIS TAUX NC — Source : AG Gestion, ImmoCal NC 2025
@@ -7389,7 +7484,7 @@ function renderSuiviPipeline(){
   el.innerHTML=`<div style="display:flex;align-items:start;gap:0;overflow-x:auto;padding:10px 0">
     ${etapes.map((e,i)=>`
     <div style="display:flex;flex-direction:column;align-items:center;min-width:100px;text-align:center;flex:1">
-      <div style="width:44px;height:44px;border-radius:50%;background:${e.statut==='done'?'#DCFCE7':e.statut==='active'?'rgba(15,110,117,0.12)':'#F3F4F6'};border:2px solid ${colors[e.statut]};display:flex;align-items:center;justify-content:center;font-size:20px;position:relative;z-index:1">${e.icon}</div>
+      <div style="width:44px;height:44px;border-radius:50%;background:${e.statut==='done'?'#DCFCE7':e.statut==='active'?'rgba(10,122,132,0.12)':'#F3F4F6'};border:2px solid ${colors[e.statut]};display:flex;align-items:center;justify-content:center;font-size:20px;position:relative;z-index:1">${e.icon}</div>
       ${i<etapes.length-1?`<div style="position:absolute;width:calc(100%/6);height:2px;background:${e.statut==='done'?'#16A34A':'#E5E7EB'};top:22px;left:50%;z-index:0"></div>`:''}
       <div style="font-size:11px;font-weight:700;color:${colors[e.statut]};margin-top:6px">${e.label}</div>
       <div style="font-size:9px;color:var(--mid)">${e.date}</div>
@@ -7397,7 +7492,7 @@ function renderSuiviPipeline(){
     ${i<etapes.length-1?`<div style="flex:0.5;height:2px;background:${e.statut==='done'?'#16A34A':'#E5E7EB'};margin-top:21px"></div>`:''}
     `).join('')}
   </div>
-  <div style="margin-top:14px;padding:12px;background:rgba(15,110,117,0.06);border:1px solid rgba(15,110,117,0.2);border-radius:10px">
+  <div style="margin-top:14px;padding:12px;background:rgba(10,122,132,0.06);border:1px solid rgba(10,122,132,0.2);border-radius:10px">
     <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">Prochaine action recommandée</div>
     <div style="font-size:12px;color:var(--mid)">Planifiez une visite sur un bien compatible à plus de 80% avec votre projet.</div>
     <button type="button" class="btn btn-gold btn-sm" style="margin-top:8px" onclick="go('marketplace')">Voir mes biens compatibles →</button>
@@ -8057,13 +8152,13 @@ function buildSmartDashboard(){
 
   // Carte générique
   const card=(inner,pad='18px')=>`<div style="background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.07);padding:${pad};margin-bottom:16px">${inner}</div>`;
-  const lbl=(t)=>`<h3 style="font-size:17px;font-weight:700;color:#1E2329;margin:0 0 12px;${F}">${t}</h3>`;
+  const lbl=(t)=>`<h3 style="font-size:17px;font-weight:700;color:#12303F;margin:0 0 12px;${F}">${t}</h3>`;
 
   // Colonne GAUCHE : carte profil
   const profilCard=(emoji,role,sub,color)=>`
-    <div style="background:#fff;border-radius:10px;border:1px solid #E3E0D8;padding:18px;margin-bottom:16px;display:flex;gap:14px;align-items:center">
+    <div style="background:#fff;border-radius:10px;border:1px solid #D3DEE2;padding:18px;margin-bottom:16px;display:flex;gap:14px;align-items:center">
       <div style="width:48px;height:48px;border-radius:50%;background:${color}1A;color:${color};display:flex;align-items:center;justify-content:center;font:700 17px 'Source Sans 3',sans-serif;flex:none">${esc((nom||'?').trim().slice(0,2).toUpperCase())}</div>
-      <div style="min-width:0"><div style="font-size:18px;font-weight:700;color:#1E2329">Bonjour ${esc(nom)}</div>
+      <div style="min-width:0"><div style="font-size:18px;font-weight:700;color:#12303F">Bonjour ${esc(nom)}</div>
         <div style="font-size:14px;color:var(--mid)">${role}</div>
         ${sub?`<div style="font-size:14px;color:#3B424C;margin-top:4px">${sub}</div>`:''}</div>
     </div>`;
@@ -8078,16 +8173,16 @@ function buildSmartDashboard(){
   // Raccourcis (gauche)
   const shortcut=(ico,label,panel)=>`
     <div onclick="go('${panel}')" style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:.15s;${F}" onmouseover="this.style.background='#F9F7F3'" onmouseout="this.style.background='none'">
-      <span style="font-size:13px;color:#1E2329;font-weight:500;flex:1">${label}</span>
+      <span style="font-size:13px;color:#12303F;font-weight:500;flex:1">${label}</span>
       <span style="color:var(--mid)">›</span>
     </div>`;
 
   // IA box (droite)
   const iaBox=(msg)=>`
-    <div style="background:#1C1A16;border-left:3px solid #0F6E75;border-radius:12px;padding:18px;margin-bottom:16px">
+    <div style="background:#1C1A16;border-left:3px solid #0A7A84;border-radius:12px;padding:18px;margin-bottom:16px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="font-size:16px;color:#0F6E75"><svg class="i"><use href="#i-sparkle"/></svg></span>
-        <span style="font-size:11px;font-weight:700;color:#0F6E75;${F}">IA Immo360</span>
+        <span style="font-size:16px;color:#0A7A84"><svg class="i"><use href="#i-sparkle"/></svg></span>
+        <span style="font-size:11px;font-weight:700;color:#0A7A84;${F}">IA Immo360</span>
       </div>
       <div style="font-size:12px;color:rgba(255,255,255,0.7);${F};line-height:1.6;position:relative">${msg}</div>
     </div>`;
@@ -8108,8 +8203,8 @@ function buildSmartDashboard(){
     let sim=null; try{ sim=JSON.parse(localStorage.getItem('immo360.sim.v1')); }catch(e){}
     let budget=''; if(sim && window.IMMO_BNK){ try{ budget='Jusqu\u2019à '+conv(IMMO_BNK.capacite(sim).prixMax); }catch(e){} }
     const left=
-      profilCard('','J\u2019achète un bien', budget?('Mon budget : '+budget):'Budget pas encore calculé','#0F6E75')+
-      card(lbl('Le marché')+miniStat('Annonces en ligne',String(tous.length),'#1E2329')+miniStat('Appartement vendu (médiane 2025)','280 000 F/m²','#1E2329')+miniStat('Maison vendue (médiane 2025)','23,0 M F','#1E2329')+'<div style="font-size:13px;color:var(--mid);margin-top:10px">Source : ISEE, ventes conclues en 2025</div>')+
+      profilCard('','J\u2019achète un bien', budget?('Mon budget : '+budget):'Budget pas encore calculé','#0A7A84')+
+      card(lbl('Le marché')+miniStat('Annonces en ligne',String(tous.length),'#12303F')+miniStat('Appartement vendu (médiane 2025)','280 000 F/m²','#12303F')+miniStat('Maison vendue (médiane 2025)','23,0 M F','#12303F')+'<div style="font-size:13px;color:var(--mid);margin-top:10px">Source : ISEE, ventes conclues en 2025</div>')+
       card(lbl('Raccourcis')+shortcut('','Toutes les annonces','marketplace')+shortcut('','Calculer mon budget','capacite')+shortcut('','Comparer des biens','comparateur'));
     const next=card(`${lbl('Prochaine étape')}<p style="margin:0 0 14px;font-size:16px;color:#3B424C;line-height:1.5">${budget?'Votre budget est prêt. Parcourez les annonces qui y correspondent.':'Commencez par calculer votre budget réel, frais de notaire compris : c\u2019est la première chose que la banque vous demandera.'}</p>
       <button type="button" class="btn btn-gold" onclick="go('${budget?'marketplace':'capacite'}')">${budget?'Voir les annonces':'Calculer mon budget'}</button>`);
@@ -8122,14 +8217,14 @@ function buildSmartDashboard(){
     // Uniquement ses vraies annonces et des actions claires (plus de vues, scores ou recommandations inventés)
     const mes=(window.IMMO_ANN?IMMO_ANN.mine():[]);
     const left=
-      profilCard('','Je vends un bien', mes.length?(mes.length+' annonce'+(mes.length>1?'s':'')):'Aucune annonce pour le moment','#0F6E75')+
+      profilCard('','Je vends un bien', mes.length?(mes.length+' annonce'+(mes.length>1?'s':'')):'Aucune annonce pour le moment','#0A7A84')+
       card(lbl('Raccourcis')+shortcut('','Estimer mon bien','valorisation')+shortcut('','Déposer une annonce','depot')+shortcut('','Créer la vidéo du bien','visite')+shortcut('','Trouver un artisan','artisans'));
     const actions=card(`${lbl('Que voulez-vous faire ?')}
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-        <button type="button" onclick="go('valorisation')" style="text-align:left;background:#fff;border:1px solid #D8D4CB;border-radius:10px;padding:16px;cursor:pointer;font-family:inherit;color:#1E2329"><b style="display:block;font-size:17px">Savoir combien vaut mon bien</b><span style="font-size:14px;color:var(--mid)">Estimation gratuite, avec ou sans travaux</span></button>
-        <button type="button" onclick="go('depot')" style="text-align:left;background:#fff;border:1px solid #D8D4CB;border-radius:10px;padding:16px;cursor:pointer;font-family:inherit;color:#1E2329"><b style="display:block;font-size:17px">Mettre mon bien en vente</b><span style="font-size:14px;color:var(--mid)">Annonce avec photos, visible de tous</span></button>
+        <button type="button" onclick="go('valorisation')" style="text-align:left;background:#fff;border:1px solid #D8D4CB;border-radius:10px;padding:16px;cursor:pointer;font-family:inherit;color:#12303F"><b style="display:block;font-size:17px">Savoir combien vaut mon bien</b><span style="font-size:14px;color:var(--mid)">Estimation gratuite, avec ou sans travaux</span></button>
+        <button type="button" onclick="go('depot')" style="text-align:left;background:#fff;border:1px solid #D8D4CB;border-radius:10px;padding:16px;cursor:pointer;font-family:inherit;color:#12303F"><b style="display:block;font-size:17px">Mettre mon bien en vente</b><span style="font-size:14px;color:var(--mid)">Annonce avec photos, visible de tous</span></button>
       </div>`);
-    const annonces=card(`${lbl('Mes annonces')}${mes.length?mes.slice(0,4).map(x=>`<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-top:1px solid #EEEAE2">
+    const annonces=card(`${lbl('Mes annonces')}${mes.length?mes.slice(0,4).map(x=>`<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-top:1px solid #E8EEF0">
         <div style="min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.titre)}</div><div style="font-size:14px;color:var(--mid)">${x.publie?'En ligne':'Retirée'} · ${x.prix?Number(x.prix).toLocaleString('fr-FR')+' F':''}</div></div>
         <button type="button" class="btn btn-sm btn-outline" onclick="go('mes-annonces')">Gérer</button></div>`).join(''):'<p style="margin:0 0 12px;color:var(--mid)">Vous n\u2019avez pas encore d\u2019annonce.</p><button type="button" class="btn btn-gold" onclick="go(\'depot\')">Déposer une annonce</button>'}`);
     const etapes=['Estimer le prix','Préparer le bien (rangement, petits travaux)','Publier l\u2019annonce avec photos','Organiser les visites','Accepter une offre','Signer chez le notaire'];
@@ -8140,15 +8235,15 @@ function buildSmartDashboard(){
     const biens=(typeof S!=='undefined'&&S.biens)?S.biens:(typeof BIENS_DATA!=='undefined'?BIENS_DATA:[]);
     const enVente=biens.filter(b=>b.statut==='En vente');
     const left=
-      profilCard('','Agent immobilier',(window.IMMO_SYNC&&IMMO_SYNC.uid)?'':'Données d\u2019exemple (démonstration)','#0F6E75')+
-      card(lbl('Mon activité')+miniStat('Mandats','8','#0F6E75')+miniStat('Prospects chauds','3','#EF4444')+miniStat('Visites aujourd\'hui','2','#2E7D4F')+miniStat('Clients actifs','12','#9333EA'))+
+      profilCard('','Agent immobilier',(window.IMMO_SYNC&&IMMO_SYNC.uid)?'':'Données d\u2019exemple (démonstration)','#0A7A84')+
+      card(lbl('Mon activité')+miniStat('Mandats','8','#0A7A84')+miniStat('Prospects chauds','3','#EF4444')+miniStat('Visites aujourd\'hui','2','#2E7D4F')+miniStat('Clients actifs','12','#9333EA'))+
       card(lbl('Raccourcis')+shortcut('','Mandats','mandats')+shortcut('','CRM','crm')+shortcut('','Matching','matching')+shortcut('','Notaire','notaire'));
 
-    const cta=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="${PF};font-size:20px;font-weight:700;color:#1E2329">Tableau de bord</div><button onclick="go('depot')" style="display:flex;align-items:center;gap:8px;background:#1E2329;color:#fff;border:none;padding:11px 20px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;${F}" onmouseover="this.style.background='#0F6E75'" onmouseout="this.style.background='#1E2329'"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>Ajouter une annonce</button></div>`;
+    const cta=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="${PF};font-size:20px;font-weight:700;color:#12303F">Tableau de bord</div><button onclick="go('depot')" style="display:flex;align-items:center;gap:8px;background:#12303F;color:#fff;border:none;padding:11px 20px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;${F}" onmouseover="this.style.background='#0A7A84'" onmouseout="this.style.background='#12303F'"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>Ajouter une annonce</button></div>`;
 
     const tableCard=card(`${lbl('Mes biens en cours')}
       <div style="display:grid;grid-template-columns:2fr 1fr 90px 70px 80px;gap:8px;padding:8px 0;border-bottom:2px solid #F3F4F6;font-size:10px;font-weight:700;color:var(--mid);${F}"><div>Bien</div><div>Prix</div><div>Statut</div><div style="text-align:center">Vues</div><div></div></div>
-      ${(enVente.length?enVente:biens).slice(0,6).map(b=>`<div style="display:grid;grid-template-columns:2fr 1fr 90px 70px 80px;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #F5F5F5;font-size:12px;${F}"><div><div style="font-weight:700;color:#1E2329;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type}</div><div style="font-size:11px;color:var(--mid)">${b.quartier||b.ville}</div></div><div style="${PF};font-weight:700;color:#0F6E75">${(b.prix/1000000).toFixed(1).replace('.',',')}M</div><div style="font-size:10px;font-weight:700;color:#166534;background:#F0FDF4;padding:3px 7px;border-radius:6px;text-align:center">En vente</div><div style="text-align:center;color:rgba(0,0,0,0.5)">👁${Math.floor(Math.random()*150+30)}</div><button onclick="go('mandats')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);border-radius:7px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;${F}">Gérer →</button></div>`).join('')}`,'18px');
+      ${(enVente.length?enVente:biens).slice(0,6).map(b=>`<div style="display:grid;grid-template-columns:2fr 1fr 90px 70px 80px;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #F5F5F5;font-size:12px;${F}"><div><div style="font-weight:700;color:#12303F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.titre||b.type}</div><div style="font-size:11px;color:var(--mid)">${b.quartier||b.ville}</div></div><div style="${PF};font-weight:700;color:#0A7A84">${(b.prix/1000000).toFixed(1).replace('.',',')}M</div><div style="font-size:10px;font-weight:700;color:#166534;background:#F0FDF4;padding:3px 7px;border-radius:6px;text-align:center">En vente</div><div style="text-align:center;color:rgba(0,0,0,0.5)">👁${Math.floor(Math.random()*150+30)}</div><button onclick="go('mandats')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);border-radius:7px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;${F}">Gérer →</button></div>`).join('')}`,'18px');
 
     const right=
 
@@ -8156,15 +8251,15 @@ function buildSmartDashboard(){
         {i:'DU',n:'M. Dupont',d:'Signature 87% · 48h',tc:'#DC2626',bg:'#FEF2F2'},
         {i:'MA',n:'Mme Martin',d:'3 visites · Chaud',tc:'#D97706',bg:'#FEF3C7'},
         {i:'BE',n:'M. Bernard',d:'Match 94% · Nouveau',tc:'#166534',bg:'#F0FDF4'},
-      ].map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F5F5F5"><div style="width:32px;height:32px;border-radius:50%;background:#1E2329;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;${F}">${p.i}</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#1E2329;${F}">${p.n}</div><div style="font-size:10px;color:var(--mid);${F}">${p.d}</div></div><button onclick="go('crm')" style="background:#1E2329;color:#fff;border:none;border-radius:7px;padding:5px 9px;font-size:10px;font-weight:600;cursor:pointer;${F}">→</button></div>`).join(''));
+      ].map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F5F5F5"><div style="width:32px;height:32px;border-radius:50%;background:#12303F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;${F}">${p.i}</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#12303F;${F}">${p.n}</div><div style="font-size:10px;color:var(--mid);${F}">${p.d}</div></div><button onclick="go('crm')" style="background:#12303F;color:#fff;border:none;border-radius:7px;padding:5px 9px;font-size:10px;font-weight:600;cursor:pointer;${F}">→</button></div>`).join(''));
 
     dash.innerHTML=layout(left, cta+tableCard, right);
 
   // ════ NOTAIRE ════
   } else if(profil==='not'){
     const left=
-      profilCard('⚖️','Notaire','4 dossiers actifs · 2 signatures cette semaine','#1E2329')+
-      card(lbl('Mes dossiers')+miniStat('Actifs','4','#0F6E75')+miniStat('Docs manquants','3','#EF4444')+miniStat('Signatures','2','#2E7D4F')+miniStat('Alertes délai','1','#F59E0B'))+
+      profilCard('⚖️','Notaire','4 dossiers actifs · 2 signatures cette semaine','#12303F')+
+      card(lbl('Mes dossiers')+miniStat('Actifs','4','#0A7A84')+miniStat('Docs manquants','3','#EF4444')+miniStat('Signatures','2','#2E7D4F')+miniStat('Alertes délai','1','#F59E0B'))+
       card(lbl('Raccourcis')+shortcut('','Dossiers','notaire')+shortcut('','Signatures','rdv')+shortcut('','Messages','messagerie'));
 
     const dossiers=card(`${lbl('Transactions en cours')}${[
@@ -8172,13 +8267,13 @@ function buildSmartDashboard(){
       {ref:'#118',n:'Martin — Leroy',b:'Appt Magenta',s:'SRU J-4',tc:'#DC2626',bg:'#FEF2F2',pr:45},
       {ref:'#131',n:'Bernard — Kawa',b:'Maison Plum',s:'✅ En cours',tc:'#166534',bg:'#F0FDF4',pr:30},
       {ref:'#108',n:'Leclerc — Aoua',b:'Studio Centre',s:'À signer',tc:'#2563EB',bg:'#EFF6FF',pr:90},
-    ].map(d=>`<div style="padding:11px 0;border-bottom:1px solid #F5F5F5"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:var(--mid);${F}">${d.ref}</span><span style="font-size:13px;font-weight:700;color:#1E2329;${F}">${d.n}</span><span style="font-size:11px;color:var(--mid);${F}">· ${d.b}</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;font-weight:700;color:${d.tc};background:${d.bg};padding:3px 8px;border-radius:6px">${d.s}</span><button onclick="go('notaire')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);border-radius:7px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;${F}">Ouvrir →</button></div></div><div style="height:3px;background:#F3F4F6;border-radius:2px;overflow:hidden"><div style="width:${d.pr}%;height:100%;background:${d.pr>=80?'#2E7D4F':d.pr>=50?'#0F6E75':'#3B82F6'}"></div></div></div>`).join('')}`);
+    ].map(d=>`<div style="padding:11px 0;border-bottom:1px solid #F5F5F5"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:var(--mid);${F}">${d.ref}</span><span style="font-size:13px;font-weight:700;color:#12303F;${F}">${d.n}</span><span style="font-size:11px;color:var(--mid);${F}">· ${d.b}</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;font-weight:700;color:${d.tc};background:${d.bg};padding:3px 8px;border-radius:6px">${d.s}</span><button onclick="go('notaire')" style="background:#F9F7F3;border:1px solid rgba(0,0,0,0.07);border-radius:7px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;${F}">Ouvrir →</button></div></div><div style="height:3px;background:#F3F4F6;border-radius:2px;overflow:hidden"><div style="width:${d.pr}%;height:100%;background:${d.pr>=80?'#2E7D4F':d.pr>=50?'#0A7A84':'#3B82F6'}"></div></div></div>`).join('')}`);
 
     const right=
       iaBox('Priorité : Dossier Dupont-Fontaine — 3 documents manquants, acte le 15/07. Dossier Martin — délai SRU expire dans 4 jours.')+
       card(lbl('Cette semaine')+[
         {j:'Lun',a:'Compromis Dupont'},{j:'Mer',a:'Réception actes Martin'},{j:'Jeu',a:'Signature Leclerc'}
-      ].map(e=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #F5F5F5"><span style="font-size:11px;font-weight:700;color:#0F6E75;min-width:34px;${F}">${e.j}</span><span style="font-size:12px;color:#1E2329;${F}">${e.a}</span></div>`).join(''));
+      ].map(e=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #F5F5F5"><span style="font-size:11px;font-weight:700;color:#0A7A84;min-width:34px;${F}">${e.j}</span><span style="font-size:12px;color:#12303F;${F}">${e.a}</span></div>`).join(''));
 
     dash.innerHTML=layout(left, dossiers, right);
 
@@ -8215,7 +8310,7 @@ function launchAIProject(){
     let html='';
     if(isVente){
       html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:linear-gradient(135deg,rgba(15,110,117,0.08),rgba(15,110,117,0.04));border:1px solid rgba(15,110,117,0.2);border-radius:10px;padding:14px">
+        <div style="background:linear-gradient(135deg,rgba(10,122,132,0.08),rgba(10,122,132,0.04));border:1px solid rgba(10,122,132,0.2);border-radius:10px;padding:14px">
           <div style="font-size:11px;font-weight:600;color:var(--gold);margin-bottom:4px">ESTIMATION IA</div>
           <div style="font-size:13px;color:var(--dark);line-height:1.5">L'IA peut estimer votre bien en moins de 2 minutes basé sur le marché NC réel.</div>
           <button type="button" onclick="loginAs('sell')" class="btn btn-gold btn-sm" style="margin-top:10px;font-size:11px">Estimer mon bien →</button>
@@ -8233,7 +8328,7 @@ function launchAIProject(){
       html=`<div>
         <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:10px">Analyse de votre projet</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-          <div style="background:rgba(15,110,117,0.06);border:1px solid rgba(15,110,117,0.15);border-radius:8px;padding:10px">
+          <div style="background:rgba(10,122,132,0.06);border:1px solid rgba(10,122,132,0.15);border-radius:8px;padding:10px">
             <div style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:2px">ZONE RECOMMANDÉE</div>
             <div style="font-size:13px;font-weight:600;color:var(--dark)">${qLabel}</div>
           </div>
@@ -8399,7 +8494,7 @@ function buildLandingBiensPublic(){
     const pm2=conv(Math.round(b.prix/(b.surface||1)));
     const isListe=vuePublique==='list';
     return isListe ? `
-      <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:14px;cursor:pointer;display:flex;gap:0;align-items:stretch;overflow:hidden;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,0.05)" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 4px 16px rgba(15,110,117,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)'">
+      <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:14px;cursor:pointer;display:flex;gap:0;align-items:stretch;overflow:hidden;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,0.05)" onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 4px 16px rgba(10,122,132,0.1)'" onmouseout="this.style.borderColor='var(--warm)';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)'">
         <!-- Photo large -->
         <div style="width:200px;min-width:200px;background:linear-gradient(135deg,var(--warm),var(--cream));display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden">
           ${b.photoUrl
@@ -8444,7 +8539,7 @@ function buildLandingBiensPublic(){
           <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px">Prix de vente</div>
         </div>
       </div>` : `
-      <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:16px;overflow:hidden;cursor:pointer;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 28px rgba(15,110,117,0.13)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.06)'">
+      <div onclick="openLandingBien(${b.id})" style="background:#fff;border:1px solid var(--warm);border-radius:16px;overflow:hidden;cursor:pointer;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 28px rgba(10,122,132,0.13)'" onmouseout="this.style.borderColor='var(--warm)';this.style.transform='';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.06)'">
         <!-- PHOTO -->
         <div style="height:210px;background:linear-gradient(135deg,var(--warm),var(--cream));position:relative;display:flex;align-items:center;justify-content:center;font-size:56px;overflow:hidden">
           ${b.photoUrl
@@ -8900,7 +8995,7 @@ function afficherResultats(result, surface, quartier){
   if(badge){
     const pct = result.positionnement_pct || 55;
     badge.textContent = pct>=70?'✅ Au-dessus de la moyenne locale':pct>=50?'Dans la moyenne locale':'Légèrement sous la moyenne';
-    badge.style.background = pct>=70?'rgba(42,122,75,0.2)':pct>=50?'rgba(15,110,117,0.2)':'rgba(220,38,38,0.15)';
+    badge.style.background = pct>=70?'rgba(42,122,75,0.2)':pct>=50?'rgba(10,122,132,0.2)':'rgba(220,38,38,0.15)';
     badge.style.color = pct>=70?'#4ade80':pct>=50?'var(--gold)':'#ef4444';
   }
 
@@ -9313,7 +9408,7 @@ function afficherEpResultats(result){
           <div style="font-size:9px;color:var(--mid)">Gain</div>
           <div style="font-size:12px;font-weight:700;color:var(--green)">+${conv(r.gain_xpf)}</div>
         </div>
-        <div style="background:rgba(15,110,117,0.06);border-radius:6px;padding:5px">
+        <div style="background:rgba(10,122,132,0.06);border-radius:6px;padding:5px">
           <div style="font-size:9px;color:var(--mid)">ROI</div>
           <div style="font-size:12px;font-weight:700;color:var(--gold)">x${r.roi}</div>
         </div>
@@ -9370,7 +9465,8 @@ function buildLandingBiensSimple(zone, budget, type){
     if(zone && !(b.quartier||'').includes(zone) && !(b.ville||'').includes(zone)) return false;
     if(budget>0 && b.prix>budget) return false;
     return true;
-  }).slice(0,12);
+  });
+  biens = (window.IMMO_OPT ? IMMO_OPT.sort(biens) : biens).slice(0,12); // « À la une » et remontées d'abord
 
   if(countEl) countEl.textContent = biens.length ? biens.length+' bien'+(biens.length>1?'s':'')+' à vendre'+(zone?' · '+zone:'')+(type?' · '+type:'') : '';
 
@@ -9435,5 +9531,9 @@ go('dashboard');
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
 <script src="js/missions.js"></script>
+<script src="js/options.js"></script>
+<script src="js/abonnement.js"></script>
+<script src="js/agence.js"></script>
+<script src="js/nav.js"></script>
 </body>
 </html>

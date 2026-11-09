@@ -37,12 +37,14 @@
       ville: txt(d.ville, 60), quartier: txt(d.quartier, 60), desc: txt(d.desc, 3000),
       features: (Array.isArray(d.features) ? d.features : []).slice(0, 20).map(f => txt(f, 40)).filter(Boolean),
       agent: txt(d.agent, 60), tel: txt(d.tel, 30).replace(/[^0-9+ ().-]/g, ''), ref: txt(d.ref, 40), date: /^\d{4}-\d{2}-\d{2}$/.test(d.date || '') ? d.date : '',
-      thumb: IMG.test(d.thumb || '') ? d.thumb : null, nbPhotos: Math.round(num(d.nbPhotos, MAX_PHOTOS)), publie: d.publie === true
+      thumb: IMG.test(d.thumb || '') ? d.thumb : null, nbPhotos: Math.round(num(d.nbPhotos, MAX_PHOTOS)), publie: d.publie === true,
+      // marque de l'agence (nom + logo) apposée à la publication
+      agence: d.agence && typeof d.agence === 'object' ? { nom: txt(d.agence.nom, 80), logo: IMG.test(d.agence.logo || '') && d.agence.logo.length < 120000 ? d.agence.logo : null } : null
     };
   }
   // Forme attendue par les gabarits existants (BIENS_DATA)
   const toBien = a => ({ id: a.id, titre: a.titre, type: a.type, surface: a.surface, pieces: a.pieces, chambres: a.chambres, prix: a.prix, statut: a.statut, dpe: a.dpe,
-    ville: a.ville, quartier: a.quartier, desc: a.desc, description: a.desc, features: a.features, photos: ['🏠'], photoUrl: a.thumb, date: a.date, agent: a.agent, tel: a.tel, ref: a.ref, _ann: true });
+    ville: a.ville, quartier: a.quartier, desc: a.desc, description: a.desc, features: a.features, photos: ['🏠'], photoUrl: a.thumb, date: a.date, agent: a.agent, tel: a.tel, ref: a.ref, agence: a.agence && (a.agence.nom || a.agence.logo) ? a.agence : null, _ann: true });
 
   /* ---------- Images ---------- */
   function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
@@ -128,8 +130,8 @@
       if (!ph.length || !document.body.contains(media)) return;
       const gal = media.querySelector('.ann-gal');
       gal.innerHTML = `<div style="position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:3/2;margin-bottom:6px"><img class="ann-main" alt="${E(b.titre)}" src="${ph[0]}" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-        ${ph.length > 1 ? `<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px">${ph.map((src, i) => `<img data-i="${i}" alt="Photo ${i + 1}" src="${src}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer;flex:none;outline:${i ? 'none' : '2px solid #0F6E75'}">`).join('')}</div>` : ''}`;
-      gal.querySelectorAll('img[data-i]').forEach(t => t.onclick = () => { gal.querySelector('.ann-main').src = ph[+t.dataset.i]; gal.querySelectorAll('img[data-i]').forEach(x => { x.style.outline = x === t ? '2px solid #0F6E75' : 'none'; }); });
+        ${ph.length > 1 ? `<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px">${ph.map((src, i) => `<img data-i="${i}" alt="Photo ${i + 1}" src="${src}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer;flex:none;outline:${i ? 'none' : '2px solid #0A7A84'}">`).join('')}</div>` : ''}`;
+      gal.querySelectorAll('img[data-i]').forEach(t => t.onclick = () => { gal.querySelector('.ann-main').src = ph[+t.dataset.i]; gal.querySelectorAll('img[data-i]').forEach(x => { x.style.outline = x === t ? '2px solid #0A7A84' : 'none'; }); });
       // Masque l'ancien bloc « photo » (emoji ou miniature) de la fiche, remplacé par la galerie
       const fph = card.querySelector('.fi-ph'); if (fph) fph.classList.add('gal'); // fiche v3 : la galerie remplace la photo d'en-tête, les boutons restent
       card.querySelectorAll('div').forEach(d => { if (media.contains(d) || d.classList.contains('fi-ph')) return; const im = d.querySelector(':scope > img'); if ((d.style.height === '130px' && d.textContent.trim() === '🏠') || (im && im.getAttribute('src') === b.photoUrl)) d.style.display = 'none'; });
@@ -145,8 +147,9 @@
       ${list.length ? list.map(a => `<div class="card" style="display:grid;grid-template-columns:120px 1fr auto;gap:14px;align-items:center;padding:12px">
         <div style="width:120px;height:80px;border-radius:8px;background:var(--warm) center/cover no-repeat${a.thumb && IMG.test(a.thumb) ? ';background-image:url(' + a.thumb + ')' : ''}"></div>
         <div><div style="font-weight:600;font-size:15px">${E(a.titre)}</div><div style="font-size:12px;color:var(--mid);margin:3px 0">${E([a.quartier, a.ville].filter(Boolean).join(', '))} · ${a.surface ? E(a.surface) + ' m² · ' : ''}${a.prix ? Number(a.prix).toLocaleString('fr-FR') + ' F' : ''}</div>
-          <span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;${a.publie ? 'background:#E6F4EA;color:#1E6B3A">Publiée' : 'background:#EEF2F6;color:#475569">Retirée'}</span> <span style="font-size:11px;color:var(--mid)">${E(a.nbPhotos || 0)} photo(s) · réf. ${E(a.ref)}</span></div>
+          <span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;${a.publie ? 'background:#E6F4EA;color:#1E6B3A">Publiée' : 'background:#EEF2F6;color:#475569">Retirée'}</span> <span style="font-size:11px;color:var(--mid)">${E(a.nbPhotos || 0)} photo(s) · réf. ${E(a.ref)}</span>${window.IMMO_OPT && IMMO_OPT.badges(a.id) ? '<div style="margin-top:6px">' + IMMO_OPT.badges(a.id) + '</div>' : ''}</div>
         <div style="display:flex;flex-direction:column;gap:6px">${a.publie ? `<button type="button" class="btn btn-sm btn-outline" data-voir="${E(a.id)}">Voir la fiche</button>` : ''}
+          ${a.publie && window.IMMO_TARIFS && IMMO_TARIFS.actif() ? `<button type="button" class="btn btn-sm btn-gold" data-boost="${E(a.id)}">Vendre plus vite</button>` : ''}
           <button type="button" class="btn btn-sm btn-outline" data-visite="${E(a.id)}">Visite vidéo</button>
           <button type="button" class="btn btn-sm btn-outline" data-pub="${E(a.id)}" data-v="${a.publie ? '0' : '1'}">${a.publie ? 'Retirer' : 'Republier'}</button>
           <button type="button" class="btn btn-sm btn-outline" data-del="${E(a.id)}">Supprimer</button></div></div>`).join('')
@@ -154,6 +157,7 @@
     $('ma-new').onclick = () => go('depot');
     $('ma-texte').onclick = () => go('annonces');
     el.querySelectorAll('[data-voir]').forEach(b => b.onclick = () => { if (typeof openBien === 'function') openBien(+b.dataset.voir); });
+    el.querySelectorAll('[data-boost]').forEach(b => b.onclick = () => { if (window.IMMO_OPT) IMMO_OPT.openBoost(+b.dataset.boost); });
     el.querySelectorAll('[data-visite]').forEach(b => b.onclick = () => { if (window.IMMO_VISITE && IMMO_VISITE.state) IMMO_VISITE.state.bienId = +b.dataset.visite; go('visite'); });
     el.querySelectorAll('[data-pub]').forEach(b => b.onclick = async () => { await setPublie(+b.dataset.pub, b.dataset.v === '1'); buildMes(el); });
     el.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => { if (confirm('Supprimer définitivement cette annonce et ses photos ?')) { await remove(+b.dataset.del); buildMes(el); } });

@@ -51,10 +51,10 @@
       const st = $('dstep-' + i); if (st) { st.classList.remove('active', 'done'); if (i < n) st.classList.add('done'); if (i === n) st.classList.add('active'); }
     }
     window.depotStep = n;
-    if (n === 2) photosHint();
+    if (n === 2) { photosHint(); videoPreview(); }
     if (n === 3) { hint(); updateDepotEstim(); }
     if (n === 4) autoTitle();
-    if (n === 5) { prefillContact(); preview(); }
+    if (n === 5) { prefillContact(); preview(); boost(); }
     const panel = $('panel-depot'); if (panel && panel.scrollIntoView) panel.scrollIntoView({ block: 'start' });
     window.scrollTo({ top: 0 });
   }
@@ -74,6 +74,31 @@
     if (!val('d-titre')) return err(4, 'Donnez un titre à votre annonce.', 'd-titre');
     err(4, ''); goDepotStep(5);
   }
+
+  /* ---------- Visite vidéo : aperçu en direct à partir des photos du dépôt ---------- */
+  let vSig = '';
+  function videoPreview() {
+    const box = $('dp-video-prev'), help = $('dp-video-help'), on = $('d-video') && $('d-video').checked;
+    const ph = (typeof depotPhotos !== 'undefined' ? depotPhotos : []);
+    if (help) help.textContent = !on ? 'Pas de vidéo pour cette annonce.' : ph.length < 2 ? 'Ajoutez au moins 2 photos pour voir l\'aperçu de la vidéo.' : 'Aperçu : lancez la lecture pour voir la visite.';
+    const sig = on ? ph.map(p => p.url).join('|') : '';
+    if (sig === vSig || !box) return; vSig = sig;
+    if (!on || ph.length < 2 || !window.IMMO_VISITE) { box.innerHTML = ''; return; }
+    IMMO_VISITE.preview(box, ph, { titre: val('d-titre') || val('d-type') || 'Votre bien', sous: val('d-quartier') && val('d-quartier') !== 'Autre' ? val('d-quartier') : val('d-ville') });
+  }
+
+  /* ---------- Options payantes à la publication (selon js/tarifs.js) ---------- */
+  let picker = null;
+  function boost() {
+    const box = $('dp-boost'); if (!box) return;
+    const t = window.IMMO_TARIFS;
+    if (!t || !t.actif() || !window.IMMO_OPT) { box.hidden = true; picker = null; return; }
+    if (picker) { box.hidden = false; return; } // garder les choix déjà faits
+    box.hidden = false;
+    box.innerHTML = `<h3>Vendez plus vite (facultatif)</h3><p>${t.offert() ? 'Offertes pendant le lancement d\'Immo360.' : 'Options payantes, activées dès réception du paiement.'}</p><div id="dp-pick">${IMMO_OPT.pickerHTML('dpb')}</div>`;
+    picker = IMMO_OPT.bindPicker(box.querySelector('#dp-pick'), 'dpb');
+  }
+  const boostChoisi = () => picker ? { ids: picker.selected(), date: picker.date() } : { ids: [], date: '' };
 
   /* ---------- Aides ---------- */
   function photosHint() { const b = $('dp-photos-next'); if (b) b.textContent = (typeof depotPhotos !== 'undefined' && depotPhotos.length) ? 'Continuer' : 'Continuer sans photo'; }
@@ -142,6 +167,9 @@
         $('d-transaction').value = b.dataset.tr;
       }));
       ['d-surface', 'd-quartier'].forEach(id => $(id) && $(id).addEventListener('input', hint));
+      // L'aperçu vidéo suit les photos ajoutées ou retirées
+      const grid = $('d-photos-grid'); if (grid) new MutationObserver(() => { if (window.depotStep === 2) videoPreview(); }).observe(grid, { childList: true });
+      $('d-video') && $('d-video').addEventListener('change', () => { vSig = 'x'; videoPreview(); });
       $('d-quartier') && $('d-quartier').addEventListener('change', hint);
       updateQuartiers();
     }
@@ -152,5 +180,13 @@
   Object.assign(window, { goDepotStep, validateStep1, validateStep3: validatePrix, validatePrix, validatePresentation, updateQuartiers, updateDepotEstim });
   window.IMMO_PANELS = Object.assign(window.IMMO_PANELS || {}, { depot: () => init() });
   if (document.readyState !== 'loading') init(); else document.addEventListener('DOMContentLoaded', init);
-  window.IMMO_DEPOT = { QUARTIERS, repere, autoTitle };
+  // Arrivée depuis l'estimation : informations reprises, on reste à l'étape 1 pour vérifier
+  let fromEst = null;
+  function fromEstimation(o) {
+    fromEst = o; goDepotStep(1);
+    const bx = $('dp-from-est');
+    const lk = $('dp-est-link'); if (lk) lk.style.display = 'none';
+    if (bx) { bx.style.display = 'block'; bx.innerHTML = `<b>Repris de votre estimation</b> : type, lieu, surface, prestations et prix (${(typeof conv === 'function' ? conv(Math.round(o.prix / 100000) * 100000) : '')}). Vérifiez puis continuez.`; }
+  }
+  window.IMMO_DEPOT = { QUARTIERS, repere, autoTitle, fromEstimation, boostChoisi };
 })();

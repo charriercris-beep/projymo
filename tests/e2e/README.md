@@ -24,3 +24,13 @@ node tests/e2e/e2e.js $PG /tmp
 ```
 `supabase-stub.sql` imite le minimum de Supabase : schéma `auth`, rôles `anon` / `authenticated` /
 `service_role`, fonctions `auth.uid()` et `auth.role()`.
+
+## Sécurité de la monétisation
+
+`rls-monetisation.sql` vérifie, sur la même base, qu'un utilisateur peut commander une option ou un
+abonnement mais jamais l'activer lui-même (ni via la fonction d'administration, ni en modifiant sa
+commande, ni sur l'annonce d'un autre), que l'essai pro n'est accordé qu'une fois, et qu'en mode
+« lancement » la base fixe elle-même le prix (0) et la durée.
+```bash
+psql -h $PG -p 54329 -U postgres -f tests/e2e/rls-monetisation.sql
+```

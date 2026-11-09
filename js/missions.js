@@ -113,8 +113,10 @@
     return `<div class="ms-row" data-mid="${E(m.id)}"><div><h4>${E(m.type)} — ${E(m.client || 'Client ?')}</h4><p>${E([m.adresse, m.commune].filter(Boolean).join(', ') || 'Adresse à préciser')}${m.source !== 'manuel' ? ' · demandé depuis l\'espace ' + E(m.source) : ''}${m.intervention ? ' · intervention le ' + fmtD(m.intervention) : ''}</p></div><div><span class="ms-tag ${cls}">${E(lab)}</span></div></div>`;
   }
   function buildListe(r, el) {
-    injectStyle(); clearOthers(el); const list = store.get(keyM(r), []), R = ROLES[r];
-    el.innerHTML = `<div class="ms-wrap"><div class="ms-head" style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><h2>${E(R.titreMissions)}</h2><p>${list.length} mission(s).</p></div><button type="button" class="btn btn-gold" id="ms-new">Nouvelle mission</button></div>
+    injectStyle(); clearOthers(el); const all = store.get(keyM(r), []), R = ROLES[r];
+    // Formule gratuite en mode payant : missions limitées par mois (js/abonnement.js)
+    const capM = window.IMMO_ABO ? IMMO_ABO.cap(r, 'missions', all) : { shown: all, hidden: 0 }, list = capM.shown;
+    el.innerHTML = `<div class="ms-wrap">${window.IMMO_ABO ? IMMO_ABO.invite(r, capM.hidden, 'missions') : ''}<div class="ms-head" style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><h2>${E(R.titreMissions)}</h2><p>${list.length} mission(s).</p></div><button type="button" class="btn btn-gold" id="ms-new">Nouvelle mission</button></div>
       ${list.length ? list.map(m => rowHTML(r, m)).join('') : '<div class="card"><p style="margin:0;color:var(--mid);font-size:13px">Aucune mission pour le moment.</p></div>'}</div>`;
     $('ms-new').onclick = () => openMission(r, el, request(r, {}));
     el.querySelectorAll('[data-mid]').forEach(b => b.onclick = () => openMission(r, el, b.dataset.mid));

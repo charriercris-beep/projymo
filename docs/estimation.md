@@ -64,3 +64,40 @@ principes comparables, **sans réutiliser leurs données** :
 - [ISEE — Transactions immobilières, synthèse annuelle 2025](https://isee.nc/transactions-immobilieres-synthese-annuelle-2025)
 - [CombienLaKaz.nc — FAQ (méthode)](https://www.combienlakaz.nc/faq) · [CGU](https://www.combienlakaz.nc/cgu) · [À propos](https://www.combienlakaz.nc/a-propos)
 - [Les Nouvelles Calédoniennes — Le marché reprend quelques couleurs en 2025](https://www.lnc.nc/article/immobilier-1/2-le-marche-reprend-quelques-couleurs-en-2025-mais-loin-des-niveaux-d-avant-crise)
+
+## Valorisation : diagnostic d'abord
+
+L'assistant de valorisation (`js/valorisation.js`) ne prête plus de plus-value automatique à chaque poste coché.
+Le vendeur décrit d'abord l'état de chaque élément (présentation, petits défauts, murs, sols, cuisine,
+salle de bain, électricité, climatisation, menuiseries, extérieur, photos), et chaque poste reçoit un
+coefficient « besoin » :
+
+- **0** : rien à corriger (murs en bon état, cuisine récente, pas de jardin…) → poste grisé, 0 F ;
+- **0,2 à 0,8** : gain partiel (cuisine « correcte », climatisation dans certaines pièces…) ;
+- **1 à 1,3** : défaut net → gain plein ou renforcé, poste marqué « conseillé ».
+
+Tant qu'un élément n'est pas décrit, le gain du poste correspondant reste « à évaluer » et ne compte pas.
+Les niveaux (Rangement, Home staging…) ne retiennent que les postes utiles. Avec des photos, l'analyse IA
+peut remplir les éléments non décrits (mention « vu sur les photos »), sans jamais écraser ce que le
+vendeur a indiqué.
+
+### Valeur en l'état, calculée en direct
+
+Valeur = prix au m² du secteur × surface × (1 + état) × (1 + prestations) + extérieurs.
+
+- **État** : il n'y a plus de champ « État général ». L'état se déduit du diagnostic, élément par élément,
+  par rapport à un bien moyen du secteur (le barème est une médiane de ventes) : par exemple cuisine récente
+  +3 %, datée −4 % ; électricité ancienne −3 % ; climatisation partout +2 %, aucune −2 % ; murs abîmés −3 %.
+  Un élément non décrit compte pour 0. L'année de construction (facultative) ajoute de +3 % (depuis 2015)
+  à −4 % (avant 1975).
+- **Prestations**, regroupées comme sur les grands portails (vue, piscine et bien-être, stationnement,
+  sécurité, confort et annexes) : vue mer ou lagon +7 %, piscine privée +5 %, studio indépendant +6 %,
+  garage fermé +3 %, plage à pied +3 %, parking sécurisé +2 %, spa +1,5 %… Le total est plafonné à +25 %.
+  Certaines dépendent du type de bien (ascenseur pour un appartement, carport ou pool house pour une maison).
+- **Extérieurs**, en surface pondérée et sans double compte : en appartement, terrasse à 30 % du prix au m²
+  et jardin privatif à 3 % (1 % au-delà de 200 m²) ; en maison ou villa, le prix du secteur comprend déjà un
+  terrain d'environ 600 m², seul le surplus compte (3 %), et la terrasse compte pour 15 %.
+- **Fourchette** : ±12 % quand le bien n'est pas décrit, jusqu'à ±5 % quand le diagnostic est complet.
+
+Tous ces coefficients sont des repères indicatifs, à recaler sur les ventes observées dès que
+l'observatoire disposera d'assez d'annonces.
