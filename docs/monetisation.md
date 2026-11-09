@@ -53,6 +53,22 @@ la grille ; leur commande sera branchée avec le paiement).
   Une agence au maximum d'annonces ne peut plus en publier.
 - **Pied de page** : lien « Tarifs » (page générée à partir de `js/tarifs.js`).
 
+## Avantages des formules agence (construits)
+
+- **Mon agence** (espace agent) : nom, logo, téléphone, email, adresse, carte professionnelle.
+- **Logo et nom de l'agence** sur ses annonces (petit logo sur la photo de la carte, logo et nom dans
+  le contact de la fiche). Apposés à la publication.
+- **Rapport d'estimation au nom de l'agence** : depuis « Estimer et vendre », bouton « Rapport
+  d'estimation (PDF) » ; document imprimable / enregistrable en PDF avec l'en-tête de l'agence, la valeur,
+  la fourchette, le calcul détaillé, l'état constaté, les scénarios de travaux et la méthode (ISEE).
+- **Agence+ : 2 « À la une » offertes par mois**, proposées dans « Vendre plus vite ». La base vérifie
+  l'abonnement Agence+ actif et le compteur du mois (`une_offerte_ok`).
+
+En mode payant, logo et rapport sont réservés aux formules Agence et Agence+ (la formule Découverte voit
+une invitation). Tant que la partie payante est éteinte, tout le monde y a accès ; un particulier obtient
+le rapport sans en-tête d'agence (en mode payant, le rapport des particuliers deviendra le service à
+2 900 F, dont la commande reste à brancher avec le paiement).
+
 ## Encaisser et activer (en attendant un paiement en ligne)
 
 Le paiement en ligne n'est pas branché (à choisir avec votre banque ; Stripe n'est a priori pas ouvert

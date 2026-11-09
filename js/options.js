@@ -92,6 +92,25 @@
     writeL(all); await load(); refreshViews();
     return { ok: true, online: false, aPayer: false, total };
   }
+  // Formule Agence+ : « À la une » offertes ce mois-ci (la base vérifie aussi, voir une_offerte_ok)
+  function unesOffertes() {
+    const t = T(); if (!t || t.MODE !== 'payant' || typeof S === 'undefined' || S.profile !== 'agt' || !window.IMMO_ABO || !IMMO_ABO.a('agt', 'une_mensuelle')) return 0;
+    const m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
+    const used = rows.filter(r => r.option === 'une' && Number(r.prix) === 0 && r.statut === 'active' && new Date(r.created_at || r.debut).getTime() >= m0.getTime()).length;
+    return Math.max(0, 2 - used);
+  }
+  async function orderFreeUne(annonceId) {
+    if (!unesOffertes()) return { ok: false };
+    if (online()) {
+      const r = await IMMO_SYNC.client.from('options_annonce').insert({ annonce_id: Number(annonceId), option: 'une', prix: 0, statut: 'active' });
+      if (r && r.error) return { ok: false, error: r.error.message || String(r.error) };
+    } else {
+      const now = new Date(), all = readL();
+      all.push({ id: 'd' + Date.now(), annonce_id: Number(annonceId), option: 'une', prix: 0, statut: 'active', debut: now.toISOString(), fin: new Date(now.getTime() + 7 * DAY).toISOString(), created_at: now.toISOString(), demo: true });
+      writeL(all);
+    }
+    await load(); refreshViews(); return { ok: true };
+  }
   const mine = annonceId => rows.filter(r => String(r.annonce_id) === String(annonceId));
 
   function refreshViews() {
@@ -135,6 +154,7 @@
       <p class="op-sub">${E(b.titre || 'Votre annonce')}</p>
       ${t.offert() ? '<p class="op-note">Pendant le lancement d\'Immo360, toutes les options sont offertes.</p>' : ''}
       ${deja.length ? `<div class="op-deja"><b>Déjà commandé</b>${deja.map(r => `<span>${E((t.OPTIONS[r.option] || {}).nom || r.option)} — ${etat(r)}${r.demo ? ' (démo)' : ''}</span>`).join('')}</div>` : ''}
+      ${unesOffertes() ? `<label class="op-row op-free"><input type="checkbox" id="op-free-une"><span><b>À la une · 7 jours — inclus dans votre formule</b><small>Il vous reste ${unesOffertes()} « À la une » offerte(s) ce mois-ci.</small></span><em>Offert</em></label>` : ''}
       <div id="op-pick">${pickerHTML('opb')}</div>
       <p class="op-msg" id="op-msg" role="status"></p>
       <div class="op-actions"><button type="button" class="btn btn-outline op-x">Plus tard</button><button type="button" class="btn btn-gold" id="op-go">${t.offert() ? 'Activer les options' : 'Commander'}</button></div></div>`;
@@ -143,8 +163,11 @@
     ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('.op-x')) close(); });
     const pk = bindPicker(ov.querySelector('#op-pick'), 'opb');
     ov.querySelector('#op-go').onclick = async () => {
-      const ids = pk.selected(), msg = ov.querySelector('#op-msg');
-      if (!ids.length) { msg.textContent = 'Choisissez au moins une option.'; return; }
+      const free = ov.querySelector('#op-free-une') && ov.querySelector('#op-free-une').checked;
+      const ids = pk.selected().filter(x => !(free && x === 'une')), msg = ov.querySelector('#op-msg');
+      if (!ids.length && !free) { msg.textContent = 'Choisissez au moins une option.'; return; }
+      if (free) { const f = await orderFreeUne(annonceId); if (!f.ok) { msg.innerHTML = 'L\'« À la une » offerte n\'a pas pu être activée.' + (f.error ? ' <small>(' + E(f.error) + ')</small>' : ''); return; }
+        if (!ids.length) { msg.innerHTML = '<b>« À la une » activée pour 7 jours (offerte par votre formule).</b>'; ov.querySelector('#op-go').disabled = true; setTimeout(close, 2000); return; } }
       if (ids.includes('portes') && !pk.date()) { msg.textContent = 'Indiquez la date des portes ouvertes.'; ov.querySelector('#opb-date').focus(); return; }
       const r = await order(annonceId, ids, pk.date());
       msg.innerHTML = !r.ok ? 'La commande n\'a pas pu être enregistrée. Réessayez.' + (r.error ? ' <small>(' + E(r.error) + ')</small>' : '')
@@ -173,13 +196,13 @@
 .op-row b{display:block;font-size:15.5px}.op-row small{display:block;color:var(--mid);font-size:13.5px}
 .op-row em{font-style:normal;font-weight:700;white-space:nowrap;color:var(--ocean)}.op-row em s{color:var(--mid);font-weight:400;margin-right:4px}
 .op-row:has(input:checked){border-color:var(--gold);background:var(--lagoon-pale)}
-.op-pack{border-color:var(--gold)}.op-date{margin-top:6px;max-width:200px}
+.op-pack{border-color:var(--gold)}.op-free{border-color:var(--green);background:#EEF8F1}.op-date{margin-top:6px;max-width:200px}
 .op-total{text-align:right;font-size:17px;margin:6px 0}.op-msg{min-height:1em;font-size:15px}
 .op-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
 .dp-boost{margin-top:18px}.dp-boost>h3{font-size:18px;margin:0 0 4px;color:var(--ocean)}.dp-boost>p{margin:0 0 10px;color:var(--mid);font-size:15px}`;
   document.head.appendChild(css);
 
-  window.IMMO_OPT = { load, sort, badges, couleur, of, order, openBoost, pickerHTML, bindPicker, mine, refresh: async () => { await load(); refreshViews(); } };
+  window.IMMO_OPT = { unesOffertes, orderFreeUne, load, sort, badges, couleur, of, order, openBoost, pickerHTML, bindPicker, mine, refresh: async () => { await load(); refreshViews(); } };
   window.addEventListener('immo360:purge', () => { rows = []; byId = {}; });
   // La fenêtre se ferme quand on change de page
   const go0 = window.go;

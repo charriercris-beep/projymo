@@ -3158,10 +3158,10 @@ const MENUS = {
   agt:[
     {l:'Estimer et vendre',sub:[{k:'valorisation',l:'1. Estimer'},{k:'depot',l:'2. Déposer l\'annonce'}]},
     {l:'Annonces',sub:[{k:'mes-annonces',l:'Mes annonces'},{k:'visite',l:'Visites vidéo'},{k:'statsannonces',l:'Statistiques'}]},
-    {k:'mandats',l:'Mandats'},
+    {l:'Mandats',sub:[{k:'mandats',l:'Mandats'},{k:'notaire',l:'Suivi notaire'}]},
     {l:'Clients',sub:[{k:'crm',l:'Clients'},{k:'matching',l:'Acheteurs'}]},
     {l:'Agenda et messages',sub:[{k:'visites',l:'Rendez-vous'},{k:'messagerie',l:'Messages'}]},
-    {k:'notaire',l:'Notaire'},
+    {k:'agt-profil',l:'Mon agence'},
   ],
   art:[
     {l:'Demandes et devis',sub:[{k:'art-demandes',l:'Demandes'},{k:'art-devis',l:'Mes devis'}]},
@@ -3197,7 +3197,10 @@ function buildSB(){
   const prof=S.profile||APP_STATE.user?.profil||'sell';
   let items=MENUS[prof]||MENUS.sell;
   // Onglet « Abonnement » pour les pros, seulement quand la partie payante est allumée (js/tarifs.js)
-  if(window.IMMO_TARIFS && IMMO_TARIFS.actif() && IMMO_TARIFS.plans(prof).some(p=>p.prix>0)) items=items.concat([{k:'abonnement',l:'Abonnement'}]);
+  if(window.IMMO_TARIFS && IMMO_TARIFS.actif() && IMMO_TARIFS.plans(prof).some(p=>p.prix>0)){
+    const ab={k:'abonnement',l:'Abonnement'}, ip=items.findIndex(it=>!it.sub && /-profil$/.test(it.k||''));
+    items = ip<0 ? items.concat([ab]) : items.map((it,i)=>i===ip?{l:it.l,sub:[{k:it.k,l:it.l},ab]}:it);
+  }
   const keys=it=>it.sub?it.sub.map(x=>x.k):[it.k];
   const mk=(label,panel,on)=>{
     const d=document.createElement('button');
@@ -4717,7 +4720,7 @@ function openLandingBien(id){
       </div>
       <aside class="fi-side">
         <div class="fi-contact">
-          <div class="fi-ag"><span class="fi-av" aria-hidden="true">${esc((b.agent||b.auteur||'Vendeur').trim().charAt(0).toUpperCase())}</span><div><b>${esc(b.agent||b.auteur||'Vendeur')}</b><span>${b.ref?'Réf. '+esc(b.ref):''}${b.date?' · publié le '+esc(new Date(b.date).toLocaleDateString('fr-FR')):''}</span></div></div>
+          <div class="fi-ag">${b.agence&&b.agence.logo?`<span class="fi-av logo"><img src="${esc(b.agence.logo)}" alt=""></span>`:`<span class="fi-av" aria-hidden="true">${esc((b.agent||b.auteur||'Vendeur').trim().charAt(0).toUpperCase())}</span>`}<div><b>${esc((b.agence&&b.agence.nom)||b.agent||b.auteur||'Vendeur')}</b><span>${b.ref?'Réf. '+esc(b.ref):''}${b.date?' · publié le '+esc(new Date(b.date).toLocaleDateString('fr-FR')):''}</span></div></div>
           ${cta}
         </div>
       </aside>
@@ -5323,6 +5326,9 @@ async function publierAnnonce(){
     tel: document.getElementById('d-contact-tel')?.value,
     ref: document.getElementById('d-ref')?.value||null,
   };
+  // Agence : nom et logo apposés sur l'annonce (selon la formule en mode payant) — js/agence.js
+  const marque=window.IMMO_AGENCE?IMMO_AGENCE.marque('logo'):null;
+  if(marque){ bien.agence={nom:marque.nom,logo:marque.logo}; if(!bien.agent) bien.agent=marque.nom; if(!bien.tel) bien.tel=marque.tel; }
 
   // Contrôles minimaux
   if(!bien.titre||!bien.type||!bien.prix||!bien.surface){
@@ -9527,6 +9533,7 @@ go('dashboard');
 <script src="js/missions.js"></script>
 <script src="js/options.js"></script>
 <script src="js/abonnement.js"></script>
+<script src="js/agence.js"></script>
 <script src="js/nav.js"></script>
 </body>
 </html>

@@ -26,6 +26,8 @@
     'immo360.visites.v1': { c: 'visite', ownOnly: true },
     // Annonces : on ne récupère périodiquement que les siennes ; les annonces publiées de tous sont lues par js/annonces.js
     'immo360.annonces.v1': { c: 'annonce', ownOnly: true },
+    // Profil de l'agence (privé)
+    'immo360.agence.v1': { c: 'agence', ownOnly: true },
     'immo360.devis.v1': { c: 'devis', aud: r => ({ role: 'artisan', metiers: Array.isArray(r.metiers) ? r.metiers : [] }), strip: ['reponses', 'nom', 'tel', 'contactAccepte'] }  // coordonnées du client : jamais dans la demande partagée
   };
   const META = ['_o', '_u'];

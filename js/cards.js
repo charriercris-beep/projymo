@@ -76,7 +76,7 @@
       : '';
     const ob = window.IMMO_OPT ? IMMO_OPT.badges(b.id) : '', hl = window.IMMO_OPT && IMMO_OPT.couleur(b.id);
     return `<article class="pc${o.compact ? ' sm' : ''}${hl ? ' op-couleur' : ''}">
-  <div class="pc-ph${b.photoUrl ? '' : ' none'}">${ph}<svg class="i pc-noimg" aria-hidden="true"><use href="#i-home"/></svg>${ob ? '<div class="pc-obs">' + ob + '</div>' : badge}${b.illustration ? '<span class="pc-ill">Photo d\'illustration</span>' : ''}</div>
+  <div class="pc-ph${b.photoUrl ? '' : ' none'}">${ph}<svg class="i pc-noimg" aria-hidden="true"><use href="#i-home"/></svg>${ob ? '<div class="pc-obs">' + ob + '</div>' : badge}${b.illustration ? '<span class="pc-ill">Photo d\'illustration</span>' : ''}${b.agence && b.agence.logo ? `<span class="pc-logo"><img src="${E(b.agence.logo)}" alt="${E(b.agence.nom || 'Agence')}"></span>` : ''}</div>
   <div class="pc-bd">
     <div class="pc-pr">${price(b.prix)}</div>
     <div class="pc-sp">${specs(b)}</div>

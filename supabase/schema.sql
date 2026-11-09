@@ -321,11 +321,18 @@ drop policy if exists opt_own on public.options_annonce;
 drop policy if exists opt_insert on public.options_annonce;
 create policy opt_public on public.options_annonce for select to anon, authenticated using (statut = 'active' and fin > now());
 create policy opt_own on public.options_annonce for select to authenticated using (owner_id = auth.uid());
--- commande sur SA propre annonce ; « active » d'emblée seulement si la base est en mode lancement (offert)
+-- Formule Agence+ : 2 « À la une » offertes par mois (abonnement actif, compteur tenu par la base)
+create or replace function public.une_offerte_ok() returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.abonnements a where a.owner_id = auth.uid() and a.role = 'agt' and a.formule = 'premium' and a.statut = 'actif' and a.fin > now())
+     and (select count(*) from public.options_annonce o where o.owner_id = auth.uid() and o.option = 'une' and o.prix = 0 and o.statut = 'active'
+          and o.created_at >= date_trunc('month', now())) < 2;
+$$;
+-- commande sur SA propre annonce ; « active » d'emblée seulement si offerte : mode lancement (base),
+-- ou « À la une » incluse dans la formule Agence+ (dans la limite de 2 par mois)
 create policy opt_insert on public.options_annonce for insert to authenticated with check (
   owner_id = auth.uid()
   and public.record_owner('annonce', annonce_id::text) = auth.uid()
-  and (statut = 'a_payer' or (statut = 'active' and public.mode_tarifs() = 'lancement'))
+  and (statut = 'a_payer' or (statut = 'active' and (public.mode_tarifs() = 'lancement' or (option = 'une' and public.une_offerte_ok()))))
 );
 -- (aucune politique update / delete : seul l'administrateur modifie une commande)
 create or replace function public.options_guard() returns trigger language plpgsql set search_path = public as $$

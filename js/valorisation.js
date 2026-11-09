@@ -251,6 +251,7 @@
 .val-pxo.on{border-color:var(--gold);background:var(--lagoon-pale)}
 .val-txt{margin:0 0 14px}.val-txt summary{cursor:pointer;font-weight:600;color:var(--gold);padding:6px 0;font-size:15px}
 .val-go{font-size:17px!important;padding:13px 26px!important}
+.val-acts{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .val-hint{margin:-4px 0 0;font-size:13.5px;color:var(--mid)}
 .val-ext{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px}
 .val-pg>b{display:block;font-size:14px;color:var(--ocean);margin-bottom:6px}.val-pg>div{display:flex;flex-wrap:wrap;gap:8px}
@@ -339,7 +340,8 @@
           <textarea id="val-ann" rows="6" style="width:100%;box-sizing:border-box;border:1.5px solid var(--line-strong);border-radius:8px;padding:10px;font:15px 'Source Sans 3',sans-serif" placeholder="Le texte rédigé apparaîtra ici ; vous pourrez le modifier."></textarea>
           <button type="button" class="btn btn-sm btn-outline" id="val-copy" style="margin-top:8px">Copier</button>
         </details>
-        <button type="button" class="btn btn-gold val-go" id="val-depot">Déposer mon annonce</button>
+        <div class="val-acts"><button type="button" class="btn btn-gold val-go" id="val-depot">Déposer mon annonce</button>
+          <button type="button" class="btn btn-outline" id="val-rapport" hidden>Rapport d'estimation (PDF)</button></div>
       </div>
     </section>
   </div>
@@ -368,6 +370,7 @@
     $('val-ann-btn').addEventListener('click', genAnnonce);
     $('val-copy').addEventListener('click', () => { const t = $('val-ann').value; if (t && navigator.clipboard) navigator.clipboard.writeText(t); });
     $('val-depot').addEventListener('click', toDepot);
+    $('val-rapport').addEventListener('click', rapport);
     $('val-devis-btn').addEventListener('click', openDevis);
   }
 
@@ -428,6 +431,7 @@
       return;
     }
     ['val-ai-btn', 'val-ann-btn', 'val-depot'].forEach(id => { if ($(id)) $(id).disabled = false; });
+    if ($('val-rapport')) $('val-rapport').hidden = !rapportPermis();
     const cur = compute(st.selected), base = compute(new Set());
     // Plus le bien est décrit, plus la fourchette est étroite (±12 % sans description, ±5 % avec tout)
     const pt = parts(), spread = 0.12 - 0.07 * (diagCount() / DIAG.length) - (st.bien.annee ? 0.005 : 0);
@@ -583,6 +587,63 @@
     if (b.terrasse) ids.add('df-terrasse'); if (b.jardin) ids.add('df-jardin'); if (st.diag.clim === 'complete' || st.diag.clim === 'partielle') ids.add('df-clim');
     ids.forEach(id => { const c = $(id); if (c && !c.checked) { c.checked = true; c.dispatchEvent(new Event('change', { bubbles: true })); } });
     if (window.IMMO_DEPOT && IMMO_DEPOT.fromEstimation) IMMO_DEPOT.fromEstimation({ prix, choix: st.prixChoix });
+  }
+
+  /* ---------- Rapport d'estimation à imprimer / enregistrer en PDF ----------
+   * Gratuit pour tous tant que la partie payante est éteinte. En mode payant : agences dont la formule
+   * inclut « estimation_marque » (en-tête de l'agence) ; pour les particuliers, service payant (commande à venir). */
+  function rapportPermis() {
+    const t = window.IMMO_TARIFS; if (!t || t.MODE !== 'payant') return true;
+    return typeof S !== 'undefined' && S.profile === 'agt' && (!window.IMMO_ABO || IMMO_ABO.a('agt', 'estimation_marque'));
+  }
+  function rapport() {
+    if (!ready() || !rapportPermis()) return;
+    const b = st.bien, pt = parts(), base = compute(new Set()), cur = compute(st.selected), sc = scenarios();
+    const ag = window.IMMO_AGENCE ? IMMO_AGENCE.marque('estimation_marque') : null;
+    const spread = 0.12 - 0.07 * (diagCount() / DIAG.length) - (b.annee ? 0.005 : 0);
+    const r1 = v => Math.round(v / 100000) * 100000, pc = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 1000) / 10).toLocaleString('fr-FR') + ' %';
+    const TYPES = { appartement: 'Appartement', maison: 'Maison', villa: 'Villa', studio: 'Studio' };
+    const diagRows = DIAG.filter(d => st.diag[d.key] !== undefined).map(d => `<tr><td>${E(d.label)}</td><td>${E(diagLabel(d.key, st.diag[d.key]))}${st.diagSrc[d.key] === 'ia' ? ' <i>(vu sur photo)</i>' : ''}</td></tr>`).join('');
+    const presta = PRESTA.filter(x => prestaOk(x) && st.presta.has(x.id)).map(x => E(x.label));
+    const est = estOf(b.quartier, b.type);
+    const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    const head = ag ? `<div class="hd">${ag.logo ? `<img src="${E(ag.logo)}" alt="">` : ''}<div><b>${E(ag.nom)}</b><br>${[ag.adresse, ag.tel, ag.email].filter(Boolean).map(E).join(' · ')}${ag.carte ? '<br>Carte professionnelle n° ' + E(ag.carte) : ''}</div></div>`
+      : '<div class="hd"><div><b style="font-size:20px">Immo<span style="color:#0A7A84">360</span></b> · Nouvelle-Calédonie</div></div>';
+    const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Estimation — ${E(TYPES[b.type] || b.type)} ${E(b.surface)} m² — ${E(b.quartier)}</title>
+<style>body{font:14px/1.5 'Source Sans 3',system-ui,sans-serif;color:#0F2A38;max-width:780px;margin:24px auto;padding:0 24px}
+h1{font-size:26px;margin:18px 0 2px;color:#0B3954}h2{font-size:17px;color:#0B3954;margin:22px 0 8px;border-bottom:2px solid #35C3BC;padding-bottom:4px}
+.hd{display:flex;gap:16px;align-items:center;border-bottom:1px solid #D3DEE2;padding-bottom:12px}.hd img{max-height:64px;max-width:200px}
+.big{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0}.big div{flex:1;min-width:180px;border:1px solid #D3DEE2;border-top:4px solid #0A7A84;border-radius:10px;padding:12px}
+.big b{display:block;font-size:26px}.big span{color:#3E5462}table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1px solid #E1E9EC;text-align:left;vertical-align:top}
+th{font-size:13px;color:#3E5462}td.n,th.n{text-align:right;white-space:nowrap}.small{font-size:12.5px;color:#3E5462}.no-print{margin:16px 0}
+@media print{.no-print{display:none}body{margin:0}}</style></head><body>
+<div class="no-print"><button onclick="print()" style="font:600 15px sans-serif;padding:10px 18px;border-radius:8px;border:0;background:#0A7A84;color:#fff;cursor:pointer">Imprimer ou enregistrer en PDF</button></div>
+${head}
+<h1>Estimation de votre bien</h1><div class="small">Établie le ${date}${ag ? ' par ' + E(ag.nom) : ''}</div>
+<h2>Le bien</h2><table>
+<tr><td>Type</td><td>${E(TYPES[b.type] || b.type)}</td></tr><tr><td>Lieu</td><td>${E(b.quartier)}</td></tr>
+<tr><td>Surface habitable</td><td>${E(b.surface)} m²</td></tr>${b.annee ? `<tr><td>Année de construction</td><td>${E(b.annee)}</td></tr>` : ''}
+${b.terrasse ? `<tr><td>Terrasse ou balcon</td><td>${E(b.terrasse)} m²</td></tr>` : ''}${b.jardin ? `<tr><td>Jardin ou terrain</td><td>${E(b.jardin)} m²</td></tr>` : ''}
+${presta.length ? `<tr><td>Prestations</td><td>${presta.join(', ')}</td></tr>` : ''}</table>
+<div class="big"><div><span>Valeur estimée en l'état</span><b>${money(r1(base.V))}</b><span>Fourchette ${money(r1(base.V * (1 - spread)))} – ${money(r1(base.V * (1 + spread)))}</span></div>
+${cur.list.length ? `<div><span>Après les travaux retenus</span><b>${money(r1(cur.apres))}</b><span>Travaux ${money(cur.cout)} · gain net ${cur.gainNet >= 0 ? '+' : '−'}${money(Math.abs(cur.gainNet))}</span></div>` : ''}</div>
+<h2>Comment ce prix est calculé</h2><table>
+<tr><td>Prix au m² du secteur</td><td class="n">${money(pt.pm2)}/m² × ${E(b.surface)} m² = ${money(pt.brut)}</td></tr>
+<tr><td>État du bien${b.annee ? ' et année' : ''}</td><td class="n">${pc(pt.etat)}</td></tr>
+${pt.presta ? `<tr><td>Prestations</td><td class="n">${pc(pt.presta)}</td></tr>` : ''}${pt.ext ? `<tr><td>Extérieurs (surface pondérée)</td><td class="n">+${money(pt.ext)}</td></tr>` : ''}
+<tr><th>Valeur en l'état</th><th class="n">${money(base.V)}</th></tr></table>
+${diagRows ? `<h2>État constaté</h2><table>${diagRows}</table>` : ''}
+${diagCount() ? `<h2>Scénarios de préparation</h2><table><tr><th>Scénario</th><th class="n">Coût des travaux</th><th class="n">Valeur</th><th class="n">Gain net</th></tr>
+${sc.map(s => `<tr><td>${E(s.label)}</td><td class="n">${s.r.cout ? money(s.r.cout) : '—'}</td><td class="n">${money(r1(s.r.apres))}</td><td class="n">${s.r.cout ? (s.r.gainNet >= 0 ? '+' : '−') + money(Math.abs(s.r.gainNet)) : '—'}</td></tr>`).join('')}</table>
+${cur.list.length ? `<p>Travaux retenus : ${cur.list.map(p => E(p.label) + ' (' + money(p.cout) + ')').join(', ')}.</p>` : ''}` : ''}
+<h2>Méthode et sources</h2>
+<p class="small">${est.source === 'observatoire' ? 'Prix au m² issu des annonces Immo360 du secteur, ramenées au prix de vente.' : 'Prix au m² issu du barème Immo360, calé sur les ventes réellement conclues en 2025 (ISEE, synthèse des transactions immobilières, données des offices notariaux).'}
+L'état, l'année, les prestations et les extérieurs ajustent ce prix selon des repères indicatifs. Les coûts de travaux sont des moyennes calédoniennes à confirmer par des devis.
+Ce document est une estimation indicative : il ne constitue ni une expertise immobilière ni un avis de valeur opposable.</p>
+<p class="small">Document établi avec Immo360 NC${ag ? ' pour ' + E(ag.nom) : ''}.</p></body></html>`;
+    const w = window.open('', '_blank');
+    if (!w) { alert('Autorisez l\'ouverture de fenêtres pour afficher le rapport.'); return; }
+    w.document.open(); w.document.write(html); w.document.close();
   }
 
   /* ---------- Devis aux artisans ---------- */

@@ -37,12 +37,14 @@
       ville: txt(d.ville, 60), quartier: txt(d.quartier, 60), desc: txt(d.desc, 3000),
       features: (Array.isArray(d.features) ? d.features : []).slice(0, 20).map(f => txt(f, 40)).filter(Boolean),
       agent: txt(d.agent, 60), tel: txt(d.tel, 30).replace(/[^0-9+ ().-]/g, ''), ref: txt(d.ref, 40), date: /^\d{4}-\d{2}-\d{2}$/.test(d.date || '') ? d.date : '',
-      thumb: IMG.test(d.thumb || '') ? d.thumb : null, nbPhotos: Math.round(num(d.nbPhotos, MAX_PHOTOS)), publie: d.publie === true
+      thumb: IMG.test(d.thumb || '') ? d.thumb : null, nbPhotos: Math.round(num(d.nbPhotos, MAX_PHOTOS)), publie: d.publie === true,
+      // marque de l'agence (nom + logo) apposée à la publication
+      agence: d.agence && typeof d.agence === 'object' ? { nom: txt(d.agence.nom, 80), logo: IMG.test(d.agence.logo || '') && d.agence.logo.length < 120000 ? d.agence.logo : null } : null
     };
   }
   // Forme attendue par les gabarits existants (BIENS_DATA)
   const toBien = a => ({ id: a.id, titre: a.titre, type: a.type, surface: a.surface, pieces: a.pieces, chambres: a.chambres, prix: a.prix, statut: a.statut, dpe: a.dpe,
-    ville: a.ville, quartier: a.quartier, desc: a.desc, description: a.desc, features: a.features, photos: ['🏠'], photoUrl: a.thumb, date: a.date, agent: a.agent, tel: a.tel, ref: a.ref, _ann: true });
+    ville: a.ville, quartier: a.quartier, desc: a.desc, description: a.desc, features: a.features, photos: ['🏠'], photoUrl: a.thumb, date: a.date, agent: a.agent, tel: a.tel, ref: a.ref, agence: a.agence && (a.agence.nom || a.agence.logo) ? a.agence : null, _ann: true });
 
   /* ---------- Images ---------- */
   function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
