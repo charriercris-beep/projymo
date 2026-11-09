@@ -226,8 +226,8 @@
     try {
       const r = await fetch('/api/config'); const cfg = r.ok ? await r.json() : {};
       if (!cfg.supabaseKey || !window.supabase) throw new Error('config');
-      // même adresse de secours que le site (immo360-global.html) si SUPABASE_URL n'est pas renseignée dans Vercel
-      sb = window.supabase.createClient(cfg.supabaseUrl || 'https://wulymsslxgnhysopigcw.supabase.co', cfg.supabaseKey);
+      if (!cfg.supabaseUrl) throw new Error('config'); // déduite de la clé par /api/config
+      sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey);
     } catch (_) { app.innerHTML = '<div class="card err">Le service est indisponible : la clé Supabase n\'est pas configurée sur ce déploiement (variable NEXT_PUBLIC_SUPABASE_ANON_KEY dans Vercel, voir docs/back-office.md).</div>'; return; }
     start();
   })();
