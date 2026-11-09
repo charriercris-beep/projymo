@@ -54,6 +54,26 @@ create table if not exists public.rdv (
   created_at timestamptz not null default now()
 );
 
+-- Base créée par une version antérieure du site (ex. colonne user_id au lieu de owner_id) :
+-- les colonnes manquantes sont ajoutées, rien n'est supprimé ; le propriétaire est repris de user_id.
+do $$
+declare t text;
+begin
+  foreach t in array array['biens', 'users', 'rdv'] loop
+    execute format('alter table public.%I add column if not exists owner_id uuid references auth.users(id) on delete cascade', t);
+    execute format('alter table public.%I alter column owner_id set default auth.uid()', t);
+    if exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = t and column_name = 'user_id' and data_type = 'uuid') then
+      execute format('update public.%I set owner_id = user_id where owner_id is null and user_id in (select id from auth.users)', t);
+    end if;
+    execute format('alter table public.%I add column if not exists created_at timestamptz not null default now()', t);
+  end loop;
+  alter table public.messages add column if not exists from_user uuid references auth.users(id) on delete set null;
+  alter table public.messages alter column from_user set default auth.uid();
+  alter table public.messages add column if not exists to_user uuid references auth.users(id) on delete set null;
+  alter table public.messages add column if not exists lu boolean not null default false;
+  alter table public.messages add column if not exists created_at timestamptz not null default now();
+end $$;
+
 alter table public.biens    enable row level security;
 alter table public.users    enable row level security;
 alter table public.messages enable row level security;
@@ -326,11 +346,13 @@ drop policy if exists opt_insert on public.options_annonce;
 create policy opt_public on public.options_annonce for select to anon, authenticated using (statut = 'active' and fin > now());
 create policy opt_own on public.options_annonce for select to authenticated using (owner_id = auth.uid());
 -- Formule Agence+ : 2 « À la une » offertes par mois (abonnement actif, compteur tenu par la base)
-create or replace function public.une_offerte_ok() returns boolean language sql stable security definer set search_path = public as $$
-  select exists (select 1 from public.abonnements a where a.owner_id = auth.uid() and a.role = 'agt' and a.formule = 'premium' and a.statut = 'actif' and a.fin > now())
+-- (plpgsql : le corps n'est vérifié qu'à l'exécution, la table abonnements est créée plus bas)
+create or replace function public.une_offerte_ok() returns boolean language plpgsql stable security definer set search_path = public as $$
+begin
+  return exists (select 1 from public.abonnements a where a.owner_id = auth.uid() and a.role = 'agt' and a.formule = 'premium' and a.statut = 'actif' and a.fin > now())
      and (select count(*) from public.options_annonce o where o.owner_id = auth.uid() and o.option = 'une' and o.prix = 0 and o.statut = 'active'
           and o.created_at >= date_trunc('month', now())) < 2;
-$$;
+end $$;
 -- commande sur SA propre annonce ; « active » d'emblée seulement si offerte : mode lancement (base),
 -- ou « À la une » incluse dans la formule Agence+ (dans la limite de 2 par mois)
 create policy opt_insert on public.options_annonce for insert to authenticated with check (
