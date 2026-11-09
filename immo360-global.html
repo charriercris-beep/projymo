@@ -864,6 +864,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <button type="button" onclick="showPage('confidentialite')">Confidentialité</button>
     <button type="button" onclick="showPage('contact')">Contact</button>
     <button type="button" onclick="showPage('credits')">Crédits photos</button>
+    <button type="button" id="lp-tarifs" hidden onclick="showPage('tarifs')">Tarifs</button>
   </nav>
 </div></footer>
 </div>
@@ -1574,8 +1575,6 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div id="depot-estim-compare" style="display:none;margin:-4px 0 14px;font-size:15px">
             <span id="depot-prix-user" hidden></span><span id="depot-prix-ia" hidden></span>Écart avec le repère : <b id="depot-ecart">—</b>
           </div>
-          <div class="dp-f"><label for="d-negociable">Le prix est-il négociable ?</label>
-            <select id="d-negociable"><option value="non">Non</option><option value="oui">Oui</option><option value="faire-offre">Faire une offre</option></select></div>
           <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(2)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePrix()">Continuer</button></div>
         </div>
 
@@ -1643,6 +1642,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             </div>
           </div>
           <p style="font-size:14px;color:var(--mid);margin:0 0 12px">En publiant, vous certifiez que les informations sont exactes et acceptez les <a href="#" onclick="openLegalPage('cgu');return false" style="color:var(--gold)">conditions d'utilisation</a>.</p>
+          <div class="dp-boost" id="dp-boost" hidden></div>
           <div id="depot-notif" style="display:none;padding:12px;border-radius:8px;margin-bottom:12px;font-size:15px"></div>
           <button type="button" class="btn btn-gold btn-full" onclick="publierAnnonce()" id="btn-publier">Publier mon annonce</button>
           <button type="button" class="btn btn-outline btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px" onclick="ouvrirMonAnnonce()">Voir mon annonce</button>
@@ -2976,6 +2976,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 </div>
 
 
+<script src="js/tarifs.js"></script>
 <script src="js/cards.js"></script>
 <script src="js/pages.js"></script>
 <script>
@@ -3194,7 +3195,9 @@ function buildSB(){
   if(!nav){ setTimeout(buildSB,200); return; }
   nav.innerHTML='';
   const prof=S.profile||APP_STATE.user?.profil||'sell';
-  const items=MENUS[prof]||MENUS.sell;
+  let items=MENUS[prof]||MENUS.sell;
+  // Onglet « Abonnement » pour les pros, seulement quand la partie payante est allumée (js/tarifs.js)
+  if(window.IMMO_TARIFS && IMMO_TARIFS.actif() && IMMO_TARIFS.plans(prof).some(p=>p.prix>0)) items=items.concat([{k:'abonnement',l:'Abonnement'}]);
   const keys=it=>it.sub?it.sub.map(x=>x.k):[it.k];
   const mk=(label,panel,on)=>{
     const d=document.createElement('button');
@@ -4077,7 +4080,7 @@ function filterMarketplace(){
   if(tri==='prix_asc')mktFiltered.sort((a,b)=>a.prix-b.prix);
   else if(tri==='prix_desc')mktFiltered.sort((a,b)=>b.prix-a.prix);
   else if(tri==='surface')mktFiltered.sort((a,b)=>b.surface-a.surface);
-  else mktFiltered.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  else mktFiltered = window.IMMO_OPT ? IMMO_OPT.sort(mktFiltered) : mktFiltered.sort((a,b)=>new Date(b.date)-new Date(a.date));
   const c=document.getElementById('mkt-count');
   if(c)c.textContent=mktFiltered.length+' bien(s)';
   if(mktView==='grid')renderMktGrid();else renderMktMap();
@@ -4702,6 +4705,7 @@ function openLandingBien(id){
     <div class="fi-bd">
       <div class="fi-main">
         ${b.statut&&b.statut!=='En vente'?`<span class="pc-badge alt" style="position:static;display:inline-block;margin-bottom:8px">${esc(b.statut)}</span>`:''}
+        ${window.IMMO_OPT&&IMMO_OPT.badges(b.id)?'<div class="fi-obs">'+IMMO_OPT.badges(b.id)+'</div>':''}
         <div class="fi-pr">${IMMO_CARDS?IMMO_CARDS.price(prix):conv(prix)}</div>
         <h2 class="fi-ti">${esc(b.titre||b.type)}</h2>
         <div class="pc-lo" style="font-size:16px"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>${lieu}</div>
@@ -5325,6 +5329,15 @@ async function publierAnnonce(){
     if(notif){notif.style.display='block';notif.style.background='rgba(184,58,42,0.08)';notif.style.border='1px solid rgba(184,58,42,0.3)';notif.style.color='var(--red)';notif.textContent='Renseignez au minimum le titre, le type de bien, la surface et le prix.';}
     btn.innerHTML='Publier mon annonce';btn.disabled=false;return;
   }
+  // Formule de l'agence : nombre d'annonces publiées (mode payant uniquement, js/abonnement.js)
+  if(S.profile==='agt' && window.IMMO_ABO && window.IMMO_ANN){
+    const max=IMMO_ABO.limite('agt','annonces'), n=IMMO_ANN.mine().filter(a=>a.publie).length;
+    if(n>=max){
+      notif.style.display='block';notif.style.background='var(--lagoon-pale)';notif.style.border='1.5px dashed var(--gold)';notif.style.color='var(--dark)';
+      notif.innerHTML='<b>Votre formule permet '+max+' annonces en ligne.</b> Retirez une annonce ou passez à la formule supérieure. <button type="button" class="btn btn-gold btn-sm" onclick="go(\'abonnement\')">Voir les formules</button>';
+      btn.innerHTML='Publier mon annonce';btn.disabled=false;return;
+    }
+  }
   // Publication (en ligne si connecté, sinon dans ce navigateur) — js/annonces.js
   let res=null;
   try{ res=window.IMMO_ANN ? await IMMO_ANN.publish(bien, depotPhotos) : null; }catch(e){ console.error(e); }
@@ -5333,7 +5346,18 @@ async function publierAnnonce(){
   if(res && document.getElementById('d-video')?.checked && depotPhotos.length>=2 && window.IMMO_VISITE){
     try{ videoOk=await IMMO_VISITE.autoCreate(res.id, depotPhotos, {titre:bien.titre, sous:[bien.quartier,bien.ville].filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).join(', '), prix:bien.prix?bien.prix.toLocaleString('fr-FR')+' F':'', contact:bien.agent||'', tel:bien.tel||''}); }catch(e){ console.error(e); }
   }
-  const videoTxt=videoOk?'<br>Visite vidéo publiée avec l\'annonce. <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" onclick="IMMO_VISITE.openFor('+Number(res.id)+')">Personnaliser la vidéo</button>':'';
+  // Options choisies au dépôt (bulles, remontée, à la une…) : commandées pour la nouvelle annonce
+  let optTxt='';
+  if(res && window.IMMO_DEPOT && IMMO_DEPOT.boostChoisi && window.IMMO_OPT){
+    const ch=IMMO_DEPOT.boostChoisi();
+    if(ch.ids.length){
+      const r=await IMMO_OPT.order(res.id, ch.ids, ch.date);
+      optTxt=!r.ok?'<br>Les options n\'ont pas pu être commandées : réessayez depuis « Mes annonces ».'
+        :r.aPayer?'<br>Options commandées : <b>'+IMMO_TARIFS.fmt(r.total)+' à régler</b>. Elles s\'activent dès réception du paiement.'
+        :'<br>Options activées'+(r.online?'.':' (démonstration, sans paiement).');
+    }
+  }
+  const videoTxt=optTxt+(videoOk?'<br>Visite vidéo publiée avec l\'annonce. <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" onclick="IMMO_VISITE.openFor('+Number(res.id)+')">Personnaliser la vidéo</button>':'');
   if(notif){
     notif.style.display='block';
     if(res && res.online && res.okPhotos){
@@ -9435,7 +9459,8 @@ function buildLandingBiensSimple(zone, budget, type){
     if(zone && !(b.quartier||'').includes(zone) && !(b.ville||'').includes(zone)) return false;
     if(budget>0 && b.prix>budget) return false;
     return true;
-  }).slice(0,12);
+  });
+  biens = (window.IMMO_OPT ? IMMO_OPT.sort(biens) : biens).slice(0,12); // « À la une » et remontées d'abord
 
   if(countEl) countEl.textContent = biens.length ? biens.length+' bien'+(biens.length>1?'s':'')+' à vendre'+(zone?' · '+zone:'')+(type?' · '+type:'') : '';
 
@@ -9500,6 +9525,8 @@ go('dashboard');
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
 <script src="js/missions.js"></script>
+<script src="js/options.js"></script>
+<script src="js/abonnement.js"></script>
 <script src="js/nav.js"></script>
 </body>
 </html>

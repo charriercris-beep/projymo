@@ -257,5 +257,5 @@
     if (profil in proCache) show(proCache[profil]); else ensurePro(profil).then(show);
   }
 
-  window.IMMO_SYNC = { start, stop, saved, pull, pullAll, pushReponse, shareContact, fetchOne, fetchAll, putRecord, delRecord, ensurePro, decorate, get uid() { return uid; }, COLLS };
+  window.IMMO_SYNC = { start, stop, saved, pull, pullAll, pushReponse, shareContact, fetchOne, fetchAll, putRecord, delRecord, ensurePro, decorate, get uid() { return uid; }, get client() { return client(); }, COLLS };
 })();

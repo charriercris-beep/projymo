@@ -175,8 +175,10 @@
   }
   function buildDemandes(el) {
     injectStyle(); remoteSync();
-    const reqs = myRequests();
-    el.innerHTML = `<div class="art-wrap"><div class="art-head"><h2>Demandes de devis</h2><p>Demandes correspondant à vos métiers${S0.profil.metiers.length ? ' (' + S0.profil.metiers.map(m => E(METIERS[m] || m)).join(', ') + ')' : ' — renseignez vos métiers dans votre profil pour filtrer'}.</p></div>
+    // Formule gratuite en mode payant : nombre de demandes par mois limité (js/abonnement.js)
+    const capR = window.IMMO_ABO ? IMMO_ABO.cap('art', 'demandes', myRequests()) : { shown: myRequests(), hidden: 0 };
+    const reqs = capR.shown;
+    el.innerHTML = `<div class="art-wrap">${window.IMMO_ABO ? IMMO_ABO.invite('art', capR.hidden, 'demandes') : ''}<div class="art-head"><h2>Demandes de devis</h2><p>Demandes correspondant à vos métiers${S0.profil.metiers.length ? ' (' + S0.profil.metiers.map(m => E(METIERS[m] || m)).join(', ') + ')' : ' — renseignez vos métiers dans votre profil pour filtrer'}.</p></div>
       ${reqs.length ? reqs.map(reqRow).join('') : '<div class="card"><p style="margin:0;color:var(--mid);font-size:13px">Aucune demande pour le moment.</p></div>'}</div>`;
     wire(el);
   }

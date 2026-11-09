@@ -281,3 +281,112 @@ create trigger trg_records_guard before insert or update on public.records
 -- ============================================================
 -- select id, role, nom, ridet, metiers, verifie, created_at from public.professionnels where not verifie order by created_at;
 -- update public.professionnels set verifie = true where id = <id>;   -- après contrôle des justificatifs
+
+-- ============================================================
+-- Monétisation (tarifs : js/tarifs.js ; procédure : docs/monetisation.md)
+-- Principe : un utilisateur peut COMMANDER (statut « a_payer »), jamais s'activer lui-même une option
+-- ou un abonnement payant. L'activation se fait ici, par l'administrateur, après paiement.
+-- Seules exceptions, décidées par la base : options offertes en mode « lancement », et l'essai gratuit
+-- d'un professionnel (une seule fois par métier).
+-- ============================================================
+create table if not exists public.parametres (cle text primary key, valeur text not null);
+alter table public.parametres enable row level security;
+drop policy if exists par_select on public.parametres;
+create policy par_select on public.parametres for select to anon, authenticated using (true);
+insert into public.parametres (cle, valeur) values ('mode_tarifs', 'off') on conflict (cle) do nothing;
+create or replace function public.mode_tarifs() returns text language sql stable security definer set search_path = public as $$
+  select coalesce((select valeur from public.parametres where cle = 'mode_tarifs'), 'off');
+$$;
+
+-- Options d'annonce
+create or replace function public.option_jours(p text) returns int language sql immutable as $$
+  select case p when 'remontee' then 1 when 'remontee7' then 7 when 'une' then 7 else 30 end;
+$$;
+create table if not exists public.options_annonce (
+  id          bigint generated always as identity primary key,
+  owner_id    uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  annonce_id  bigint not null,
+  option      text not null check (option in ('urgent', 'negociable', 'remontee', 'remontee7', 'une', 'couleur', 'portes')),
+  info        text check (info is null or length(info) <= 20),   -- date des portes ouvertes
+  prix        integer not null default 0 check (prix >= 0),       -- montant annoncé au client (à vérifier avant activation)
+  statut      text not null default 'a_payer' check (statut in ('a_payer', 'active', 'annulee')),
+  debut       timestamptz,
+  fin         timestamptz,
+  created_at  timestamptz not null default now()
+);
+create index if not exists options_annonce_idx on public.options_annonce (annonce_id);
+alter table public.options_annonce enable row level security;
+drop policy if exists opt_public on public.options_annonce;
+drop policy if exists opt_own on public.options_annonce;
+drop policy if exists opt_insert on public.options_annonce;
+create policy opt_public on public.options_annonce for select to anon, authenticated using (statut = 'active' and fin > now());
+create policy opt_own on public.options_annonce for select to authenticated using (owner_id = auth.uid());
+-- commande sur SA propre annonce ; « active » d'emblée seulement si la base est en mode lancement (offert)
+create policy opt_insert on public.options_annonce for insert to authenticated with check (
+  owner_id = auth.uid()
+  and public.record_owner('annonce', annonce_id::text) = auth.uid()
+  and (statut = 'a_payer' or (statut = 'active' and public.mode_tarifs() = 'lancement'))
+);
+-- (aucune politique update / delete : seul l'administrateur modifie une commande)
+create or replace function public.options_guard() returns trigger language plpgsql set search_path = public as $$
+begin
+  if current_user in ('authenticated', 'anon') then
+    if new.statut = 'active' then  -- offerte (mode lancement) : dates fixées par la base
+      new.prix := 0; new.debut := now(); new.fin := now() + make_interval(days => public.option_jours(new.option));
+    else new.debut := null; new.fin := null; end if;
+  end if;
+  return new;
+end $$;
+drop trigger if exists trg_options_guard on public.options_annonce;
+create trigger trg_options_guard before insert on public.options_annonce for each row execute function public.options_guard();
+create or replace function public.activer_option(p_id bigint) returns void language sql security definer set search_path = public as $$
+  update public.options_annonce set statut = 'active', debut = now(), fin = now() + make_interval(days => public.option_jours(option)) where id = p_id;
+$$;
+revoke execute on function public.activer_option(bigint) from public, anon, authenticated;
+
+-- Abonnements des professionnels (historique : la ligne en cours est la plus récente encore valide)
+create table if not exists public.abonnements (
+  id          bigint generated always as identity primary key,
+  owner_id    uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  role        text not null check (role in ('agt', 'art', 'bnk', 'not', 'diag', 'geo', 'ass')),
+  formule     text not null,
+  prix        integer not null default 0 check (prix >= 0),        -- prix mensuel annoncé
+  statut      text not null default 'a_payer' check (statut in ('a_payer', 'essai', 'actif', 'termine')),
+  debut       timestamptz,
+  fin         timestamptz,
+  created_at  timestamptz not null default now()
+);
+create index if not exists abonnements_owner_idx on public.abonnements (owner_id, role);
+alter table public.abonnements enable row level security;
+drop policy if exists abo_own on public.abonnements;
+drop policy if exists abo_insert on public.abonnements;
+create policy abo_own on public.abonnements for select to authenticated using (owner_id = auth.uid());
+create policy abo_insert on public.abonnements for insert to authenticated with check (owner_id = auth.uid() and statut in ('a_payer', 'essai'));
+create or replace function public.abonnements_guard() returns trigger language plpgsql set search_path = public as $$
+begin
+  if current_user in ('authenticated', 'anon') then
+    if new.statut = 'essai' then
+      if exists (select 1 from public.abonnements a where a.owner_id = new.owner_id and a.role = new.role and a.statut in ('essai', 'actif')) then
+        raise exception 'Essai déjà utilisé pour ce métier';
+      end if;
+      new.prix := 0; new.debut := now(); new.fin := now() + interval '30 days';
+    else new.debut := null; new.fin := null; end if;
+  end if;
+  return new;
+end $$;
+drop trigger if exists trg_abonnements_guard on public.abonnements;
+create trigger trg_abonnements_guard before insert on public.abonnements for each row execute function public.abonnements_guard();
+create or replace function public.activer_abonnement(p_id bigint, p_mois int) returns void language sql security definer set search_path = public as $$
+  update public.abonnements set statut = 'actif', debut = coalesce(debut, now()), fin = greatest(coalesce(fin, now()), now()) + make_interval(months => p_mois) where id = p_id;
+$$;
+revoke execute on function public.activer_abonnement(bigint, int) from public, anon, authenticated;
+
+-- ============================================================
+-- Administration : commandes à régler et activation après paiement
+-- ============================================================
+-- select o.id, o.annonce_id, o.option, o.prix, o.created_at, u.email from public.options_annonce o join auth.users u on u.id = o.owner_id where o.statut = 'a_payer' order by o.created_at;
+-- select public.activer_option(<id>);
+-- select a.id, a.role, a.formule, a.prix, a.created_at, u.email from public.abonnements a join auth.users u on u.id = a.owner_id where a.statut = 'a_payer' order by a.created_at;
+-- select public.activer_abonnement(<id>, 1);   -- 1 mois payé (12 pour une année)
+-- Interrupteur côté base (doit correspondre à js/tarifs.js) :
+-- update public.parametres set valeur = 'payant' where cle = 'mode_tarifs';   -- off | lancement | payant

@@ -145,8 +145,9 @@
       ${list.length ? list.map(a => `<div class="card" style="display:grid;grid-template-columns:120px 1fr auto;gap:14px;align-items:center;padding:12px">
         <div style="width:120px;height:80px;border-radius:8px;background:var(--warm) center/cover no-repeat${a.thumb && IMG.test(a.thumb) ? ';background-image:url(' + a.thumb + ')' : ''}"></div>
         <div><div style="font-weight:600;font-size:15px">${E(a.titre)}</div><div style="font-size:12px;color:var(--mid);margin:3px 0">${E([a.quartier, a.ville].filter(Boolean).join(', '))} · ${a.surface ? E(a.surface) + ' m² · ' : ''}${a.prix ? Number(a.prix).toLocaleString('fr-FR') + ' F' : ''}</div>
-          <span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;${a.publie ? 'background:#E6F4EA;color:#1E6B3A">Publiée' : 'background:#EEF2F6;color:#475569">Retirée'}</span> <span style="font-size:11px;color:var(--mid)">${E(a.nbPhotos || 0)} photo(s) · réf. ${E(a.ref)}</span></div>
+          <span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;${a.publie ? 'background:#E6F4EA;color:#1E6B3A">Publiée' : 'background:#EEF2F6;color:#475569">Retirée'}</span> <span style="font-size:11px;color:var(--mid)">${E(a.nbPhotos || 0)} photo(s) · réf. ${E(a.ref)}</span>${window.IMMO_OPT && IMMO_OPT.badges(a.id) ? '<div style="margin-top:6px">' + IMMO_OPT.badges(a.id) + '</div>' : ''}</div>
         <div style="display:flex;flex-direction:column;gap:6px">${a.publie ? `<button type="button" class="btn btn-sm btn-outline" data-voir="${E(a.id)}">Voir la fiche</button>` : ''}
+          ${a.publie && window.IMMO_TARIFS && IMMO_TARIFS.actif() ? `<button type="button" class="btn btn-sm btn-gold" data-boost="${E(a.id)}">Vendre plus vite</button>` : ''}
           <button type="button" class="btn btn-sm btn-outline" data-visite="${E(a.id)}">Visite vidéo</button>
           <button type="button" class="btn btn-sm btn-outline" data-pub="${E(a.id)}" data-v="${a.publie ? '0' : '1'}">${a.publie ? 'Retirer' : 'Republier'}</button>
           <button type="button" class="btn btn-sm btn-outline" data-del="${E(a.id)}">Supprimer</button></div></div>`).join('')
@@ -154,6 +155,7 @@
     $('ma-new').onclick = () => go('depot');
     $('ma-texte').onclick = () => go('annonces');
     el.querySelectorAll('[data-voir]').forEach(b => b.onclick = () => { if (typeof openBien === 'function') openBien(+b.dataset.voir); });
+    el.querySelectorAll('[data-boost]').forEach(b => b.onclick = () => { if (window.IMMO_OPT) IMMO_OPT.openBoost(+b.dataset.boost); });
     el.querySelectorAll('[data-visite]').forEach(b => b.onclick = () => { if (window.IMMO_VISITE && IMMO_VISITE.state) IMMO_VISITE.state.bienId = +b.dataset.visite; go('visite'); });
     el.querySelectorAll('[data-pub]').forEach(b => b.onclick = async () => { await setPublie(+b.dataset.pub, b.dataset.v === '1'); buildMes(el); });
     el.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => { if (confirm('Supprimer définitivement cette annonce et ses photos ?')) { await remove(+b.dataset.del); buildMes(el); } });

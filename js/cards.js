@@ -74,8 +74,9 @@
     const ph = b.photoUrl
       ? `<img src="${E(b.photoUrl)}" alt="" loading="lazy" onerror="this.parentNode.classList.add('none');this.remove()">`
       : '';
-    return `<article class="pc${o.compact ? ' sm' : ''}">
-  <div class="pc-ph${b.photoUrl ? '' : ' none'}">${ph}<svg class="i pc-noimg" aria-hidden="true"><use href="#i-home"/></svg>${badge}${b.illustration ? '<span class="pc-ill">Photo d\'illustration</span>' : ''}</div>
+    const ob = window.IMMO_OPT ? IMMO_OPT.badges(b.id) : '', hl = window.IMMO_OPT && IMMO_OPT.couleur(b.id);
+    return `<article class="pc${o.compact ? ' sm' : ''}${hl ? ' op-couleur' : ''}">
+  <div class="pc-ph${b.photoUrl ? '' : ' none'}">${ph}<svg class="i pc-noimg" aria-hidden="true"><use href="#i-home"/></svg>${ob ? '<div class="pc-obs">' + ob + '</div>' : badge}${b.illustration ? '<span class="pc-ill">Photo d\'illustration</span>' : ''}</div>
   <div class="pc-bd">
     <div class="pc-pr">${price(b.prix)}</div>
     <div class="pc-sp">${specs(b)}</div>

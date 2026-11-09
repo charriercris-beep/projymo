@@ -54,7 +54,7 @@
     if (n === 2) { photosHint(); videoPreview(); }
     if (n === 3) { hint(); updateDepotEstim(); }
     if (n === 4) autoTitle();
-    if (n === 5) { prefillContact(); preview(); }
+    if (n === 5) { prefillContact(); preview(); boost(); }
     const panel = $('panel-depot'); if (panel && panel.scrollIntoView) panel.scrollIntoView({ block: 'start' });
     window.scrollTo({ top: 0 });
   }
@@ -86,6 +86,19 @@
     if (!on || ph.length < 2 || !window.IMMO_VISITE) { box.innerHTML = ''; return; }
     IMMO_VISITE.preview(box, ph, { titre: val('d-titre') || val('d-type') || 'Votre bien', sous: val('d-quartier') && val('d-quartier') !== 'Autre' ? val('d-quartier') : val('d-ville') });
   }
+
+  /* ---------- Options payantes à la publication (selon js/tarifs.js) ---------- */
+  let picker = null;
+  function boost() {
+    const box = $('dp-boost'); if (!box) return;
+    const t = window.IMMO_TARIFS;
+    if (!t || !t.actif() || !window.IMMO_OPT) { box.hidden = true; picker = null; return; }
+    if (picker) { box.hidden = false; return; } // garder les choix déjà faits
+    box.hidden = false;
+    box.innerHTML = `<h3>Vendez plus vite (facultatif)</h3><p>${t.offert() ? 'Offertes pendant le lancement d\'Immo360.' : 'Options payantes, activées dès réception du paiement.'}</p><div id="dp-pick">${IMMO_OPT.pickerHTML('dpb')}</div>`;
+    picker = IMMO_OPT.bindPicker(box.querySelector('#dp-pick'), 'dpb');
+  }
+  const boostChoisi = () => picker ? { ids: picker.selected(), date: picker.date() } : { ids: [], date: '' };
 
   /* ---------- Aides ---------- */
   function photosHint() { const b = $('dp-photos-next'); if (b) b.textContent = (typeof depotPhotos !== 'undefined' && depotPhotos.length) ? 'Continuer' : 'Continuer sans photo'; }
@@ -175,5 +188,5 @@
     const lk = $('dp-est-link'); if (lk) lk.style.display = 'none';
     if (bx) { bx.style.display = 'block'; bx.innerHTML = `<b>Repris de votre estimation</b> : type, lieu, surface, prestations et prix (${(typeof conv === 'function' ? conv(Math.round(o.prix / 100000) * 100000) : '')}). Vérifiez puis continuez.`; }
   }
-  window.IMMO_DEPOT = { QUARTIERS, repere, autoTitle, fromEstimation };
+  window.IMMO_DEPOT = { QUARTIERS, repere, autoTitle, fromEstimation, boostChoisi };
 })();
