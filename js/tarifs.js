@@ -98,5 +98,22 @@
   }
   const plans = profil => ABONNEMENTS[profil] || [];
 
-  window.IMMO_TARIFS = { get MODE() { return MODE; }, setMode, OPTIONS, PACKS, ABONNEMENTS, ESSAI_JOURS, SERVICES, fmt, actif, offert, prixDe, totalOptions, plans };
+  // Prix modifiés depuis le back office (table parametres, clé « tarifs ») : ils remplacent ceux de ce fichier.
+  // Forme : { options: { urgent: 1500 }, packs: { express: 9900 }, abonnements: { 'agt.pro': 19900 }, services: { rapport: 2900 } }
+  const DEFAUTS = JSON.stringify({ o: OPTIONS, p: PACKS, a: ABONNEMENTS, s: SERVICES });
+  const okPrix = v => Number.isFinite(Number(v)) && Number(v) >= 0 && Number(v) <= 10000000;
+  function setPrix(t) {
+    if (!t || typeof t !== 'object') return false;
+    const d = JSON.parse(DEFAUTS); let change = false;
+    const put = (obj, cle, def, v) => { const n = okPrix(v) ? Math.round(Number(v)) : def; if (obj[cle].prix !== n) { obj[cle].prix = n; change = true; } };
+    Object.keys(OPTIONS).forEach(k => put(OPTIONS, k, d.o[k].prix, (t.options || {})[k]));
+    Object.keys(PACKS).forEach(k => put(PACKS, k, d.p[k].prix, (t.packs || {})[k]));
+    Object.keys(SERVICES).forEach(k => put(SERVICES, k, d.s[k].prix, (t.services || {})[k]));
+    Object.keys(ABONNEMENTS).forEach(r => ABONNEMENTS[r].forEach((p, i) => { if (!p.prix && !d.a[r][i].prix) return; const v = (t.abonnements || {})[r + '.' + p.id]; const n = okPrix(v) ? Math.round(Number(v)) : d.a[r][i].prix; if (p.prix !== n) { p.prix = n; change = true; } }));
+    if (change) try { window.dispatchEvent(new CustomEvent('immo360:tarifs')); } catch (_) { /* ignoré */ }
+    return change;
+  }
+  const defauts = () => JSON.parse(DEFAUTS);
+
+  window.IMMO_TARIFS = { get MODE() { return MODE; }, setMode, setPrix, defauts, OPTIONS, PACKS, ABONNEMENTS, ESSAI_JOURS, SERVICES, fmt, actif, offert, prixDe, totalOptions, plans };
 })();

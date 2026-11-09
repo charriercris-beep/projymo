@@ -2,9 +2,9 @@
 // PostgreSQL local sous l'identité de l'utilisateur, avec les politiques RLS réelles).
 const http = require('http'), fs = require('fs'), path = require('path'), { execFileSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '../..'), PGHOST = process.argv[2], PORT = 8125;
-const TABLES = new Set(['records', 'professionnels', 'options_annonce', 'abonnements', 'parametres']);
+const TABLES = new Set(['records', 'professionnels', 'options_annonce', 'abonnements', 'parametres', 'evenements']);
 const IDENT = /^[a-z_]+$/;
-const lit = v => v === null || v === undefined ? 'null' : "'" + String(v).replace(/'/g, "''") + "'";
+const lit = v => v === null || v === undefined ? 'null' : "'" + (typeof v === 'object' ? JSON.stringify(v) : String(v)).replace(/'/g, "''") + "'";
 
 function sqlFor(q) {
   // Appel de fonction (supabase.rpc) : fonctions du back office et lecture des paramètres uniquement

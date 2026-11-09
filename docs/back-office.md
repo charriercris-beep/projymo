@@ -39,9 +39,21 @@ Un autre compte, même connecté, ne voit rien et ne peut rien faire (testé : `
 - **Partie payante** : l'interrupteur (éteinte / lancement / payante). Le site lit ce réglage dans la base
   au chargement : c'est le seul interrupteur à manipuler. (Un aperçu reste possible avec `?tarifs=payant`.)
 
-## À venir (étape 3)
+- **Tarifs** : tous les prix (options, pack, abonnements, services) modifiables ; ils s'appliquent sur le site
+  au prochain chargement (quand la partie payante est allumée). « Revenir aux prix par défaut » reprend ceux
+  de `js/tarifs.js`. La base refuse un prix invalide (négatif ou au-delà de 10 000 000 F).
 
-- Journal d'événements anonymes : entonnoir vendeur (estimation → dépôt → publication), messages et
-  demandes de visite.
-- Prix modifiables depuis le back office.
-- Fréquentation : activer Vercel Analytics (dans Vercel, onglet Analytics, un clic).
+## Parcours des visiteurs (journal anonyme)
+
+Le tableau de bord compte, sur 30 jours : visites (une par onglet ouvert, part sur téléphone), recherches,
+fiches vues, favoris, simulations de financement, inscriptions, et deux entonnoirs :
+- **Acheteurs** : visites → fiches vues → contacts vendeur → demandes de visite ;
+- **Vendeurs** : estimations → dépôts commencés → annonces publiées.
+
+Le journal (`public.evenements`) ne contient que le nom de l'action, le profil (vendeur, acheteur… ou
+« visiteur »), le type d'appareil et la date : ni compte, ni email, ni adresse IP, ni contenu, ni bien
+consulté. Il n'est pas lisible depuis le site (seul le tableau de bord en fait des totaux). Si l'envoi
+échoue, l'action de l'utilisateur n'est jamais bloquée.
+
+Pour la fréquentation détaillée (pages, provenance), activer **Vercel Analytics** dans Vercel (onglet
+Analytics, un clic).

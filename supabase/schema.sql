@@ -478,6 +478,23 @@ begin
    where (collection = 'annonce_photos' and id = p_id) or (collection = 'visite' and id = 'v' || p_id);
   return jsonb_build_object('ok', true);
 end $$;
+-- Prix modifiés depuis le back office (remplacent ceux de js/tarifs.js) ; '{}' = prix par défaut
+create or replace function public.admin_tarifs(p_tarifs jsonb) returns jsonb language plpgsql security definer set search_path = public as $$
+declare g text; k text; v jsonb;
+begin
+  perform public.admin_garde();
+  if jsonb_typeof(p_tarifs) <> 'object' then raise exception 'Format invalide'; end if;
+  for g in select jsonb_object_keys(p_tarifs) loop
+    if g not in ('options', 'packs', 'abonnements', 'services') or jsonb_typeof(p_tarifs->g) <> 'object' then raise exception 'Rubrique invalide : %', g; end if;
+    for k, v in select * from jsonb_each(p_tarifs->g) loop
+      if jsonb_typeof(v) <> 'number' or (v::text)::numeric < 0 or (v::text)::numeric > 10000000 then raise exception 'Prix invalide pour %', k; end if;
+    end loop;
+  end loop;
+  insert into public.parametres (cle, valeur) values ('tarifs', p_tarifs::text) on conflict (cle) do update set valeur = excluded.valeur;
+  return p_tarifs;
+end $$;
+revoke execute on function public.admin_tarifs(jsonb) from public, anon;
+grant execute on function public.admin_tarifs(jsonb) to authenticated;
 -- Interrupteur de la partie payante (le site le lit au chargement)
 create or replace function public.admin_mode(p_mode text) returns jsonb language plpgsql security definer set search_path = public as $$
 begin
@@ -486,6 +503,23 @@ begin
   update public.parametres set valeur = p_mode where cle = 'mode_tarifs';
   return to_jsonb(p_mode);
 end $$;
+-- Journal d'événements ANONYMES (entonnoirs du tableau de bord) : aucun identifiant de personne,
+-- ni compte, ni adresse IP ; seulement le nom de l'action, le profil (vendeur, acheteur, visiteur…),
+-- le type d'appareil et la date. Écriture ouverte (liste fermée de noms), lecture réservée à l'admin.
+create table if not exists public.evenements (
+  id         bigint generated always as identity primary key,
+  nom        text not null check (nom in ('visite', 'recherche', 'fiche_vue', 'favori', 'contact_vendeur', 'demande_visite', 'simulation_financement',
+                                          'estimation', 'rapport_estimation', 'depot_debut', 'annonce_publiee', 'devis_demande', 'inscription', 'option_commande')),
+  profil     text check (profil is null or profil in ('visiteur', 'sell', 'buy', 'agt', 'art', 'bnk', 'not', 'diag', 'geo', 'ass')),
+  appareil   text check (appareil is null or appareil in ('mobile', 'ordinateur')),
+  created_at timestamptz not null default now()
+);
+create index if not exists evenements_idx on public.evenements (nom, created_at);
+alter table public.evenements enable row level security;
+drop policy if exists evt_insert on public.evenements;
+create policy evt_insert on public.evenements for insert to anon, authenticated with check (true);  -- contrôlé par les contraintes ci-dessus
+-- (aucune politique de lecture : seul admin_kpis les compte)
+
 -- Tableau de bord : tous les indicateurs en un appel (données agrégées, aucune donnée personnelle)
 create or replace function public.admin_kpis() returns jsonb language plpgsql stable security definer set search_path = public as $$
 declare r jsonb;
@@ -536,6 +570,10 @@ begin
       'a_regler', (select coalesce(sum(prix), 0) from public.options_annonce where statut = 'a_payer') + (select coalesce(sum(prix), 0) from public.abonnements where statut = 'a_payer'),
       'top_options', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n, 'm', m) order by n desc) from (select option k, count(*) n, sum(prix) m from public.options_annonce where statut = 'active' and prix > 0 group by 1) x), '[]'),
       'formules', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select role || ' · ' || formule k, count(*) n from public.abonnements where statut in ('actif', 'essai') and fin > now() group by 1) x), '[]')),
+    'evenements', jsonb_build_object(
+      'n30', coalesce((select jsonb_object_agg(nom, n) from (select nom, count(*) n from public.evenements where created_at > now() - interval '30 days' group by 1) x), '{}'),
+      'mobile30', (select count(*) from public.evenements where nom = 'visite' and appareil = 'mobile' and created_at > now() - interval '30 days'),
+      'visites_semaine', (select jsonb_agg(jsonb_build_object('s', to_char(s, 'YYYY-MM-DD'), 'n', (select count(*) from public.evenements e where e.nom = 'visite' and date_trunc('week', e.created_at) = s)) order by s) from semaines)),
     'calcule_le', now()) into r;
   return r;
 end $$;

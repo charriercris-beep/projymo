@@ -431,6 +431,7 @@
       return;
     }
     ['val-ai-btn', 'val-ann-btn', 'val-depot'].forEach(id => { if ($(id)) $(id).disabled = false; });
+    if (window.IMMO_EVT) IMMO_EVT.track('estimation'); // une fois par onglet (journal anonyme)
     if ($('val-rapport')) $('val-rapport').hidden = !rapportPermis();
     const cur = compute(st.selected), base = compute(new Set());
     // Plus le bien est décrit, plus la fourchette est étroite (±12 % sans description, ±5 % avec tout)
@@ -598,6 +599,7 @@
   }
   function rapport() {
     if (!ready() || !rapportPermis()) return;
+    if (window.IMMO_EVT) IMMO_EVT.track('rapport_estimation');
     const b = st.bien, pt = parts(), base = compute(new Set()), cur = compute(st.selected), sc = scenarios();
     const ag = window.IMMO_AGENCE ? IMMO_AGENCE.marque('estimation_marque') : null;
     const spread = 0.12 - 0.07 * (diagCount() / DIAG.length) - (b.annee ? 0.005 : 0);
@@ -689,6 +691,7 @@ Ce document est une estimation indicative : il ne constitue ni une expertise imm
       bien: { type: st.bien.type, surface: st.bien.surface, quartier: st.bien.quartier }, metiers: [...new Set(cur.list.map(p => p.metier))], reponses: []
     };
     if (typeof devisEnCours !== 'undefined') devisEnCours.push(devis);
+    if (window.IMMO_EVT) IMMO_EVT.track('devis_demande');
     // Enregistrement local + synchronisation (si connecté) via js/sync.js
     if (window.IMMO_ART) IMMO_ART.saveDevis();
     m.remove();

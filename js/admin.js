@@ -55,9 +55,9 @@
     cache.pros = pros || []; cache.cmd = cmd || [];
     const nPros = cache.pros.filter(p => p.attente).length, nCmd = cache.cmd.length;
     const tab = (id, l, n) => `<button type="button" class="tab${onglet === id ? ' on' : ''}" data-t="${id}">${l}${n ? `<span class="n">${n}</span>` : ''}</button>`;
-    app.innerHTML = `<nav class="tabs" aria-label="Rubriques">${tab('kpi', 'Tableau de bord')}${tab('pros', 'Professionnels', nPros)}${tab('cmd', 'Commandes à régler', nCmd)}${tab('ann', 'Annonces')}${tab('mode', 'Partie payante')}</nav><section id="sec" class="card"></section>`;
+    app.innerHTML = `<nav class="tabs" aria-label="Rubriques">${tab('kpi', 'Tableau de bord')}${tab('pros', 'Professionnels', nPros)}${tab('cmd', 'Commandes à régler', nCmd)}${tab('ann', 'Annonces')}${tab('prix', 'Tarifs')}${tab('mode', 'Partie payante')}</nav><section id="sec" class="card"></section>`;
     app.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { onglet = b.dataset.t; render(); });
-    ({ kpi: vKpi, pros: vPros, cmd: vCmd, ann: vAnn, mode: vMode })[onglet]($('sec'));
+    ({ kpi: vKpi, pros: vPros, cmd: vCmd, ann: vAnn, prix: vPrix, mode: vMode })[onglet]($('sec'));
   }
   const flash = (el, txt, err) => { const m = el.querySelector('.msg') || el.appendChild(Object.assign(document.createElement('p'), { className: 'msg' })); m.className = 'msg' + (err ? ' err' : ''); m.textContent = txt; };
 
@@ -82,10 +82,20 @@
     const max = Math.max(1, ...l.map(x => x.n));
     return `<figure class="ch"><figcaption>${E(titre)}</figcaption><div class="hb">${l.map(x => `<div class="r"><span class="l">${E(nom ? nom(x.k) : x.k)}</span><span class="t"><i style="width:${Math.max(2, Math.round(x.n / max * 100))}%"></i></span><span class="n">${n0(x.n)}${extra ? extra(x) : ''}</span></div>`).join('')}</div></figure>`;
   }
+  // Entonnoir : chaque étape en barre, rapportée à la première ; % par rapport à l'étape précédente
+  function entonnoir(titre, etapes) {
+    const base = Math.max(1, etapes[0][1]);
+    return `<figure class="ch"><figcaption>${E(titre)} <small>30 derniers jours</small></figcaption><div class="hb fn">${etapes.map(([l, n], i) => {
+      const prev = i ? etapes[i - 1][1] : 0, pc = i && prev ? Math.round(n / prev * 100) + ' %' : '';
+      return `<div class="r"><span class="l">${E(l)}</span><span class="t"><i style="width:${Math.max(2, Math.round(n / base * 100))}%"></i></span><span class="n">${n0(n)}${pc ? ` <small>· ${pc} de l'étape précédente</small>` : ''}</span></div>`;
+    }).join('')}</div></figure>`;
+  }
   async function vKpi(el) {
+    await chargerPrix();
     el.innerHTML = '<h2>Tableau de bord</h2><p class="sub">Chargement…</p>';
     let k; try { k = await rpc('admin_kpis'); } catch (e) { el.innerHTML = `<p class="err">${E(e.message)}</p>`; return; }
     const A = k.annonces, U = k.utilisateurs, P = k.pros, R = k.relations, M = k.argent;
+    const V = new Proxy((k.evenements && k.evenements.n30) || {}, { get: (o, p) => Number(o[p]) || 0 });
     const taux = R.devis_total ? Math.round(R.devis_avec_reponse / R.devis_total * 100) + ' %' : '—';
     const optNom = o => (T && T.OPTIONS[o] && T.OPTIONS[o].nom) || o;
     el.innerHTML = `<div class="kh"><div><h2>Tableau de bord</h2><p class="sub">Calculé le ${new Date(k.calcule_le).toLocaleString('fr-FR')}. Chiffres agrégés, sans données personnelles.</p></div><button type="button" class="btn out sm" id="k-re">Actualiser</button></div>
@@ -100,7 +110,13 @@
       <div class="g2">${barres('Professionnels par métier', P.par_role, x => ROLES[x] || x, x => ` <small>(${n0(x.v)} vérifié${x.v > 1 ? "s" : ""})</small>`)}<div></div></div>
       <h3>Mise en relation</h3><div class="ks">${tile(n0(R.devis_30j), 'demandes de devis sur 30 jours', n0(R.devis_total) + ' au total')}${tile(taux, 'des demandes de devis ont reçu une réponse')}
         ${tile(n0(R.financements_30j), 'dossiers de financement sur 30 jours')}${tile(n0(R.missions_30j), 'missions diagnostic, géomètre, assurance', 'sur 30 jours')}${tile(n0(R.notaire_30j), 'dossiers notaire sur 30 jours')}</div>
-      <p class="note">Messages et demandes de visite ne sont pas encore mesurés (étape suivante : journal d'événements anonymes).</p>
+      <h3>Parcours des visiteurs</h3>
+      <div class="ks">${tile(n0(V.visite), 'visites sur 30 jours', V.visite ? Math.round((k.evenements.mobile30 || 0) / V.visite * 100) + ' % sur téléphone' : '')}${tile(n0(V.recherche), 'recherches')}${tile(n0(V.fiche_vue), 'fiches de biens vues')}
+        ${tile(n0(V.favori), 'ajouts en favori')}${tile(n0(V.simulation_financement), 'simulations de financement')}${tile(n0(V.inscription), 'inscriptions')}</div>
+      <div class="g2">${entonnoir('Acheteurs', [['Visites', V.visite], ['Fiches vues', V.fiche_vue], ['Contacts vendeur', V.contact_vendeur], ['Demandes de visite', V.demande_visite]])}
+        ${entonnoir('Vendeurs', [['Estimations', V.estimation], ['Dépôts commencés', V.depot_debut], ['Annonces publiées', V.annonce_publiee]])}</div>
+      <div class="g2">${colonnes('Visites par semaine', (k.evenements && k.evenements.visites_semaine) || [])}${barres('Autres actions', [['Rapports d\'estimation', V.rapport_estimation], ['Demandes de devis', V.devis_demande], ['Options commandées', V.option_commande]].map(([k2, n]) => ({ k: k2, n })).filter(x => x.n))}</div>
+      <p class="note">Journal anonyme : ni compte, ni adresse IP, ni contenu ; une visite est comptée une fois par onglet ouvert.</p>
       <h3>Chiffre d'affaires</h3><div class="ks">${tile(n0(M.options_mois) + ' F', 'options payées ce mois-ci', n0(M.options_mois_n) + ' option(s)')}${tile(n0(M.abonnements_mensuel) + ' F', 'revenu mensuel des abonnements', n0(M.abonnements_actifs) + ' abonnement(s) actif(s)')}
         ${tile(n0(M.a_regler) + ' F', 'commandes à régler')}${tile(n0(M.essais), 'essais gratuits en cours')}</div>
       <div class="g2">${barres('Options vendues (depuis le début)', M.top_options, optNom, x => ` <small>· ${n0(x.m)} F</small>`)}${barres('Formules pros en cours', M.formules, x => { const [r, f] = String(x).split(' · '); return (ROLES[r] || r) + ' · ' + (((T && T.plans(r).find(p => p.id === f)) || {}).nom || f); })}</div>`;
@@ -164,6 +180,30 @@
       try { await rpc('admin_moderer', { p_id: b.dataset.ret, p_retirer: true, p_motif: motif }); vAnn(el, q); } catch (e) { flash(el, e.message, true); }
     });
     $('al').querySelectorAll('[data-rest]').forEach(b => b.onclick = async () => { try { await rpc('admin_moderer', { p_id: b.dataset.rest, p_retirer: false }); vAnn(el, q); } catch (e) { flash(el, e.message, true); } });
+  }
+
+  /* ---------- Tarifs (modifiables sans toucher au code) ---------- */
+  async function chargerPrix() {
+    try { const r = await sb.from('parametres').select('cle,valeur').eq('cle', 'tarifs'); const v = r.data && r.data[0] && r.data[0].valeur; T.setPrix(v ? JSON.parse(v) : {}); } catch (_) { T.setPrix({}); }
+  }
+  async function vPrix(el) {
+    await chargerPrix();
+    const d = T.defauts();
+    const ligne = (g, k, nom, prix, def, unite) => `<tr><td>${E(nom)}</td><td><input type="number" min="0" max="10000000" step="100" data-g="${g}" data-k="${E(k)}" value="${prix}" style="max-width:150px"> <small>F${unite || ''}</small></td><td><small>${prix !== def ? 'par défaut : ' + fmt(def) : ''}</small></td></tr>`;
+    const abo = Object.keys(T.ABONNEMENTS).flatMap(r => T.ABONNEMENTS[r].map((p, i) => [r, p, d.a[r][i]]).filter(([, p, pd]) => p.prix || pd.prix));
+    el.innerHTML = `<h2>Tarifs</h2><p class="sub">Prix en francs CFP TTC. Ils s'appliquent sur le site au prochain chargement de page (et seulement quand la partie payante est allumée). Une commande déjà passée garde son montant.</p>
+      <table class="px-t"><thead><tr><th>Options d'annonce</th><th>Prix</th><th></th></tr></thead><tbody>${Object.entries(T.OPTIONS).map(([k, o]) => ligne('options', k, o.nom, o.prix, d.o[k].prix)).join('')}
+        ${Object.entries(T.PACKS).map(([k, o]) => ligne('packs', k, o.nom, o.prix, d.p[k].prix)).join('')}</tbody></table>
+      <table class="px-t" style="margin-top:14px"><thead><tr><th>Abonnements des professionnels</th><th>Prix</th><th></th></tr></thead><tbody>${abo.map(([r, p, pd]) => ligne('abonnements', r + '.' + p.id, (ROLES[r] || r) + ' · formule ' + p.nom, p.prix, pd.prix, ' / mois')).join('')}</tbody></table>
+      <table class="px-t" style="margin-top:14px"><thead><tr><th>Services</th><th>Prix</th><th></th></tr></thead><tbody>${Object.entries(T.SERVICES).map(([k, o]) => ligne('services', k, o.nom, o.prix, d.s[k].prix)).join('')}</tbody></table>
+      <p style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" id="px-go">Enregistrer les prix</button><button type="button" class="btn out" id="px-def">Revenir aux prix par défaut</button></p>`;
+    $('px-go').onclick = async () => {
+      const t = { options: {}, packs: {}, abonnements: {}, services: {} }; let bad = null;
+      el.querySelectorAll('input[data-g]').forEach(i => { const v = Number(i.value); if (!Number.isFinite(v) || v < 0 || v > 10000000) bad = i; else t[i.dataset.g][i.dataset.k] = Math.round(v); });
+      if (bad) { bad.focus(); flash(el, 'Prix invalide (entre 0 et 10 000 000 F).', true); return; }
+      try { await rpc('admin_tarifs', { p_tarifs: t }); await vPrix(el); flash(el, 'Prix enregistrés.'); } catch (e) { flash(el, e.message, true); }
+    };
+    $('px-def').onclick = async () => { if (!confirm('Revenir à tous les prix par défaut ?')) return; try { await rpc('admin_tarifs', { p_tarifs: {} }); await vPrix(el); flash(el, 'Prix par défaut rétablis.'); } catch (e) { flash(el, e.message, true); } };
   }
 
   /* ---------- Interrupteur de la partie payante ---------- */
