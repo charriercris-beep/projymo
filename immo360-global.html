@@ -4389,6 +4389,7 @@ async function doRegister(){
     APP_STATE.user=userFromSupabase(data.user,profil);
     APP_STATE.loggedIn=true;
     if(window.IMMO_SYNC){ IMMO_SYNC.start(); if(pro) IMMO_SYNC.ensurePro(profil,{nom:entreprise,ridet,tel,email}); }
+    if(window.IMMO_EVT) IMMO_EVT.track('inscription');
     showAuthStep2('Compte créé avec succès !');
   } finally { if(btn){btn.disabled=false;btn.textContent='Créer mon compte gratuit';} }
 }
@@ -4992,6 +4993,16 @@ async function initSupabase(){
       if(cfg.supabaseKey && window.supabase){
         sb = window.supabase.createClient(cfg.supabaseUrl || SUPABASE_URL, cfg.supabaseKey);
         console.log('Supabase connecté');
+        // Interrupteur de la partie payante, réglé dans le back office (table parametres, lisible par tous)
+        sb.from('parametres').select('cle,valeur').then(r=>{
+          const P={}; ((r&&r.data)||[]).forEach(x=>{P[x.cle]=x.valeur;});
+          let prixChange=false; try{ if(P.tarifs && window.IMMO_TARIFS) prixChange=IMMO_TARIFS.setPrix(JSON.parse(P.tarifs)); }catch(e){}
+          const m=P.mode_tarifs;
+          if(window.IMMO_TARIFS && ((m && IMMO_TARIFS.setMode(m)) || prixChange)){
+            try{ if(window.IMMO_OPT) IMMO_OPT.refresh(); if(document.getElementById('main-shell').style.display==='flex'){ buildSB(); go(S.panel); } }catch(e){}
+            const l=document.getElementById('lp-tarifs'); if(l) l.hidden=!IMMO_TARIFS.actif();
+          }
+        }).catch(()=>{});
         // Session existante (retour sur le site) : reprise de la synchronisation et accès direct à son espace
         if(window.IMMO_SYNC) IMMO_SYNC.start().then(restored=>{
           const shell=document.getElementById('main-shell');
@@ -5363,6 +5374,7 @@ async function publierAnnonce(){
         :'<br>Options activées'+(r.online?'.':' (démonstration, sans paiement).');
     }
   }
+  if(res && res.id && window.IMMO_EVT) IMMO_EVT.track('annonce_publiee');
   const videoTxt=optTxt+(videoOk?'<br>Visite vidéo publiée avec l\'annonce. <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" onclick="IMMO_VISITE.openFor('+Number(res.id)+')">Personnaliser la vidéo</button>':'');
   if(notif){
     notif.style.display='block';
@@ -9535,5 +9547,6 @@ go('dashboard');
 <script src="js/abonnement.js"></script>
 <script src="js/agence.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/evenements.js"></script>
 </body>
 </html>

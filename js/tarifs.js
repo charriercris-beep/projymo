@@ -6,7 +6,8 @@
  *   'payant'    → les prix s'appliquent : commandes « à régler », activées après paiement
  *
  * Les prix sont en francs CFP, TTC. Ce sont des propositions de départ, à fixer ensemble.
- * Le jour où le trafic est là : passer MODE à 'payant' (ou 'lancement'), vérifier les prix, publier.
+ * L'interrupteur se règle dans le back office (admin.html) : le site lit le mode dans la base au chargement.
+ * MODE_SITE ci-dessous ne sert que tant que la base n'a pas répondu (ou hors ligne).
  * Détails et procédure d'activation après paiement : docs/monetisation.md
  */
 (function () {
@@ -15,13 +16,21 @@
   const MODE_SITE = 'off';
   // Aperçu sans rien mettre en ligne : ajouter ?tarifs=payant (ou lancement, off) à l'adresse.
   // Sans risque : l'activation réelle d'une option ou d'un abonnement se fait uniquement côté base, après paiement.
-  const MODE = (() => {
-    try {
-      const q = new URLSearchParams(location.search).get('tarifs');
-      if (q && ['off', 'lancement', 'payant'].includes(q)) sessionStorage.setItem('immo360.tarifs.apercu', q);
-      return sessionStorage.getItem('immo360.tarifs.apercu') || MODE_SITE;
-    } catch (_) { return MODE_SITE; }
-  })();
+  const MODES = ['off', 'lancement', 'payant'];
+  let apercu = null;
+  try {
+    const q = new URLSearchParams(location.search).get('tarifs');
+    if (q && MODES.includes(q)) sessionStorage.setItem('immo360.tarifs.apercu', q);
+    apercu = sessionStorage.getItem('immo360.tarifs.apercu');
+  } catch (_) { /* stockage indisponible */ }
+  let MODE = apercu || MODE_SITE;
+  // Mode réglé dans la base (back office) ; un aperçu ?tarifs=… reste prioritaire dans cet onglet
+  function setMode(m) {
+    if (apercu || !MODES.includes(m) || m === MODE) return false;
+    MODE = m;
+    try { window.dispatchEvent(new CustomEvent('immo360:tarifs', { detail: m })); } catch (_) { /* ignoré */ }
+    return true;
+  }
 
   /* ---------- Options d'annonce (particuliers et pros) ---------- */
   const OPTIONS = {
@@ -89,5 +98,22 @@
   }
   const plans = profil => ABONNEMENTS[profil] || [];
 
-  window.IMMO_TARIFS = { MODE, OPTIONS, PACKS, ABONNEMENTS, ESSAI_JOURS, SERVICES, fmt, actif, offert, prixDe, totalOptions, plans };
+  // Prix modifiés depuis le back office (table parametres, clé « tarifs ») : ils remplacent ceux de ce fichier.
+  // Forme : { options: { urgent: 1500 }, packs: { express: 9900 }, abonnements: { 'agt.pro': 19900 }, services: { rapport: 2900 } }
+  const DEFAUTS = JSON.stringify({ o: OPTIONS, p: PACKS, a: ABONNEMENTS, s: SERVICES });
+  const okPrix = v => Number.isFinite(Number(v)) && Number(v) >= 0 && Number(v) <= 10000000;
+  function setPrix(t) {
+    if (!t || typeof t !== 'object') return false;
+    const d = JSON.parse(DEFAUTS); let change = false;
+    const put = (obj, cle, def, v) => { const n = okPrix(v) ? Math.round(Number(v)) : def; if (obj[cle].prix !== n) { obj[cle].prix = n; change = true; } };
+    Object.keys(OPTIONS).forEach(k => put(OPTIONS, k, d.o[k].prix, (t.options || {})[k]));
+    Object.keys(PACKS).forEach(k => put(PACKS, k, d.p[k].prix, (t.packs || {})[k]));
+    Object.keys(SERVICES).forEach(k => put(SERVICES, k, d.s[k].prix, (t.services || {})[k]));
+    Object.keys(ABONNEMENTS).forEach(r => ABONNEMENTS[r].forEach((p, i) => { if (!p.prix && !d.a[r][i].prix) return; const v = (t.abonnements || {})[r + '.' + p.id]; const n = okPrix(v) ? Math.round(Number(v)) : d.a[r][i].prix; if (p.prix !== n) { p.prix = n; change = true; } }));
+    if (change) try { window.dispatchEvent(new CustomEvent('immo360:tarifs')); } catch (_) { /* ignoré */ }
+    return change;
+  }
+  const defauts = () => JSON.parse(DEFAUTS);
+
+  window.IMMO_TARIFS = { get MODE() { return MODE; }, setMode, setPrix, defauts, OPTIONS, PACKS, ABONNEMENTS, ESSAI_JOURS, SERVICES, fmt, actif, offert, prixDe, totalOptions, plans };
 })();

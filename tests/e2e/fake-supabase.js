@@ -27,6 +27,10 @@
     createClient() {
       return {
         from: builder,
+        rpc(fn, args) {
+          const q = { op: 'rpc', fn, args: args || {}, uid: session ? session.user.id : null };
+          return fetch('/__db', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(q) }).then(r => r.json());
+        },
         auth: {
           async getSession() { return { data: { session }, error: null }; },
           async signInWithPassword({ email, password }) {
