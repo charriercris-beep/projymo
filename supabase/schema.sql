@@ -265,6 +265,10 @@ create or replace function public.records_guard() returns trigger
 language plpgsql set search_path = public as $$
 begin
   new.updated_at := now();
+  -- Contenu retiré par la modération (back office) : son auteur ne peut pas le remettre en ligne
+  if tg_op = 'UPDATE' and current_user in ('authenticated', 'anon') and coalesce((old.data->>'modere')::boolean, false) then
+    new.data := new.data || jsonb_build_object('publie', false, 'modere', true, 'motif', old.data->'motif');
+  end if;
   if tg_op = 'UPDATE' and old.owner_id is distinct from auth.uid() and current_user in ('authenticated', 'anon') then
     new.owner_id := old.owner_id; new.collection := old.collection; new.id := old.id;
     new.audience_role := old.audience_role; new.audience_metiers := old.audience_metiers; new.parent_id := old.parent_id;
@@ -387,6 +391,108 @@ create or replace function public.activer_abonnement(p_id bigint, p_mois int) re
   update public.abonnements set statut = 'actif', debut = coalesce(debut, now()), fin = greatest(coalesce(fin, now()), now()) + make_interval(months => p_mois) where id = p_id;
 $$;
 revoke execute on function public.activer_abonnement(bigint, int) from public, anon, authenticated;
+
+-- ============================================================
+-- Back office (admin.html) : réservé aux comptes listés dans public.admins
+-- Toutes les fonctions admin_* vérifient is_admin() : appelées par quelqu'un d'autre, elles refusent.
+-- Donner l'accès (une seule fois, avec votre adresse) :
+--   insert into public.admins (user_id) select id from auth.users where email = 'votre@adresse.nc';
+-- ============================================================
+create table if not exists public.admins (user_id uuid primary key references auth.users(id) on delete cascade, created_at timestamptz not null default now());
+alter table public.admins enable row level security;   -- aucune politique : invisible depuis le site
+alter table public.professionnels add column if not exists refuse_le timestamptz;
+alter table public.professionnels add column if not exists refus_motif text;
+create or replace function public.is_admin() returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.admins where user_id = auth.uid());
+$$;
+create or replace function public.admin_garde() returns void language plpgsql stable security definer set search_path = public as $$
+begin if not public.is_admin() then raise exception 'Accès réservé à l''administrateur'; end if; end $$;
+
+create or replace function public.admin_moi() returns jsonb language sql stable security definer set search_path = public as $$
+  select to_jsonb(public.is_admin());
+$$;
+-- Professionnels : en attente, puis les plus récents traités
+create or replace function public.admin_pros() returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  return coalesce((select jsonb_agg(x order by x.attente desc, x.created_at desc) from (
+    select p.id, p.role, p.nom, p.ridet, p.tel, p.email, p.metiers, p.zones, p.verifie, p.refuse_le, p.refus_motif, p.created_at,
+           (not p.verifie and p.refuse_le is null) as attente, u.email as compte
+    from public.professionnels p left join auth.users u on u.id = p.owner_id
+    order by (not p.verifie and p.refuse_le is null) desc, p.created_at desc limit 200) x), '[]'::jsonb);
+end $$;
+create or replace function public.admin_pro_decider(p_id bigint, p_ok boolean, p_motif text default null) returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  if p_ok then update public.professionnels set verifie = true, refuse_le = null, refus_motif = null where id = p_id;
+  else update public.professionnels set verifie = false, refuse_le = now(), refus_motif = left(coalesce(p_motif, ''), 300) where id = p_id; end if;
+  return jsonb_build_object('ok', found);
+end $$;
+-- Commandes à régler (options d'annonce et abonnements)
+create or replace function public.admin_commandes() returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  return coalesce((select jsonb_agg(x order by x.created_at) from (
+    select 'option' as type, o.id, o.option as quoi, o.annonce_id::text as cible, o.prix, o.info, o.created_at, u.email
+      from public.options_annonce o left join auth.users u on u.id = o.owner_id where o.statut = 'a_payer'
+    union all
+    select 'abonnement', a.id, a.formule, a.role, a.prix, null, a.created_at, u.email
+      from public.abonnements a left join auth.users u on u.id = a.owner_id where a.statut = 'a_payer') x), '[]'::jsonb);
+end $$;
+create or replace function public.admin_payer(p_type text, p_id bigint, p_mois int default 1) returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  if p_type = 'option' then perform public.activer_option(p_id);
+  elsif p_type = 'abonnement' then perform public.activer_abonnement(p_id, greatest(1, least(coalesce(p_mois, 1), 24)));
+  else raise exception 'Type inconnu'; end if;
+  return jsonb_build_object('ok', true);
+end $$;
+create or replace function public.admin_annuler(p_type text, p_id bigint) returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  if p_type = 'option' then update public.options_annonce set statut = 'annulee' where id = p_id and statut = 'a_payer';
+  elsif p_type = 'abonnement' then update public.abonnements set statut = 'termine' where id = p_id and statut = 'a_payer';
+  else raise exception 'Type inconnu'; end if;
+  return jsonb_build_object('ok', found);
+end $$;
+-- Annonces : les plus récentes (recherche facultative sur le titre, la commune ou l'email)
+create or replace function public.admin_annonces(p_q text default null) returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  return coalesce((select jsonb_agg(x order by x.created_at desc) from (
+    select r.id, r.data->>'titre' as titre, r.data->>'type' as type, (r.data->>'prix') as prix, r.data->>'ville' as ville, r.data->>'quartier' as quartier,
+           coalesce((r.data->>'publie')::boolean, false) as publie, coalesce((r.data->>'modere')::boolean, false) as modere, r.data->>'motif' as motif,
+           (r.data->>'nbPhotos') as photos, r.created_at, u.email
+    from public.records r left join auth.users u on u.id = r.owner_id
+    where r.collection = 'annonce' and (p_q is null or p_q = '' or (r.data->>'titre') ilike '%' || p_q || '%' or (r.data->>'ville') ilike '%' || p_q || '%'
+                                         or (r.data->>'quartier') ilike '%' || p_q || '%' or u.email ilike '%' || p_q || '%')
+    order by r.created_at desc limit 200) x), '[]'::jsonb);
+end $$;
+-- Retirer (ou rétablir) une annonce : annonce, photos et visite vidéo
+create or replace function public.admin_moderer(p_id text, p_retirer boolean, p_motif text default null) returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  update public.records set data = data || jsonb_build_object('publie', not p_retirer, 'modere', p_retirer, 'motif', case when p_retirer then left(coalesce(p_motif, ''), 300) else null end), updated_at = now()
+   where collection = 'annonce' and id = p_id;
+  update public.records set data = data || jsonb_build_object('publie', not p_retirer, 'modere', p_retirer), updated_at = now()
+   where (collection = 'annonce_photos' and id = p_id) or (collection = 'visite' and id = 'v' || p_id);
+  return jsonb_build_object('ok', true);
+end $$;
+-- Interrupteur de la partie payante (le site le lit au chargement)
+create or replace function public.admin_mode(p_mode text) returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  if p_mode not in ('off', 'lancement', 'payant') then raise exception 'Mode inconnu'; end if;
+  update public.parametres set valeur = p_mode where cle = 'mode_tarifs';
+  return to_jsonb(p_mode);
+end $$;
+revoke execute on function public.admin_garde() from public, anon;
+revoke execute on function public.admin_moi(), public.admin_pros(), public.admin_pro_decider(bigint, boolean, text), public.admin_commandes(),
+  public.admin_payer(text, bigint, int), public.admin_annuler(text, bigint), public.admin_annonces(text), public.admin_moderer(text, boolean, text),
+  public.admin_mode(text) from public, anon;
+grant execute on function public.admin_moi(), public.admin_pros(), public.admin_pro_decider(bigint, boolean, text), public.admin_commandes(),
+  public.admin_payer(text, bigint, int), public.admin_annuler(text, bigint), public.admin_annonces(text), public.admin_moderer(text, boolean, text),
+  public.admin_mode(text) to authenticated;
 
 -- ============================================================
 -- Administration : commandes à régler et activation après paiement

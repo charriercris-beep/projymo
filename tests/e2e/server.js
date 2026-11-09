@@ -2,11 +2,17 @@
 // PostgreSQL local sous l'identité de l'utilisateur, avec les politiques RLS réelles).
 const http = require('http'), fs = require('fs'), path = require('path'), { execFileSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '../..'), PGHOST = process.argv[2], PORT = 8125;
-const TABLES = new Set(['records', 'professionnels']);
+const TABLES = new Set(['records', 'professionnels', 'options_annonce', 'abonnements', 'parametres']);
 const IDENT = /^[a-z_]+$/;
 const lit = v => v === null || v === undefined ? 'null' : "'" + String(v).replace(/'/g, "''") + "'";
 
 function sqlFor(q) {
+  // Appel de fonction (supabase.rpc) : fonctions du back office et lecture des paramètres uniquement
+  if (q.op === 'rpc') {
+    if (!/^admin_[a-z_]+$/.test(q.fn || '')) throw new Error('fonction non autorisée');
+    const args = Object.entries(q.args || {}).map(([k, v]) => { if (!IDENT.test(k)) throw new Error('argument'); return `${k} => ${lit(v)}`; }).join(', ');
+    return `select coalesce(public.${q.fn}(${args})::text, 'null');`;
+  }
   if (!TABLES.has(q.table)) throw new Error('table inconnue');
   const t = 'public.' + q.table;
   const where = (q.filters || []).map(([c, v]) => { if (!IDENT.test(c)) throw new Error('colonne'); return `${c} = ${lit(v)}`; }).join(' and ') || 'true';

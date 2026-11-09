@@ -6,7 +6,8 @@
  *   'payant'    → les prix s'appliquent : commandes « à régler », activées après paiement
  *
  * Les prix sont en francs CFP, TTC. Ce sont des propositions de départ, à fixer ensemble.
- * Le jour où le trafic est là : passer MODE à 'payant' (ou 'lancement'), vérifier les prix, publier.
+ * L'interrupteur se règle dans le back office (admin.html) : le site lit le mode dans la base au chargement.
+ * MODE_SITE ci-dessous ne sert que tant que la base n'a pas répondu (ou hors ligne).
  * Détails et procédure d'activation après paiement : docs/monetisation.md
  */
 (function () {
@@ -15,13 +16,21 @@
   const MODE_SITE = 'off';
   // Aperçu sans rien mettre en ligne : ajouter ?tarifs=payant (ou lancement, off) à l'adresse.
   // Sans risque : l'activation réelle d'une option ou d'un abonnement se fait uniquement côté base, après paiement.
-  const MODE = (() => {
-    try {
-      const q = new URLSearchParams(location.search).get('tarifs');
-      if (q && ['off', 'lancement', 'payant'].includes(q)) sessionStorage.setItem('immo360.tarifs.apercu', q);
-      return sessionStorage.getItem('immo360.tarifs.apercu') || MODE_SITE;
-    } catch (_) { return MODE_SITE; }
-  })();
+  const MODES = ['off', 'lancement', 'payant'];
+  let apercu = null;
+  try {
+    const q = new URLSearchParams(location.search).get('tarifs');
+    if (q && MODES.includes(q)) sessionStorage.setItem('immo360.tarifs.apercu', q);
+    apercu = sessionStorage.getItem('immo360.tarifs.apercu');
+  } catch (_) { /* stockage indisponible */ }
+  let MODE = apercu || MODE_SITE;
+  // Mode réglé dans la base (back office) ; un aperçu ?tarifs=… reste prioritaire dans cet onglet
+  function setMode(m) {
+    if (apercu || !MODES.includes(m) || m === MODE) return false;
+    MODE = m;
+    try { window.dispatchEvent(new CustomEvent('immo360:tarifs', { detail: m })); } catch (_) { /* ignoré */ }
+    return true;
+  }
 
   /* ---------- Options d'annonce (particuliers et pros) ---------- */
   const OPTIONS = {
@@ -89,5 +98,5 @@
   }
   const plans = profil => ABONNEMENTS[profil] || [];
 
-  window.IMMO_TARIFS = { MODE, OPTIONS, PACKS, ABONNEMENTS, ESSAI_JOURS, SERVICES, fmt, actif, offert, prixDe, totalOptions, plans };
+  window.IMMO_TARIFS = { get MODE() { return MODE; }, setMode, OPTIONS, PACKS, ABONNEMENTS, ESSAI_JOURS, SERVICES, fmt, actif, offert, prixDe, totalOptions, plans };
 })();

@@ -4992,6 +4992,14 @@ async function initSupabase(){
       if(cfg.supabaseKey && window.supabase){
         sb = window.supabase.createClient(cfg.supabaseUrl || SUPABASE_URL, cfg.supabaseKey);
         console.log('Supabase connecté');
+        // Interrupteur de la partie payante, réglé dans le back office (table parametres, lisible par tous)
+        sb.from('parametres').select('cle,valeur').eq('cle','mode_tarifs').then(r=>{
+          const m=r&&r.data&&r.data[0]&&r.data[0].valeur;
+          if(m && window.IMMO_TARIFS && IMMO_TARIFS.setMode(m)){
+            try{ if(window.IMMO_OPT) IMMO_OPT.refresh(); if(document.getElementById('main-shell').style.display==='flex'){ buildSB(); go(S.panel); } }catch(e){}
+            const l=document.getElementById('lp-tarifs'); if(l) l.hidden=!IMMO_TARIFS.actif();
+          }
+        }).catch(()=>{});
         // Session existante (retour sur le site) : reprise de la synchronisation et accès direct à son espace
         if(window.IMMO_SYNC) IMMO_SYNC.start().then(restored=>{
           const shell=document.getElementById('main-shell');

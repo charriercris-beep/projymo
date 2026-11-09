@@ -34,3 +34,14 @@ commande, ni sur l'annonce d'un autre), que l'essai pro n'est accordé qu'une fo
 ```bash
 psql -h $PG -p 54329 -U postgres -f tests/e2e/rls-monetisation.sql
 ```
+
+## Back office
+
+`admin.js` vérifie le back office (`admin.html`) : accès refusé à un compte non administrateur (page et
+appel direct des fonctions), validation d'un pro, paiement d'une option et d'un abonnement (3 mois),
+retrait d'une annonce (invisible des visiteurs, l'auteur ne peut pas la republier), rétablissement,
+interrupteur de la partie payante lu par le site. 16 vérifications.
+```bash
+node tests/e2e/server.js $PG &   # si pas déjà lancé
+node tests/e2e/admin.js $PG
+```

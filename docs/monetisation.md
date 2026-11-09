@@ -11,8 +11,9 @@ l'interrupteur n'est pas basculé. Le jour où le trafic est là, on fixe les pr
 | `lancement` | Options, page Tarifs et abonnements visibles mais **offerts**. Aucune limite. |
 | `payant` | Les prix s'appliquent : commandes « à régler », limites des formules gratuites. |
 
-1. **Site** : `js/tarifs.js`, ligne `const MODE_SITE = 'off';`
-2. **Base** (Supabase, éditeur SQL) : `update public.parametres set valeur = 'payant' where cle = 'mode_tarifs';`
+Un seul interrupteur : **back office → « Partie payante »** (voir `docs/back-office.md`). Le site lit ce
+réglage dans la base à chaque chargement. (`MODE_SITE` dans `js/tarifs.js` ne sert que si la base ne répond pas.)
+Les commandes à régler et leur activation se font aussi dans le back office (rubrique « Commandes à régler »).
 
 La base est la seule à pouvoir activer quelque chose : même si quelqu'un modifiait le site dans son
 navigateur, il ne pourrait pas s'offrir une option ou un abonnement (vérifié par
