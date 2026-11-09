@@ -13,7 +13,7 @@
   const date = d => d ? new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
   const ROLES = { artisan: 'Artisan', notaire: 'Notaire', banquier: 'Banquier', courtier: 'Courtier', diagnostiqueur: 'Diagnostiqueur', geometre: 'Géomètre-expert', assureur: 'Assureur', agent: 'Agent immobilier',
     agt: 'Agence', art: 'Artisan', bnk: 'Banque / courtier', not: 'Notaire', diag: 'Diagnostiqueur', geo: 'Géomètre', ass: 'Assureur' };
-  let sb = null, onglet = 'pros', cache = {};
+  let sb = null, onglet = 'kpi', cache = {};
 
   async function rpc(fn, args) {
     const r = await sb.rpc(fn, args || {});
@@ -55,11 +55,57 @@
     cache.pros = pros || []; cache.cmd = cmd || [];
     const nPros = cache.pros.filter(p => p.attente).length, nCmd = cache.cmd.length;
     const tab = (id, l, n) => `<button type="button" class="tab${onglet === id ? ' on' : ''}" data-t="${id}">${l}${n ? `<span class="n">${n}</span>` : ''}</button>`;
-    app.innerHTML = `<nav class="tabs" aria-label="Rubriques">${tab('pros', 'Professionnels', nPros)}${tab('cmd', 'Commandes à régler', nCmd)}${tab('ann', 'Annonces')}${tab('mode', 'Partie payante')}</nav><section id="sec" class="card"></section>`;
+    app.innerHTML = `<nav class="tabs" aria-label="Rubriques">${tab('kpi', 'Tableau de bord')}${tab('pros', 'Professionnels', nPros)}${tab('cmd', 'Commandes à régler', nCmd)}${tab('ann', 'Annonces')}${tab('mode', 'Partie payante')}</nav><section id="sec" class="card"></section>`;
     app.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { onglet = b.dataset.t; render(); });
-    ({ pros: vPros, cmd: vCmd, ann: vAnn, mode: vMode })[onglet]($('sec'));
+    ({ kpi: vKpi, pros: vPros, cmd: vCmd, ann: vAnn, mode: vMode })[onglet]($('sec'));
   }
   const flash = (el, txt, err) => { const m = el.querySelector('.msg') || el.appendChild(Object.assign(document.createElement('p'), { className: 'msg' })); m.className = 'msg' + (err ? ' err' : ''); m.textContent = txt; };
+
+  /* ---------- Tableau de bord ---------- */
+  const PROFILS = { sell: 'Vendeurs', buy: 'Acheteurs', agt: 'Agences', art: 'Artisans', bnk: 'Banques, courtiers', not: 'Notaires', diag: 'Diagnostiqueurs', geo: 'Géomètres', ass: 'Assureurs', inconnu: 'Non précisé' };
+  const n0 = v => (Number(v) || 0).toLocaleString('fr-FR');
+  const tile = (v, l, sub) => `<div class="k"><b>${v}</b><span>${E(l)}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
+  // Histogramme hebdomadaire (une seule série : pas de légende, le titre la nomme ; survol et tableau des valeurs)
+  function colonnes(titre, serie) {
+    const max = Math.max(1, ...serie.map(x => x.n)), H = 120;
+    const lab = s => new Date(s + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    const last = serie.length - 1, iMax = serie.reduce((a, x, i) => x.n > serie[a].n ? i : a, 0);
+    return `<figure class="ch"><figcaption>${E(titre)} <small>12 dernières semaines</small></figcaption>
+      <div class="cols" role="img" aria-label="${E(titre)} : ${serie.map(x => lab(x.s) + ' ' + x.n).join(', ')}">
+        ${serie.map((x, i) => `<div class="col" tabindex="0" data-tip="Semaine du ${lab(x.s)} : ${x.n}"><span class="v">${i === last || (i === iMax && x.n) ? x.n : ''}</span><i style="height:${Math.round(x.n / max * H)}px"></i><em>${i % 3 === 0 || i === last ? lab(x.s) : ''}</em></div>`).join('')}
+      </div>
+      <details class="tv"><summary>Voir les chiffres</summary><table><tr><th>Semaine du</th><th>Nombre</th></tr>${serie.map(x => `<tr><td>${lab(x.s)}</td><td>${x.n}</td></tr>`).join('')}</table></details></figure>`;
+  }
+  // Répartition (barres horizontales, valeur au bout de la barre)
+  function barres(titre, l, nom, extra) {
+    if (!l || !l.length) return `<figure class="ch"><figcaption>${E(titre)}</figcaption><p class="empty">Pas encore de données.</p></figure>`;
+    const max = Math.max(1, ...l.map(x => x.n));
+    return `<figure class="ch"><figcaption>${E(titre)}</figcaption><div class="hb">${l.map(x => `<div class="r"><span class="l">${E(nom ? nom(x.k) : x.k)}</span><span class="t"><i style="width:${Math.max(2, Math.round(x.n / max * 100))}%"></i></span><span class="n">${n0(x.n)}${extra ? extra(x) : ''}</span></div>`).join('')}</div></figure>`;
+  }
+  async function vKpi(el) {
+    el.innerHTML = '<h2>Tableau de bord</h2><p class="sub">Chargement…</p>';
+    let k; try { k = await rpc('admin_kpis'); } catch (e) { el.innerHTML = `<p class="err">${E(e.message)}</p>`; return; }
+    const A = k.annonces, U = k.utilisateurs, P = k.pros, R = k.relations, M = k.argent;
+    const taux = R.devis_total ? Math.round(R.devis_avec_reponse / R.devis_total * 100) + ' %' : '—';
+    const optNom = o => (T && T.OPTIONS[o] && T.OPTIONS[o].nom) || o;
+    el.innerHTML = `<div class="kh"><div><h2>Tableau de bord</h2><p class="sub">Calculé le ${new Date(k.calcule_le).toLocaleString('fr-FR')}. Chiffres agrégés, sans données personnelles.</p></div><button type="button" class="btn out sm" id="k-re">Actualiser</button></div>
+      <h3>Annonces</h3><div class="ks">${tile(n0(A.en_ligne), 'en ligne')}${tile(n0(A.nouvelles_7j), 'nouvelles sur 7 jours', n0(A.nouvelles_30j) + ' sur 30 jours')}
+        ${tile(A.prix_m2_median ? n0(A.prix_m2_median) + ' F' : '—', 'prix au m² médian affiché', 'repère ISEE 2025 (vendus, appartements) : 280 000 F')}
+        ${tile(n0(A.sans_photo), 'en ligne sans photo')}${tile(n0(A.avec_video), 'avec visite vidéo')}${tile(n0(A.moderees), 'retirées par la modération')}</div>
+      <div class="g2">${colonnes('Annonces publiées par semaine', A.par_semaine || [])}${barres('Annonces en ligne par commune', A.par_commune)}</div>
+      <div class="g2">${barres('Annonces en ligne par type', A.par_type)}<div></div></div>
+      <h3>Utilisateurs</h3><div class="ks">${tile(n0(U.total), 'comptes')}${tile(n0(U.nouveaux_7j), 'nouveaux sur 7 jours', n0(U.nouveaux_30j) + ' sur 30 jours')}${tile(n0(U.actifs_30j), 'connectés sur 30 jours')}
+        ${tile(n0(P.verifies), 'professionnels vérifiés', P.en_attente ? n0(P.en_attente) + ' en attente' : '')}</div>
+      <div class="g2">${colonnes('Inscriptions par semaine', U.par_semaine || [])}${barres('Comptes par profil', U.par_profil, x => PROFILS[x] || x)}</div>
+      <div class="g2">${barres('Professionnels par métier', P.par_role, x => ROLES[x] || x, x => ` <small>(${n0(x.v)} vérifié${x.v > 1 ? "s" : ""})</small>`)}<div></div></div>
+      <h3>Mise en relation</h3><div class="ks">${tile(n0(R.devis_30j), 'demandes de devis sur 30 jours', n0(R.devis_total) + ' au total')}${tile(taux, 'des demandes de devis ont reçu une réponse')}
+        ${tile(n0(R.financements_30j), 'dossiers de financement sur 30 jours')}${tile(n0(R.missions_30j), 'missions diagnostic, géomètre, assurance', 'sur 30 jours')}${tile(n0(R.notaire_30j), 'dossiers notaire sur 30 jours')}</div>
+      <p class="note">Messages et demandes de visite ne sont pas encore mesurés (étape suivante : journal d'événements anonymes).</p>
+      <h3>Chiffre d'affaires</h3><div class="ks">${tile(n0(M.options_mois) + ' F', 'options payées ce mois-ci', n0(M.options_mois_n) + ' option(s)')}${tile(n0(M.abonnements_mensuel) + ' F', 'revenu mensuel des abonnements', n0(M.abonnements_actifs) + ' abonnement(s) actif(s)')}
+        ${tile(n0(M.a_regler) + ' F', 'commandes à régler')}${tile(n0(M.essais), 'essais gratuits en cours')}</div>
+      <div class="g2">${barres('Options vendues (depuis le début)', M.top_options, optNom, x => ` <small>· ${n0(x.m)} F</small>`)}${barres('Formules pros en cours', M.formules, x => { const [r, f] = String(x).split(' · '); return (ROLES[r] || r) + ' · ' + (((T && T.plans(r).find(p => p.id === f)) || {}).nom || f); })}</div>`;
+    $('k-re').onclick = () => vKpi(el);
+  }
 
   /* ---------- Professionnels ---------- */
   function vPros(el) {

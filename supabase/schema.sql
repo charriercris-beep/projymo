@@ -486,7 +486,63 @@ begin
   update public.parametres set valeur = p_mode where cle = 'mode_tarifs';
   return to_jsonb(p_mode);
 end $$;
+-- Tableau de bord : tous les indicateurs en un appel (données agrégées, aucune donnée personnelle)
+create or replace function public.admin_kpis() returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare r jsonb;
+begin
+  perform public.admin_garde();
+  with ann as (
+    select r.id, r.created_at, r.data, coalesce((r.data->>'publie')::boolean, false) as publie, coalesce((r.data->>'modere')::boolean, false) as modere,
+           nullif(r.data->>'prix', '')::numeric as prix, nullif(r.data->>'surface', '')::numeric as surface, coalesce(nullif(r.data->>'nbPhotos', '')::int, 0) as photos
+    from public.records r where r.collection = 'annonce'),
+  enligne as (select * from ann where publie),
+  semaines as (select generate_series(date_trunc('week', now()) - interval '11 weeks', date_trunc('week', now()), interval '1 week') as s)
+  select jsonb_build_object(
+    'annonces', jsonb_build_object(
+      'en_ligne', (select count(*) from enligne),
+      'nouvelles_7j', (select count(*) from ann where created_at > now() - interval '7 days'),
+      'nouvelles_30j', (select count(*) from ann where created_at > now() - interval '30 days'),
+      'moderees', (select count(*) from ann where modere),
+      'sans_photo', (select count(*) from enligne where photos = 0),
+      'avec_video', (select count(*) from public.records v where v.collection = 'visite' and coalesce((v.data->>'publie')::boolean, false)),
+      'prix_m2_median', (select round(percentile_cont(0.5) within group (order by prix / surface)) from enligne where prix > 0 and surface > 0 and data->>'type' <> 'Terrain'),
+      'par_commune', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select coalesce(nullif(data->>'ville', ''), 'Non précisée') k, count(*) n from enligne group by 1 order by 2 desc limit 8) x), '[]'),
+      'par_type', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select coalesce(nullif(data->>'type', ''), 'Autre') k, count(*) n from enligne group by 1) x), '[]'),
+      'par_semaine', (select jsonb_agg(jsonb_build_object('s', to_char(s, 'YYYY-MM-DD'), 'n', (select count(*) from ann where date_trunc('week', created_at) = s)) order by s) from semaines)),
+    'utilisateurs', jsonb_build_object(
+      'total', (select count(*) from auth.users),
+      'nouveaux_7j', (select count(*) from auth.users where created_at > now() - interval '7 days'),
+      'nouveaux_30j', (select count(*) from auth.users where created_at > now() - interval '30 days'),
+      'actifs_30j', (select count(*) from auth.users where last_sign_in_at > now() - interval '30 days'),
+      'par_profil', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select coalesce(nullif(raw_user_meta_data->>'profil', ''), 'inconnu') k, count(*) n from auth.users group by 1) x), '[]'),
+      'par_semaine', (select jsonb_agg(jsonb_build_object('s', to_char(s, 'YYYY-MM-DD'), 'n', (select count(*) from auth.users u where date_trunc('week', u.created_at) = s)) order by s) from semaines)),
+    'pros', jsonb_build_object(
+      'verifies', (select count(*) from public.professionnels where verifie),
+      'en_attente', (select count(*) from public.professionnels where not verifie and refuse_le is null),
+      'par_role', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n, 'v', v) order by n desc) from (select role k, count(*) n, count(*) filter (where verifie) v from public.professionnels group by 1) x), '[]')),
+    'relations', jsonb_build_object(
+      'devis_30j', (select count(*) from public.records where collection = 'devis' and created_at > now() - interval '30 days'),
+      'devis_total', (select count(*) from public.records where collection = 'devis'),
+      'devis_avec_reponse', (select count(distinct parent_id) from public.records where collection = 'devis_reponse'),
+      'financements_30j', (select count(*) from public.records where collection = 'fin' and created_at > now() - interval '30 days'),
+      'missions_30j', (select count(*) from public.records where collection in ('mission_diag', 'mission_geo', 'mission_ass') and created_at > now() - interval '30 days'),
+      'notaire_30j', (select count(*) from public.records where collection = 'notaire' and created_at > now() - interval '30 days')),
+    'argent', jsonb_build_object(
+      'options_mois', (select coalesce(sum(prix), 0) from public.options_annonce where statut = 'active' and prix > 0 and debut >= date_trunc('month', now())),
+      'options_mois_n', (select count(*) from public.options_annonce where statut = 'active' and prix > 0 and debut >= date_trunc('month', now())),
+      'abonnements_mensuel', (select coalesce(sum(prix), 0) from public.abonnements where statut = 'actif' and fin > now()),
+      'abonnements_actifs', (select count(*) from public.abonnements where statut = 'actif' and fin > now()),
+      'essais', (select count(*) from public.abonnements where statut = 'essai' and fin > now()),
+      'a_regler', (select coalesce(sum(prix), 0) from public.options_annonce where statut = 'a_payer') + (select coalesce(sum(prix), 0) from public.abonnements where statut = 'a_payer'),
+      'top_options', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n, 'm', m) order by n desc) from (select option k, count(*) n, sum(prix) m from public.options_annonce where statut = 'active' and prix > 0 group by 1) x), '[]'),
+      'formules', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select role || ' · ' || formule k, count(*) n from public.abonnements where statut in ('actif', 'essai') and fin > now() group by 1) x), '[]')),
+    'calcule_le', now()) into r;
+  return r;
+end $$;
+
 revoke execute on function public.admin_garde() from public, anon;
+revoke execute on function public.admin_kpis() from public, anon;
+grant execute on function public.admin_kpis() to authenticated;
 revoke execute on function public.admin_moi(), public.admin_pros(), public.admin_pro_decider(bigint, boolean, text), public.admin_commandes(),
   public.admin_payer(text, bigint, int), public.admin_annuler(text, bigint), public.admin_annonces(text), public.admin_moderer(text, boolean, text),
   public.admin_mode(text) from public, anon;

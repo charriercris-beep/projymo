@@ -16,6 +16,18 @@ Un autre compte, même connecté, ne voit rien et ne peut rien faire (testé : `
 
 ## Rubriques
 
+- **Tableau de bord** (s'ouvre en premier), chiffres agrégés sans données personnelles, bouton « Actualiser » :
+  - *Annonces* : en ligne, nouvelles (7 j / 30 j), prix au m² médian affiché (comparé au repère ISEE),
+    sans photo, avec visite vidéo, retirées ; publications par semaine (12 semaines) ; répartition par
+    commune et par type.
+  - *Utilisateurs* : comptes, nouveaux (7 j / 30 j), connectés sur 30 jours, pros vérifiés et en attente ;
+    inscriptions par semaine ; comptes par profil ; pros par métier.
+  - *Mise en relation* : demandes de devis (30 j, total) et part ayant reçu une réponse, dossiers de
+    financement, missions (diagnostic, géomètre, assurance), dossiers notaire.
+  - *Chiffre d'affaires* : options payées ce mois, revenu mensuel des abonnements, commandes à régler,
+    essais en cours, options vendues, formules pros en cours.
+  Chaque histogramme a un « Voir les chiffres » (tableau) et une infobulle au survol.
+
 - **Professionnels** : pros inscrits, à vérifier en premier. Vérifier le RIDET (avis de situation, répertoire
   de l'ISEE), l'assurance décennale (artisans) ou la carte professionnelle (agents), puis **Valider**
   (le pro reçoit les demandes des particuliers) ou **Refuser** avec un motif. « Retirer » enlève la vérification.
@@ -27,8 +39,9 @@ Un autre compte, même connecté, ne voit rien et ne peut rien faire (testé : `
 - **Partie payante** : l'interrupteur (éteinte / lancement / payante). Le site lit ce réglage dans la base
   au chargement : c'est le seul interrupteur à manipuler. (Un aperçu reste possible avec `?tarifs=payant`.)
 
-## À venir (étapes 2 et 3)
+## À venir (étape 3)
 
-- Tableau de bord : annonces, utilisateurs, mise en relation, chiffre d'affaires.
-- Journal d'événements anonymes pour l'entonnoir (estimation → dépôt → publication).
+- Journal d'événements anonymes : entonnoir vendeur (estimation → dépôt → publication), messages et
+  demandes de visite.
 - Prix modifiables depuis le back office.
+- Fréquentation : activer Vercel Analytics (dans Vercel, onglet Analytics, un clic).

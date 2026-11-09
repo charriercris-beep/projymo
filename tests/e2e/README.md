@@ -40,8 +40,8 @@ psql -h $PG -p 54329 -U postgres -f tests/e2e/rls-monetisation.sql
 `admin.js` vérifie le back office (`admin.html`) : accès refusé à un compte non administrateur (page et
 appel direct des fonctions), validation d'un pro, paiement d'une option et d'un abonnement (3 mois),
 retrait d'une annonce (invisible des visiteurs, l'auteur ne peut pas la republier), rétablissement,
-interrupteur de la partie payante lu par le site. 16 vérifications.
+interrupteur de la partie payante lu par le site, tableau de bord (chiffres conformes à la base, refusé à un non-admin). 20 vérifications.
 ```bash
 node tests/e2e/server.js $PG &   # si pas déjà lancé
-node tests/e2e/admin.js $PG
+node tests/e2e/admin.js $PG /tmp   # 2e argument : dossier de la capture du tableau de bord
 ```
