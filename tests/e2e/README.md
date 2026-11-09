@@ -45,3 +45,10 @@ interrupteur de la partie payante lu par le site, tableau de bord (chiffres conf
 node tests/e2e/server.js $PG &   # si pas déjà lancé
 node tests/e2e/admin.js $PG /tmp   # 2e argument : dossier de la capture du tableau de bord
 ```
+
+## Compte réel ou démo
+
+`compte.js` : sans compte, « Publier » invite à se connecter (rien n'est publié en démo quand la base
+est disponible) ; après connexion, retour à la dernière étape du dépôt avec la saisie conservée, puis
+publication en ligne ; un utilisateur connecté qui clique sur « Vendre » depuis l'accueil reste sur
+son compte. 8 vérifications. `node tests/e2e/compte.js $PG`
