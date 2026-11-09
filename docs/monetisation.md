@@ -31,7 +31,7 @@ annonce en couleur 2 000 F (30 j) · bulle « Portes ouvertes » 1 000 F ·
 **Pack « Vente express »** (à la une + urgent + remontée quotidienne, 7 j) 9 900 F.
 
 **Abonnements pros (par mois, essai 30 jours une fois par métier)** :
-- Agences : Découverte gratuite (5 annonces) · Agence 19 900 F (50 annonces, statistiques) · Agence+ 39 900 F (illimité)
+- Agences : Découverte gratuite (5 annonces) · Agence 19 900 F (30 annonces, statistiques) · Agence+ 39 900 F (illimité)
 - Artisans : Découverte gratuite (3 demandes / mois) · Artisan 6 900 F (illimité, badge « Vérifié »)
 - Banques et courtiers : Découverte (2 dossiers / mois) · Partenaire 24 900 F
 - Diagnostiqueurs, géomètres : Découverte (3 missions / mois) · Pro 5 900 F

@@ -42,7 +42,7 @@
   const ABONNEMENTS = {
     agt: [
       { id: 'decouverte', nom: 'Découverte', prix: 0,     limites: { annonces: 5 },        fonctions: [], desc: '5 annonces, fiches clients, rendez-vous.' },
-      { id: 'pro',        nom: 'Agence',     prix: 19900, limites: { annonces: 50 },       fonctions: ['stats', 'logo', 'estimation_marque'], desc: '50 annonces, statistiques, logo de l\'agence, estimations à votre nom.', conseille: true },
+      { id: 'pro',        nom: 'Agence',     prix: 19900, limites: { annonces: 30 },       fonctions: ['stats', 'logo', 'estimation_marque'], desc: '30 annonces, statistiques, logo de l\'agence, estimations à votre nom.', conseille: true },
       { id: 'premium',    nom: 'Agence+',    prix: 39900, limites: { annonces: Infinity }, fonctions: ['stats', 'logo', 'estimation_marque', 'une_mensuelle'], desc: 'Annonces illimitées + 2 annonces à la une chaque mois.' }
     ],
     art: [
