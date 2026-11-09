@@ -482,7 +482,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
   .topnav{flex-wrap:wrap;height:auto;padding:8px 14px;gap:6px}
   .tn-logo{border:0;padding:0;margin:0}
   .tn-right{margin-left:auto;gap:6px}
-  .tn-right .dev-sel,.tn-btn:not(.tn-out){display:none}
+  .tn-right .dev-sel,.tn-btn:not(.tn-out):not(.tn-login){display:none}
   .tn-tabs{order:3;flex-basis:100%;height:42px}
 }
 /* Cartes plus sobres */
@@ -634,6 +634,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .tn-btn{color:var(--dark);border-color:var(--line-strong);font-size:14px;font-weight:600}
 .tn-btn:hover{color:var(--dark);border-color:var(--dark);background:var(--cream)}
 .tn-out:hover{color:var(--red);border-color:var(--red);background:#fff}
+.tn-login{background:var(--gold)!important;color:#fff!important;border-color:var(--gold)!important}.tn-login:hover{background:var(--gold-dark)!important}
 .tn-right .dev-sel{color:var(--dark);border-color:var(--line-strong)}
 .tn-prof{color:var(--mid);font-size:13px}
 .tn-prof select{background:var(--cream);color:var(--dark);border-color:var(--line-strong)}
@@ -1029,7 +1030,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       </select>
       <span class="topbar-badge badge-sell" id="profile-badge" hidden>Vendeur</span>
       <button type="button" class="tn-btn" onclick="showLanding()" title="Retour au site public">Voir les annonces</button>
-      <button type="button" class="tn-btn tn-out" onclick="logout()">Déconnexion</button>
+      <button type="button" class="tn-btn tn-login" id="tn-login" hidden onclick="showLoginModal(S.profile||'buy')">Se connecter</button>
+      <button type="button" class="tn-btn tn-out" id="tn-out" onclick="logout()">Déconnexion</button>
     </div>
   </header>
 
@@ -3235,7 +3237,12 @@ function buildSB(){
   // synchroniser le sélecteur de profil et le badge avec le profil courant
   const ps=document.getElementById('prof-sel'); if(ps && ps.value!==prof) ps.value=prof;
   // Une même personne peut acheter et vendre : sélecteur « Mon espace » (compte) ou « Démo » (sans compte)
-  const tp=document.querySelector('.tn-prof span'); if(tp) tp.textContent=(window.IMMO_SYNC && IMMO_SYNC.uid) ? 'Mon espace' : 'Démo';
+  const reel=!!(window.IMMO_SYNC && IMMO_SYNC.uid);
+  const tp=document.querySelector('.tn-prof span'); if(tp) tp.textContent=reel ? 'Mon espace' : 'Démo';
+  // En démo, alors que la base est disponible : bouton « Se connecter » bien visible, « Quitter la démo » au lieu de « Déconnexion »
+  const tl=document.getElementById('tn-login'), to=document.getElementById('tn-out');
+  if(tl) tl.hidden = reel || !(typeof sb!=='undefined' && sb);
+  if(to) to.textContent = reel ? 'Déconnexion' : 'Quitter la démo';
   const badge=document.getElementById('profile-badge');
   if(badge){const L={sell:'Vendeur',buy:'Acheteur',agt:'Agent',not:'Notaire',art:'Artisan'};badge.textContent=L[prof]||prof;}
 }
@@ -4432,11 +4439,14 @@ function doLoginConfirm(){
   initConversations();
   updateUserDisplay();
   if(window._pendingBien){setTimeout(()=>{contactVendeur(window._pendingBien);window._pendingBien=null;},300);}
+  if(window._pendingDepot){ window._pendingDepot=false; setTimeout(()=>{ go('depot'); if(typeof goDepotStep==='function') goDepotStep(5); },200); }
 }
 
 function loginAs(profil){
   if(['sell','buy','agt','not','art','bnk','diag','geo','ass'].includes(profil)){
-    APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
+    // Connecté avec un vrai compte : on reste sur ce compte (avant : on repassait en démo « Demo »)
+    if(window.IMMO_SYNC && IMMO_SYNC.uid && APP_STATE.user && APP_STATE.user.email!=='demo@immo360.nc') APP_STATE.user.profil=profil;
+    else APP_STATE.user={nom:'Demo',email:'demo@immo360.nc',profil};
     APP_STATE.loggedIn=true;
     S.profile=profil;
     document.getElementById('main-shell').style.display='flex';
@@ -5354,6 +5364,14 @@ async function publierAnnonce(){
       notif.innerHTML='<b>Votre formule permet '+max+' annonces en ligne.</b> Retirez une annonce ou passez à la formule supérieure. <button type="button" class="btn btn-gold btn-sm" onclick="go(\'abonnement\')">Voir les formules</button>';
       btn.innerHTML='Publier mon annonce';btn.disabled=false;return;
     }
+  }
+  // Base configurée mais pas de compte connecté : on propose de se connecter au lieu de publier « en démo »
+  if(typeof sb!=='undefined' && sb && !(window.IMMO_SYNC && IMMO_SYNC.uid)){
+    notif.style.display='block';notif.style.background='var(--lagoon-pale)';notif.style.border='1.5px solid var(--gold)';notif.style.color='var(--dark)';
+    notif.innerHTML='<b>Connectez-vous pour publier votre annonce en ligne.</b> C\'est gratuit ; vos informations et vos photos sont conservées, vous reviendrez ici pour publier.'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="btn btn-gold btn-sm" onclick="window._pendingDepot=true;showLoginModal(\'sell\');switchAuthTab(\'register\')">Créer un compte</button>'
+      +'<button type="button" class="btn btn-outline btn-sm" onclick="window._pendingDepot=true;showLoginModal(\'sell\');switchAuthTab(\'login\')">J\'ai déjà un compte</button></div>';
+    btn.innerHTML='Publier mon annonce';btn.disabled=false;return;
   }
   // Publication (en ligne si connecté, sinon dans ce navigateur) — js/annonces.js
   let res=null;
