@@ -688,6 +688,20 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-btn.big{padding:15px 26px;font-size:16px}
 
 /* Bandeau photo + recherche */
+/* Diffusion sur les réseaux (js/social.js) */
+.soc-mod{position:fixed;inset:0;background:rgba(7,25,35,.55);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px}
+.soc-in{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:92vh;overflow:auto;padding:20px}
+.soc-h{display:flex;justify-content:space-between;align-items:center}.soc-h b{font-size:20px;color:var(--ocean)}
+.soc-x{background:none;border:0;font-size:28px;line-height:1;cursor:pointer;color:var(--mid);padding:4px 8px}
+.soc-lead{color:var(--mid);margin:4px 0 14px;font-size:15px}
+.soc-g{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px}
+.soc-cv{width:100%;aspect-ratio:1;border-radius:12px;display:block;margin-bottom:8px;background:var(--warm)}
+.soc-tabs{display:flex;gap:4px;background:var(--cream);border-radius:10px;padding:4px;margin-bottom:8px}
+.soc-tabs button{flex:1;background:none;border:0;border-radius:8px;padding:7px;font:inherit;font-weight:600;color:var(--mid);cursor:pointer}.soc-tabs button.on{background:#fff;color:var(--ocean);box-shadow:0 1px 4px rgba(15,42,56,.12)}
+.soc-p textarea{width:100%;border:1.5px solid var(--line-strong);border-radius:10px;padding:10px;font:inherit;font-size:15px;resize:vertical}
+.soc-acts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.soc-acts a{text-decoration:none}
+.soc-src{font-size:13px;color:var(--mid);margin:10px 0 0}
+@media(max-width:720px){.soc-g{grid-template-columns:1fr}.soc-cv{max-width:340px;margin:0 auto 8px}}
 /* Qualification des prospects (js/prospects.js) */
 #msg-lead:empty{display:none}#msg-lead{padding:10px 14px 0}
 .lead-tri{display:block;width:calc(100% - 20px);margin:8px 10px;background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--gold-dark);font:inherit;font-weight:700;font-size:14px;border-radius:9px;padding:8px;cursor:pointer}
@@ -9729,6 +9743,7 @@ go('dashboard');
 <script src="js/ia-photos.js"></script>
 <script src="js/recherche-ia.js"></script>
 <script src="js/prospects.js"></script>
+<script src="js/social.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
