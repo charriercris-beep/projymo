@@ -5237,26 +5237,35 @@ function updateDepotEstim(){
 
 async function genDescriptionIA(){
   const titre=document.getElementById('d-titre')?.value||'Bien immobilier';
-  const surface=document.getElementById('d-surface')?.value||'85';
-  const type=document.getElementById('d-type')?.value||'Appartement';
+  const surface=document.getElementById('d-surface')?.value||'';
+  const type=document.getElementById('d-type')?.value||'';
   const ville=document.getElementById('d-ville')?.value||'Nouméa';
   const quartier=document.getElementById('d-quartier')?.value||'';
-  const etat=document.getElementById('d-etat')?.value||'bon';
+  const etat=document.getElementById('d-etat')?.value||'';
+  // Ce que le vendeur a réellement saisi : pièces, chambres, état, points forts cochés, notes déjà écrites
+  const v=id=>(document.getElementById(id)?.value||'').trim();
+  const forts=[...document.querySelectorAll('#panel-depot input[id^="df-"]:checked')].map(c=>(c.closest('label')?.textContent||'').trim()).filter(Boolean);
+  const infos=[type, v('d-pieces')?v('d-pieces')+' pièces':'', v('d-chambres')?v('d-chambres')+' chambre(s)':'', etat?'état : '+etat:'',
+    forts.length?'points forts : '+forts.join(', '):'', v('d-desc')&&!/^Rédaction en cours/.test(v('d-desc'))?'notes du vendeur : '+v('d-desc'):''].filter(Boolean).join(' ; ');
+  const prixSaisi=parseInt(v('d-prix'))||0;
   const btn=document.querySelector('[onclick="genDescriptionIA()"]');
   if(btn){btn.textContent="⏳ Génération...";btn.disabled=true;}
   const descEl=document.getElementById('d-desc');
-  if(descEl) descEl.value='Génération en cours par Claude IA...';
+  const avantIA=descEl?descEl.value:'';
+  if(descEl) descEl.value='Rédaction en cours…';
   try {
     const r=await fetch('/api/generate-annonce',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({titre,surface,prix:0,desc:'',ton:'Familial & chaleureux',
+      body:JSON.stringify({titre,surface,prix:prixSaisi,desc:infos,ton:'Familial & chaleureux',
         plateforme:'Multi-plateformes',devise:'F',pays:'NC',ville:quartier?quartier+', '+ville:ville})
     });
     const d=await r.json();
-    if(descEl&&d.annonce) descEl.value=d.annonce;
-    else if(descEl) descEl.value='';
+    if(!r.ok || d.error || !d.annonce) throw new Error(d.error || 'Réponse vide du service IA');
+    if(descEl) descEl.value=d.annonce;
   } catch(e){
-    if(descEl) descEl.value='';
+    // on rend le texte d'avant et on explique (avant : le champ s'effaçait sans message)
+    if(descEl) descEl.value=avantIA;
+    if(typeof showToast==='function') showToast('Rédaction automatique indisponible : '+e.message);
   }
   if(btn){btn.textContent="Générer avec l'IA";btn.disabled=false;}
 }

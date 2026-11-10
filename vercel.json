@@ -28,5 +28,10 @@
       "path": "/api/ping",
       "schedule": "17 20 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 60
+    }
+  }
 }

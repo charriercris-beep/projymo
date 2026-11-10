@@ -34,7 +34,7 @@ Application immobilière avec IA pour la Nouvelle-Calédonie : espaces Vendeur, 
 | Variable | Obligatoire | Description |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | oui | Clé API Anthropic (jamais exposée au navigateur) |
-| `ANTHROPIC_MODEL` | non | Modèle utilisé (défaut : `claude-sonnet-5-5`) |
+| `ANTHROPIC_MODEL` | non | Modèle utilisé (défaut : `claude-opus-5-5`) |
 | `SUPABASE_URL` | non | URL du projet Supabase (déduite automatiquement de la clé anon si absente) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | oui | Clé *anon* Supabase (publique, protégée par la RLS) |
 | `ALLOWED_ORIGIN` | non | Origines CORS autorisées, séparées par des virgules (même origine par défaut) |

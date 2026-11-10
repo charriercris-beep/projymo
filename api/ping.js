@@ -10,7 +10,8 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
   const url = process.env.SUPABASE_URL || urlDepuisCle(key);
-  if (!key || !url) return res.status(200).json({ ok: false, base: 'non configurée' });
+  const ia = process.env.ANTHROPIC_API_KEY ? 'clé configurée' : 'clé absente (ANTHROPIC_API_KEY)'; // jamais la clé elle-même
+  if (!key || !url) return res.status(200).json({ ok: false, base: 'non configurée', ia });
   const t0 = Date.now();
   try {
     const r = await fetch(`${url}/rest/v1/parametres?select=cle&limit=1`, {
@@ -18,8 +19,8 @@ export default async function handler(req, res) {
       signal: AbortSignal.timeout(15000)
     });
     const ok = r.ok;
-    res.status(ok ? 200 : 502).json({ ok, base: ok ? 'active' : 'erreur ' + r.status, ms: Date.now() - t0 });
+    res.status(ok ? 200 : 502).json({ ok, base: ok ? 'active' : 'erreur ' + r.status, ia, ms: Date.now() - t0 });
   } catch (e) {
-    res.status(502).json({ ok: false, base: 'injoignable (projet en pause ?)', ms: Date.now() - t0 });
+    res.status(502).json({ ok: false, base: 'injoignable (projet en pause ?)', ia, ms: Date.now() - t0 });
   }
 }

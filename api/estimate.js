@@ -25,7 +25,7 @@ Réponds UNIQUEMENT en JSON: {"score_global":84,"scores":{"marche":85,"presentat
       ...images.map(i => ({ type: 'image', source: { type: 'base64', media_type: i.mediaType || 'image/jpeg', data: i.data } })),
       { type: 'text', text: prompt }
     ];
-    const parsed = extractJson(await callClaude({ content, max_tokens: 2000 }));
+    const parsed = extractJson(await callClaude({ content, effort: 'medium' }));
     if (!parsed) return res.status(502).json({ error: 'Réponse IA illisible' });
     res.status(200).json(parsed);
   } catch (err) { fail(res, err); }

@@ -564,7 +564,7 @@
       const d = await r.json();
       if (!r.ok || d.error) throw new Error(d.error || 'Erreur');
       out.value = d.annonce;
-    } catch (e) { out.value = ''; alert("La génération d'annonce est momentanément indisponible. Réessayez dans un instant."); }
+    } catch (e) { out.value = ''; if (typeof showToast === 'function') showToast('Rédaction automatique indisponible : ' + e.message); }
     btn.disabled = false;
   }
   // Dépôt de l'annonce à partir de l'estimation : tout ce qui a été saisi est repris
