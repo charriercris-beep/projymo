@@ -688,6 +688,65 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-btn.big{padding:15px 26px;font-size:16px}
 
 /* Bandeau photo + recherche */
+/* Diffusion sur les réseaux (js/social.js) */
+.soc-mod{position:fixed;inset:0;background:rgba(7,25,35,.55);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px}
+.soc-in{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:92vh;overflow:auto;padding:20px}
+.soc-h{display:flex;justify-content:space-between;align-items:center}.soc-h b{font-size:20px;color:var(--ocean)}
+.soc-x{background:none;border:0;font-size:28px;line-height:1;cursor:pointer;color:var(--mid);padding:4px 8px}
+.soc-lead{color:var(--mid);margin:4px 0 14px;font-size:15px}
+.soc-g{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px}
+.soc-cv{width:100%;aspect-ratio:1;border-radius:12px;display:block;margin-bottom:8px;background:var(--warm)}
+.soc-tabs{display:flex;gap:4px;background:var(--cream);border-radius:10px;padding:4px;margin-bottom:8px}
+.soc-tabs button{flex:1;background:none;border:0;border-radius:8px;padding:7px;font:inherit;font-weight:600;color:var(--mid);cursor:pointer}.soc-tabs button.on{background:#fff;color:var(--ocean);box-shadow:0 1px 4px rgba(15,42,56,.12)}
+.soc-p textarea{width:100%;border:1.5px solid var(--line-strong);border-radius:10px;padding:10px;font:inherit;font-size:15px;resize:vertical}
+.soc-acts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.soc-acts a{text-decoration:none}
+.soc-src{font-size:13px;color:var(--mid);margin:10px 0 0}
+@media(max-width:720px){.soc-g{grid-template-columns:1fr}.soc-cv{max-width:340px;margin:0 auto 8px}}
+/* Qualification des prospects (js/prospects.js) */
+#msg-lead:empty{display:none}#msg-lead{padding:10px 14px 0}
+.lead-tri{display:block;width:calc(100% - 20px);margin:8px 10px;background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--gold-dark);font:inherit;font-weight:700;font-size:14px;border-radius:9px;padding:8px;cursor:pointer}
+.lead-tri:hover{border-color:var(--gold)}.lead-tri:disabled{opacity:.7;cursor:wait}
+.lead-cta{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--lagoon-pale);border:1px solid #BFE3DF;border-radius:12px;padding:10px 14px;font-size:14.5px;flex-wrap:wrap}
+.lead-w{display:flex;gap:10px;align-items:center;font-size:14.5px;color:var(--mid);padding:6px 0}
+.lead-w .iap-scan{width:16px;height:16px;border-radius:50%;border:3px solid var(--gold-light);border-top-color:var(--gold);animation:iapSpin .8s linear infinite}
+.lead{border:1px solid var(--line);border-left:5px solid var(--mid);border-radius:12px;padding:10px 14px;background:#fff;font-size:14.5px}
+.lead-chaud{border-left-color:var(--green)}.lead-tiede{border-left-color:#D9A21B}.lead-froid{border-left-color:var(--line-strong)}
+.lead-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lead-b{font-weight:700;color:var(--ocean)}
+.lead-s{flex:1;min-width:80px;max-width:160px;height:8px;border-radius:99px;background:var(--warm);overflow:hidden}.lead-s i{display:block;height:100%;background:var(--gold);border-radius:99px}
+.lead-chaud .lead-s i{background:var(--green)}.lead-tiede .lead-s i{background:#D9A21B}
+.lead-x{margin-left:auto;background:none;border:0;color:var(--gold);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.lead-r{margin:6px 0 0}.lead-a{margin:6px 0 0}
+.lead-f{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.lead-f span{background:var(--cream);border-radius:8px;padding:4px 10px}.lead-f small{display:block;font-size:11.5px;color:var(--mid);text-transform:uppercase;letter-spacing:.04em}
+.lead-rep{margin-top:8px;background:var(--lagoon-pale);border-radius:10px;padding:8px 12px}.lead-rep p{margin:0 0 6px;font-style:italic}
+.lead-n{margin:6px 0 0;font-size:12.5px;color:var(--mid)}
+.lead-p{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;border-radius:99px;padding:1px 7px;text-transform:capitalize;vertical-align:middle}
+.lead-p.chaud{background:#E6F4EA;color:#1E6B3A}.lead-p.tiede{background:#FFF1D6;color:#7A4B00}.lead-p.froid{background:var(--warm);color:var(--mid)}
+@keyframes iapSpin{to{transform:rotate(360deg)}}
+/* Recherche en langage naturel (js/recherche-ia.js) */
+.lp-ai{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--lagoon);border-radius:12px;padding:5px 5px 5px 14px;margin:12px 12px 8px}
+.lp-ai>.i{width:22px;height:22px;color:var(--gold);flex:none}
+.lp-ai input{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:17px;color:var(--dark);padding:10px 0;background:transparent}
+.lp-ai .lp-btn{flex:none}
+.lp-ai-ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;margin:0 12px 4px;color:var(--mid)}
+.lp-ai-ex button{background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--gold-dark);border-radius:99px;padding:3px 11px;font:inherit;font-size:14px;cursor:pointer}
+.lp-ai-ex button:hover{border-color:var(--gold)}
+.lp-ai-or{display:flex;align-items:center;gap:10px;margin:8px 12px 0;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mid)}.lp-ai-or::before,.lp-ai-or::after{content:'';flex:1;height:1px;background:var(--line)}
+.rq-head{background:var(--lagoon-pale);border:1px solid #BFE3DF;border-radius:14px;padding:14px 16px;margin:0 0 18px}
+.rq-q{display:flex;gap:8px;align-items:center;font-weight:600;font-size:17px;color:var(--ocean);flex-wrap:wrap}.rq-q .i{width:20px;height:20px;color:var(--gold)}
+.rq-q em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--gold-dark);background:#fff;border-radius:99px;padding:1px 9px}.rq-q em.wait{color:var(--mid)}
+.rq-cs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.rq-c{background:#fff;border:1px solid var(--gold);color:var(--gold-dark);border-radius:99px;padding:3px 10px;font:inherit;font-size:14px;cursor:pointer}.rq-c:hover{background:var(--gold);color:#fff}
+.rq-none{font-size:14px;color:var(--mid)}
+.rq-acts{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.rq-it{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rq-why{display:flex;flex-wrap:wrap;gap:4px;font-size:12.5px;align-items:center}
+.rq-why span{border-radius:99px;padding:1px 8px}.rq-why .y{background:#E6F4EA;color:#1E6B3A}.rq-why .p{background:#FFF1D6;color:#7A4B00}.rq-why .n{background:var(--warm);color:var(--mid)}
+.rq-pct{font-size:13px;color:var(--ocean);margin-right:2px}
+.lp-btn.sm{padding:8px 14px;font-size:14px}
+.rq-alertes{display:grid;gap:8px;margin:0 0 14px}
+.rq-al{display:flex;gap:10px;align-items:center;background:#FFF7E6;border:1px solid #F2D49B;border-radius:12px;padding:10px 14px}.rq-al .i{color:#B7791F;flex:none}.rq-al span{flex:1}
+@media(max-width:560px){.lp-ai{flex-wrap:wrap;padding:8px}.lp-ai input{flex-basis:calc(100% - 40px);font-size:16px}.lp-ai .lp-btn{width:100%}}
 .lp-hero{position:relative;min-height:540px;display:flex;align-items:center;color:#fff;background:#2B3640 center/cover no-repeat}
 .lp-hero{background-position:center bottom}
 .lp-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(7,45,66,.72) 0%,rgba(7,45,66,.42) 42%,rgba(7,45,66,0) 68%)}
@@ -782,6 +841,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <button type="button" class="lp-stab" role="tab" aria-selected="false" onclick="loginAs('sell');setTimeout(function(){go('depot')},60)">Vendre</button>
         <button type="button" class="lp-stab" role="tab" aria-selected="false" onclick="loginAs('sell');setTimeout(function(){go('valorisation')},60)">Estimer</button>
       </div>
+      <form class="lp-ai" id="lp-ai" role="search" aria-label="Recherche en langage naturel">
+        <svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg>
+        <input type="search" id="lp-ai-q" maxlength="300" autocomplete="off" placeholder="Décrivez ce que vous cherchez, ex. : F3 vue lagon à Nouméa, moins de 40 M, avec parking" aria-label="Décrivez ce que vous cherchez">
+        <button type="submit" class="lp-btn pri">Chercher</button>
+      </form>
+      <div class="lp-ai-ex"><span>Essayez :</span><button type="button" data-rq="Maison avec jardin à Dumbéa pour une famille, max 60 M">Maison avec jardin à Dumbéa</button><button type="button" data-rq="Appartement vue mer avec terrasse à Nouméa sud">Vue mer à Nouméa sud</button><button type="button" data-rq="Studio meublé pour investir, moins de 15 M">Studio pour investir</button></div>
+      <p class="lp-ai-or">ou par critères</p>
       <div class="lp-search">
         <div class="f"><label for="ld-zone-simple">Où ?</label>
           <select id="ld-zone-simple" onchange="buildLandingBiensSimple()">
@@ -815,6 +881,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <div><h2>Annonces récentes</h2><div class="lp-count" id="ld-simple-count"></div></div>
     <button type="button" class="lp-btn sec" onclick="loginAs('buy')">Voir toutes les annonces</button>
   </div>
+  <div class="rq-alertes" id="rq-alertes" hidden></div>
+  <div class="rq-head" id="rq-head" hidden></div>
   <div id="landing-biens-grid"></div>
 </div></section>
 
@@ -1329,6 +1397,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             Messages
             <span id="msg-unread-total" style="float:right;background:var(--gold);color:#fff;border-radius:12px;padding:1px 8px;font-size:11px"></span>
           </div>
+          <button type="button" class="lead-tri" id="lead-tri">Trier par priorité (IA)</button>
           <div id="conv-list"></div>
           <div style="padding:12px 16px">
             <button type="button" class="btn btn-gold btn-full btn-sm" onclick="newConversation()">+ Nouvelle conversation</button>
@@ -1350,6 +1419,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               </div>
               <button type="button" class="btn btn-outline btn-sm" onclick="go('rdv')">RDV</button>
             </div>
+            <div id="msg-lead"></div>
             <div class="msg-body" id="msg-body"></div>
             <div class="msg-input-bar">
               <textarea class="msg-input" id="msg-input" placeholder="Votre message..." rows="1" onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
@@ -1590,6 +1660,29 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         .dpl.open{display:flex;flex-direction:column-reverse}
       }
       @media(prefers-reduced-motion:reduce){.dpl *{animation:none!important;transition:none!important}}
+      /* Lecture des photos par l'IA (js/ia-photos.js) */
+      .iap{margin-top:14px;border:1px solid #BFE3DF;border-radius:12px;padding:14px;background:linear-gradient(180deg,var(--lagoon-pale),#fff)}
+      .iap-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}.iap-top small{display:block;color:var(--mid);font-size:14px;line-height:1.4}
+      .iap-ic{flex:none;width:36px;height:36px;border-radius:10px;background:var(--gold);color:#fff;display:grid;place-items:center}.iap-ic .i{width:20px;height:20px}
+      .iap-tip{font-size:13px;color:var(--mid);margin:10px 0 0}
+      .iap-msg{margin:10px 0 0;font-size:14.5px}.iap-msg.err{color:var(--red)}
+      .iap-wait{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14.5px;color:var(--mid)}
+      .iap-scan{width:18px;height:18px;border-radius:50%;border:3px solid var(--gold-light);border-top-color:var(--gold);animation:iapSpin 0.8s linear infinite;flex:none}
+      @keyframes iapSpin{to{transform:rotate(360deg)}}
+      .iap-res{margin-top:12px;display:grid;gap:10px}
+      .iap-h b{font-size:16px;color:var(--ocean)}.iap-h p{margin:2px 0 0;font-size:14.5px}
+      .iap-blk{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}.iap-blk>b{display:block;margin-bottom:6px;font-size:15px}
+      .iap-blk small{display:block;font-size:14px;color:var(--mid)}.iap-blk .btn{margin-top:8px}
+      .iap-row{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}
+      .iap-row small{display:block;font-size:13.5px;color:var(--mid)}.iap-row .btn{margin-left:auto}
+      .iap-blk .iap-row{border:0;padding:4px 0}
+      .iap-th{width:64px;height:48px;border-radius:6px;overflow:hidden;flex:none;background:var(--warm)}.iap-th img{width:100%;height:100%;object-fit:cover}
+      .iap-q{font-weight:700;color:var(--red)}
+      .iap-chips{display:flex;flex-wrap:wrap;gap:6px}.iap-chips span{font-size:13.5px;border:1px solid var(--gold);color:var(--gold-dark);border-radius:99px;padding:2px 10px}
+      .iap-chips span.on{background:var(--gold);color:#fff}
+      .iap-ok{color:var(--green)!important;font-weight:600;margin-top:6px}
+      .iap-tag{position:absolute;top:4px;left:4px;background:rgba(15,42,56,.78);color:#fff;font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:capitalize;max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .iap-tag.warn{background:var(--accent)}
       </style>
       <div class="dp-wrap">
        <div class="dp-main">
@@ -1648,11 +1741,12 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div id="dp-video-prev" class="dp-video-prev"></div>
             <p id="dp-video-help" class="dp-video-help">Ajoutez au moins 2 photos pour voir l'aperçu de la vidéo.</p>
           </div>
-          <details class="dp-more"><summary>Conseils et vérification de mes photos (facultatif)</summary>
-            <p style="font-size:15px;color:#3B424C;margin:0 0 10px">Photos prises de jour, pièces rangées, à l'horizontale. Les photos d'iPhone (HEIC) s'affichent mieux converties en JPG.</p>
-            <button type="button" class="btn btn-outline btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Faire vérifier mes photos</button>
-            <div id="depot-ia-result" style="margin:12px 0"></div>
-          </details>
+          <div class="iap" id="dp-ia-photos">
+            <div class="iap-top"><span class="iap-ic"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg></span><div><b>L'IA lit vos photos</b><small>Elle reconnaît les pièces, repère l'état et les prestations visibles, choisit la meilleure photo principale et vous dit quoi améliorer.</small></div></div>
+            <button type="button" class="btn btn-sm btn-outline" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Analyser mes photos</button>
+            <div id="depot-ia-result" aria-live="polite"></div>
+            <p class="iap-tip">Conseil : photos de jour, pièces rangées, à l'horizontale. Les photos d'iPhone (HEIC) passent mieux converties en JPG.</p>
+          </div>
           <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(1)">Retour</button><button type="button" class="btn btn-gold" id="dp-photos-next" onclick="goDepotStep(3)">Continuer</button></div>
         </div>
 
@@ -5335,7 +5429,7 @@ async function genDescriptionIA(){
   const notes=v('d-desc');
   const infos=[type, v('d-pieces')?v('d-pieces')+' pièces':'', v('d-chambres')?v('d-chambres')+' chambre(s)':'', etat?'état : '+etat.toLowerCase():'',
     v('d-annee')?'construit en '+v('d-annee'):'', v('d-etage')?'étage '+v('d-etage'):'', v('d-dpe')?'diagnostic énergétique '+v('d-dpe'):'',
-    forts.length?'prestations : '+forts.join(', '):'', notes&&!/^Rédaction en cours/.test(notes)?'notes du vendeur : '+notes:''].filter(Boolean).join(' ; ');
+    forts.length?'prestations : '+forts.join(', '):'', (window.IMMO_PHOTOS_IA&&IMMO_PHOTOS_IA.points_forts.length)?'atouts visibles sur les photos : '+IMMO_PHOTOS_IA.points_forts.join(', '):'', notes&&!/^Rédaction en cours/.test(notes)?'notes du vendeur : '+notes:''].filter(Boolean).join(' ; ');
   const btn=document.getElementById('dp-ia-btn'), msg=document.getElementById('dp-ia-msg'), descEl=document.getElementById('d-desc');
   const dire=(t,c)=>{ if(msg){ msg.textContent=t; msg.className='dp-ia-msg'+(c?' '+c:''); } };
   if(!forts.length && !notes) dire('Astuce : cochez les prestations ci-dessus, la description sera plus juste.');
@@ -9646,6 +9740,10 @@ go('dashboard');
 <script src="js/annonces.js"></script>
 <script src="js/depot.js"></script>
 <script src="js/depot-live.js"></script>
+<script src="js/ia-photos.js"></script>
+<script src="js/recherche-ia.js"></script>
+<script src="js/prospects.js"></script>
+<script src="js/social.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
