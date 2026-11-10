@@ -688,6 +688,27 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-btn.big{padding:15px 26px;font-size:16px}
 
 /* Bandeau photo + recherche */
+/* Qualification des prospects (js/prospects.js) */
+#msg-lead:empty{display:none}#msg-lead{padding:10px 14px 0}
+.lead-tri{display:block;width:calc(100% - 20px);margin:8px 10px;background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--gold-dark);font:inherit;font-weight:700;font-size:14px;border-radius:9px;padding:8px;cursor:pointer}
+.lead-tri:hover{border-color:var(--gold)}.lead-tri:disabled{opacity:.7;cursor:wait}
+.lead-cta{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--lagoon-pale);border:1px solid #BFE3DF;border-radius:12px;padding:10px 14px;font-size:14.5px;flex-wrap:wrap}
+.lead-w{display:flex;gap:10px;align-items:center;font-size:14.5px;color:var(--mid);padding:6px 0}
+.lead-w .iap-scan{width:16px;height:16px;border-radius:50%;border:3px solid var(--gold-light);border-top-color:var(--gold);animation:iapSpin .8s linear infinite}
+.lead{border:1px solid var(--line);border-left:5px solid var(--mid);border-radius:12px;padding:10px 14px;background:#fff;font-size:14.5px}
+.lead-chaud{border-left-color:var(--green)}.lead-tiede{border-left-color:#D9A21B}.lead-froid{border-left-color:var(--line-strong)}
+.lead-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lead-b{font-weight:700;color:var(--ocean)}
+.lead-s{flex:1;min-width:80px;max-width:160px;height:8px;border-radius:99px;background:var(--warm);overflow:hidden}.lead-s i{display:block;height:100%;background:var(--gold);border-radius:99px}
+.lead-chaud .lead-s i{background:var(--green)}.lead-tiede .lead-s i{background:#D9A21B}
+.lead-x{margin-left:auto;background:none;border:0;color:var(--gold);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.lead-r{margin:6px 0 0}.lead-a{margin:6px 0 0}
+.lead-f{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.lead-f span{background:var(--cream);border-radius:8px;padding:4px 10px}.lead-f small{display:block;font-size:11.5px;color:var(--mid);text-transform:uppercase;letter-spacing:.04em}
+.lead-rep{margin-top:8px;background:var(--lagoon-pale);border-radius:10px;padding:8px 12px}.lead-rep p{margin:0 0 6px;font-style:italic}
+.lead-n{margin:6px 0 0;font-size:12.5px;color:var(--mid)}
+.lead-p{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;border-radius:99px;padding:1px 7px;text-transform:capitalize;vertical-align:middle}
+.lead-p.chaud{background:#E6F4EA;color:#1E6B3A}.lead-p.tiede{background:#FFF1D6;color:#7A4B00}.lead-p.froid{background:var(--warm);color:var(--mid)}
+@keyframes iapSpin{to{transform:rotate(360deg)}}
 /* Recherche en langage naturel (js/recherche-ia.js) */
 .lp-ai{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--lagoon);border-radius:12px;padding:5px 5px 5px 14px;margin:12px 12px 8px}
 .lp-ai>.i{width:22px;height:22px;color:var(--gold);flex:none}
@@ -1362,6 +1383,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             Messages
             <span id="msg-unread-total" style="float:right;background:var(--gold);color:#fff;border-radius:12px;padding:1px 8px;font-size:11px"></span>
           </div>
+          <button type="button" class="lead-tri" id="lead-tri">Trier par priorité (IA)</button>
           <div id="conv-list"></div>
           <div style="padding:12px 16px">
             <button type="button" class="btn btn-gold btn-full btn-sm" onclick="newConversation()">+ Nouvelle conversation</button>
@@ -1383,6 +1405,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
               </div>
               <button type="button" class="btn btn-outline btn-sm" onclick="go('rdv')">RDV</button>
             </div>
+            <div id="msg-lead"></div>
             <div class="msg-body" id="msg-body"></div>
             <div class="msg-input-bar">
               <textarea class="msg-input" id="msg-input" placeholder="Votre message..." rows="1" onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
@@ -9705,6 +9728,7 @@ go('dashboard');
 <script src="js/depot-live.js"></script>
 <script src="js/ia-photos.js"></script>
 <script src="js/recherche-ia.js"></script>
+<script src="js/prospects.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
