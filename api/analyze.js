@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   try {
     const text = await callClaude({
-      max_tokens: 1024,
+      effort: 'medium',
       content: [
         { type: 'image', source: { type: 'base64', media_type: mediaType || 'image/jpeg', data: image } },
         { type: 'text', text: `Tu es un expert immobilier en Nouvelle-Calédonie. Analyse cette photo de bien immobilier.

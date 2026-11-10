@@ -1,0 +1,8 @@
+{
+  "name": "immo360-nc",
+  "private": true,
+  "description": "Immo360 NC — site et fonctions serverless (Vercel)",
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.6.0"
+  }
+}

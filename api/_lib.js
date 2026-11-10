@@ -1,6 +1,10 @@
 // Utilitaires partagés des fonctions serverless (le préfixe "_" empêche Vercel d'en faire un endpoint).
 
-export const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5';
+import Anthropic from '@anthropic-ai/sdk';
+
+export const MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-5-5';
+// Modèles qui acceptent la reprise automatique côté serveur en cas de refus (paramètre « fallbacks »)
+const AVEC_REPRISE = ['claude-opus-5-5', 'claude-opus-5', 'claude-fable-5-2', 'claude-fable-5-1', 'claude-sonnet-5-5'];
 const ALLOWED_MEDIA = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const MAX_IMAGE_B64 = 5 * 1024 * 1024; // ~3,7 Mo d'image binaire par photo
 
@@ -51,20 +55,31 @@ export function extractJson(text) {
   return null;
 }
 
-export async function callClaude({ content, max_tokens }) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) { const e = new Error('Clé API manquante côté serveur'); e.status = 500; throw e; }
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: MODEL, max_tokens, messages: [{ role: 'user', content }] })
-  });
-  if (!r.ok) {
-    console.error('Anthropic error', r.status, await r.text().catch(() => ''));
-    const e = new Error('Le service IA est momentanément indisponible'); e.status = 502; throw e;
+// Appel à Claude via le kit officiel (@anthropic-ai/sdk).
+// - Le modèle réfléchit avant de répondre : la réponse contient alors un bloc « thinking » avant le texte.
+//   On assemble donc les blocs de type « text » (l'ancienne version lisait le premier bloc : texte vide).
+// - max_tokens large : la réflexion compte dans la limite ; seul ce qui est généré est facturé.
+// - effort : « low » pour la rédaction, « medium » pour les analyses.
+let client = null;
+export async function callClaude({ content, effort = 'medium' }) {
+  if (!process.env.ANTHROPIC_API_KEY) { const e = new Error('Clé API manquante côté serveur (ANTHROPIC_API_KEY)'); e.status = 500; throw e; }
+  client ||= new Anthropic();
+  const params = { model: MODEL, max_tokens: 16000, output_config: { effort }, messages: [{ role: 'user', content }] };
+  if (AVEC_REPRISE.includes(MODEL)) Object.assign(params, { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' });
+  let r;
+  try {
+    r = AVEC_REPRISE.includes(MODEL) ? await client.beta.messages.create(params) : await client.messages.create(params);
+  } catch (err) {
+    console.error('Anthropic', err?.status, err?.message);
+    let e;
+    if (err instanceof Anthropic.AuthenticationError) e = new Error('Clé API invalide côté serveur');
+    else if (err instanceof Anthropic.RateLimitError) e = new Error('Trop de demandes au service IA, réessayez dans une minute.');
+    else if (err instanceof Anthropic.BadRequestError) e = new Error('Demande refusée par le service IA');
+    else e = new Error('Le service IA est momentanément indisponible');
+    e.status = err instanceof Anthropic.RateLimitError ? 429 : 502; throw e;
   }
-  const data = await r.json();
-  return data.content?.[0]?.text || '';
+  if (r.stop_reason === 'refusal') { const e = new Error('Le service IA n\'a pas pu traiter cette demande.'); e.status = 422; throw e; }
+  return (r.content || []).filter(bk => bk.type === 'text').map(bk => bk.text).join('').trim();
 }
 
 export function fail(res, err) {
