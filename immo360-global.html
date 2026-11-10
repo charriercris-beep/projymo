@@ -1474,6 +1474,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <div class="panel" id="panel-depot">
       <style>
       .dp-wrap{max-width:680px;margin:0 auto}
+      @media(min-width:1000px){.dp-wrap{max-width:1140px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:start}}
       .dp-steps{display:flex;gap:6px;margin-bottom:18px}
       .dp-steps .depot-step{flex:1;align-items:flex-start;gap:6px;cursor:default}
       .dp-steps .depot-step-num{display:none}
@@ -1505,8 +1506,93 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       details.dp-more summary{cursor:pointer;padding:12px 0;font-weight:600}
       details.dp-more[open]{padding-bottom:6px}
       @media(max-width:560px){.dp-tiles{grid-template-columns:repeat(2,1fr)}.dp-row,.dp-row3{grid-template-columns:1fr}}
+      /* Prestations : pastilles à bascule */
+      #panel-depot .dp-chips{gap:8px}
+      #panel-depot .dp-chips label{padding:7px 14px 7px 10px;border-color:var(--line);background:#F7FAFB;transition:background .15s,border-color .15s,transform .1s;user-select:none}
+      #panel-depot .dp-chips label:hover{border-color:var(--gold);background:#fff}
+      #panel-depot .dp-chips label:active{transform:scale(.97)}
+      #panel-depot .dp-chips input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-strong);background:#fff center/12px no-repeat;flex:none;cursor:pointer;transition:.15s}
+      #panel-depot .dp-chips input:checked{background-color:#fff;border-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.5l4.5-5' fill='none' stroke='%230A7A84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+      #panel-depot .dp-chips input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+      #panel-depot .dp-chips label:has(input:checked){background:var(--gold);border-color:var(--gold);color:#fff;font-weight:600}
+      .dp-pg{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px 6px;margin:0 0 10px}
+      .dp-pg>b{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mid)}
+      /* Aperçu en direct (js/depot-live.js) */
+      .dpl{position:sticky;top:76px}
+      @media(min-width:1000px){.dpl-body{max-height:calc(100vh - 92px);overflow:auto;scrollbar-width:thin}}
+      .dpl-bar{display:none}
+      .dpl-body{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(15,42,56,.08)}
+      .dpl-score{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+      .dpl-ring{position:relative;width:84px;height:84px;flex:none}
+      .dpl svg{width:100%;height:100%;transform:rotate(-90deg)}
+      .dpl-trk{fill:none;stroke:var(--warm);stroke-width:8}
+      .dpl-arc{fill:none;stroke:var(--gold);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.2,.8,.2,1),stroke .4s}
+      .dpl[data-niv="3"] .dpl-arc{stroke:var(--lagoon)}.dpl[data-niv="4"] .dpl-arc{stroke:var(--green)}
+      .dpl-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:21px;color:var(--ocean)}
+      .dpl-gain{position:absolute;right:-6px;top:-4px;font-style:normal;font-weight:700;font-size:14px;color:var(--green);background:#E6F4EA;border-radius:99px;padding:1px 7px;opacity:0;pointer-events:none}
+      .dpl-gain.on{animation:dplGain 1.1s ease-out}
+      @keyframes dplGain{0%{opacity:0;transform:translateY(6px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0;transform:translateY(-12px)}}
+      .dpl-fx{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
+      .dpl-fx i{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--lagoon);opacity:0}
+      .dpl-fx i:nth-child(3n){background:var(--accent)}.dpl-fx i:nth-child(3n+1){background:#F2C14E}
+      .dpl-fx.on i{animation:dplBurst .9s ease-out var(--d) forwards}
+      @keyframes dplBurst{0%{opacity:1;transform:rotate(var(--a)) translateX(0)}100%{opacity:0;transform:rotate(var(--a)) translateX(58px)}}
+      .dpl-niv{font-weight:700;font-size:18px;color:var(--ocean)}
+      .dpl-niv-t{margin:2px 0 0;font-size:14px;color:var(--mid);line-height:1.4}
+      .dpl-h{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mid);margin:0 0 8px}
+      .dpl-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+      .dpl-ph{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,#C4EEEA,#7FD3CE 55%,#35C3BC)}
+      .dpl-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:dplIn .4s ease}
+      .dpl-ph0{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--ocean);font-size:14px;font-weight:600}
+      .dpl-ph0 .i{width:30px;height:30px;opacity:.7}
+      .dpl-tr,.dpl-dpe,.dpl-nb{position:absolute;font-size:12px;font-weight:700;border-radius:6px;padding:2px 8px}
+      .dpl-tr{top:10px;left:10px;background:#fff;color:var(--ocean)}
+      .dpl-dpe{top:10px;right:10px;color:#fff;background:#9ecf2d}.dpe-A{background:#2d7f2d}.dpe-B{background:#5aaf2d}.dpe-D{background:#c99a10}.dpe-E{background:#d9701a}.dpe-F{background:#e04020}
+      .dpl-nb{bottom:10px;right:10px;background:rgba(15,42,56,.75);color:#fff}
+      .dpl-b{padding:12px 14px 14px}
+      .dpl-prix{font-size:22px;font-weight:700;color:var(--dark);min-height:30px}.dpl-prix small{font-size:14px;font-weight:400;color:var(--mid)}
+      .dpl-t{font-weight:600;font-size:16px;line-height:1.3;margin:2px 0}
+      .dpl-l{font-size:14px;color:var(--mid);margin-bottom:8px}
+      .dpl-facts,.dpl-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+      .dpl-facts span{font-size:13px;font-weight:600;background:var(--lagoon-pale);color:var(--gold-dark);border-radius:6px;padding:2px 8px}
+      .dpl-chips span{font-size:12.5px;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--dark);animation:dplIn .3s ease}
+      .dpl-chips .plus{background:var(--warm);border-color:var(--warm);font-weight:700}
+      .dpl-d{font-size:14px;color:#3B424C;line-height:1.5;margin:0;white-space:pre-line}
+      .dpl-sk{display:block;height:12px;border-radius:6px;margin:6px 0;background:linear-gradient(90deg,var(--warm) 25%,#F3F7F8 50%,var(--warm) 75%);background-size:200% 100%;animation:dplSk 1.6s infinite linear;position:relative}
+      .dpl-sk em{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-style:normal;font-size:11px;color:var(--mid);font-weight:600;white-space:nowrap}
+      .dpl-facts .dpl-sk,.dpl-chips .dpl-sk{flex:none}
+      .dpl-prix .dpl-sk{height:18px}
+      @keyframes dplSk{0%{background-position:100% 0}100%{background-position:-100% 0}}
+      @keyframes dplIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+      .dpl-flash{animation:dplFlash 1s ease}
+      @keyframes dplFlash{0%{background:#FFF1C9}100%{background:transparent}}
+      .dpl-next{margin-top:14px}
+      .dpl-next ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+      .dpl-next button,.dpl-next li>span{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:#F7FAFB;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:14.5px;color:var(--dark);cursor:pointer}
+      .dpl-next li>span{cursor:default;color:var(--mid)}
+      .dpl-next button:hover{border-color:var(--gold);background:#fff}
+      .dpl-next b{flex:none;font-size:13px;color:var(--green);background:#E6F4EA;border-radius:99px;padding:1px 7px}
+      .dpl-next small{margin-left:auto;font-size:12px;color:var(--mid);white-space:nowrap}
+      .dpl-more{font-size:13px;color:var(--mid);margin:6px 0 0}
+      .dpl-done{margin:0;font-weight:600;color:var(--green)}
+      @media(max-width:999px){
+        .dp-main{padding-bottom:84px}
+        .dpl{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:60}
+        .dpl-bar{display:flex;align-items:center;gap:12px;width:100%;background:#fff;border:0;border-top:1px solid var(--line);box-shadow:0 -6px 20px rgba(15,42,56,.10);padding:10px 16px;font:inherit;color:var(--dark);cursor:pointer;text-align:left}
+        .dpl-bar.pop{animation:dplPop .5s ease}
+        @keyframes dplPop{40%{background:var(--lagoon-pale)}}
+        .dpl-mini{width:40px;height:40px;flex:none}.dpl-mini .dpl-trk,.dpl-mini .dpl-arc{stroke-width:10}
+        .dpl-bar-t{flex:1;font-size:15px}.dpl-bar-t b{font-size:18px;color:var(--ocean)}
+        .dpl-bar-a{font-weight:700;color:var(--gold);font-size:15px}
+        .dpl-body{display:none;border-radius:16px 16px 0 0;max-height:72vh;overflow:auto;border-bottom:0}
+        .dpl.open .dpl-body{display:block}
+        .dpl.open .dpl-bar{border-radius:0}
+        .dpl.open{display:flex;flex-direction:column-reverse}
+      }
+      @media(prefers-reduced-motion:reduce){.dpl *{animation:none!important;transition:none!important}}
       </style>
       <div class="dp-wrap">
+       <div class="dp-main">
         <div class="dp-steps" aria-label="Étapes">
           <div class="depot-step active" id="dstep-1"><div class="bar"></div><div class="depot-step-num">1</div><div class="depot-step-lbl">Le bien</div></div>
           <div class="depot-step" id="dstep-2"><div class="bar"></div><div class="depot-step-num">2</div><div class="depot-step-lbl">Photos</div></div>
@@ -1653,6 +1739,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <button type="button" class="btn btn-outline btn-full" id="btn-voir-annonce" style="display:none;margin-top:8px" onclick="ouvrirMonAnnonce()">Voir mon annonce</button>
           <div class="dp-nav" style="margin-top:10px"><button type="button" class="btn btn-outline" onclick="goDepotStep(4)">Retour</button><span></span></div>
         </div>
+       </div>
+       <aside class="dpl" id="dp-live" aria-label="Votre annonce en direct"></aside>
       </div>
     </div>
 
@@ -9557,6 +9645,7 @@ go('dashboard');
 <script src="js/visite.js"></script>
 <script src="js/annonces.js"></script>
 <script src="js/depot.js"></script>
+<script src="js/depot-live.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
