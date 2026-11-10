@@ -68,13 +68,23 @@ export async function callClaude({ content, effort = 'medium' }) {
   if (AVEC_REPRISE.includes(MODEL)) Object.assign(params, { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' });
   let r;
   try {
-    r = AVEC_REPRISE.includes(MODEL) ? await client.beta.messages.create(params) : await client.messages.create(params);
+    try {
+      r = AVEC_REPRISE.includes(MODEL) ? await client.beta.messages.create(params) : await client.messages.create(params);
+    } catch (err) {
+      // Option de reprise refusée (compte ou modèle sans cette fonction) : on relance la demande sans elle
+      if (!(err instanceof Anthropic.BadRequestError) || !params.fallbacks) throw err;
+      console.warn('Reprise automatique refusée, relance sans :', err.message);
+      const { betas, fallbacks, ...simple } = params;
+      r = await client.messages.create(simple);
+    }
   } catch (err) {
     console.error('Anthropic', err?.status, err?.message);
     let e;
     if (err instanceof Anthropic.AuthenticationError) e = new Error('Clé API invalide côté serveur');
     else if (err instanceof Anthropic.RateLimitError) e = new Error('Trop de demandes au service IA, réessayez dans une minute.');
-    else if (err instanceof Anthropic.BadRequestError) e = new Error('Demande refusée par le service IA');
+    else if (err instanceof Anthropic.NotFoundError) e = new Error('Modèle IA introuvable pour ce compte (' + MODEL + ') : vérifiez ANTHROPIC_MODEL');
+    else if (err instanceof Anthropic.PermissionDeniedError) e = new Error('Accès refusé par le service IA (crédit ou droits du compte Anthropic)');
+    else if (err instanceof Anthropic.BadRequestError) e = new Error('Demande refusée par le service IA : ' + String(err.error?.error?.message || err.message || '').slice(0, 160));
     else e = new Error('Le service IA est momentanément indisponible');
     e.status = err instanceof Anthropic.RateLimitError ? 429 : 502; throw e;
   }
