@@ -1590,6 +1590,29 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         .dpl.open{display:flex;flex-direction:column-reverse}
       }
       @media(prefers-reduced-motion:reduce){.dpl *{animation:none!important;transition:none!important}}
+      /* Lecture des photos par l'IA (js/ia-photos.js) */
+      .iap{margin-top:14px;border:1px solid #BFE3DF;border-radius:12px;padding:14px;background:linear-gradient(180deg,var(--lagoon-pale),#fff)}
+      .iap-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}.iap-top small{display:block;color:var(--mid);font-size:14px;line-height:1.4}
+      .iap-ic{flex:none;width:36px;height:36px;border-radius:10px;background:var(--gold);color:#fff;display:grid;place-items:center}.iap-ic .i{width:20px;height:20px}
+      .iap-tip{font-size:13px;color:var(--mid);margin:10px 0 0}
+      .iap-msg{margin:10px 0 0;font-size:14.5px}.iap-msg.err{color:var(--red)}
+      .iap-wait{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14.5px;color:var(--mid)}
+      .iap-scan{width:18px;height:18px;border-radius:50%;border:3px solid var(--gold-light);border-top-color:var(--gold);animation:iapSpin 0.8s linear infinite;flex:none}
+      @keyframes iapSpin{to{transform:rotate(360deg)}}
+      .iap-res{margin-top:12px;display:grid;gap:10px}
+      .iap-h b{font-size:16px;color:var(--ocean)}.iap-h p{margin:2px 0 0;font-size:14.5px}
+      .iap-blk{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}.iap-blk>b{display:block;margin-bottom:6px;font-size:15px}
+      .iap-blk small{display:block;font-size:14px;color:var(--mid)}.iap-blk .btn{margin-top:8px}
+      .iap-row{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}
+      .iap-row small{display:block;font-size:13.5px;color:var(--mid)}.iap-row .btn{margin-left:auto}
+      .iap-blk .iap-row{border:0;padding:4px 0}
+      .iap-th{width:64px;height:48px;border-radius:6px;overflow:hidden;flex:none;background:var(--warm)}.iap-th img{width:100%;height:100%;object-fit:cover}
+      .iap-q{font-weight:700;color:var(--red)}
+      .iap-chips{display:flex;flex-wrap:wrap;gap:6px}.iap-chips span{font-size:13.5px;border:1px solid var(--gold);color:var(--gold-dark);border-radius:99px;padding:2px 10px}
+      .iap-chips span.on{background:var(--gold);color:#fff}
+      .iap-ok{color:var(--green)!important;font-weight:600;margin-top:6px}
+      .iap-tag{position:absolute;top:4px;left:4px;background:rgba(15,42,56,.78);color:#fff;font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:capitalize;max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .iap-tag.warn{background:var(--accent)}
       </style>
       <div class="dp-wrap">
        <div class="dp-main">
@@ -1648,11 +1671,12 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div id="dp-video-prev" class="dp-video-prev"></div>
             <p id="dp-video-help" class="dp-video-help">Ajoutez au moins 2 photos pour voir l'aperçu de la vidéo.</p>
           </div>
-          <details class="dp-more"><summary>Conseils et vérification de mes photos (facultatif)</summary>
-            <p style="font-size:15px;color:#3B424C;margin:0 0 10px">Photos prises de jour, pièces rangées, à l'horizontale. Les photos d'iPhone (HEIC) s'affichent mieux converties en JPG.</p>
-            <button type="button" class="btn btn-outline btn-full" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Faire vérifier mes photos</button>
-            <div id="depot-ia-result" style="margin:12px 0"></div>
-          </details>
+          <div class="iap" id="dp-ia-photos">
+            <div class="iap-top"><span class="iap-ic"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg></span><div><b>L'IA lit vos photos</b><small>Elle reconnaît les pièces, repère l'état et les prestations visibles, choisit la meilleure photo principale et vous dit quoi améliorer.</small></div></div>
+            <button type="button" class="btn btn-sm btn-outline" onclick="analyzeDepotPhotos()" id="btn-analyze-depot">Analyser mes photos</button>
+            <div id="depot-ia-result" aria-live="polite"></div>
+            <p class="iap-tip">Conseil : photos de jour, pièces rangées, à l'horizontale. Les photos d'iPhone (HEIC) passent mieux converties en JPG.</p>
+          </div>
           <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(1)">Retour</button><button type="button" class="btn btn-gold" id="dp-photos-next" onclick="goDepotStep(3)">Continuer</button></div>
         </div>
 
@@ -5335,7 +5359,7 @@ async function genDescriptionIA(){
   const notes=v('d-desc');
   const infos=[type, v('d-pieces')?v('d-pieces')+' pièces':'', v('d-chambres')?v('d-chambres')+' chambre(s)':'', etat?'état : '+etat.toLowerCase():'',
     v('d-annee')?'construit en '+v('d-annee'):'', v('d-etage')?'étage '+v('d-etage'):'', v('d-dpe')?'diagnostic énergétique '+v('d-dpe'):'',
-    forts.length?'prestations : '+forts.join(', '):'', notes&&!/^Rédaction en cours/.test(notes)?'notes du vendeur : '+notes:''].filter(Boolean).join(' ; ');
+    forts.length?'prestations : '+forts.join(', '):'', (window.IMMO_PHOTOS_IA&&IMMO_PHOTOS_IA.points_forts.length)?'atouts visibles sur les photos : '+IMMO_PHOTOS_IA.points_forts.join(', '):'', notes&&!/^Rédaction en cours/.test(notes)?'notes du vendeur : '+notes:''].filter(Boolean).join(' ; ');
   const btn=document.getElementById('dp-ia-btn'), msg=document.getElementById('dp-ia-msg'), descEl=document.getElementById('d-desc');
   const dire=(t,c)=>{ if(msg){ msg.textContent=t; msg.className='dp-ia-msg'+(c?' '+c:''); } };
   if(!forts.length && !notes) dire('Astuce : cochez les prestations ci-dessus, la description sera plus juste.');
@@ -9646,6 +9670,7 @@ go('dashboard');
 <script src="js/annonces.js"></script>
 <script src="js/depot.js"></script>
 <script src="js/depot-live.js"></script>
+<script src="js/ia-photos.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
