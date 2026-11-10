@@ -541,6 +541,33 @@ alter table public.evenements enable row level security;
 drop policy if exists evt_insert on public.evenements;
 create policy evt_insert on public.evenements for insert to anon, authenticated with check (true);  -- contrôlé par les contraintes ci-dessus
 -- (aucune politique de lecture : seul admin_kpis les compte)
+-- Visiteurs uniques : identifiant ALÉATOIRE propre au navigateur (renouvelé au plus tard après 13 mois),
+-- sans lien avec un compte ni une adresse IP ; sert uniquement à compter les visiteurs distincts.
+alter table public.evenements add column if not exists visiteur text check (visiteur is null or visiteur ~ '^[a-z0-9]{8,24}$');
+-- Provenance de la visite, zone (déduite du fuseau horaire de l'appareil), nouveau visiteur, et un détail
+-- non personnel : commune ou type recherché (listes du site), numéro de l'annonce consultée.
+alter table public.evenements add column if not exists source text check (source is null or source in ('direct', 'google', 'facebook', 'instagram', 'autre_reseau', 'autre_site'));
+alter table public.evenements add column if not exists zone text check (zone is null or zone in ('nc', 'europe', 'autre'));
+alter table public.evenements add column if not exists nouveau boolean;
+alter table public.evenements add column if not exists detail text check (detail is null or (length(detail) <= 60 and detail !~ '[<>\x00-\x1f]'));
+create index if not exists evenements_visiteur_idx on public.evenements (created_at, visiteur) where nom = 'visite';
+-- Présence en direct : chaque onglet ouvert signale sa présence toutes les minutes (identifiant aléatoire
+-- de l'onglet) ; une présence de plus de 2 minutes ne compte plus, au-delà de 15 minutes elle est effacée.
+create table if not exists public.presence (
+  sid      text primary key check (sid ~ '^[a-z0-9]{8,24}$'),
+  appareil text check (appareil is null or appareil in ('mobile', 'ordinateur')),
+  vu       timestamptz not null default now()
+);
+alter table public.presence enable row level security; -- aucune politique : accès uniquement par les fonctions ci-dessous
+create or replace function public.presence_ping(p_sid text, p_appareil text default null) returns void language plpgsql security definer set search_path = public as $$
+begin
+  if p_sid is null or p_sid !~ '^[a-z0-9]{8,24}$' then return; end if;
+  insert into public.presence (sid, appareil, vu) values (p_sid, case when p_appareil in ('mobile', 'ordinateur') then p_appareil end, now())
+    on conflict (sid) do update set vu = now();
+  delete from public.presence where vu < now() - interval '15 minutes';
+end $$;
+revoke execute on function public.presence_ping(text, text) from public;
+grant execute on function public.presence_ping(text, text) to anon, authenticated;
 
 -- Tableau de bord : tous les indicateurs en un appel (données agrégées, aucune donnée personnelle)
 create or replace function public.admin_kpis() returns jsonb language plpgsql stable security definer set search_path = public as $$
@@ -596,10 +623,39 @@ begin
       'n30', coalesce((select jsonb_object_agg(nom, n) from (select nom, count(*) n from public.evenements where created_at > now() - interval '30 days' group by 1) x), '{}'),
       'mobile30', (select count(*) from public.evenements where nom = 'visite' and appareil = 'mobile' and created_at > now() - interval '30 days'),
       'visites_semaine', (select jsonb_agg(jsonb_build_object('s', to_char(s, 'YYYY-MM-DD'), 'n', (select count(*) from public.evenements e where e.nom = 'visite' and date_trunc('week', e.created_at) = s)) order by s) from semaines)),
+    'audience', jsonb_build_object(
+      'en_ligne', (select count(*) from public.presence where vu > now() - interval '2 minutes'),
+      'en_ligne_mobile', (select count(*) from public.presence where vu > now() - interval '2 minutes' and appareil = 'mobile'),
+      'uniques_jour', (select count(distinct visiteur) from public.evenements where nom = 'visite' and created_at >= (date_trunc('day', now() at time zone 'Pacific/Noumea') at time zone 'Pacific/Noumea')),
+      'uniques_7j', (select count(distinct visiteur) from public.evenements where nom = 'visite' and created_at > now() - interval '7 days'),
+      'uniques_30j', (select count(distinct visiteur) from public.evenements where nom = 'visite' and created_at > now() - interval '30 days'),
+      'visites_jour', (select count(*) from public.evenements where nom = 'visite' and created_at >= (date_trunc('day', now() at time zone 'Pacific/Noumea') at time zone 'Pacific/Noumea')),
+      'nouveaux_30j', (select count(distinct visiteur) from public.evenements where nom = 'visite' and nouveau and created_at > now() - interval '30 days'),
+      'sources', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select source k, count(*) n from public.evenements where nom = 'visite' and source is not null and created_at > now() - interval '30 days' group by 1) x), '[]'),
+      'zones', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select zone k, count(distinct visiteur) n from public.evenements where nom = 'visite' and zone is not null and created_at > now() - interval '30 days' group by 1) x), '[]'),
+      'heures', (select jsonb_agg(jsonb_build_object('h', h, 'n', (select count(*) from public.evenements e where e.nom = 'visite' and e.created_at > now() - interval '30 days'
+                   and extract(hour from e.created_at at time zone 'Pacific/Noumea') = h)) order by h) from generate_series(0, 23) h),
+      'communes', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select split_part(detail, '|', 2) k, count(*) n from public.evenements where nom = 'recherche' and split_part(detail, '|', 2) <> '' and created_at > now() - interval '30 days' group by 1 order by 2 desc limit 10) x), '[]'),
+      'types', coalesce((select jsonb_agg(jsonb_build_object('k', k, 'n', n) order by n desc) from (select split_part(detail, '|', 1) k, count(*) n from public.evenements where nom = 'recherche' and split_part(detail, '|', 1) <> '' and created_at > now() - interval '30 days' group by 1 order by 2 desc limit 8) x), '[]'),
+      'fiches', coalesce((select jsonb_agg(jsonb_build_object('k', coalesce(r.data->>'titre', 'Annonce de démonstration n° ' || x.k), 'n', x.n) order by x.n desc)
+                   from (select detail k, count(*) n from public.evenements where nom = 'fiche_vue' and detail ~ '^[0-9]{1,20}$' and created_at > now() - interval '30 days' group by 1 order by 2 desc limit 10) x
+                   left join public.records r on r.collection = 'annonce' and r.id = x.k), '[]'),
+      'par_jour', (select jsonb_agg(jsonb_build_object('s', to_char(j, 'YYYY-MM-DD'), 'n', (select count(distinct visiteur) from public.evenements e where e.nom = 'visite'
+                     and (e.created_at at time zone 'Pacific/Noumea')::date = j)) order by j)
+                   from generate_series((now() at time zone 'Pacific/Noumea')::date - 29, (now() at time zone 'Pacific/Noumea')::date, interval '1 day') g(d), lateral (select g.d::date as j) jj)),
     'calcule_le', now()) into r;
   return r;
 end $$;
 
+-- Nombre de personnes en ligne (rafraîchi toutes les 30 secondes dans le back office)
+create or replace function public.admin_en_ligne() returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  perform public.admin_garde();
+  return jsonb_build_object('n', (select count(*) from public.presence where vu > now() - interval '2 minutes'),
+                            'mobile', (select count(*) from public.presence where vu > now() - interval '2 minutes' and appareil = 'mobile'));
+end $$;
+revoke execute on function public.admin_en_ligne() from public, anon;
+grant execute on function public.admin_en_ligne() to authenticated;
 revoke execute on function public.admin_garde() from public, anon;
 revoke execute on function public.admin_kpis() from public, anon;
 grant execute on function public.admin_kpis() to authenticated;

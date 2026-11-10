@@ -22,6 +22,7 @@
       <ul><li>Vos documents (pièces d'identité, avis d'imposition…) ne sont visibles que par vous et les professionnels que vous choisissez.</li>
       <li>Aucune donnée n'est revendue.</li>
       <li>Vos favoris et brouillons restent sur votre appareil.</li>
+      <li>Mesure d'audience anonyme : pour compter les visiteurs, un identifiant tiré au hasard est enregistré sur votre appareil (renouvelé au plus tard après 13 mois). Il n'est lié ni à votre identité, ni à votre compte, ni à votre adresse IP, et ne sert qu'à produire des statistiques globales (nombre de visiteurs, provenance, pages consultées). Pour l'effacer, videz les données du site dans votre navigateur.</li>
       <li>Vous pouvez demander la consultation, la correction ou la suppression de vos données à tout moment depuis la page Contact.</li></ul>`],
     contact: ['Contact', `
       <p>Une question, un problème avec une annonce, une demande sur vos données ?</p>

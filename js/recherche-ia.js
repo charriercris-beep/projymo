@@ -133,7 +133,7 @@
     courant = { q, c: lectureLocale(q), source: 'attente' };
     afficher();
     $('section-annonces')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (window.IMMO_EVT) IMMO_EVT.track('recherche');
+    if (window.IMMO_EVT) IMMO_EVT.track('recherche', (courant.c.types[0] || '') + '|' + (courant.c.zones[0] || ''));
     const moi = courant;
     try {
       const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 20000);

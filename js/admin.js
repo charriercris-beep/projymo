@@ -66,15 +66,38 @@
   const n0 = v => (Number(v) || 0).toLocaleString('fr-FR');
   const tile = (v, l, sub) => `<div class="k"><b>${v}</b><span>${E(l)}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
   // Histogramme hebdomadaire (une seule série : pas de légende, le titre la nomme ; survol et tableau des valeurs)
-  function colonnes(titre, serie) {
-    const max = Math.max(1, ...serie.map(x => x.n)), H = 120;
-    const lab = s => new Date(s + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+  function colonnes(titre, serie, o) {
+    o = Object.assign({ sous: '12 dernières semaines', tip: 'Semaine du ', th: 'Semaine du', pas: 3, lab: s => new Date(s + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) }, o || {});
+    const max = Math.max(1, ...serie.map(x => x.n)), H = 120, lab = o.lab;
     const last = serie.length - 1, iMax = serie.reduce((a, x, i) => x.n > serie[a].n ? i : a, 0);
-    return `<figure class="ch"><figcaption>${E(titre)} <small>12 dernières semaines</small></figcaption>
+    return `<figure class="ch"><figcaption>${E(titre)} <small>${E(o.sous)}</small></figcaption>
       <div class="cols" role="img" aria-label="${E(titre)} : ${serie.map(x => lab(x.s) + ' ' + x.n).join(', ')}">
-        ${serie.map((x, i) => `<div class="col" tabindex="0" data-tip="Semaine du ${lab(x.s)} : ${x.n}"><span class="v">${i === last || (i === iMax && x.n) ? x.n : ''}</span><i style="height:${Math.round(x.n / max * H)}px"></i><em>${i % 3 === 0 || i === last ? lab(x.s) : ''}</em></div>`).join('')}
+        ${serie.map((x, i) => `<div class="col" tabindex="0" data-tip="${E(o.tip)}${lab(x.s)} : ${x.n}"><span class="v">${i === last || (i === iMax && x.n) ? x.n : ''}</span><i style="height:${Math.round(x.n / max * H)}px"></i><em>${i % o.pas === 0 || i === last ? lab(x.s) : ''}</em></div>`).join('')}
       </div>
-      <details class="tv"><summary>Voir les chiffres</summary><table><tr><th>Semaine du</th><th>Nombre</th></tr>${serie.map(x => `<tr><td>${lab(x.s)}</td><td>${x.n}</td></tr>`).join('')}</table></details></figure>`;
+      <details class="tv"><summary>Voir les chiffres</summary><table><tr><th>${E(o.th)}</th><th>Nombre</th></tr>${serie.map(x => `<tr><td>${lab(x.s)}</td><td>${x.n}</td></tr>`).join('')}</table></details></figure>`;
+  }
+  const SOURCES = { direct: 'Accès direct (lien, favori, adresse tapée)', google: 'Moteurs de recherche (Google…)', facebook: 'Facebook', instagram: 'Instagram', autre_reseau: 'Autres réseaux (WhatsApp, TikTok…)', autre_site: 'Autres sites' };
+  const ZONES = { nc: 'Nouvelle-Calédonie', europe: 'Métropole et Europe', autre: 'Ailleurs' };
+  let direct = null;
+  function audience(a) {
+    if (!a) return '<p class="note">Indicateurs d\'audience indisponibles : mettez à jour la base (supabase/schema.sql).</p>';
+    const jour = s => new Date(s + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    return `<h3>Audience</h3><div class="ks">
+        <div class="k live"><b id="k-live">${n0(a.en_ligne)}</b><span><i class="dot" aria-hidden="true"></i>en ligne maintenant</span><small id="k-live-m">${a.en_ligne ? n0(a.en_ligne_mobile) + ' sur téléphone · ' : ''}actualisé toutes les 30 s</small></div>
+        ${tile(n0(a.uniques_jour), 'visiteurs uniques aujourd\'hui', n0(a.visites_jour) + ' visite(s)')}${tile(n0(a.uniques_7j), 'visiteurs uniques sur 7 jours')}
+        ${tile(n0(a.uniques_30j), 'visiteurs uniques sur 30 jours', a.uniques_30j ? n0(a.nouveaux_30j) + ' nouveaux · ' + n0(Math.max(0, a.uniques_30j - a.nouveaux_30j)) + ' revenus' : '')}</div>
+      <div class="g2">${colonnes('Visiteurs uniques par jour', a.par_jour || [], { sous: '30 derniers jours', tip: '', th: 'Jour', pas: 5, lab: jour })}${barres('D\'où viennent les visiteurs', a.sources, x => SOURCES[x] || x)}</div>
+      <div class="g2">${colonnes('Heures d\'affluence', (a.heures || []).map(x => ({ s: x.h, n: x.n })), { sous: 'visites des 30 derniers jours, heure de Nouméa', tip: '', th: 'Heure', pas: 3, lab: h => h + ' h' })}${barres('Où sont les visiteurs', a.zones, x => ZONES[x] || x)}</div>
+      <div class="g2">${barres('Communes les plus recherchées', a.communes)}${barres('Types de biens recherchés', a.types)}</div>
+      <div class="g2">${barres('Annonces les plus consultées', a.fiches)}<div></div></div>
+      <p class="note">Mesure anonyme : identifiant tiré au hasard par navigateur, sans compte ni adresse IP. Zone déduite du fuseau horaire de l'appareil.</p>`;
+  }
+  function suivreDirect() {
+    clearInterval(direct);
+    direct = setInterval(async () => {
+      const b = document.getElementById('k-live'); if (!b) { clearInterval(direct); return; }
+      try { const r = await rpc('admin_en_ligne'); b.textContent = n0(r.n); const m = document.getElementById('k-live-m'); if (m) m.textContent = (r.n ? n0(r.mobile) + ' sur téléphone · ' : '') + 'actualisé toutes les 30 s'; } catch (_) { /* nouvel essai dans 30 s */ }
+    }, 30000);
   }
   // Répartition (barres horizontales, valeur au bout de la barre)
   function barres(titre, l, nom, extra) {
@@ -99,6 +122,7 @@
     const taux = R.devis_total ? Math.round(R.devis_avec_reponse / R.devis_total * 100) + ' %' : '—';
     const optNom = o => (T && T.OPTIONS[o] && T.OPTIONS[o].nom) || o;
     el.innerHTML = `<div class="kh"><div><h2>Tableau de bord</h2><p class="sub">Calculé le ${new Date(k.calcule_le).toLocaleString('fr-FR')}. Chiffres agrégés, sans données personnelles.</p></div><button type="button" class="btn out sm" id="k-re">Actualiser</button></div>
+      ${audience(k.audience)}
       <h3>Annonces</h3><div class="ks">${tile(n0(A.en_ligne), 'en ligne')}${tile(n0(A.nouvelles_7j), 'nouvelles sur 7 jours', n0(A.nouvelles_30j) + ' sur 30 jours')}
         ${tile(A.prix_m2_median ? n0(A.prix_m2_median) + ' F' : '—', 'prix au m² médian affiché', 'repère ISEE 2025 (vendus, appartements) : 280 000 F')}
         ${tile(n0(A.sans_photo), 'en ligne sans photo')}${tile(n0(A.avec_video), 'avec visite vidéo')}${tile(n0(A.moderees), 'retirées par la modération')}</div>
@@ -121,6 +145,7 @@
         ${tile(n0(M.a_regler) + ' F', 'commandes à régler')}${tile(n0(M.essais), 'essais gratuits en cours')}</div>
       <div class="g2">${barres('Options vendues (depuis le début)', M.top_options, optNom, x => ` <small>· ${n0(x.m)} F</small>`)}${barres('Formules pros en cours', M.formules, x => { const [r, f] = String(x).split(' · '); return (ROLES[r] || r) + ' · ' + (((T && T.plans(r).find(p => p.id === f)) || {}).nom || f); })}</div>`;
     $('k-re').onclick = () => vKpi(el);
+    if (k.audience) suivreDirect();
   }
 
   /* ---------- Professionnels ---------- */
