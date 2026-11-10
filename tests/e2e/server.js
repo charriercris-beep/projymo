@@ -9,7 +9,7 @@ const lit = v => v === null || v === undefined ? 'null' : "'" + (typeof v === 'o
 function sqlFor(q) {
   // Appel de fonction (supabase.rpc) : fonctions du back office et lecture des paramètres uniquement
   if (q.op === 'rpc') {
-    if (!/^admin_[a-z_]+$/.test(q.fn || '')) throw new Error('fonction non autorisée');
+    if (!/^(admin_[a-z_]+|presence_ping)$/.test(q.fn || '')) throw new Error('fonction non autorisée');
     const args = Object.entries(q.args || {}).map(([k, v]) => { if (!IDENT.test(k)) throw new Error('argument'); return `${k} => ${lit(v)}`; }).join(', ');
     return `select coalesce(public.${q.fn}(${args})::text, 'null');`;
   }
