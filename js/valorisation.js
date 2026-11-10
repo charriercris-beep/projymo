@@ -168,6 +168,25 @@
     return { pm2, brut, etat, presta, ext, V: brut * (1 + etat) * (1 + presta) + ext };
   }
   function baseValue() { return parts().V; }
+  // Détail du prix, facteur par facteur (la somme des montants redonne exactement la valeur en l'état)
+  function facteurs() {
+    const pt = parts(), out = [];
+    DIAG.forEach(d => { const v = st.diag[d.key], pct = (COND[d.key] || {})[v] || 0; if (pct) out.push({ label: d.label + ' : ' + diagLabel(d.key, v), pct, montant: pt.brut * pct }); });
+    const ag = ageCoef(st.bien.annee); if (ag) out.push({ label: 'Construit en ' + st.bien.annee, pct: ag, montant: pt.brut * ag });
+    const pr = PRESTA.filter(x => prestaOk(x) && st.presta.has(x.id)), brutP = pr.reduce((a, x) => a + x.up, 0);
+    pr.forEach(x => { const pct = brutP ? x.up * pt.presta / brutP : 0; out.push({ label: x.label, pct, montant: pt.brut * (1 + pt.etat) * pct, plafond: brutP > PRESTA_MAX }); });
+    if (pt.ext) out.push({ label: 'Extérieurs (' + [st.bien.terrasse ? 'terrasse ' + st.bien.terrasse + ' m²' : '', st.bien.jardin ? 'jardin ' + st.bien.jardin + ' m²' : ''].filter(Boolean).join(', ') + ')', pct: 0, montant: pt.ext });
+    return out;
+  }
+  // Ce qui ferait monter le prix : travaux rentables, puis informations qui resserrent la fourchette
+  function leviers() {
+    const l = POSTES.map(posteCalc).filter(p => (p.statut === 'utile' || p.statut === 'conseille') && p.gain - p.cout > 0)
+      .sort((a, b) => (b.gain - b.cout) - (a.gain - a.cout)).slice(0, 3)
+      .map(p => ({ txt: p.label, d: '+' + money(p.gain) + ' de valeur pour ' + money(p.cout) + ' de travaux' }));
+    const reste = DIAG.length - diagCount();
+    if (reste) l.push({ txt: 'Décrire encore ' + reste + ' élément' + (reste > 1 ? 's' : '') + ' de l\'état', d: 'la fourchette se resserre jusqu\'à ±5 %' });
+    return l;
+  }
   // État déduit (transmis à l'IA et utilisé pour la rédaction)
   function etatDeduit() { const c = condCoef(); return c <= -0.08 ? 'a_renover' : c < 0 ? 'correct' : c < 0.05 ? 'bon' : 'tres_bon'; }
   // Estimation possible seulement quand le vendeur a décrit son bien (type, surface, quartier, état)
@@ -271,6 +290,14 @@
 .val-bar.cur .lbl{font-weight:700}
 .val-ai h4{margin:12px 0 4px;font-size:12px;color:var(--mid)}
 .val-ai ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6}
+.val-why .card-title{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.val-why .vw-ia{background:var(--lagoon-pale);border-radius:10px;padding:10px 12px;margin:0 0 12px;font-size:15px;line-height:1.55}.val-why .vw-ia small{display:block;font-size:12px;font-weight:700;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.vw-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(60px,1fr) auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14.5px}
+.vw-row:first-of-type{border-top:0}.vw-row .b{height:10px;border-radius:99px;background:var(--warm);position:relative;overflow:hidden}.vw-row .b i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:var(--green)}
+.vw-row.neg .b i{background:var(--red)}.vw-row.base .b i{background:var(--gold)}.vw-row .m{text-align:right;white-space:nowrap;font-weight:600}.vw-row .m small{display:block;font-weight:400;color:var(--mid);font-size:12px}
+.vw-row.neg .m{color:var(--red)}.vw-row.tot{border-top:2px solid var(--dark);font-weight:700}.vw-row.tot .m{font-size:17px}
+.vw-lev{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:6px}.vw-lev li{background:var(--cream);border-radius:8px;padding:7px 10px;font-size:14.5px}.vw-lev small{display:block;color:var(--mid);font-size:13px}
+.vw-h{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mid);margin:14px 0 0}
 .val-note{font-size:14px;color:var(--dark);background:var(--lagoon-pale);border-radius:8px;padding:9px 12px;margin-top:10px;line-height:1.5}
 .val-mod{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px}
 .val-mod>div{background:#fff;border-radius:14px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:22px}
@@ -313,6 +340,7 @@
     </aside>
     <section>
       <div class="val-hero" id="val-hero"></div>
+      <div class="card val-why" id="val-why" hidden></div>
       <div class="card"><div class="card-title">1. L'état actuel de votre bien</div>
         <p class="val-lead">Décrivez chaque élément : un travail n'apporte de la valeur que s'il corrige un vrai défaut. <span id="val-diag-n"></span></p>
         <div class="val-diag" id="val-diag"></div>
@@ -412,6 +440,23 @@
 
   }
 
+  function renderWhy(pt, V, spread) {
+    const box = $('val-why'); if (!box) return;
+    box.hidden = false;
+    const f = facteurs(), max = Math.max(pt.brut, ...f.map(x => Math.abs(x.montant))) || 1;
+    const pc = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 1000) / 10).toLocaleString('fr-FR') + ' %';
+    const row = (cls, lbl, m, sub) => `<div class="vw-row ${cls}"><span>${E(lbl)}</span><span class="b"><i style="width:${Math.max(2, Math.abs(m) / max * 100).toFixed(1)}%"></i></span><span class="m">${m < 0 ? '−' : cls === 'base' || cls === 'tot' ? '' : '+'}${money(Math.abs(m))}${sub ? `<small>${E(sub)}</small>` : ''}</span></div>`;
+    const ia = st.ai && st.ai.explication_prix;
+    const lev = leviers();
+    box.innerHTML = `<div class="card-title"><span>Pourquoi ce prix ?</span><small style="font-weight:400;color:var(--mid);font-size:13px">fourchette ±${Math.round(spread * 100)} %</small></div>
+      ${ia ? `<div class="vw-ia"><small>Expliqué par l'IA</small>${E(ia)}</div>` : ''}
+      ${row('base', 'Prix du secteur : ' + money(pt.pm2) + '/m² × ' + st.bien.surface + ' m²', pt.brut, estOf(st.bien.quartier, st.bien.type).source === 'observatoire' ? 'annonces Immo360 du secteur' : 'ventes 2025 (ISEE)')}
+      ${f.map(x => row(x.montant < 0 ? 'neg' : 'pos', x.label, x.montant, x.pct ? pc(x.pct) + (x.plafond ? ' (plafonné)' : '') : '')).join('')}
+      ${row('tot', 'Valeur en l\'état', V, '')}
+      ${f.length ? '' : '<p class="val-wait" style="margin:8px 0 0">Décrivez l\'état et les prestations : chaque élément ajustera le prix ici, avec son montant.</p>'}
+      ${lev.length ? `<p class="vw-h">Pour faire monter le prix</p><ul class="vw-lev">${lev.map(l => `<li>${E(l.txt)}<small>${E(l.d)}</small></li>`).join('')}</ul>` : ''}`;
+  }
+
   function renderAll(keepInputs) {
     persist();
     renderDiag(keepInputs);
@@ -428,6 +473,7 @@
       $('val-devis-btn').disabled = true;
       ['val-ai-btn', 'val-ann-btn', 'val-depot'].forEach(id => { if ($(id)) $(id).disabled = true; });
       renderAI();
+      if ($('val-why')) $('val-why').hidden = true;
       return;
     }
     ['val-ai-btn', 'val-ann-btn', 'val-depot'].forEach(id => { if ($(id)) $(id).disabled = false; });
@@ -447,6 +493,7 @@
       <div class="val-kpi gold"><small>Prix après travaux</small><b>${money(cur.apres)}</b><em>${cur.list.length ? 'Coût des travaux : ' + money(cur.cout) + ' · environ ' + cur.jours + ' j' : diagCount() ? 'Choisissez les travaux utiles ci-dessous' : 'Décrivez d\'abord l\'état du bien'}</em></div>
       <div class="val-kpi ${cur.gainNet >= 0 ? 'pos' : 'neg'}"><small>Gain net estimé</small><b>${cur.list.length ? (cur.gainNet >= 0 ? '+' : '−') + money(Math.abs(cur.gainNet)) : '—'}</b><em>${cur.list.length ? 'Rendement des travaux : ' + (cur.roi * 100).toFixed(0) + ' %' : (souTxt || '&nbsp;')}</em></div>`;
 
+    renderWhy(pt, base.V, spread);
     // préréglages
     const matches = id => { const ids = id === 'etat' ? new Set() : idsUpTo(id); return ids.size === st.selected.size && [...ids].every(x => st.selected.has(x)); };
     $('val-presets').innerHTML = [{ id: 'etat', label: 'En l\'état' }, ...GRADES.map(g => ({ id: g.id, label: g.short }))]
@@ -527,7 +574,8 @@
           diagnostic: Object.fromEntries(DIAG.filter(d => st.diag[d.key] !== undefined).map(d => [d.key, st.diag[d.key]])),
           prestations: PRESTA.filter(x => prestaOk(x) && st.presta.has(x.id)).map(x => x.label).concat(b.terrasse ? ['terrasse ' + b.terrasse + ' m²'] : [], b.jardin ? ['jardin ' + b.jardin + ' m²'] : []),
           postes: POSTES.map(posteCalc).map(p => ({ id: p.id, label: p.label, grade: p.grade, cout: p.cout, gain: p.statut === 'inconnu' ? null : p.gain, statut: p.statut })),
-          images: st.photos.map(p => ({ data: p.data, mediaType: p.mediaType }))
+          images: st.photos.map(p => ({ data: p.data, mediaType: p.mediaType })),
+          facteurs: [{ label: 'Prix du secteur ' + Math.round(pm2Of(b.quartier, b.type)) + ' F/m² × ' + b.surface + ' m²', montant: Math.round(parts().brut) }].concat(facteurs().map(x => ({ label: x.label, montant: Math.round(x.montant) }))).concat([{ label: 'Valeur en l\'état', montant: Math.round(baseValue()) }])
         })
       });
       const d = await r.json();
@@ -631,10 +679,10 @@ ${b.terrasse ? `<tr><td>Terrasse ou balcon</td><td>${E(b.terrasse)} m²</td></tr
 ${presta.length ? `<tr><td>Prestations</td><td>${presta.join(', ')}</td></tr>` : ''}</table>
 <div class="big"><div><span>Valeur estimée en l'état</span><b>${money(r1(base.V))}</b><span>Fourchette ${money(r1(base.V * (1 - spread)))} – ${money(r1(base.V * (1 + spread)))}</span></div>
 ${cur.list.length ? `<div><span>Après les travaux retenus</span><b>${money(r1(cur.apres))}</b><span>Travaux ${money(cur.cout)} · gain net ${cur.gainNet >= 0 ? '+' : '−'}${money(Math.abs(cur.gainNet))}</span></div>` : ''}</div>
+${st.ai && st.ai.explication_prix ? `<h2>En résumé</h2><p>${E(st.ai.explication_prix)}</p>` : ''}
 <h2>Comment ce prix est calculé</h2><table>
 <tr><td>Prix au m² du secteur</td><td class="n">${money(pt.pm2)}/m² × ${E(b.surface)} m² = ${money(pt.brut)}</td></tr>
-<tr><td>État du bien${b.annee ? ' et année' : ''}</td><td class="n">${pc(pt.etat)}</td></tr>
-${pt.presta ? `<tr><td>Prestations</td><td class="n">${pc(pt.presta)}</td></tr>` : ''}${pt.ext ? `<tr><td>Extérieurs (surface pondérée)</td><td class="n">+${money(pt.ext)}</td></tr>` : ''}
+${facteurs().map(x => `<tr><td>${E(x.label)}${x.pct ? ' <span class="small">(' + pc(x.pct) + ')</span>' : ''}</td><td class="n">${x.montant < 0 ? '−' : '+'}${money(Math.abs(x.montant))}</td></tr>`).join('')}
 <tr><th>Valeur en l'état</th><th class="n">${money(base.V)}</th></tr></table>
 ${diagRows ? `<h2>État constaté</h2><table>${diagRows}</table>` : ''}
 ${diagCount() ? `<h2>Scénarios de préparation</h2><table><tr><th>Scénario</th><th class="n">Coût des travaux</th><th class="n">Valeur</th><th class="n">Gain net</th></tr>
