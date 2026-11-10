@@ -617,6 +617,9 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 /* Dépôt : arrivée depuis l'estimation */
 .dp-from-est{background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--dark);border-radius:10px;padding:10px 14px;font-size:15px;margin:0 0 14px}
 .dp-est-link{font-size:15px;color:var(--mid);margin:-4px 0 14px}
+/* Dépôt : prestations groupées, message de la rédaction IA */
+.dp-pg{margin:6px 0 10px}.dp-pg>b{display:block;font-size:14px;color:var(--ocean);margin-bottom:6px}
+.dp-ia-msg{margin:8px 0 0;font-size:14.5px;min-height:1em}.dp-ia-msg.err{color:var(--red)}.dp-ia-msg.ok{color:var(--green)}
 /* Dépôt : visite vidéo intégrée */
 .dp-video{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--lagoon-pale)}
 .dp-video-h{display:flex!important;gap:10px;align-items:flex-start;font-weight:400!important;font-size:15px!important;cursor:pointer;margin:0 0 10px!important}
@@ -1586,17 +1589,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <p class="dp-help">Nous avons préparé un titre ; modifiez-le si vous voulez.</p>
           <div class="dp-err" role="alert"></div>
           <div class="dp-f"><label for="d-titre">Titre de l'annonce</label><input type="text" id="d-titre" maxlength="100" placeholder="ex. Appartement F4 lumineux, vue mer — Baie des Citrons"></div>
-          <div class="dp-f"><label for="d-desc">Description</label>
-            <textarea id="d-desc" rows="6" placeholder="Ce qui rend votre bien agréable à vivre : luminosité, vue, quartier, rénovations…"></textarea>
-            <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" onclick="genDescriptionIA()">Rédiger une proposition pour moi</button></div>
-          <div class="dp-f"><label>Points forts</label>
-            <div class="dp-chips">
-              <label><input type="checkbox" id="df-vue-mer">Vue mer</label><label><input type="checkbox" id="df-vue-lagon">Vue lagon</label><label><input type="checkbox" id="df-vue-deg">Vue dégagée</label>
-              <label><input type="checkbox" id="df-piscine">Piscine</label><label><input type="checkbox" id="df-jardin">Jardin</label><label><input type="checkbox" id="df-terrasse">Terrasse</label>
-              <label><input type="checkbox" id="df-garage">Garage</label><label><input type="checkbox" id="df-parking">Parking</label><label><input type="checkbox" id="df-clim">Climatisation</label>
-              <label><input type="checkbox" id="df-ascenseur">Ascenseur</label><label><input type="checkbox" id="df-gardien">Gardien</label><label><input type="checkbox" id="df-meuble">Meublé</label>
-              <label><input type="checkbox" id="df-solaire">Solaire</label><label><input type="checkbox" id="df-jacuzzi">Jacuzzi</label><label><input type="checkbox" id="df-domotique">Domotique</label><label><input type="checkbox" id="df-digicode">Digicode</label>
-            </div></div>
+          <div class="dp-f"><label>Prestations et points forts <span style="font-weight:400;color:var(--mid)">(cochez tout ce qui s'applique : l'annonce et la description s'en servent)</span></label>
+            <div class="dp-pg"><b>Vue et situation</b><div class="dp-chips"><label><input type="checkbox" id="df-vue-mer">Vue mer</label><label><input type="checkbox" id="df-vue-lagon">Vue lagon</label><label><input type="checkbox" id="df-vue-deg">Vue dégagée</label><label><input type="checkbox" id="df-plage">Plage à pied</label><label><input type="checkbox" id="df-calme">Quartier calme</label><label><input type="checkbox" id="df-commerces">Commerces à pied</label><label><input type="checkbox" id="df-ecoles">Écoles à proximité</label></div></div>
+            <div class="dp-pg"><b>Extérieurs</b><div class="dp-chips"><label><input type="checkbox" id="df-terrasse">Terrasse</label><label><input type="checkbox" id="df-balcon">Balcon</label><label><input type="checkbox" id="df-jardin">Jardin</label><label><input type="checkbox" id="df-piscine">Piscine</label><label><input type="checkbox" id="df-piscine-res">Piscine de la résidence</label><label><input type="checkbox" id="df-jacuzzi">Spa / jacuzzi</label><label><input type="checkbox" id="df-pool-house">Pool house / faré</label><label><input type="checkbox" id="df-dependance">Studio indépendant</label></div></div>
+            <div class="dp-pg"><b>Stationnement</b><div class="dp-chips"><label><input type="checkbox" id="df-garage">Garage fermé</label><label><input type="checkbox" id="df-parking-secu">Parking sécurisé</label><label><input type="checkbox" id="df-parking">Place de parking</label><label><input type="checkbox" id="df-carport">Carport</label></div></div>
+            <div class="dp-pg"><b>Confort</b><div class="dp-chips"><label><input type="checkbox" id="df-clim">Climatisation</label><label><input type="checkbox" id="df-cuisine-eq">Cuisine équipée</label><label><input type="checkbox" id="df-solaire">Chauffe-eau / panneaux solaires</label><label><input type="checkbox" id="df-dressing">Dressing</label><label><input type="checkbox" id="df-buanderie">Buanderie / cellier</label><label><input type="checkbox" id="df-cave">Cave / local de rangement</label><label><input type="checkbox" id="df-meuble">Meublé</label><label><input type="checkbox" id="df-domotique">Domotique</label></div></div>
+            <div class="dp-pg"><b>Sécurité et accès</b><div class="dp-chips"><label><input type="checkbox" id="df-gardien">Résidence sécurisée / gardien</label><label><input type="checkbox" id="df-digicode">Digicode / interphone</label><label><input type="checkbox" id="df-alarme">Alarme</label><label><input type="checkbox" id="df-ascenseur">Ascenseur</label><label><input type="checkbox" id="df-plainpied">Plain-pied / accès facile</label></div></div>
+          </div>
           <details class="dp-more"><summary>Plus de détails (facultatif)</summary>
             <div class="dp-row">
               <div class="dp-f"><label for="d-etat">État général</label><select id="d-etat"><option value="">Non précisé</option><option value="neuf">Neuf / récent</option><option value="excellent">Excellent état</option><option value="bon">Bon état</option><option value="moyen">État moyen</option><option value="travaux">À rénover</option></select></div>
@@ -1609,6 +1608,10 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="dp-f"><label for="d-adresse">Adresse <span style="font-weight:400;color:var(--mid)">(jamais affichée publiquement)</span></label><input type="text" id="d-adresse"></div>
             <div class="dp-f"><label for="d-ref">Votre référence</label><input type="text" id="d-ref" placeholder="ex. APPT-2026-001"></div>
           </details>
+          <div class="dp-f"><label for="d-desc">Description</label>
+            <textarea id="d-desc" rows="7" placeholder="Ce qui rend votre bien agréable à vivre : luminosité, vue, quartier, rénovations…"></textarea>
+            <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" id="dp-ia-btn" onclick="genDescriptionIA()">Rédiger la description à partir de mes choix</button>
+            <p class="dp-ia-msg" id="dp-ia-msg" role="status" aria-live="polite"></p></div>
           <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(3)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePresentation()">Continuer</button></div>
         </div>
 
@@ -5236,38 +5239,35 @@ function updateDepotEstim(){
 }
 
 async function genDescriptionIA(){
-  const titre=document.getElementById('d-titre')?.value||'Bien immobilier';
-  const surface=document.getElementById('d-surface')?.value||'';
-  const type=document.getElementById('d-type')?.value||'';
-  const ville=document.getElementById('d-ville')?.value||'Nouméa';
-  const quartier=document.getElementById('d-quartier')?.value||'';
-  const etat=document.getElementById('d-etat')?.value||'';
-  // Ce que le vendeur a réellement saisi : pièces, chambres, état, points forts cochés, notes déjà écrites
   const v=id=>(document.getElementById(id)?.value||'').trim();
+  const titre=v('d-titre')||'Bien immobilier', surface=v('d-surface'), type=v('d-type'), ville=v('d-ville'), quartier=v('d-quartier');
+  const etat=document.getElementById('d-etat')?.selectedOptions?.[0]?.value ? document.getElementById('d-etat').selectedOptions[0].textContent : '';
+  // Ce que le vendeur a réellement saisi : pièces, chambres, état, année, étage, toutes les prestations cochées, notes déjà écrites
   const forts=[...document.querySelectorAll('#panel-depot input[id^="df-"]:checked')].map(c=>(c.closest('label')?.textContent||'').trim()).filter(Boolean);
-  const infos=[type, v('d-pieces')?v('d-pieces')+' pièces':'', v('d-chambres')?v('d-chambres')+' chambre(s)':'', etat?'état : '+etat:'',
-    forts.length?'points forts : '+forts.join(', '):'', v('d-desc')&&!/^Rédaction en cours/.test(v('d-desc'))?'notes du vendeur : '+v('d-desc'):''].filter(Boolean).join(' ; ');
-  const prixSaisi=parseInt(v('d-prix'))||0;
-  const btn=document.querySelector('[onclick="genDescriptionIA()"]');
-  if(btn){btn.textContent="⏳ Génération...";btn.disabled=true;}
-  const descEl=document.getElementById('d-desc');
-  const avantIA=descEl?descEl.value:'';
-  if(descEl) descEl.value='Rédaction en cours…';
+  const notes=v('d-desc');
+  const infos=[type, v('d-pieces')?v('d-pieces')+' pièces':'', v('d-chambres')?v('d-chambres')+' chambre(s)':'', etat?'état : '+etat.toLowerCase():'',
+    v('d-annee')?'construit en '+v('d-annee'):'', v('d-etage')?'étage '+v('d-etage'):'', v('d-dpe')?'diagnostic énergétique '+v('d-dpe'):'',
+    forts.length?'prestations : '+forts.join(', '):'', notes&&!/^Rédaction en cours/.test(notes)?'notes du vendeur : '+notes:''].filter(Boolean).join(' ; ');
+  const btn=document.getElementById('dp-ia-btn'), msg=document.getElementById('dp-ia-msg'), descEl=document.getElementById('d-desc');
+  const dire=(t,c)=>{ if(msg){ msg.textContent=t; msg.className='dp-ia-msg'+(c?' '+c:''); } };
+  if(!forts.length && !notes) dire('Astuce : cochez les prestations ci-dessus, la description sera plus juste.');
+  if(btn){btn.disabled=true;btn.textContent='Rédaction en cours… (10 à 20 secondes)';}
+  const avant=descEl?descEl.value:'';
   try {
     const r=await fetch('/api/generate-annonce',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({titre,surface,prix:prixSaisi,desc:infos,ton:'Familial & chaleureux',
-        plateforme:'Multi-plateformes',devise:'F',pays:'NC',ville:quartier?quartier+', '+ville:ville})
+      body:JSON.stringify({titre,surface,prix:parseInt(v('d-prix'))||0,desc:infos,ton:'Familial & chaleureux',
+        plateforme:'Multi-plateformes',devise:'F',pays:'Nouvelle-Calédonie',ville:[quartier&&quartier!=='Autre'?quartier:'',ville].filter(Boolean).join(', ')})
     });
-    const d=await r.json();
-    if(!r.ok || d.error || !d.annonce) throw new Error(d.error || 'Réponse vide du service IA');
+    let d={}; try{ d=await r.json(); }catch(_){ d={error:'réponse illisible du serveur ('+r.status+')'}; }
+    if(!r.ok || d.error || !d.annonce) throw new Error(d.error || 'réponse vide du service IA');
     if(descEl) descEl.value=d.annonce;
+    dire('Description rédigée : relisez-la et modifiez-la si besoin.','ok');
   } catch(e){
-    // on rend le texte d'avant et on explique (avant : le champ s'effaçait sans message)
-    if(descEl) descEl.value=avantIA;
-    if(typeof showToast==='function') showToast('Rédaction automatique indisponible : '+e.message);
+    if(descEl) descEl.value=avant; // le texte d'avant est conservé
+    dire('La rédaction automatique n\'a pas abouti : '+e.message,'err');
   }
-  if(btn){btn.textContent="Générer avec l'IA";btn.disabled=false;}
+  if(btn){btn.disabled=false;btn.textContent='Rédiger la description à partir de mes choix';}
 }
 
 function buildDepotPreview(){
@@ -5326,17 +5326,8 @@ async function publierAnnonce(){
   btn.innerHTML='⏳ Publication en cours...';btn.disabled=true;
 
   // Construire l'objet bien
-  const features=[];
-  const fMap={
-    'df-vue-mer':'Vue mer','df-vue-lagon':'Vue lagon','df-vue-deg':'Vue dégagée',
-    'df-piscine':'Piscine','df-jacuzzi':'Jacuzzi','df-garage':'Garage',
-    'df-parking':'Parking','df-terrasse':'Terrasse','df-jardin':'Jardin',
-    'df-ascenseur':'Ascenseur','df-gardien':'Gardien','df-domotique':'Domotique',
-    'df-solaire':'Solaire','df-meuble':'Meublé','df-clim':'Climatisation','df-digicode':'Digicode'
-  };
-  Object.entries(fMap).forEach(([id,val])=>{
-    if(document.getElementById(id)?.checked) features.push(val);
-  });
+  // Points forts : toutes les prestations cochées (libellés affichés)
+  const features=[...document.querySelectorAll('#panel-depot input[id^="df-"]:checked')].map(c=>(c.closest('label')?.textContent||'').trim()).filter(Boolean);
 
   const bien = {
     titre: document.getElementById('d-titre')?.value,

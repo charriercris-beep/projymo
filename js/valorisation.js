@@ -569,7 +569,9 @@
   }
   // Dépôt de l'annonce à partir de l'estimation : tout ce qui a été saisi est repris
   const TYPE_DEPOT = { appartement: 'Appartement', maison: 'Maison', villa: 'Villa', studio: 'Studio' };
-  const PRESTA_DEPOT = { vue_mer: 'df-vue-mer', vue_degagee: 'df-vue-deg', piscine: 'df-piscine', piscine_res: 'df-piscine', spa: 'df-jacuzzi', garage: 'df-garage', parking: 'df-parking', parking_secu: 'df-parking', ascenseur: 'df-ascenseur', securise: 'df-gardien', solaire: 'df-solaire' };
+  const PRESTA_DEPOT = { vue_mer: 'df-vue-mer', vue_degagee: 'df-vue-deg', plage: 'df-plage', piscine: 'df-piscine', piscine_res: 'df-piscine-res', spa: 'df-jacuzzi', pool_house: 'df-pool-house',
+    garage: 'df-garage', parking_secu: 'df-parking-secu', parking: 'df-parking', carport: 'df-carport', securise: 'df-gardien', ascenseur: 'df-ascenseur', alarme: 'df-alarme',
+    dependance: 'df-dependance', solaire: 'df-solaire', buanderie: 'df-buanderie', dressing: 'df-dressing', cave: 'df-cave' };
   function toDepot() {
     if (!ready()) return;
     const cur = compute(st.selected), b = st.bien, set = (id, v) => { const e = $(id); if (e) e.value = v; };
