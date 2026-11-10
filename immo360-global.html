@@ -688,6 +688,30 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-btn.big{padding:15px 26px;font-size:16px}
 
 /* Bandeau photo + recherche */
+/* Recherche en langage naturel (js/recherche-ia.js) */
+.lp-ai{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--lagoon);border-radius:12px;padding:5px 5px 5px 14px;margin:12px 12px 8px}
+.lp-ai>.i{width:22px;height:22px;color:var(--gold);flex:none}
+.lp-ai input{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:17px;color:var(--dark);padding:10px 0;background:transparent}
+.lp-ai .lp-btn{flex:none}
+.lp-ai-ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;margin:0 12px 4px;color:var(--mid)}
+.lp-ai-ex button{background:var(--lagoon-pale);border:1px solid #BFE3DF;color:var(--gold-dark);border-radius:99px;padding:3px 11px;font:inherit;font-size:14px;cursor:pointer}
+.lp-ai-ex button:hover{border-color:var(--gold)}
+.lp-ai-or{display:flex;align-items:center;gap:10px;margin:8px 12px 0;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mid)}.lp-ai-or::before,.lp-ai-or::after{content:'';flex:1;height:1px;background:var(--line)}
+.rq-head{background:var(--lagoon-pale);border:1px solid #BFE3DF;border-radius:14px;padding:14px 16px;margin:0 0 18px}
+.rq-q{display:flex;gap:8px;align-items:center;font-weight:600;font-size:17px;color:var(--ocean);flex-wrap:wrap}.rq-q .i{width:20px;height:20px;color:var(--gold)}
+.rq-q em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--gold-dark);background:#fff;border-radius:99px;padding:1px 9px}.rq-q em.wait{color:var(--mid)}
+.rq-cs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.rq-c{background:#fff;border:1px solid var(--gold);color:var(--gold-dark);border-radius:99px;padding:3px 10px;font:inherit;font-size:14px;cursor:pointer}.rq-c:hover{background:var(--gold);color:#fff}
+.rq-none{font-size:14px;color:var(--mid)}
+.rq-acts{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.rq-it{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rq-why{display:flex;flex-wrap:wrap;gap:4px;font-size:12.5px;align-items:center}
+.rq-why span{border-radius:99px;padding:1px 8px}.rq-why .y{background:#E6F4EA;color:#1E6B3A}.rq-why .p{background:#FFF1D6;color:#7A4B00}.rq-why .n{background:var(--warm);color:var(--mid)}
+.rq-pct{font-size:13px;color:var(--ocean);margin-right:2px}
+.lp-btn.sm{padding:8px 14px;font-size:14px}
+.rq-alertes{display:grid;gap:8px;margin:0 0 14px}
+.rq-al{display:flex;gap:10px;align-items:center;background:#FFF7E6;border:1px solid #F2D49B;border-radius:12px;padding:10px 14px}.rq-al .i{color:#B7791F;flex:none}.rq-al span{flex:1}
+@media(max-width:560px){.lp-ai{flex-wrap:wrap;padding:8px}.lp-ai input{flex-basis:calc(100% - 40px);font-size:16px}.lp-ai .lp-btn{width:100%}}
 .lp-hero{position:relative;min-height:540px;display:flex;align-items:center;color:#fff;background:#2B3640 center/cover no-repeat}
 .lp-hero{background-position:center bottom}
 .lp-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(7,45,66,.72) 0%,rgba(7,45,66,.42) 42%,rgba(7,45,66,0) 68%)}
@@ -782,6 +806,13 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <button type="button" class="lp-stab" role="tab" aria-selected="false" onclick="loginAs('sell');setTimeout(function(){go('depot')},60)">Vendre</button>
         <button type="button" class="lp-stab" role="tab" aria-selected="false" onclick="loginAs('sell');setTimeout(function(){go('valorisation')},60)">Estimer</button>
       </div>
+      <form class="lp-ai" id="lp-ai" role="search" aria-label="Recherche en langage naturel">
+        <svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg>
+        <input type="search" id="lp-ai-q" maxlength="300" autocomplete="off" placeholder="Décrivez ce que vous cherchez, ex. : F3 vue lagon à Nouméa, moins de 40 M, avec parking" aria-label="Décrivez ce que vous cherchez">
+        <button type="submit" class="lp-btn pri">Chercher</button>
+      </form>
+      <div class="lp-ai-ex"><span>Essayez :</span><button type="button" data-rq="Maison avec jardin à Dumbéa pour une famille, max 60 M">Maison avec jardin à Dumbéa</button><button type="button" data-rq="Appartement vue mer avec terrasse à Nouméa sud">Vue mer à Nouméa sud</button><button type="button" data-rq="Studio meublé pour investir, moins de 15 M">Studio pour investir</button></div>
+      <p class="lp-ai-or">ou par critères</p>
       <div class="lp-search">
         <div class="f"><label for="ld-zone-simple">Où ?</label>
           <select id="ld-zone-simple" onchange="buildLandingBiensSimple()">
@@ -815,6 +846,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
     <div><h2>Annonces récentes</h2><div class="lp-count" id="ld-simple-count"></div></div>
     <button type="button" class="lp-btn sec" onclick="loginAs('buy')">Voir toutes les annonces</button>
   </div>
+  <div class="rq-alertes" id="rq-alertes" hidden></div>
+  <div class="rq-head" id="rq-head" hidden></div>
   <div id="landing-biens-grid"></div>
 </div></section>
 
@@ -9671,6 +9704,7 @@ go('dashboard');
 <script src="js/depot.js"></script>
 <script src="js/depot-live.js"></script>
 <script src="js/ia-photos.js"></script>
+<script src="js/recherche-ia.js"></script>
 <script src="js/artisan.js"></script>
 <script src="js/banquier.js"></script>
 <script src="js/notaire.js"></script>
