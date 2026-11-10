@@ -103,6 +103,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   ok('aucune donnée personnelle dans le journal (colonnes)', sql(`select string_agg(column_name, ',' order by ordinal_position) from information_schema.columns where table_schema = 'public' and table_name = 'evenements'`) === 'id,nom,profil,appareil,created_at,visiteur,source,zone,nouveau,detail');
   ok('visite : identifiant aléatoire, provenance, zone, nouveau visiteur', /^[a-z0-9]{12}\|direct\|(nc|europe|autre)\|(t|true)$/.test(sql(`select visiteur || '|' || source || '|' || zone || '|' || nouveau from public.evenements where nom = 'visite'`)), sql(`select visiteur || '|' || source || '|' || zone || '|' || nouveau from public.evenements where nom = 'visite'`));
   ok('fiche vue : numéro de l\'annonce', sql(`select detail from public.evenements where nom = 'fiche_vue'`) === String(await vis.evaluate(() => BIENS_DATA[0].id)));
+  ok('présence : page, zone, provenance, profil', /^(accueil|fiche)\|(nc|europe|autre)\|direct\|visiteur$/.test(sql(`select page || '|' || zone || '|' || source || '|' || profil from public.presence order by vu desc limit 1`)), sql(`select page || '|' || zone || '|' || source || '|' || profil from public.presence order by vu desc limit 1`));
   ok('présence en direct enregistrée', Number(sql(`select count(*) from public.presence where vu > now() - interval '2 minutes'`)) >= 1);
   ok('présence illisible depuis le site', (await v.evaluate(async id => fetch('/__db', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ op: 'rpc', fn: 'admin_en_ligne', uid: id }) }).then(r => r.json()), U['vendeur@test.nc'].id)).error !== undefined);
   await vis.reload(); await wait(1500);
@@ -111,6 +112,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   ok('le journal n\'est pas lisible depuis le site', Array.isArray(lu.data) && lu.data.length === 0, JSON.stringify(lu).slice(0, 80));
   await a.click('[data-t="kpi"]'); await wait(1200);
   const kt2 = (await a.innerText('#sec')).replace(/\s+/g, ' ');
+  ok('liste des visiteurs en ligne', (await a.locator('#k-live-l .live-t tbody tr').count()) >= 1 && /Accueil|Fiche/.test(await a.innerText('#k-live-l')), (await a.innerText('#k-live-l')).slice(0, 120).replace(/\s+/g, ' '));
   ok('tableau de bord : audience (en ligne, visiteurs uniques, provenance)', /en ligne maintenant/.test(kt2) && /1 visiteurs uniques aujourd'hui/.test(kt2) && /Accès direct/.test(kt2), (kt2.match(/Audience.{0,200}/) || [])[0]);
   ok('tableau de bord : visites et entonnoirs', /1 visites sur 30 jours/.test(kt2) && /Acheteurs 30 derniers jours/.test(kt2) && /Vendeurs 30 derniers jours/.test(kt2), (kt2.match(/Parcours des visiteurs.{0,120}/) || [])[0]);
   // 5. Prix modifiables

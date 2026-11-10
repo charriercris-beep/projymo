@@ -559,15 +559,28 @@ create table if not exists public.presence (
   vu       timestamptz not null default now()
 );
 alter table public.presence enable row level security; -- aucune politique : accès uniquement par les fonctions ci-dessous
-create or replace function public.presence_ping(p_sid text, p_appareil text default null) returns void language plpgsql security definer set search_path = public as $$
+-- Détail anonyme de chaque visiteur en ligne : page en cours, zone, provenance, profil, arrivée
+alter table public.presence add column if not exists page text check (page is null or page ~ '^[a-z0-9-]{1,30}$');
+alter table public.presence add column if not exists zone text check (zone is null or zone in ('nc', 'europe', 'autre'));
+alter table public.presence add column if not exists source text check (source is null or source in ('direct', 'google', 'facebook', 'instagram', 'autre_reseau', 'autre_site'));
+alter table public.presence add column if not exists profil text check (profil is null or profil in ('visiteur', 'sell', 'buy', 'agt', 'art', 'bnk', 'not', 'diag', 'geo', 'ass'));
+alter table public.presence add column if not exists debut timestamptz not null default now();
+drop function if exists public.presence_ping(text, text);
+create or replace function public.presence_ping(p_sid text, p_appareil text default null, p_page text default null, p_zone text default null,
+                                                p_source text default null, p_profil text default null) returns void language plpgsql security definer set search_path = public as $$
 begin
   if p_sid is null or p_sid !~ '^[a-z0-9]{8,24}$' then return; end if;
-  insert into public.presence (sid, appareil, vu) values (p_sid, case when p_appareil in ('mobile', 'ordinateur') then p_appareil end, now())
-    on conflict (sid) do update set vu = now();
+  insert into public.presence (sid, appareil, page, zone, source, profil, vu, debut)
+    values (p_sid, case when p_appareil in ('mobile', 'ordinateur') then p_appareil end,
+            case when p_page ~ '^[a-z0-9-]{1,30}$' then p_page end, case when p_zone in ('nc', 'europe', 'autre') then p_zone end,
+            case when p_source in ('direct', 'google', 'facebook', 'instagram', 'autre_reseau', 'autre_site') then p_source end,
+            case when p_profil in ('visiteur', 'sell', 'buy', 'agt', 'art', 'bnk', 'not', 'diag', 'geo', 'ass') then p_profil end, now(), now())
+    on conflict (sid) do update set vu = now(), page = excluded.page, profil = excluded.profil,
+      appareil = coalesce(excluded.appareil, presence.appareil), zone = coalesce(presence.zone, excluded.zone), source = coalesce(presence.source, excluded.source);
   delete from public.presence where vu < now() - interval '15 minutes';
 end $$;
-revoke execute on function public.presence_ping(text, text) from public;
-grant execute on function public.presence_ping(text, text) to anon, authenticated;
+revoke execute on function public.presence_ping(text, text, text, text, text, text) from public;
+grant execute on function public.presence_ping(text, text, text, text, text, text) to anon, authenticated;
 
 -- Tableau de bord : tous les indicateurs en un appel (données agrégées, aucune donnée personnelle)
 create or replace function public.admin_kpis() returns jsonb language plpgsql stable security definer set search_path = public as $$
@@ -652,7 +665,10 @@ create or replace function public.admin_en_ligne() returns jsonb language plpgsq
 begin
   perform public.admin_garde();
   return jsonb_build_object('n', (select count(*) from public.presence where vu > now() - interval '2 minutes'),
-                            'mobile', (select count(*) from public.presence where vu > now() - interval '2 minutes' and appareil = 'mobile'));
+                            'mobile', (select count(*) from public.presence where vu > now() - interval '2 minutes' and appareil = 'mobile'),
+                            'liste', coalesce((select jsonb_agg(jsonb_build_object('appareil', appareil, 'page', page, 'zone', zone, 'source', source, 'profil', profil,
+                                       'depuis', extract(epoch from now() - debut)::int, 'vu', extract(epoch from now() - vu)::int) order by debut)
+                                     from (select * from public.presence where vu > now() - interval '2 minutes' order by debut limit 100) x), '[]'));
 end $$;
 revoke execute on function public.admin_en_ligne() from public, anon;
 grant execute on function public.admin_en_ligne() to authenticated;

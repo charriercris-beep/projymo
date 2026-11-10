@@ -79,6 +79,20 @@
   const SOURCES = { direct: 'Accès direct (lien, favori, adresse tapée)', google: 'Moteurs de recherche (Google…)', facebook: 'Facebook', instagram: 'Instagram', autre_reseau: 'Autres réseaux (WhatsApp, TikTok…)', autre_site: 'Autres sites' };
   const ZONES = { nc: 'Nouvelle-Calédonie', europe: 'Métropole et Europe', autre: 'Ailleurs' };
   let direct = null;
+  const PAGES = { accueil: 'Accueil', fiche: 'Fiche d\'un bien', depot: 'Dépôt d\'annonce', valorisation: 'Estimation', marketplace: 'Annonces',
+    messagerie: 'Messagerie', 'mes-annonces': 'Mes annonces', dashboard: 'Mon espace', visite: 'Visite vidéo', financement: 'Financement', rdv: 'Rendez-vous',
+    annonces: 'Rédaction d\'annonce', estimation: 'Estimation', deco: 'Décoration', artisans: 'Artisans', tarifs: 'Tarifs', favoris: 'Favoris' };
+  const PROF = { visiteur: 'Visiteur', sell: 'Vendeur', buy: 'Acheteur', agt: 'Agence', art: 'Artisan', bnk: 'Banque', not: 'Notaire', diag: 'Diagnostiqueur', geo: 'Géomètre', ass: 'Assureur' };
+  const ZC = { nc: 'Calédonie', europe: 'Europe', autre: 'Ailleurs' };
+  const SC = { direct: 'Direct', google: 'Google', facebook: 'Facebook', instagram: 'Instagram', autre_reseau: 'Autre réseau', autre_site: 'Autre site' };
+  const duree = s => s < 60 ? 'à l\'instant' : s < 3600 ? Math.floor(s / 60) + ' min' : Math.floor(s / 3600) + ' h ' + String(Math.floor(s % 3600 / 60)).padStart(2, '0');
+  function listeEnLigne(l) {
+    if (!l || !l.length) return '<p class="empty">Personne en ce moment. La liste se met à jour toute seule.</p>';
+    return `<table class="live-t"><thead><tr><th>Sur le site depuis</th><th>Page en cours</th><th>Appareil</th><th>Zone</th><th>Provenance</th><th>Profil</th></tr></thead><tbody>
+      ${l.map(v => `<tr><td><b>${duree(v.depuis)}</b></td><td><span class="pg pg-${E(v.page || 'x')}">${E(PAGES[v.page] || v.page || '—')}</span></td>
+        <td>${v.appareil === 'mobile' ? '📱 Téléphone' : v.appareil ? '💻 Ordinateur' : '—'}</td><td><span class="zn zn-${E(v.zone || 'x')}">${E(ZC[v.zone] || '—')}</span></td>
+        <td><span class="sr sr-${E(v.source || 'x')}">${E(SC[v.source] || '—')}</span></td><td>${E(PROF[v.profil] || '—')}</td></tr>`).join('')}</tbody></table>`;
+  }
   function audience(a) {
     if (!a) return '<p class="note">Indicateurs d\'audience indisponibles : mettez à jour la base (supabase/schema.sql).</p>';
     const jour = s => new Date(s + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
@@ -86,17 +100,27 @@
         <div class="k live"><b id="k-live">${n0(a.en_ligne)}</b><span><i class="dot" aria-hidden="true"></i>en ligne maintenant</span><small id="k-live-m">${a.en_ligne ? n0(a.en_ligne_mobile) + ' sur téléphone · ' : ''}actualisé toutes les 30 s</small></div>
         ${tile(n0(a.uniques_jour), 'visiteurs uniques aujourd\'hui', n0(a.visites_jour) + ' visite(s)')}${tile(n0(a.uniques_7j), 'visiteurs uniques sur 7 jours')}
         ${tile(n0(a.uniques_30j), 'visiteurs uniques sur 30 jours', a.uniques_30j ? n0(a.nouveaux_30j) + ' nouveaux · ' + n0(Math.max(0, a.uniques_30j - a.nouveaux_30j)) + ' revenus' : '')}</div>
+      <figure class="ch live-box"><figcaption><i class="dot" aria-hidden="true"></i> Visiteurs en ligne <small>anonymes · actualisé toutes les 30 s</small></figcaption><div id="k-live-l">${listeEnLigne(a.liste)}</div></figure>
       <div class="g2">${colonnes('Visiteurs uniques par jour', a.par_jour || [], { sous: '30 derniers jours', tip: '', th: 'Jour', pas: 5, lab: jour })}${barres('D\'où viennent les visiteurs', a.sources, x => SOURCES[x] || x)}</div>
       <div class="g2">${colonnes('Heures d\'affluence', (a.heures || []).map(x => ({ s: x.h, n: x.n })), { sous: 'visites des 30 derniers jours, heure de Nouméa', tip: '', th: 'Heure', pas: 3, lab: h => h + ' h' })}${barres('Où sont les visiteurs', a.zones, x => ZONES[x] || x)}</div>
       <div class="g2">${barres('Communes les plus recherchées', a.communes)}${barres('Types de biens recherchés', a.types)}</div>
       <div class="g2">${barres('Annonces les plus consultées', a.fiches)}<div></div></div>
       <p class="note">Mesure anonyme : identifiant tiré au hasard par navigateur, sans compte ni adresse IP. Zone déduite du fuseau horaire de l'appareil.</p>`;
   }
+  // Une couleur par rubrique du tableau de bord
+  const COULEURS = { 'Audience': 'c-cor', 'Annonces': 'c-lag', 'Utilisateurs': 'c-blu', 'Mise en relation': 'c-vio', 'Parcours des visiteurs': 'c-amb', 'Chiffre d\'affaires': 'c-grn' };
+  function colorer(el) {
+    let g = null;
+    [...el.children].forEach(n => {
+      if (n.tagName === 'H3') { g = document.createElement('div'); g.className = 'grp ' + (COULEURS[n.textContent.trim()] || 'c-lag'); n.before(g); }
+      if (g) g.appendChild(n);
+    });
+  }
   function suivreDirect() {
     clearInterval(direct);
     direct = setInterval(async () => {
       const b = document.getElementById('k-live'); if (!b) { clearInterval(direct); return; }
-      try { const r = await rpc('admin_en_ligne'); b.textContent = n0(r.n); const m = document.getElementById('k-live-m'); if (m) m.textContent = (r.n ? n0(r.mobile) + ' sur téléphone · ' : '') + 'actualisé toutes les 30 s'; } catch (_) { /* nouvel essai dans 30 s */ }
+      try { const r = await rpc('admin_en_ligne'); b.textContent = n0(r.n); const ll = document.getElementById('k-live-l'); if (ll) ll.innerHTML = listeEnLigne(r.liste); const m = document.getElementById('k-live-m'); if (m) m.textContent = (r.n ? n0(r.mobile) + ' sur téléphone · ' : '') + 'actualisé toutes les 30 s'; } catch (_) { /* nouvel essai dans 30 s */ }
     }, 30000);
   }
   // Répartition (barres horizontales, valeur au bout de la barre)
@@ -145,7 +169,8 @@
         ${tile(n0(M.a_regler) + ' F', 'commandes à régler')}${tile(n0(M.essais), 'essais gratuits en cours')}</div>
       <div class="g2">${barres('Options vendues (depuis le début)', M.top_options, optNom, x => ` <small>· ${n0(x.m)} F</small>`)}${barres('Formules pros en cours', M.formules, x => { const [r, f] = String(x).split(' · '); return (ROLES[r] || r) + ' · ' + (((T && T.plans(r).find(p => p.id === f)) || {}).nom || f); })}</div>`;
     $('k-re').onclick = () => vKpi(el);
-    if (k.audience) suivreDirect();
+    if (k.audience) { suivreDirect(); rpc('admin_en_ligne').then(r => { const ll = document.getElementById('k-live-l'); if (ll && r) ll.innerHTML = listeEnLigne(r.liste); }, () => {}); }
+    colorer(el);
   }
 
   /* ---------- Professionnels ---------- */

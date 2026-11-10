@@ -68,10 +68,27 @@
 
   /* ---------- Présence en direct ---------- */
   let sid = null; try { sid = sessionStorage.getItem('immo360.sid'); if (!/^[a-z0-9]{12}$/.test(sid || '')) { sid = alea(); sessionStorage.setItem('immo360.sid', sid); } } catch (_) { sid = alea(); }
+  // Page en cours : fiche d'un bien, accueil, ou rubrique de l'espace (clé technique, jamais de contenu)
+  function pageEnCours() {
+    if (document.querySelector('.fiche-ov')) return 'fiche';
+    const l = document.getElementById('landing-page'); if (l && l.style.display !== 'none' && l.offsetParent !== null) return 'accueil';
+    const p = document.querySelector('.panel.active'); const k = p && p.id ? p.id.replace(/^panel-/, '') : '';
+    return /^[a-z0-9-]{1,30}$/.test(k) ? k : 'accueil';
+  }
+  let srcOnglet = null; try { srcOnglet = sessionStorage.getItem('immo360.src'); if (!srcOnglet) { srcOnglet = source(); sessionStorage.setItem('immo360.src', srcOnglet || ''); } } catch (_) { srcOnglet = source(); }
+  let dernierPing = 0;
   function present() {
     const c = client(); if (!c || !c.rpc || document.visibilityState === 'hidden') return;
-    try { const p = c.rpc('presence_ping', { p_sid: sid, p_appareil: (window.matchMedia && matchMedia('(max-width: 760px)').matches) ? 'mobile' : 'ordinateur' }); if (p && p.then) p.then(() => {}, () => {}); } catch (_) { /* ignoré */ }
+    dernierPing = Date.now();
+    const loggedIn = typeof APP_STATE !== 'undefined' && APP_STATE.loggedIn;
+    try {
+      const p = c.rpc('presence_ping', { p_sid: sid, p_appareil: (window.matchMedia && matchMedia('(max-width: 760px)').matches) ? 'mobile' : 'ordinateur',
+        p_page: pageEnCours(), p_zone: zone(), p_source: srcOnglet || null, p_profil: loggedIn && typeof S !== 'undefined' && PROFILS.includes(S.profile) ? S.profile : 'visiteur' });
+      if (p && p.then) p.then(() => {}, () => {});
+    } catch (_) { /* ignoré */ }
   }
+  // Changement de page : signalé aussitôt (au plus une fois toutes les 5 secondes)
+  const bouge = () => setTimeout(() => { if (Date.now() - dernierPing > 5000) present(); }, 300);
   setTimeout(present, 3000); setInterval(present, 60000);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') present(); });
 
@@ -80,7 +97,8 @@
     const f = window[name]; if (typeof f !== 'function') return;
     window[name] = function () { const r = f.apply(this, arguments); try { test.apply(this, [r].concat([].slice.call(arguments))); } catch (_) { /* ignoré */ } return r; };
   }
-  wrap('openLandingBien', (r, id) => track('fiche_vue', /^\d+$/.test(String(id)) ? String(id) : null));
+  wrap('go', bouge); wrap('showLanding', bouge);
+  wrap('openLandingBien', (r, id) => { bouge(); track('fiche_vue', /^\d+$/.test(String(id)) ? String(id) : null); });
   wrap('contactVendeur', () => track('contact_vendeur'));
   wrap('contactFromLanding', () => track('contact_vendeur'));
   wrap('planifierVisite', () => track('demande_visite'));
