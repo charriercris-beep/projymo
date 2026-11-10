@@ -57,3 +57,11 @@ consulté. Il n'est pas lisible depuis le site (seul le tableau de bord en fait 
 
 Pour la fréquentation détaillée (pages, provenance), activer **Vercel Analytics** dans Vercel (onglet
 Analytics, un clic).
+
+## Base toujours éveillée
+
+En formule gratuite, Supabase met un projet en pause après 7 jours sans activité (le site retombe alors en
+mode démonstration). Une tâche planifiée Vercel (`crons` dans `vercel.json`) appelle chaque jour
+`/api/ping`, qui fait une petite lecture dans la base : le projet reste actif.
+`https://360immo.nc/api/ping` sert aussi de contrôle : `"base":"active"` si tout va bien.
+Si le projet a quand même été mis en pause : Supabase → le projet → « Resume project ».
