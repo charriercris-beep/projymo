@@ -65,3 +65,13 @@ mode démonstration). Une tâche planifiée Vercel (`crons` dans `vercel.json`) 
 `/api/ping`, qui fait une petite lecture dans la base : le projet reste actif.
 `https://360immo.nc/api/ping` sert aussi de contrôle : `"base":"active"` si tout va bien.
 Si le projet a quand même été mis en pause : Supabase → le projet → « Resume project ».
+
+## Liens de partage et provenance des visiteurs
+
+Chaque annonce publiée a un lien court `https://360immo.nc/a/<numéro>` (fonction `api/partage.js`, réécriture dans `vercel.json`) :
+- sur Facebook, WhatsApp ou Messenger, le lien s'affiche avec le titre, le prix et la photo de l'annonce ;
+- la personne qui clique arrive directement sur la fiche ;
+- `?s=facebook` (ou `instagram`, `whatsapp`…) est ajouté automatiquement par « Diffuser sur les réseaux » : la visite
+  est alors comptée dans la bonne ligne de « D'où viennent les visiteurs ».
+
+Le bouton « Partager » de chaque fiche copie ce lien (ou ouvre le partage du téléphone).
