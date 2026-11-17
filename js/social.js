@@ -15,6 +15,32 @@
     return m || (typeof BIENS_DATA !== 'undefined' ? BIENS_DATA.find(x => x.id === id) : null);
   }
 
+  /* ---------- Lien de partage ---------- */
+  // Annonce publiée : lien court /a/<numéro> (aperçu avec photo sur Facebook, WhatsApp…) ; la provenance
+  // « s » alimente les statistiques du back office. Annonce de démonstration : lien direct vers la fiche.
+  function lien(a, s) {
+    const o = location.origin;
+    const reelle = a._ann || (window.IMMO_ANN && IMMO_ANN.mine().some(x => x.id === a.id));
+    return reelle ? `${o}/a/${a.id}${s ? '?s=' + s : ''}` : `${o}/immo360-global.html?bien=${a.id}${s ? '&utm_source=' + s : ''}`;
+  }
+  const dire = t => { if (typeof showToast === 'function') showToast(t); };
+  async function partager(id) {
+    const a = trouver(id); if (!a) return;
+    const url = lien(a, 'lien'), titre = a.titre || 'Annonce Immo360';
+    if (navigator.share && matchMedia('(max-width: 760px)').matches) { try { await navigator.share({ title: titre, text: titre + (a.prix ? ' — ' + M(a.prix) : ''), url }); return; } catch (_) { /* annulé : on copie */ } }
+    try { await navigator.clipboard.writeText(url); dire('Lien de l\'annonce copié'); } catch (_) { prompt('Copiez le lien de l\'annonce :', url); }
+  }
+  // Arrivée par un lien partagé (?bien=123) : ouvrir la fiche dès que l'annonce est chargée
+  function ouvrirDepuisLien() {
+    const id = +(new URLSearchParams(location.search).get('bien') || 0); if (!id) return;
+    let n = 0;
+    const t = setInterval(() => {
+      const b = typeof BIENS_DATA !== 'undefined' && BIENS_DATA.find(x => x.id === id);
+      if (b && typeof openLandingBien === 'function') { clearInterval(t); openLandingBien(id); try { history.replaceState(null, '', location.pathname); } catch (_) { /* adresse inchangée */ } }
+      else if (++n > 24) { clearInterval(t); dire('Cette annonce n\'est plus en ligne.'); }
+    }, 500);
+  }
+
   /* ---------- Modèle immédiat (sans IA) ---------- */
   function modele(a) {
     const l = lieuDe(a), f = (a.features || []).slice(0, 5);
@@ -54,12 +80,16 @@
   /* ---------- Fenêtre ---------- */
   let cur = null;
   function remplir(t, src) {
-    const box = document.getElementById('soc-mod'); if (!box) return;
-    box.querySelector('[data-t="facebook"]').value = t.facebook;
-    box.querySelector('[data-t="instagram"]').value = t.instagram + (t.hashtags.length ? '\n\n' + t.hashtags.join(' ') : '');
-    box.querySelector('[data-t="whatsapp"]').value = t.whatsapp;
+    const box = document.getElementById('soc-mod'); if (!box || !cur) return;
+    const sansLien = x => String(x || '').replace(/https?:\/\/\S+/g, '').trim();
+    const wa = sansLien(t.whatsapp) + '\n' + lien(cur, 'whatsapp');
+    box.querySelector('[data-t="facebook"]').value = sansLien(t.facebook) + '\n\nToutes les photos et les détails : ' + lien(cur, 'facebook');
+    box.querySelector('[data-t="instagram"]').value = sansLien(t.instagram) + '\nLien : ' + lien(cur, 'instagram') + (t.hashtags.length ? '\n\n' + t.hashtags.join(' ') : '');
+    box.querySelector('[data-t="whatsapp"]').value = wa;
     box.querySelector('.soc-src').textContent = src;
-    const wa = box.querySelector('#soc-wa'); if (wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(t.whatsapp);
+    const w = box.querySelector('#soc-wa'); if (w) w.href = 'https://wa.me/?text=' + encodeURIComponent(wa);
+    const fb = box.querySelector('#soc-fb'); if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(lien(cur, 'facebook'));
+
   }
   async function ouvrir(id) {
     const a = trouver(id); if (!a) return;
@@ -74,7 +104,8 @@
         <div>
           <div class="soc-tabs" role="tablist"><button type="button" class="on" data-tab="facebook">Facebook</button><button type="button" data-tab="instagram">Instagram</button><button type="button" data-tab="whatsapp">WhatsApp</button></div>
           ${['facebook', 'instagram', 'whatsapp'].map((k, i) => `<div class="soc-p" data-p="${k}"${i ? ' hidden' : ''}><textarea data-t="${k}" rows="10" aria-label="Texte ${k}"></textarea>
-            <div class="soc-acts"><button type="button" class="btn btn-sm btn-outline" data-copy="${k}">Copier le texte</button>${k === 'whatsapp' ? '<a class="btn btn-sm btn-gold" id="soc-wa" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>' : ''}</div></div>`).join('')}
+            <div class="soc-acts"><button type="button" class="btn btn-sm btn-outline" data-copy="${k}">Copier le texte</button>${k === 'whatsapp' ? '<a class="btn btn-sm btn-gold" id="soc-wa" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>' : k === 'facebook' ? '<a class="btn btn-sm btn-gold" id="soc-fb" target="_blank" rel="noopener">Partager sur Facebook</a>' : ''}</div></div>`).join('')}
+          <div class="soc-link"><input type="text" readonly id="soc-url" aria-label="Lien de l'annonce" value="${E(lien(a, 'lien'))}"><button type="button" class="btn btn-sm btn-outline" id="soc-url-c">Copier le lien</button></div>
           <p class="soc-src"></p>
         </div>
       </div></div>`;
@@ -85,6 +116,7 @@
       if (t) { d.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('on', x === t)); d.querySelectorAll('[data-p]').forEach(p => { p.hidden = p.dataset.p !== t.dataset.tab; }); }
       const cp = ev.target.closest('[data-copy]');
       if (cp) { const ta = d.querySelector(`[data-t="${cp.dataset.copy}"]`); ta.select(); (navigator.clipboard ? navigator.clipboard.writeText(ta.value) : Promise.reject()).catch(() => document.execCommand && document.execCommand('copy')); cp.textContent = 'Copié !'; setTimeout(() => { cp.textContent = 'Copier le texte'; }, 1500); }
+      if (ev.target.closest('#soc-url-c')) { const i = d.querySelector('#soc-url'); i.select(); (navigator.clipboard ? navigator.clipboard.writeText(i.value) : Promise.reject()).catch(() => document.execCommand && document.execCommand('copy')); ev.target.closest('#soc-url-c').textContent = 'Copié !'; }
       if (ev.target.closest('#soc-dl')) { const cv = d.querySelector('#soc-cv'); const l = document.createElement('a'); l.download = 'immo360-' + (a.ref || a.id) + '.jpg'; l.href = cv.toDataURL('image/jpeg', 0.9); l.click(); }
     });
     document.addEventListener('keydown', echap);
@@ -102,6 +134,10 @@
   function echap(e) { if (e.key === 'Escape') fermer(); }
   function fermer() { const d = document.getElementById('soc-mod'); if (d) d.remove(); cur = null; document.removeEventListener('keydown', echap); }
 
-  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-social]'); if (b) ouvrir(+b.dataset.social); });
-  window.IMMO_SOCIAL = { ouvrir, fermer, modele };
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('[data-social]'); if (b) return ouvrir(+b.dataset.social);
+    const p = e.target.closest && e.target.closest('[data-partage]'); if (p) partager(+p.dataset.partage);
+  });
+  if (document.readyState === 'complete') ouvrirDepuisLien(); else window.addEventListener('load', ouvrirDepuisLien);
+  window.IMMO_SOCIAL = { ouvrir, fermer, modele, lien, partager };
 })();

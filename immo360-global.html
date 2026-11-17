@@ -549,6 +549,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .fi-noimg{display:none;position:absolute;inset:0;margin:auto;width:64px;height:64px;color:#7FA9A6}.fi-ph.none .fi-noimg{display:block}
 .fi-tools{position:absolute;top:14px;right:14px;display:flex;gap:8px;z-index:2}
 .fi-tools .pc-fav{position:static}
+.fi-sh{order:-1;height:40px;border-radius:99px;border:0;background:rgba(255,255,255,.94);font:inherit;font-weight:600;font-size:14.5px;padding:0 16px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.15);color:var(--dark)}.fi-sh:hover{background:#fff;color:var(--gold-dark)}
+.soc-link{display:flex;gap:8px;margin-top:12px}.soc-link input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:9px;padding:7px 10px;font:inherit;font-size:14px;color:var(--mid);background:var(--cream)}
 .fi-x{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.94);font-size:18px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.15)}
 .fi .ann-media{padding:16px 28px 0}
 .fi-ph.gal{aspect-ratio:auto;height:0;overflow:visible;z-index:3}.fi-ph.gal img,.fi-ph.gal .pc-ill,.fi-ph.gal .fi-noimg{display:none}.fi-ph.gal .fi-tools{top:26px;right:38px}
@@ -4899,6 +4901,7 @@ function openLandingBien(id){
       <div class="fi-tools">
         <button type="button" class="pc-fav" data-id="${Number(b.id)}" aria-pressed="${!!fav}" aria-label="Favori" onclick="IMMO_CARDS.fav(${Number(b.id)},this)"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg></button>
         <button type="button" class="fi-x" aria-label="Fermer">✕</button>
+        <button type="button" class="fi-sh" data-partage="${Number(b.id)}">Partager</button>
       </div>
     </div>
     <div class="fi-bd">

@@ -33,5 +33,11 @@
     "api/*.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/a/:id",
+      "destination": "/api/partage?id=:id"
+    }
+  ]
 }
