@@ -28,6 +28,13 @@
     'immo360.annonces.v1': { c: 'annonce', ownOnly: true },
     // Profil de l'agence (privé)
     'immo360.agence.v1': { c: 'agence', ownOnly: true },
+    // Outils de l'agence (privés) : mandats, clients, rendez-vous, comptes-rendus, dossiers notaire, acheteurs
+    'immo360.agt.mandats.v1': { c: 'agt_mandat', ownOnly: true },
+    'immo360.agt.clients.v1': { c: 'agt_client', ownOnly: true },
+    'immo360.agt.visites.v1': { c: 'agt_visite', ownOnly: true },
+    'immo360.agt.cr.v1': { c: 'agt_cr', ownOnly: true },
+    'immo360.agt.notaire.v1': { c: 'agt_notaire', ownOnly: true },
+    'immo360.agt.acheteurs.v1': { c: 'agt_acheteur', ownOnly: true },
     'immo360.devis.v1': { c: 'devis', aud: r => ({ role: 'artisan', metiers: Array.isArray(r.metiers) ? r.metiers : [] }), strip: ['reponses', 'nom', 'tel', 'contactAccepte'] }  // coordonnées du client : jamais dans la demande partagée
   };
   const META = ['_o', '_u'];

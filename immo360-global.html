@@ -690,6 +690,31 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-btn.big{padding:15px 26px;font-size:16px}
 
 /* Bandeau photo + recherche */
+@media(max-width:760px){
+  #panel-notaire [style*="repeat(4"],#panel-crm [style*="repeat(4"],#panel-mandats [style*="repeat(4"],#panel-visites [style*="repeat(4"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #panel-notaire [style*="repeat(3"],#panel-crm [style*="repeat(3"]{grid-template-columns:minmax(0,1fr)!important}
+  .eq-check{white-space:normal!important;max-width:100%;min-width:0}
+  .bk-tbl{display:block;overflow-x:auto;max-width:100%}
+  #panel-notaire .artisan-tab{flex:1 1 auto}
+  #panel-notaire :has(> #not-tab-dossiers){flex-wrap:wrap;overflow:visible}
+}
+/* Espaces réels (js/espace-reel.js) */
+.immo-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ocean);color:#fff;padding:12px 18px;border-radius:12px;font-size:15px;max-width:min(560px,calc(100% - 32px));box-shadow:0 10px 30px rgba(7,25,35,.3);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:4000}.immo-toast.on{opacity:1;transform:translate(-50%,0)}
+.demo-band{background:#FFF7E6;border:1px solid #F2D49B;color:#5C3D00;border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:14.5px}.demo-band .lp-link{color:var(--gold-dark);font-weight:700;padding:0}
+.vide-aide{background:var(--lagoon-pale);border:1px dashed #9FD8D2;border-radius:12px;padding:14px 16px;color:var(--dark);font-size:15px;margin:10px 0 14px}
+.st-w{max-width:1100px;margin:0 auto}.st-w h2{margin:0 0 4px;color:var(--ocean)}.st-sub{color:var(--mid);font-size:14.5px;margin:0 0 14px}
+.st-k{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px}.st-k div{background:#fff;border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:12px;padding:12px 14px}
+.st-k b{display:block;font-size:26px;color:var(--ocean)}.st-k span{font-size:14px;color:var(--mid)}
+.st-t{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.st-t th,.st-t td{text-align:left;padding:9px 10px;border-top:1px solid var(--line);font-size:14.5px}.st-t th{font-size:12.5px;color:var(--mid);border-top:0;background:var(--cream)}
+.st-b{display:inline-block;width:70px;height:8px;background:var(--warm);border-radius:99px;margin-right:8px;vertical-align:middle;overflow:hidden}.st-b i{display:block;height:100%;background:var(--gold)}
+.ach-et{list-style:none;display:flex;gap:6px;padding:0;margin:6px 0 16px;flex-wrap:wrap}.ach-et li{flex:1;min-width:90px;text-align:center;font-size:13.5px;color:var(--mid);border-top:4px solid var(--line);padding-top:6px}
+.ach-et li span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--warm);font-weight:700;margin-right:4px}
+.ach-et li.fait{border-color:var(--green);color:var(--dark)}.ach-et li.fait span{background:#E6F4EA;color:var(--green)}.ach-et li.en{border-color:var(--gold);color:var(--ocean);font-weight:700}.ach-et li.en span{background:var(--gold);color:#fff}
+.ach-s{background:var(--lagoon-pale);border:1px solid #BFE3DF;border-radius:12px;padding:12px 14px;margin-bottom:16px}.ach-s p{margin:2px 0 8px}
+.ach-h{font-size:17px;color:var(--ocean);margin:4px 0 8px}.ach-n{list-style:none;margin:0;padding:0;display:grid;gap:6px}.ach-n li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14.5px}.ach-n small{display:block;color:var(--mid)}
+.pm-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.rdv-l{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;flex-wrap:wrap}.rdv-l span{flex:1;min-width:180px}.rdv-l small{display:block;color:var(--mid)}
+@media(max-width:700px){.st-t{display:block;overflow-x:auto}}
 /* Fenêtres au-dessus de la fiche : contact / visite (js/messages.js), financement (js/fin-popup.js) */
 .ctc-mod,.fp-mod{position:fixed;inset:0;background:rgba(7,25,35,.55);z-index:3500;display:flex;align-items:center;justify-content:center;padding:16px}
 .ctc-in{background:#fff;border-radius:18px;max-width:520px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(7,25,35,.35)}
@@ -2170,7 +2195,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <div class="ai-line"><span>Début</span><span>02/06/2026</span></div>
             <div class="ai-line"><span>Fin prévue</span><span>12/06/2026</span></div>
             <div class="ai-line"><span>Montant</span><span style="color:var(--gold);font-weight:600">280 000 F</span></div>
-            <button type="button" class="btn btn-outline btn-full btn-sm" style="margin-top:10px" onclick="alert('Messagerie avec Eric Peintures NC ouverte')">Contacter l'artisan</button>
+            <button type="button" class="btn btn-outline btn-full btn-sm" style="margin-top:10px" onclick="showToast('Exemple de démonstration : connectez-vous pour suivre vos vrais chantiers.')">Contacter l'artisan</button>
           </div>
           <div class="card" style="border:1.5px dashed var(--soft);background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;cursor:pointer" onclick="showDevisModal()">
             <div style="font-size:32px;margin-bottom:8px">+</div>
@@ -2644,7 +2669,7 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         </div>
         <div style="background:linear-gradient(135deg,#DCFCE7,#F0FDF4);border-radius:12px;padding:14px;text-align:center;border:1px solid #86EFAC">
           <div style="font-size:26px;font-weight:800;color:#166534" id="mand-nb-signes">0</div>
-          <div style="font-size:11px;color:#15803D;font-weight:600">Signés électroniquement</div>
+          <div style="font-size:11px;color:#15803D;font-weight:600">Signés</div>
         </div>
       </div>
 
@@ -2689,11 +2714,11 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div class="field"><label>Date de début</label><input type="date" id="mand-debut"></div>
           <div class="field"><label>Conditions particulières</label><textarea id="mand-conditions" rows="2" placeholder="Conditions spécifiques, restrictions..."></textarea></div>
           <div style="background:var(--warm);border-radius:8px;padding:12px;margin-bottom:14px">
-            <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px">Signature électronique</div>
-            <div style="font-size:11px;color:var(--mid);margin-bottom:8px">Le mandat sera envoyé par email au vendeur pour signature électronique sécurisée.</div>
-            <label class="eq-check"><input type="checkbox" id="mand-esign" checked> Activer la signature électronique</label>
+            <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px">Signature</div>
+            <div style="font-size:11px;color:var(--mid);margin-bottom:8px">Un mandat prêt à imprimer est préparé : faites-le signer par le vendeur, puis indiquez-le comme signé.</div>
+            <label class="eq-check"><input type="checkbox" id="mand-esign" checked> Préparer le mandat à imprimer dès sa création</label>
           </div>
-          <button type="button" class="btn btn-gold btn-full" onclick="saveMandat()">✅ Créer et envoyer pour signature</button>
+          <button type="button" class="btn btn-gold btn-full" onclick="saveMandat()">✅ Créer le mandat</button>
         </div>
       </div>
     </div>
@@ -2758,8 +2783,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           </div>
           <div class="field"><label>Notes</label><textarea id="vis-notes" rows="2" placeholder="Particularités, accès, codes..."></textarea></div>
           <div style="background:#EFF6FF;border-radius:8px;padding:12px;margin-bottom:14px">
-            <label class="eq-check"><input type="checkbox" id="vis-sms" checked> Envoyer confirmation SMS à l'acheteur</label>
-            <label class="eq-check" style="margin-top:6px"><input type="checkbox" id="vis-bon" checked> Générer bon de visite automatiquement</label>
+            <label class="eq-check"><input type="checkbox" id="vis-sms" checked> Préparer le SMS de confirmation pour l'acheteur</label>
+            <label class="eq-check" style="margin-top:6px"><input type="checkbox" id="vis-bon" checked> Préparer le bon de visite à imprimer</label>
           </div>
           <button type="button" class="btn btn-gold btn-full" onclick="saveVisite()">✅ Confirmer la visite</button>
         </div>
@@ -7055,7 +7080,7 @@ function renderMandats(){
       <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--mid);flex-wrap:wrap;gap:8px">
         <span>Du ${m.debut} au ${m.fin}</span>
         <div style="display:flex;gap:5px">
-          ${!m.signe?`<button type="button" onclick="signerMandat(${m.id})" class="btn btn-gold btn-sm" style="font-size:10px">Signer électroniquement</button>`:''}
+          ${!m.signe?`<button type="button" onclick="signerMandat(${m.id})" class="btn btn-gold btn-sm" style="font-size:10px">Préparer le mandat à signer</button>`:''}
           <button type="button" onclick="renouvelerMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">Renouveler</button>
           <button type="button" onclick="archiverMandat(${m.id})" class="btn btn-outline btn-sm" style="font-size:10px">Archiver</button>
         </div>
@@ -7088,18 +7113,13 @@ function saveMandat(){
     debut,
     fin:finDate.toISOString().split('T')[0],
     statut:'actif',
-    signe:!sms,
+    signe:false,
     conditions:document.getElementById('mand-conditions')?.value||''
   });
   document.getElementById('mandat-modal').style.display='none';
   buildMandats();
-  if(sms){
-    const notif=document.createElement('div');
-    notif.style.cssText='position:fixed;bottom:20px;right:20px;background:#16A34A;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999';
-    notif.innerHTML='Mandat envoyé à '+vendeur+' pour signature électronique';
-    document.body.appendChild(notif);
-    setTimeout(()=>document.body.removeChild(notif),3500);
-  }
+  // rien n'est envoyé : le mandat est préparé à imprimer et à faire signer
+  if(sms){ const nid=MANDATS[0].id; setTimeout(()=>signerMandat(nid),150); }
 }
 
 function signerMandat(id){
@@ -7168,12 +7188,12 @@ function renderVisitesAgenda(){
       </div>
       <div style="display:flex;gap:12px;font-size:11px;color:var(--mid);margin-bottom:8px;flex-wrap:wrap">
         <span>${v.date}</span><span>${v.heure}</span><span>⏱️ ${v.duree} min</span>
-        ${v.smsSent?'<span style="color:#16A34A">SMS envoyé</span>':'<span style="color:#EA580C">SMS non envoyé</span>'}
-        ${v.bonVisite?'<span style="color:#9333EA">Bon visite généré</span>':''}
+        ${v.smsSent?'<span style="color:#16A34A">Confirmation préparée</span>':'<span style="color:#EA580C">Confirmation à envoyer</span>'}
+        ${v.bonVisite?'<span style="color:#9333EA">Bon de visite préparé</span>':''}
       </div>
       ${v.notes?`<div style="font-size:11px;color:var(--soft);font-style:italic;margin-bottom:6px">${esc(v.notes)}</div>`:''}
       <div style="display:flex;gap:5px;flex-wrap:wrap">
-        ${!v.smsSent?`<button type="button" onclick="envoyerSMS(${v.id})" class="btn btn-gold btn-sm" style="font-size:10px">Envoyer SMS</button>`:''}
+        ${!v.smsSent?`<button type="button" onclick="envoyerSMS(${v.id})" class="btn btn-gold btn-sm" style="font-size:10px">Préparer le SMS</button>`:''}
         ${!v.bonVisite?`<button type="button" onclick="genererBonVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">Bon de visite</button>`:''}
         <button type="button" onclick="showCRVisiteModalFor(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px">Compte-rendu</button>
         <button type="button" onclick="annulerVisite(${v.id})" class="btn btn-outline btn-sm" style="font-size:10px;color:var(--red)">✕ Annuler</button>
@@ -7192,7 +7212,7 @@ function renderVisitesStats(){
   el.innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="background:#DCFCE7;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#166534">${confirmees}</div><div style="font-size:10px;color:#15803D">Confirmées</div></div>
-      <div style="background:#EFF6FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#2563EB">${smsSent}</div><div style="font-size:10px;color:#1D4ED8">SMS envoyés</div></div>
+      <div style="background:#EFF6FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#2563EB">${smsSent}</div><div style="font-size:10px;color:#1D4ED8">Confirmations préparées</div></div>
       <div style="background:#FDF4FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#9333EA">${bons}</div><div style="font-size:10px;color:#7E22CE">Bons signés</div></div>
       <div style="background:#FFF7ED;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#EA580C">${interesses}</div><div style="font-size:10px;color:#C2410C">Intéressés</div></div>
     </div>`;
@@ -7241,8 +7261,10 @@ function saveVisite(){
     heure:document.getElementById('vis-heure')?.value||'10:00',
     duree:parseInt(document.getElementById('vis-duree')?.value||60),
     notes:document.getElementById('vis-notes')?.value||'',
-    smsSent:smsSend,bonVisite:bonV,statut:'confirmee'
+    smsSent:false,bonVisite:false,statut:'confirmee'
   });
+  // rien n'est envoyé automatiquement : on prépare le SMS (application du téléphone) et le bon à imprimer
+  { const nid=VISITES[0].id; setTimeout(()=>{ if(smsSend) envoyerSMS(nid); if(bonV) genererBonVisite(nid); },150); }
   document.getElementById('visite-modal').style.display='none';
   buildVisites();
   if(smsSend){
@@ -8215,7 +8237,7 @@ function renderNotPlanning(){
   el.innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <div style="font-size:14px;font-weight:600;color:var(--dark)">${rdvs.length} signatures planifiées</div>
-        onclick="alert('Planification RDV signature — envoi invitation calendrier aux parties')">
+        onclick="showToast('Exemple de démonstration : connectez-vous pour planifier vos signatures.')">
     </div>
     ${rdvs.map(r=>`
     <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
@@ -9824,6 +9846,7 @@ go('dashboard');
 <script src="js/agence.js"></script>
 <script src="js/messages.js"></script>
 <script src="js/fin-popup.js"></script>
+<script src="js/espace-reel.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/evenements.js"></script>
 </body>

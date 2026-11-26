@@ -314,6 +314,22 @@ begin
                              'vendeur', auth.uid() = v_vendeur, 'lu', false));
   return jsonb_build_object('id', v_id, 'fil', p_annonce || ':' || v_acheteur);
 end $$;
+-- Statistiques RÉELLES des annonces de l'utilisateur : fiches vues (journal anonyme), messages et demandes de visite reçus
+create or replace function public.mes_stats_annonces() returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  if auth.uid() is null then raise exception 'Connexion requise'; end if;
+  return coalesce((select jsonb_agg(x order by x.vues_30j desc, x.titre) from (
+    select a.id, a.data->>'titre' as titre, coalesce((a.data->>'publie')::boolean, false) as publie,
+           (current_date - a.created_at::date) as jours,
+           (select count(*) from public.evenements e where e.nom = 'fiche_vue' and e.detail = a.id and e.created_at > now() - interval '30 days') as vues_30j,
+           (select count(*) from public.evenements e where e.nom = 'fiche_vue' and e.detail = a.id) as vues_total,
+           (select count(*) from public.records m where m.collection = 'message' and m.data->>'annonce' = a.id and m.assignee = auth.uid() and m.data->>'type' = 'message') as messages,
+           (select count(*) from public.records m where m.collection = 'message' and m.data->>'annonce' = a.id and m.assignee = auth.uid() and m.data->>'type' = 'visite') as visites,
+           (select count(distinct m.owner_id) from public.records m where m.collection = 'message' and m.data->>'annonce' = a.id and m.assignee = auth.uid()) as acheteurs
+    from public.records a where a.collection = 'annonce' and a.owner_id = auth.uid()) x), '[]'::jsonb);
+end $$;
+revoke execute on function public.mes_stats_annonces() from public, anon;
+grant execute on function public.mes_stats_annonces() to authenticated;
 revoke execute on function public.envoyer_message(text, text, text, text, uuid) from public, anon;
 grant execute on function public.envoyer_message(text, text, text, text, uuid) to authenticated;
 
