@@ -93,12 +93,13 @@
     if (typeof BIENS_DATA === 'undefined') return;
     const rows = window.IMMO_SYNC ? await IMMO_SYNC.fetchAll('annonce') : null;
     const raw = rows ? rows.map(r => r.data) : [];
+    const proprio = {}; (rows || []).forEach(r => { if (r && r.data) proprio[Number(r.data.id)] = r.owner_id || null; }); // vendeur réel (messagerie)
     if (!online()) mine().forEach(a => raw.push(a)); // démo : ses annonces locales
     const seen = new Set();
     const list = raw.map(sanitize).filter(a => a && a.publie && !seen.has(a.id) && seen.add(a.id)).sort((a, b) => b.id - a.id);
     const sig = list.map(a => a.id + ':' + a.prix + ':' + a.statut + ':' + a.titre).join('|');
     for (let i = BIENS_DATA.length - 1; i >= 0; i--) if (BIENS_DATA[i]._ann) BIENS_DATA.splice(i, 1);
-    BIENS_DATA.unshift(...list.map(toBien));
+    BIENS_DATA.unshift(...list.map(a => Object.assign(toBien(a), { _owner: proprio[a.id] || null })));
     if (sig !== lastSig) { lastSig = sig; rerender(); }
   }
   function rerender() {

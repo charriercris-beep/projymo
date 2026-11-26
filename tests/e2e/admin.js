@@ -99,7 +99,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   await vis.evaluate(() => openLandingBien(BIENS_DATA[0].id)); await wait(300);
   await vis.evaluate(() => { document.querySelector('.fiche-ov').remove(); contactFromLanding(BIENS_DATA[0].id); }); await wait(4800);
   const ev = sql(`select string_agg(nom || ':' || profil, ',' order by nom) from public.evenements`);
-  ok('événements anonymes enregistrés (visite, fiche vue, contact)', /contact_vendeur:visiteur/.test(ev) && /fiche_vue:visiteur/.test(ev) && /visite:visiteur/.test(ev), ev);
+  ok('événements anonymes enregistrés (visite, fiche vue ; un contact n\'est compté qu\'à l\'envoi réel)', !/contact_vendeur/.test(ev) && /fiche_vue:visiteur/.test(ev) && /visite:visiteur/.test(ev), ev);
   ok('aucune donnée personnelle dans le journal (colonnes)', sql(`select string_agg(column_name, ',' order by ordinal_position) from information_schema.columns where table_schema = 'public' and table_name = 'evenements'`) === 'id,nom,profil,appareil,created_at,visiteur,source,zone,nouveau,detail');
   ok('visite : identifiant aléatoire, provenance, zone, nouveau visiteur', /^[a-z0-9]{12}\|direct\|(nc|europe|autre)\|(t|true)$/.test(sql(`select visiteur || '|' || source || '|' || zone || '|' || nouveau from public.evenements where nom = 'visite'`)), sql(`select visiteur || '|' || source || '|' || zone || '|' || nouveau from public.evenements where nom = 'visite'`));
   ok('fiche vue : numéro de l\'annonce', sql(`select detail from public.evenements where nom = 'fiche_vue'`) === String(await vis.evaluate(() => BIENS_DATA[0].id)));

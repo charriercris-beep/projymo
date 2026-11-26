@@ -99,11 +99,9 @@
   }
   wrap('go', bouge); wrap('showLanding', bouge);
   wrap('openLandingBien', (r, id) => { bouge(); track('fiche_vue', /^\d+$/.test(String(id)) ? String(id) : null); });
-  wrap('contactVendeur', () => track('contact_vendeur'));
-  wrap('contactFromLanding', () => track('contact_vendeur'));
-  wrap('planifierVisite', () => track('demande_visite'));
   wrap('simulerFinancement', () => track('simulation_financement'));
   wrap('simulerFinancementPublic', () => track('simulation_financement'));
+  // contacts et demandes de visite : comptés à l'envoi réel (js/messages.js)
   wrap('lpQuick', (r, zone, type) => track('recherche', (type || '') + '|' + (zone || '')));
   wrap('goDepotStep', (r, n) => { if (n === 2) track('depot_debut'); });
   if (window.IMMO_CARDS && IMMO_CARDS.fav) { const f0 = IMMO_CARDS.fav; IMMO_CARDS.fav = function () { const on = f0.apply(this, arguments); if (on) track('favori'); return on; }; }

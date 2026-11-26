@@ -690,6 +690,44 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
 .lp-btn.big{padding:15px 26px;font-size:16px}
 
 /* Bandeau photo + recherche */
+/* Fenêtres au-dessus de la fiche : contact / visite (js/messages.js), financement (js/fin-popup.js) */
+.ctc-mod,.fp-mod{position:fixed;inset:0;background:rgba(7,25,35,.55);z-index:3500;display:flex;align-items:center;justify-content:center;padding:16px}
+.ctc-in{background:#fff;border-radius:18px;max-width:520px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(7,25,35,.35)}
+.ctc-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(100deg,#0B3954,#0A7A84);color:#fff;border-radius:18px 18px 0 0}
+.ctc-b{display:flex;gap:12px;align-items:center;min-width:0}.ctc-b img,.ctc-b>span{width:64px;height:48px;border-radius:8px;object-fit:cover;flex:none;background:rgba(255,255,255,.2)}
+.ctc-b b{display:block;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ctc-b small{color:rgba(255,255,255,.85);font-size:13.5px}
+.ctc-x,.fp-x{background:rgba(255,255,255,.15);border:0;color:#fff;width:36px;height:36px;border-radius:50%;font-size:24px;line-height:1;cursor:pointer;flex:none}
+.ctc-c{padding:16px 18px 18px}.ctc-c h3{margin:0 0 6px;font-size:20px;color:var(--ocean)}
+.ctc-p{color:var(--mid);margin:0 0 12px;font-size:15px}.ctc-l{display:block;font-weight:600;font-size:14.5px;margin-top:8px}
+.ctc-l textarea{display:block;width:100%;margin-top:4px;border:1.5px solid var(--line-strong);border-radius:10px;padding:10px;font:inherit;font-size:15px;resize:vertical}
+.ctc-cr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}.ctc-cr label{font-weight:600;font-size:14px}.ctc-cr small{font-weight:400;color:var(--mid)}
+.ctc-cr input,.ctc-cr select{display:block;width:100%;margin-top:4px;border:1.5px solid var(--line-strong);border-radius:10px;padding:8px;font:inherit;font-size:15px;background:#fff}
+.ctc-n{font-size:13px;color:var(--mid);margin:8px 0 0}.ctc-warn{background:#FFF1D6;color:#7A4B00;border-radius:10px;padding:8px 12px;font-size:14px;margin:10px 0 0}
+.ctc-err{color:var(--red);font-size:14px;margin:6px 0 0;min-height:1em}
+.ctc-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.ctc-ok{text-align:center;padding:8px 4px}.ctc-ok>span{display:inline-grid;place-items:center;width:56px;height:56px;border-radius:50%;background:#E6F4EA;color:var(--green);font-size:28px;font-weight:700;margin-bottom:8px}
+.ctc-ok p{color:var(--mid)}.ctc-ok .ctc-acts{justify-content:center}
+.fp-in{background:#fff;border-radius:18px;max-width:860px;width:100%;max-height:94vh;overflow:auto;box-shadow:0 24px 60px rgba(7,25,35,.35)}
+.fp-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;background:linear-gradient(100deg,#0B3954,#0A7A84 60%,#35C3BC);color:#fff;border-radius:18px 18px 0 0}
+.fp-h small{display:block;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9BEAE3}.fp-h b{display:block;font-size:18px}.fp-h span{font-size:14.5px;color:rgba(255,255,255,.9)}
+.fp-g{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;padding:18px 20px 6px}
+.fp-big{background:var(--lagoon-pale);border:1px solid #BFE3DF;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.fp-big small{display:block;font-weight:700;color:var(--gold-dark);font-size:13.5px}.fp-big b{display:block;font-size:36px;line-height:1.1;color:var(--ocean)}.fp-big span{font-size:14px;color:var(--mid)}
+.fp-s{display:block;font-weight:600;font-size:14.5px;color:var(--dark);margin:10px 0 2px}.fp-s output{float:right;font-weight:700;color:var(--gold-dark)}
+.fp-s input{display:block;width:100%;accent-color:var(--gold);margin-top:6px}
+.fp-c{display:flex;gap:8px;align-items:center;font-size:14.5px;margin-top:12px;color:var(--dark)}.fp-c input{width:18px;height:18px;accent-color:var(--gold)}
+.fp-n{font-size:12.5px;color:var(--mid);margin:8px 0 0}
+.fp-graph{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.fp-don{width:150px;height:150px;flex:none}
+.fp-leg{list-style:none;margin:0;padding:0;flex:1;min-width:170px;display:grid;gap:6px;font-size:14px;color:var(--dark)}
+.fp-leg li{display:flex;align-items:center;gap:8px}.fp-leg i{width:12px;height:12px;border-radius:3px;flex:none}.fp-leg b{margin-left:auto}
+.fp-leg li.t{border-top:1px solid var(--line);padding-top:6px;font-weight:700}
+.fp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 20px 4px}
+.fp-tiles div{border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:12px;padding:10px 12px}.fp-tiles small{display:block;font-size:13px;color:var(--mid)}
+.fp-tiles b{display:block;font-size:20px;color:var(--ocean)}.fp-tiles span{font-size:12.5px;color:var(--mid)}
+.fp-cta{margin:14px 20px 20px;background:linear-gradient(100deg,#FFF7E6,#FDEDE7);border:1px solid #F2D49B;border-radius:14px;padding:14px 16px}
+.fp-cta b{display:block;color:var(--ocean);font-size:16px}.fp-cta span{font-size:14px;color:var(--mid)}
+.fp-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.fp-msg{margin:8px 0 0;font-size:14px;color:var(--dark)}.fp-msg .lp-link{color:var(--gold-dark);font-weight:700;padding:0}
+@media(max-width:720px){.fp-g{grid-template-columns:1fr}.fp-tiles{grid-template-columns:1fr}.ctc-cr{grid-template-columns:1fr}.fp-big b{font-size:30px}}
 /* Diffusion sur les réseaux (js/social.js) */
 .soc-mod{position:fixed;inset:0;background:rgba(7,25,35,.55);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px}
 .soc-in{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:92vh;overflow:auto;padding:20px}
@@ -1578,6 +1616,35 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       details.dp-more summary{cursor:pointer;padding:12px 0;font-weight:600}
       details.dp-more[open]{padding-bottom:6px}
       @media(max-width:560px){.dp-tiles{grid-template-columns:repeat(2,1fr)}.dp-row,.dp-row3{grid-template-columns:1fr}}
+      /* Étape Prix (js/depot-prix.js) */
+      .pc-box{border:2px solid var(--gold);border-radius:14px;padding:14px 16px;background:linear-gradient(180deg,var(--lagoon-pale),#fff);margin-bottom:16px}
+      .pc-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.pc-top small{display:block;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-dark)}
+      .pc-top b{display:block;font-size:30px;line-height:1.1;color:var(--ocean)}.pc-top span{font-size:14.5px;color:var(--mid)}
+      .pc-det{margin-top:10px}.pc-det summary{cursor:pointer;font-weight:600;color:var(--gold-dark);font-size:14.5px;padding:4px 0}
+      .pc-l{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid var(--line);font-size:14.5px}.pc-l small{color:var(--mid)}
+      .pc-l.pos b{color:var(--green)}.pc-l.neg b{color:var(--red)}.pc-l.tot{border-top:2px solid var(--dark);font-weight:700}
+      .pc-n{font-size:13px;color:var(--mid);margin:6px 0 0}
+      .pc-q{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;font-size:14px}.pc-q li{padding-left:22px;position:relative;color:var(--mid)}
+      .pc-q li::before{content:'!';position:absolute;left:0;top:1px;width:16px;height:16px;border-radius:50%;background:#FFF1D6;color:#7A4B00;font-size:11px;font-weight:700;display:grid;place-items:center}
+      .pc-q li.ok{color:var(--dark)}.pc-q li.ok::before{content:'✓';background:#E6F4EA;color:#1E6B3A}
+      .pc-mk h3,.bp h3{font-size:17px;margin:4px 0 8px;color:var(--ocean)}
+      .pc-cmp{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+      .pc-cmp button{text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;cursor:pointer}.pc-cmp button:hover{border-color:var(--gold)}
+      .pc-cmp b{display:block;font-size:16px}.pc-cmp span{display:block;font-size:13px;color:var(--dark)}.pc-cmp small{font-size:12px;color:var(--mid)}
+      .pc-ext{font-size:14px;margin:8px 0 16px}.pc-ext a{color:var(--gold-dark);font-weight:600}
+      .bp{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px;background:#fff}
+      .bp-r{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(60px,1fr) auto;gap:10px;align-items:center;font-size:14px;padding:3px 0}
+      .bp-bar{height:10px;background:var(--warm);border-radius:99px;overflow:hidden}.bp-bar i{display:block;height:100%;background:var(--line-strong);border-radius:99px}
+      .bp-r.me{font-weight:700}.bp-r.me .bp-bar i{background:var(--gold)}
+      .bp-t{font-size:14px;margin:8px 0 0}.bp-t .up{color:var(--green)}.bp-t .down{color:var(--red)}
+      .bp-g{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}.bp-h{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mid);margin:0 0 6px}
+      .bp-cols{display:flex;align-items:flex-end;gap:14px;height:120px}
+      .bp-cols div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:12px}
+      .bp-cols i{display:block;width:100%;max-width:46px;background:var(--gold);border-radius:6px 6px 0 0;margin-top:2px}.bp-cols div:last-child i{background:var(--accent)}
+      .bp-cols em{font-style:normal;color:var(--mid);margin-top:4px;white-space:nowrap}
+      .bp-svg{width:100%;height:auto;margin-top:6px}.bp-n{font-size:13.5px;color:var(--mid);margin:0}.bp-s{font-size:12px;color:var(--mid);margin:16px 0 0}
+      .dp-votre label{font-size:17px}
+      @media(max-width:640px){.bp-g{grid-template-columns:1fr}}
       /* Prestations : pastilles à bascule */
       #panel-depot .dp-chips{gap:8px}
       #panel-depot .dp-chips label{padding:7px 14px 7px 10px;border-color:var(--line);background:#F7FAFB;transition:background .15s,border-color .15s,transform .1s;user-select:none}
@@ -1691,8 +1758,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div class="dp-steps" aria-label="Étapes">
           <div class="depot-step active" id="dstep-1"><div class="bar"></div><div class="depot-step-num">1</div><div class="depot-step-lbl">Le bien</div></div>
           <div class="depot-step" id="dstep-2"><div class="bar"></div><div class="depot-step-num">2</div><div class="depot-step-lbl">Photos</div></div>
-          <div class="depot-step" id="dstep-3"><div class="bar"></div><div class="depot-step-num">3</div><div class="depot-step-lbl">Prix</div></div>
-          <div class="depot-step" id="dstep-4"><div class="bar"></div><div class="depot-step-num">4</div><div class="depot-step-lbl">Présentation</div></div>
+          <div class="depot-step" id="dstep-3"><div class="bar"></div><div class="depot-step-num">3</div><div class="depot-step-lbl">Présentation</div></div>
+          <div class="depot-step" id="dstep-4"><div class="bar"></div><div class="depot-step-num">4</div><div class="depot-step-lbl">Prix</div></div>
           <div class="depot-step" id="dstep-5"><div class="bar"></div><div class="depot-step-num">5</div><div class="depot-step-lbl">Publication</div></div>
         </div>
 
@@ -1752,21 +1819,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(1)">Retour</button><button type="button" class="btn btn-gold" id="dp-photos-next" onclick="goDepotStep(3)">Continuer</button></div>
         </div>
 
-        <!-- 3. PRIX -->
+        <!-- 3. PRÉSENTATION -->
         <div id="depot-step-3" class="card" style="display:none">
-          <h2 class="dp-q">À quel prix ?</h2>
-          <p class="dp-help">Vous fixez le prix. Voici un repère pour vous aider.</p>
-          <div class="dp-err" role="alert"></div>
-          <div class="dp-hint" id="dp-hint">—</div>
-          <div class="dp-f"><label for="d-prix">Prix demandé</label><div class="dp-price"><input type="number" id="d-prix" min="0" step="100000" inputmode="numeric" placeholder="ex. 42500000" oninput="updateDepotEstim()"><span>F</span></div><small id="dp-prix-lisible"></small></div>
-          <div id="depot-estim-compare" style="display:none;margin:-4px 0 14px;font-size:15px">
-            <span id="depot-prix-user" hidden></span><span id="depot-prix-ia" hidden></span>Écart avec le repère : <b id="depot-ecart">—</b>
-          </div>
-          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(2)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePrix()">Continuer</button></div>
-        </div>
-
-        <!-- 4. PRÉSENTATION -->
-        <div id="depot-step-4" class="card" style="display:none">
           <h2 class="dp-q">Présentez votre bien</h2>
           <p class="dp-help">Nous avons préparé un titre ; modifiez-le si vous voulez.</p>
           <div class="dp-err" role="alert"></div>
@@ -1794,7 +1848,20 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <textarea id="d-desc" rows="7" placeholder="Ce qui rend votre bien agréable à vivre : luminosité, vue, quartier, rénovations…"></textarea>
             <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" id="dp-ia-btn" onclick="genDescriptionIA()">Rédiger la description à partir de mes choix</button>
             <p class="dp-ia-msg" id="dp-ia-msg" role="status" aria-live="polite"></p></div>
-          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(3)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePresentation()">Continuer</button></div>
+          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(2)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePresentation()">Continuer</button></div>
+        </div>
+
+        <!-- 4. PRIX (en dernier : tout ce qui a été rempli est pris en compte) — js/depot-prix.js -->
+        <div id="depot-step-4" class="card" style="display:none">
+          <h2 class="dp-q">Fixons le bon prix</h2>
+          <p class="dp-help">Tout ce que vous avez renseigné est pris en compte : quartier, surface, état, prestations, photos. Vous restez libre de votre prix.</p>
+          <div class="dp-err" role="alert"></div>
+          <div id="dp-prix-ana"></div>
+          <div class="dp-f dp-votre"><label for="d-prix">Votre prix de vente</label><div class="dp-price"><input type="number" id="d-prix" min="0" step="100000" inputmode="numeric" placeholder="ex. 42500000" oninput="updateDepotEstim()"><span>F</span></div><small id="dp-prix-lisible"></small></div>
+          <div id="depot-estim-compare" style="display:none;margin:-4px 0 14px;font-size:15px">
+            <span id="depot-prix-user" hidden></span><span id="depot-prix-ia" hidden></span>Écart avec le prix conseillé : <b id="depot-ecart">—</b>
+          </div>
+          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(3)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePrix()">Continuer</button></div>
         </div>
 
         <!-- 5. PUBLICATION -->
@@ -4887,12 +4954,12 @@ function openLandingBien(id){
   const fav=window.IMMO_CARDS&&IMMO_CARDS.isFav(b.id);
   const ferme="this.closest('.fiche-ov').remove()";
   const cta = APP_STATE.loggedIn ? `
-      <button type="button" class="btn btn-gold btn-full" onclick="contactVendeur(${Number(b.id)});${ferme}">Envoyer un message</button>
-      <button type="button" class="btn btn-outline btn-full" onclick="planifierVisite(${Number(b.id)});${ferme}">Demander une visite</button>
-      <button type="button" class="btn btn-outline btn-full" onclick="simulerFinancement(${prix});${ferme}">Simuler le financement</button>` : `
-      <p class="fi-note">Créez un compte gratuit pour contacter le vendeur et demander une visite.</p>
-      <button type="button" class="btn btn-gold btn-full" onclick="contactFromLanding(${Number(b.id)});${ferme}">Contacter le vendeur</button>
-      <button type="button" class="btn btn-outline btn-full" onclick="simulerFinancementPublic(${prix});${ferme}">Simuler le financement</button>`;
+      <button type="button" class="btn btn-gold btn-full" onclick="contactVendeur(${Number(b.id)})">Envoyer un message</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="planifierVisite(${Number(b.id)})">Demander une visite</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="simulerFinancement(${prix})">Simuler le financement</button>` : `
+      <button type="button" class="btn btn-gold btn-full" onclick="contactFromLanding(${Number(b.id)})">Contacter le vendeur</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="planifierVisite(${Number(b.id)})">Demander une visite</button>
+      <button type="button" class="btn btn-outline btn-full" onclick="simulerFinancementPublic(${prix})">Simuler le financement</button>`;
   ov.innerHTML=`<div class="fi" role="dialog" aria-modal="true" aria-label="${esc(b.titre||'Fiche du bien')}">
     <div class="fi-ph${b.photoUrl?'':' none'}">
       ${b.photoUrl?`<img src="${esc(b.photoUrl)}" alt="" onerror="this.parentNode.classList.add('none');this.remove()">`:''}
@@ -9743,6 +9810,7 @@ go('dashboard');
 <script src="js/annonces.js"></script>
 <script src="js/depot.js"></script>
 <script src="js/depot-live.js"></script>
+<script src="js/depot-prix.js"></script>
 <script src="js/ia-photos.js"></script>
 <script src="js/recherche-ia.js"></script>
 <script src="js/prospects.js"></script>
@@ -9754,6 +9822,8 @@ go('dashboard');
 <script src="js/options.js"></script>
 <script src="js/abonnement.js"></script>
 <script src="js/agence.js"></script>
+<script src="js/messages.js"></script>
+<script src="js/fin-popup.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/evenements.js"></script>
 </body>

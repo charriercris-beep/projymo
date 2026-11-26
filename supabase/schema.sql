@@ -247,7 +247,7 @@ alter table public.records enable row level security;
 create or replace function public.is_verified_pro(p_role text, p_metiers text[])
 returns boolean language sql stable security definer set search_path = public as $$
   select exists (select 1 from public.professionnels p
-                 where p.owner_id = auth.uid() and p.role = p_role and p.verifie
+                 where p.owner_id = auth.uid() and (p.role = p_role or (p_role = 'banquier' and p.role = 'courtier')) and p.verifie
                    and (p_metiers is null or cardinality(p_metiers) = 0 or p.metiers && p_metiers));
 $$;
 -- Propriétaire d'un enregistrement parent (lu sans RLS pour éviter la récursion des politiques)
@@ -279,6 +279,43 @@ drop policy if exists rec_visite_public on public.records;
 drop policy if exists rec_public on public.records;
 create policy rec_public on public.records for select to anon, authenticated
   using (collection in ('visite', 'annonce', 'annonce_photos') and coalesce((data->>'publie')::boolean, false));
+
+-- Messagerie entre acheteur et vendeur, à propos d'une annonce publiée.
+-- Chaque message est un enregistrement « message » : auteur = owner_id, destinataire = assignee, fil = parent_id
+-- (« <annonce>:<acheteur> »). Le destinataire est fixé par la base (jamais par le navigateur) : le vendeur
+-- de l'annonce, ou, pour une réponse du vendeur, l'acheteur qui a ouvert le fil. Les deux le lisent (rec_select).
+create or replace function public.envoyer_message(p_annonce text, p_texte text, p_type text default 'message',
+                                                  p_creneaux text default null, p_acheteur uuid default null) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare v_vendeur uuid; v_dest uuid; v_acheteur uuid; v_titre text; v_nom text; v_id text;
+begin
+  if auth.uid() is null then raise exception 'Connexion requise'; end if;
+  if p_texte is null or length(btrim(p_texte)) = 0 or length(p_texte) > 2000 then raise exception 'Message vide ou trop long'; end if;
+  select owner_id, data->>'titre' into v_vendeur, v_titre from public.records
+   where collection = 'annonce' and id = p_annonce and coalesce((data->>'publie')::boolean, false);
+  if v_vendeur is null then raise exception 'Annonce introuvable ou retirée'; end if;
+  if auth.uid() = v_vendeur then
+    -- réponse du vendeur : uniquement à un acheteur qui lui a écrit à propos de cette annonce
+    if p_acheteur is null or not exists (select 1 from public.records where collection = 'message' and parent_id = p_annonce || ':' || p_acheteur and owner_id = p_acheteur)
+      then raise exception 'Conversation introuvable'; end if;
+    v_dest := p_acheteur; v_acheteur := p_acheteur;
+  else
+    v_dest := v_vendeur; v_acheteur := auth.uid();
+  end if;
+  if (select count(*) from public.records where collection = 'message' and owner_id = auth.uid() and created_at > now() - interval '1 hour') >= 40
+    then raise exception 'Trop de messages envoyés, réessayez plus tard'; end if;
+  select coalesce(nullif(raw_user_meta_data->>'nom', ''), split_part(email, '@', 1)) into v_nom from auth.users where id = auth.uid();
+  v_id := 'm' || floor(extract(epoch from clock_timestamp()) * 1000)::bigint || substr(md5(random()::text), 1, 6);
+  insert into public.records (collection, id, owner_id, assignee, parent_id, data)
+  values ('message', v_id, auth.uid(), v_dest, p_annonce || ':' || v_acheteur,
+          jsonb_build_object('annonce', p_annonce, 'titre', v_titre, 'texte', btrim(p_texte),
+                             'type', case when p_type = 'visite' then 'visite' else 'message' end,
+                             'creneaux', left(coalesce(p_creneaux, ''), 300), 'de_nom', left(coalesce(v_nom, ''), 80),
+                             'vendeur', auth.uid() = v_vendeur, 'lu', false));
+  return jsonb_build_object('id', v_id, 'fil', p_annonce || ':' || v_acheteur);
+end $$;
+revoke execute on function public.envoyer_message(text, text, text, text, uuid) from public, anon;
+grant execute on function public.envoyer_message(text, text, text, text, uuid) to authenticated;
 
 -- Un non-propriétaire ne peut ni changer le propriétaire ni le public visé ; en modifiant, il prend en charge
 create or replace function public.records_guard() returns trigger

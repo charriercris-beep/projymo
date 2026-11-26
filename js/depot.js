@@ -1,6 +1,6 @@
 /* Immo360 NC — Parcours de dépôt d'annonce en 5 étapes courtes
- * 1. Le bien (type, vente/location, commune, quartier, surface, pièces) · 2. Photos · 3. Prix (repère du
- * marché en direct) · 4. Présentation (titre proposé, description, points forts, détails facultatifs)
+ * 1. Le bien (type, vente/location, commune, quartier, surface, pièces) · 2. Photos · 3. Présentation (titre
+ * proposé, prestations, détails, description) · 4. Prix, en dernier : prix conseillé, marché, baromètre (js/depot-prix.js)
  * · 5. Contact, aperçu et publication.
  * Erreurs affichées dans la page (pas de fenêtre d'alerte), champ concerné mis en évidence.
  * Remplace goDepotStep / validateStep1 / validateStep3 / updateDepotEstim et ajoute updateQuartiers
@@ -52,8 +52,8 @@
     }
     window.depotStep = n;
     if (n === 2) { photosHint(); videoPreview(); }
-    if (n === 3) { hint(); updateDepotEstim(); }
-    if (n === 4) autoTitle();
+    if (n === 3) autoTitle();
+    if (n === 4) { hint(); if (window.IMMO_PRIX) IMMO_PRIX.analyser(); updateDepotEstim(); }
     if (n === 5) { prefillContact(); preview(); boost(); }
     const panel = $('panel-depot'); if (panel && panel.scrollIntoView) panel.scrollIntoView({ block: 'start' });
     window.scrollTo({ top: 0 });
@@ -66,13 +66,13 @@
   }
   function validatePrix() {
     const p = parseInt(val('d-prix'), 10);
-    if (!p || p <= 0) return err(3, 'Indiquez le prix demandé.', 'd-prix');
-    if (p < 100000) return err(3, 'Le prix semble incomplet : saisissez-le en francs, par exemple 42 500 000.', 'd-prix');
-    err(3, ''); goDepotStep(4);
+    if (!p || p <= 0) return err(4, 'Indiquez le prix demandé.', 'd-prix');
+    if (p < 100000) return err(4, 'Le prix semble incomplet : saisissez-le en francs, par exemple 42 500 000.', 'd-prix');
+    err(4, ''); goDepotStep(5);
   }
   function validatePresentation() {
-    if (!val('d-titre')) return err(4, 'Donnez un titre à votre annonce.', 'd-titre');
-    err(4, ''); goDepotStep(5);
+    if (!val('d-titre')) return err(3, 'Donnez un titre à votre annonce.', 'd-titre');
+    err(3, ''); goDepotStep(4);
   }
 
   /* ---------- Visite vidéo : aperçu en direct à partir des photos du dépôt ---------- */

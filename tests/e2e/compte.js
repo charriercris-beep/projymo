@@ -24,7 +24,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   ok('démo : bouton « Se connecter » visible dans l\'en-tête', await p.isVisible('#tn-login'));
   ok('démo : « Quitter la démo » au lieu de « Déconnexion »', (await p.textContent('#tn-out')).trim() === 'Quitter la démo');
   await p.click('#panel-depot .dp-tile[data-type="Appartement"]'); await p.fill('#d-surface', '70');
-  await p.evaluate(() => goDepotStep(3)); await p.fill('#d-prix', '34000000'); await p.evaluate(() => { goDepotStep(4); goDepotStep(5); }); await wait(200);
+  await p.evaluate(() => { goDepotStep(3); goDepotStep(4); }); await p.fill('#d-prix', '34000000'); await p.evaluate(() => { goDepotStep(5); }); await wait(200);
   await p.click('#btn-publier'); await wait(600);
   ok('sans compte : publication refusée, invitation à se connecter', /Connectez-vous pour publier/.test(await p.textContent('#depot-notif')) && sql(`select count(*) from public.records where owner_id = '${id}'`) === '0');
   // Connexion depuis l'invitation → retour à la dernière étape, formulaire conservé
