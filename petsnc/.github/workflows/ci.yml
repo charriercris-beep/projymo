@@ -1,0 +1,20 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  db:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y postgresql-16 || sudo apt-get install -y postgresql
+      - run: sudo ln -sf $(ls -d /usr/lib/postgresql/*/bin | tail -1) /usr/lib/postgresql/16/bin || true
+      - run: ./scripts/test-db.sh
+  app:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/mobile } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
