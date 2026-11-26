@@ -53,6 +53,13 @@ annoncent des envois qui n'ont pas lieu.
 - **I1** : prix en dernière étape du dépôt, prix conseillé détaillé, marché, baromètre du quartier.
 - Financement : fenêtre au-dessus de la fiche (mensualité, frais calédoniens, revenus conseillés), demande d'étude reçue par les banques **et les courtiers** vérifiés ; message honnête en mode démonstration.
 
+- **B4, B5, B7** : espaces réels sans données inventées — mandats, clients, rendez-vous, comptes-rendus, dossiers notaire et acheteurs de l'agence sont propres au compte (privés, enregistrés en base, retrouvés sur tout appareil) ; exemples seulement en démonstration, avec un bandeau ; statistiques réelles des annonces (fiches vues, messages, demandes de visite) ; « Mon achat » et « Biens pour moi » tirés des vraies démarches de l'acheteur (`tests/e2e/agence-reel.js`, 16 vérifications).
+- **B6** : plus aucun envoi annoncé sans avoir lieu — mandat et bon de visite deviennent des documents à imprimer et faire signer ; le SMS s'ouvre dans l'application du téléphone (ou WhatsApp) ; les signatures chez le notaire donnent un fichier calendrier ; le faux chantier « Eric Peintures NC » est retiré des vrais comptes.
+- **I2** : débordements mobiles corrigés.
+- Messages de confirmation (`showToast`) : la fonction n'existait pas, certains messages ne s'affichaient jamais ; ajoutée.
+
+**Reste avant ouverture : B8 (mentions légales, informations à fournir).**
+
 ## 6. Plan de correction proposé
 
 1. **Messagerie réelle** entre comptes (via la base, avec règles d'accès), sans réponses ni conversations inventées (B1–B3).
