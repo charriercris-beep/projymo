@@ -209,8 +209,9 @@
     if ($('fs-newdos')) $('fs-newdos').onclick = () => { const id = newDossier({ client: '', source: 'simulation' }); go('bnk-dossiers'); openDossier($('panel-bnk-dossiers'), id); };
     if ($('fs-send')) $('fs-send').onclick = () => {
       const u = (typeof APP_STATE !== 'undefined' && APP_STATE.user) || {};
+      if (!(window.IMMO_SYNC && IMMO_SYNC.uid)) { toast('Mode démonstration : rien n\'est envoyé. Connectez-vous avec votre compte pour demander une étude.'); return; }
       newDossier({ client: u.nom || 'Client', email: u.email || '', tel: u.tel || '', source: 'acheteur', etape: 'contact' });
-      toast('Demande transmise. Un conseiller vous recontactera.');
+      toast('Demande transmise aux banques et courtiers vérifiés d\'Immo360. Le premier disponible vous recontacte.');
     };
   }
 
@@ -321,5 +322,11 @@
     'capacite': el => buildSimu(el, 'client')
   });
   window.IMMO_DASH = Object.assign(window.IMMO_DASH || {}, { bnk: renderDashboard });
-  window.IMMO_BNK = { capacite, fraisAcquisition, eligibilites, mensualiteFacteur, DEFAULTS }; // exposé pour les tests
+  // Demande d'étude envoyée depuis la fiche d'un bien (fenêtre de financement, js/fin-popup.js)
+  function demande(o) {
+    const id = newDossier(o); dossiers = store.get(DKEY, []);
+    const d = dossiers.find(x => x.id === id); if (d && o.sim) { d.sim = { ...d.sim, ...o.sim }; d.bien = o.bien || ''; saveD(); }
+    return id;
+  }
+  window.IMMO_BNK = { capacite, fraisAcquisition, eligibilites, mensualiteFacteur, DEFAULTS, demande, taux: () => B('tauxNominal'), assurance: () => B('assurance') }; // exposé pour les tests
 })();

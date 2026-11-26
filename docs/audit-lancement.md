@@ -47,7 +47,13 @@ annoncent des envois qui n'ont pas lieu.
 - Back office : validation des pros, modération, commandes, tarifs, audience en direct.
 - Sécurité des données : règles d'accès de la base testées (35 vérifications), données de démonstration jamais envoyées en base.
 
-## 5. Plan de correction proposé
+## 5. Corrigé depuis l'audit
+
+- **B1, B2, B3** : messagerie réelle entre comptes (message et demande de visite depuis la fiche, réponse du vendeur), destinataire fixé par la base, plus de conversations ni de réponses inventées pour les vrais comptes (25 vérifications, `tests/e2e/messages.js`).
+- **I1** : prix en dernière étape du dépôt, prix conseillé détaillé, marché, baromètre du quartier.
+- Financement : fenêtre au-dessus de la fiche (mensualité, frais calédoniens, revenus conseillés), demande d'étude reçue par les banques **et les courtiers** vérifiés ; message honnête en mode démonstration.
+
+## 6. Plan de correction proposé
 
 1. **Messagerie réelle** entre comptes (via la base, avec règles d'accès), sans réponses ni conversations inventées (B1–B3).
 2. **Espaces vides au départ pour les vrais comptes** : mandats, clients, visites, acheteurs, statistiques et suivi d'achat ne montrent que les données de la personne ; les exemples restent en mode démonstration seulement (B4, B5, B7).
