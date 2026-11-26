@@ -1578,6 +1578,35 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
       details.dp-more summary{cursor:pointer;padding:12px 0;font-weight:600}
       details.dp-more[open]{padding-bottom:6px}
       @media(max-width:560px){.dp-tiles{grid-template-columns:repeat(2,1fr)}.dp-row,.dp-row3{grid-template-columns:1fr}}
+      /* Étape Prix (js/depot-prix.js) */
+      .pc-box{border:2px solid var(--gold);border-radius:14px;padding:14px 16px;background:linear-gradient(180deg,var(--lagoon-pale),#fff);margin-bottom:16px}
+      .pc-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.pc-top small{display:block;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-dark)}
+      .pc-top b{display:block;font-size:30px;line-height:1.1;color:var(--ocean)}.pc-top span{font-size:14.5px;color:var(--mid)}
+      .pc-det{margin-top:10px}.pc-det summary{cursor:pointer;font-weight:600;color:var(--gold-dark);font-size:14.5px;padding:4px 0}
+      .pc-l{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid var(--line);font-size:14.5px}.pc-l small{color:var(--mid)}
+      .pc-l.pos b{color:var(--green)}.pc-l.neg b{color:var(--red)}.pc-l.tot{border-top:2px solid var(--dark);font-weight:700}
+      .pc-n{font-size:13px;color:var(--mid);margin:6px 0 0}
+      .pc-q{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;font-size:14px}.pc-q li{padding-left:22px;position:relative;color:var(--mid)}
+      .pc-q li::before{content:'!';position:absolute;left:0;top:1px;width:16px;height:16px;border-radius:50%;background:#FFF1D6;color:#7A4B00;font-size:11px;font-weight:700;display:grid;place-items:center}
+      .pc-q li.ok{color:var(--dark)}.pc-q li.ok::before{content:'✓';background:#E6F4EA;color:#1E6B3A}
+      .pc-mk h3,.bp h3{font-size:17px;margin:4px 0 8px;color:var(--ocean)}
+      .pc-cmp{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+      .pc-cmp button{text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;cursor:pointer}.pc-cmp button:hover{border-color:var(--gold)}
+      .pc-cmp b{display:block;font-size:16px}.pc-cmp span{display:block;font-size:13px;color:var(--dark)}.pc-cmp small{font-size:12px;color:var(--mid)}
+      .pc-ext{font-size:14px;margin:8px 0 16px}.pc-ext a{color:var(--gold-dark);font-weight:600}
+      .bp{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px;background:#fff}
+      .bp-r{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(60px,1fr) auto;gap:10px;align-items:center;font-size:14px;padding:3px 0}
+      .bp-bar{height:10px;background:var(--warm);border-radius:99px;overflow:hidden}.bp-bar i{display:block;height:100%;background:var(--line-strong);border-radius:99px}
+      .bp-r.me{font-weight:700}.bp-r.me .bp-bar i{background:var(--gold)}
+      .bp-t{font-size:14px;margin:8px 0 0}.bp-t .up{color:var(--green)}.bp-t .down{color:var(--red)}
+      .bp-g{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}.bp-h{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mid);margin:0 0 6px}
+      .bp-cols{display:flex;align-items:flex-end;gap:14px;height:120px}
+      .bp-cols div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:12px}
+      .bp-cols i{display:block;width:100%;max-width:46px;background:var(--gold);border-radius:6px 6px 0 0;margin-top:2px}.bp-cols div:last-child i{background:var(--accent)}
+      .bp-cols em{font-style:normal;color:var(--mid);margin-top:4px;white-space:nowrap}
+      .bp-svg{width:100%;height:auto;margin-top:6px}.bp-n{font-size:13.5px;color:var(--mid);margin:0}.bp-s{font-size:12px;color:var(--mid);margin:16px 0 0}
+      .dp-votre label{font-size:17px}
+      @media(max-width:640px){.bp-g{grid-template-columns:1fr}}
       /* Prestations : pastilles à bascule */
       #panel-depot .dp-chips{gap:8px}
       #panel-depot .dp-chips label{padding:7px 14px 7px 10px;border-color:var(--line);background:#F7FAFB;transition:background .15s,border-color .15s,transform .1s;user-select:none}
@@ -1691,8 +1720,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
         <div class="dp-steps" aria-label="Étapes">
           <div class="depot-step active" id="dstep-1"><div class="bar"></div><div class="depot-step-num">1</div><div class="depot-step-lbl">Le bien</div></div>
           <div class="depot-step" id="dstep-2"><div class="bar"></div><div class="depot-step-num">2</div><div class="depot-step-lbl">Photos</div></div>
-          <div class="depot-step" id="dstep-3"><div class="bar"></div><div class="depot-step-num">3</div><div class="depot-step-lbl">Prix</div></div>
-          <div class="depot-step" id="dstep-4"><div class="bar"></div><div class="depot-step-num">4</div><div class="depot-step-lbl">Présentation</div></div>
+          <div class="depot-step" id="dstep-3"><div class="bar"></div><div class="depot-step-num">3</div><div class="depot-step-lbl">Présentation</div></div>
+          <div class="depot-step" id="dstep-4"><div class="bar"></div><div class="depot-step-num">4</div><div class="depot-step-lbl">Prix</div></div>
           <div class="depot-step" id="dstep-5"><div class="bar"></div><div class="depot-step-num">5</div><div class="depot-step-lbl">Publication</div></div>
         </div>
 
@@ -1752,21 +1781,8 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
           <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(1)">Retour</button><button type="button" class="btn btn-gold" id="dp-photos-next" onclick="goDepotStep(3)">Continuer</button></div>
         </div>
 
-        <!-- 3. PRIX -->
+        <!-- 3. PRÉSENTATION -->
         <div id="depot-step-3" class="card" style="display:none">
-          <h2 class="dp-q">À quel prix ?</h2>
-          <p class="dp-help">Vous fixez le prix. Voici un repère pour vous aider.</p>
-          <div class="dp-err" role="alert"></div>
-          <div class="dp-hint" id="dp-hint">—</div>
-          <div class="dp-f"><label for="d-prix">Prix demandé</label><div class="dp-price"><input type="number" id="d-prix" min="0" step="100000" inputmode="numeric" placeholder="ex. 42500000" oninput="updateDepotEstim()"><span>F</span></div><small id="dp-prix-lisible"></small></div>
-          <div id="depot-estim-compare" style="display:none;margin:-4px 0 14px;font-size:15px">
-            <span id="depot-prix-user" hidden></span><span id="depot-prix-ia" hidden></span>Écart avec le repère : <b id="depot-ecart">—</b>
-          </div>
-          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(2)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePrix()">Continuer</button></div>
-        </div>
-
-        <!-- 4. PRÉSENTATION -->
-        <div id="depot-step-4" class="card" style="display:none">
           <h2 class="dp-q">Présentez votre bien</h2>
           <p class="dp-help">Nous avons préparé un titre ; modifiez-le si vous voulez.</p>
           <div class="dp-err" role="alert"></div>
@@ -1794,7 +1810,20 @@ input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;ba
             <textarea id="d-desc" rows="7" placeholder="Ce qui rend votre bien agréable à vivre : luminosité, vue, quartier, rénovations…"></textarea>
             <button type="button" class="btn btn-sm btn-outline" style="margin-top:8px" id="dp-ia-btn" onclick="genDescriptionIA()">Rédiger la description à partir de mes choix</button>
             <p class="dp-ia-msg" id="dp-ia-msg" role="status" aria-live="polite"></p></div>
-          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(3)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePresentation()">Continuer</button></div>
+          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(2)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePresentation()">Continuer</button></div>
+        </div>
+
+        <!-- 4. PRIX (en dernier : tout ce qui a été rempli est pris en compte) — js/depot-prix.js -->
+        <div id="depot-step-4" class="card" style="display:none">
+          <h2 class="dp-q">Fixons le bon prix</h2>
+          <p class="dp-help">Tout ce que vous avez renseigné est pris en compte : quartier, surface, état, prestations, photos. Vous restez libre de votre prix.</p>
+          <div class="dp-err" role="alert"></div>
+          <div id="dp-prix-ana"></div>
+          <div class="dp-f dp-votre"><label for="d-prix">Votre prix de vente</label><div class="dp-price"><input type="number" id="d-prix" min="0" step="100000" inputmode="numeric" placeholder="ex. 42500000" oninput="updateDepotEstim()"><span>F</span></div><small id="dp-prix-lisible"></small></div>
+          <div id="depot-estim-compare" style="display:none;margin:-4px 0 14px;font-size:15px">
+            <span id="depot-prix-user" hidden></span><span id="depot-prix-ia" hidden></span>Écart avec le prix conseillé : <b id="depot-ecart">—</b>
+          </div>
+          <div class="dp-nav"><button type="button" class="btn btn-outline" onclick="goDepotStep(3)">Retour</button><button type="button" class="btn btn-gold" onclick="validatePrix()">Continuer</button></div>
         </div>
 
         <!-- 5. PUBLICATION -->
@@ -9743,6 +9772,7 @@ go('dashboard');
 <script src="js/annonces.js"></script>
 <script src="js/depot.js"></script>
 <script src="js/depot-live.js"></script>
+<script src="js/depot-prix.js"></script>
 <script src="js/ia-photos.js"></script>
 <script src="js/recherche-ia.js"></script>
 <script src="js/prospects.js"></script>
